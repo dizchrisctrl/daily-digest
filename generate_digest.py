@@ -97,10 +97,23 @@ STORY_SCHEMA = {
         "deep_dive":  {"type": "string", "description": "Socratic question connecting this to bigger trends"},
         "source_url": {"type": "string"},
         "source":     {"type": "string"},
+        "tech_tags":  {"type": "array", "items": {"type": "string"}, "description": "2-5 specific technology/product/system names featured in this story (e.g. 'OpenSSL 3.x', 'NVIDIA H100', 'Python 3.12', 'CVE-2024-1234'). Be specific — not generic terms like 'AI' or 'cloud'."},
+        "affected_systems": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name":     {"type": "string", "description": "Application or system name, e.g. 'Apache Log4j'"},
+                    "versions": {"type": "string", "description": "Affected version range, e.g. '2.0-beta9 to 2.14.1' or 'all versions before 2.17.0'"},
+                },
+                "required": ["name", "versions"],
+            },
+            "description": "For vulnerability/CVE stories: list each affected system with its version range. Use an empty array for non-vulnerability stories.",
+        },
     },
     "required": ["headline","tldr","why_it_matters","concept_title","concept_explained",
                  "visual_ascii","public_opinion","opinion_assessment","quiz","deep_dive",
-                 "source_url","source"],
+                 "source_url","source","tech_tags","affected_systems"],
 }
 
 SECTION_TOOL = {
@@ -126,6 +139,8 @@ For each story:
 - quiz: 3 questions testing real conceptual understanding, not trivia.
 - public_opinion: reference specific community sentiments (HN, Reddit r/technology, r/netsec, security Twitter/X).
 - deep_dive: a Socratic question forcing critical thinking about assumptions or bigger trends.
+- tech_tags: 2-5 specific product/technology names in this story. Include CVE IDs for vulnerabilities.
+- affected_systems: for vulnerability stories, list each affected system with its version range. Empty array otherwise.
 
 Call the publish_stories tool with your 3 stories."""
 
@@ -140,8 +155,9 @@ NOTABLE_SCHEMA = {
         "category":      {"type": "string", "description": "One of: Policy, Business, Research, Infrastructure, Society, Science"},
         "source_url":    {"type": "string"},
         "source":        {"type": "string"},
+        "tech_tags":     {"type": "array", "items": {"type": "string"}, "description": "2-4 specific technology/product/company names relevant to this story. Be specific."},
     },
-    "required": ["headline", "summary", "applicability", "category", "source_url", "source"],
+    "required": ["headline", "summary", "applicability", "category", "source_url", "source", "tech_tags"],
 }
 
 NOTABLES_TOOL = {
@@ -165,6 +181,7 @@ For each item:
 - summary: 2-3 sentences on what happened
 - applicability: 2-3 sentences connecting to real implications for someone in tech/security (career, tools, policy awareness, market shifts)
 - category: Policy | Business | Research | Infrastructure | Society | Science
+- tech_tags: 2-4 specific product/technology/company names in this story.
 
 Prioritize stories with genuine weight. Avoid minor product launches or clickbait.
 Call the publish_notables tool with your 5 items."""
@@ -478,6 +495,37 @@ kbd {
   border-radius: 4px; padding: 1px 5px; font-family: monospace; font-size: 0.7rem; color: var(--text);
 }
 
+/* ── Tech Tags ── */
+.tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.tag {
+  font-size: 0.62rem; font-weight: 600; font-family: 'Courier New', monospace;
+  padding: 2px 8px; border-radius: 5px;
+  background: var(--surface3); color: var(--muted);
+  border: 1px solid var(--border2);
+  transition: color 0.15s, border-color 0.15s;
+}
+.tag:hover { color: var(--text); border-color: var(--muted2); }
+.tag-cve { background: rgba(239,68,68,0.08); color: #f87171; border-color: rgba(239,68,68,0.25); }
+
+/* ── Affected Systems ── */
+.affected-block { background: rgba(239,68,68,0.04); border-top: 1px solid rgba(239,68,68,0.15) !important; }
+.affected-header { display: flex; align-items: center; gap: 8px; margin-bottom: 13px; }
+.affected-header .blabel { margin-bottom: 0; color: #f87171; }
+.affected-warning { font-size: 0.65rem; color: #f87171; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 4px; padding: 1px 7px; font-weight: 700; }
+.affected-list { display: flex; flex-direction: column; gap: 8px; }
+.affected-item {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  background: var(--surface2); border: 1px solid rgba(239,68,68,0.18);
+  border-radius: 9px; padding: 10px 14px;
+}
+.affected-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+.affected-ver {
+  font-family: 'Courier New', monospace; font-size: 0.77rem;
+  color: #fca5a5; background: rgba(239,68,68,0.1);
+  padding: 3px 9px; border-radius: 5px; border: 1px solid rgba(239,68,68,0.2);
+  white-space: nowrap;
+}
+
 /* Site footer */
 .site-footer { text-align: center; padding: 40px 20px; color: var(--muted2); font-size: 0.8rem; border-top: 1px solid var(--border); }
 .site-footer a { color: var(--ai); text-decoration: none; }
@@ -672,6 +720,37 @@ def safe_url(url):
     return "#"
 
 
+def build_tags_html(tags):
+    if not tags:
+        return ""
+    pills = ""
+    for t in tags:
+        cls = "tag tag-cve" if str(t).upper().startswith("CVE-") else "tag"
+        pills += f'<span class="{cls}">{esc(t)}</span>'
+    return f'<div class="tag-row">{pills}</div>'
+
+
+def build_affected_html(systems):
+    if not systems:
+        return ""
+    rows = ""
+    for s in systems:
+        rows += f"""
+      <div class="affected-item">
+        <span class="affected-name">{esc(s.get('name',''))}</span>
+        <span class="affected-ver">{esc(s.get('versions',''))}</span>
+      </div>"""
+    return f"""
+      <div class="block affected-block">
+        <div class="affected-header">
+          <div class="blabel">&#x26A0;&#xFE0F; Affected Systems</div>
+          <span class="affected-warning">PATCH CHECK</span>
+        </div>
+        <div class="affected-list">{rows}
+        </div>
+      </div>"""
+
+
 def build_story_html(story, color, num):
     quiz_html = ""
     for i, q in enumerate(story.get("quiz", []), 1):
@@ -693,7 +772,9 @@ def build_story_html(story, color, num):
         if p.strip()
     )
 
-    num_str = f"{num:02d}"
+    num_str      = f"{num:02d}"
+    tags_html    = build_tags_html(story.get("tech_tags", []))
+    affected_html = build_affected_html(story.get("affected_systems", []))
 
     return f"""
 <article class="story-card">
@@ -705,13 +786,14 @@ def build_story_html(story, color, num):
       </div>
       <h2>{esc(story.get('headline',''))}</h2>
       <div class="tldr"><span class="tldr-tag">TL;DR</span>{esc(story.get('tldr',''))}</div>
+      {tags_html}
     </div>
     <div class="chevron">&#9660;</div>
   </div>
 
   <div class="story-body">
     <div class="body-inner">
-
+      {affected_html}
       <div class="block">
         <div class="blabel">&#x1F4CC; Why It Matters</div>
         <p>{esc(story.get('why_it_matters',''))}</p>
@@ -787,6 +869,7 @@ def build_notable_html(item, num):
   </div>
   <h3 class="notable-headline">{esc(item.get('headline',''))}</h3>
   <p class="notable-summary">{esc(item.get('summary',''))}</p>
+  {build_tags_html(item.get('tech_tags', []))}
   <div class="notable-body">
     <div class="notable-apply">
       <div class="blabel">&#x1F4A1; Why This Applies to You</div>
