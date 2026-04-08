@@ -87,8 +87,8 @@ def fetch_articles(feeds, max_per_feed=2, total_limit=8):
 STORY_SCHEMA = {
     "type": "object",
     "properties": {
-        "headline":          {"type": "string", "description": "Short punchy headline"},
-        "tldr":              {"type": "string", "description": "One sentence that tells the whole story"},
+        "headline":          {"type": "string", "minLength": 1, "description": "Short punchy headline — required, never empty"},
+        "tldr":              {"type": "string", "minLength": 1, "description": "One sentence that tells the whole story"},
         "why_it_matters":    {"type": "string", "description": "2-3 sentences on real-world significance"},
         "concept_title":     {"type": "string", "description": "The core technical concept illustrated"},
         "concept_explained": {"type": "string", "description": "4 paragraphs separated by newlines. P1: simple real-world analogy. P2: how it technically works. P3: tie to this news story. P4: broader implications."},
@@ -112,7 +112,20 @@ STORY_SCHEMA = {
         "deep_dive":  {"type": "string", "description": "Socratic question connecting this to bigger trends"},
         "source_url": {"type": "string"},
         "source":     {"type": "string"},
-        "tech_tags":  {"type": "array", "items": {"type": "string"}, "description": "2-5 specific technology/product/system names featured in this story (e.g. 'OpenSSL 3.x', 'NVIDIA H100', 'Python 3.12', 'CVE-2024-1234'). Be specific — not generic terms like 'AI' or 'cloud'."},
+        "tech_tags": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name":        {"type": "string", "description": "Specific product, framework, protocol, or CVE ID — never generic terms like 'AI', 'cloud', or 'security'"},
+                    "description": {"type": "string", "description": "1-2 sentences: what this technology or system is"},
+                    "relevance":   {"type": "string", "description": "1-2 sentences: its specific role in this story"},
+                },
+                "required": ["name", "description", "relevance"],
+            },
+            "description": "0-3 tags max. ONLY include when you can supply specific, meaningful context. For vulnerability stories skip the tag entirely if no specific version or tool is confirmed. Omit generic terms.",
+        },
         "affected_systems": {
             "type": "array",
             "items": {
@@ -154,7 +167,7 @@ For each story:
 - quiz: 3 questions testing real conceptual understanding, not trivia.
 - public_opinion: reference specific community sentiments (HN, Reddit r/technology, r/netsec, security Twitter/X).
 - deep_dive: a Socratic question forcing critical thinking about assumptions or bigger trends.
-- tech_tags: 2-5 specific product/technology names in this story. Include CVE IDs for vulnerabilities.
+- tech_tags: 0-3 tags max. Only include when you have specific, meaningful context to share. Skip entirely for vulnerabilities if no specific version or tool is confirmed. Never use generic terms (AI, cloud, encryption). Each tag needs a clear description and a relevance sentence tied to this exact story.
 - affected_systems: for vulnerability stories, list each affected system with its version range. Empty array otherwise.
 
 Call the publish_stories tool with your 3 stories."""
@@ -164,13 +177,26 @@ Call the publish_stories tool with your 3 stories."""
 NOTABLE_SCHEMA = {
     "type": "object",
     "properties": {
-        "headline":      {"type": "string", "description": "Short punchy headline"},
+        "headline":      {"type": "string", "minLength": 1, "description": "Short punchy headline — required, never empty"},
         "summary":       {"type": "string", "description": "2-3 sentences covering what happened and why it is significant"},
         "applicability": {"type": "string", "description": "2-3 sentences on how this could matter to someone in tech or security — career implications, tools to watch, policy awareness, market shifts"},
         "category":      {"type": "string", "description": "One of: Policy, Business, Research, Infrastructure, Society, Science"},
         "source_url":    {"type": "string"},
         "source":        {"type": "string"},
-        "tech_tags":     {"type": "array", "items": {"type": "string"}, "description": "2-4 specific technology/product/company names relevant to this story. Be specific."},
+        "tech_tags": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name":        {"type": "string", "description": "Specific product, company, or technology name — no generic terms"},
+                    "description": {"type": "string", "description": "1-2 sentences: what this is"},
+                    "relevance":   {"type": "string", "description": "1-2 sentences: its role in this story"},
+                },
+                "required": ["name", "description", "relevance"],
+            },
+            "description": "0-3 tags. Only include when genuinely specific and informative. Empty array is fine.",
+        },
     },
     "required": ["headline", "summary", "applicability", "category", "source_url", "source", "tech_tags"],
 }
@@ -196,7 +222,7 @@ For each item:
 - summary: 2-3 sentences on what happened
 - applicability: 2-3 sentences connecting to real implications for someone in tech/security (career, tools, policy awareness, market shifts)
 - category: Policy | Business | Research | Infrastructure | Society | Science
-- tech_tags: 2-4 specific product/technology/company names in this story.
+- tech_tags: 0-3 tags max. Only include when genuinely specific. Empty array is perfectly fine.
 
 Prioritize stories with genuine weight. Avoid minor product launches or clickbait.
 Call the publish_notables tool with your 5 items."""
@@ -515,13 +541,71 @@ kbd {
 .tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
 .tag {
   font-size: 0.62rem; font-weight: 600; font-family: 'Courier New', monospace;
-  padding: 2px 8px; border-radius: 5px;
+  padding: 3px 9px; border-radius: 5px;
   background: var(--surface3); color: var(--muted);
   border: 1px solid var(--border2);
-  transition: color 0.15s, border-color 0.15s;
+  cursor: pointer; line-height: 1.4;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
-.tag:hover { color: var(--text); border-color: var(--muted2); }
+.tag:hover { color: var(--text); border-color: var(--muted2); background: #252840; }
 .tag-cve { background: rgba(239,68,68,0.08); color: #f87171; border-color: rgba(239,68,68,0.25); }
+.tag-cve:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.5); }
+
+/* ── Tag Modal ── */
+.tag-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2000;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+  backdrop-filter: blur(6px);
+  padding: 16px;
+}
+.tag-modal-overlay.open { opacity: 1; pointer-events: all; }
+.tag-modal-box {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  padding: 28px 28px 24px;
+  max-width: 460px; width: 100%;
+  position: relative;
+  transform: scale(0.93) translateY(10px);
+  transition: transform 0.22s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.55);
+}
+.tag-modal-overlay.open .tag-modal-box { transform: scale(1) translateY(0); }
+.tag-modal-close {
+  position: absolute; top: 14px; right: 14px;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--surface3); border: 1px solid var(--border2);
+  color: var(--muted); font-size: 0.9rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+.tag-modal-close:hover { background: var(--border2); color: var(--text); }
+#tag-modal-name {
+  font-size: 1.1rem; font-weight: 800;
+  font-family: 'Courier New', monospace;
+  padding-right: 36px; margin-bottom: 18px;
+  color: var(--text);
+}
+.tag-modal-overlay.cve #tag-modal-name { color: #f87171; }
+.tag-modal-section-label {
+  font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--muted2); margin-bottom: 6px;
+}
+#tag-modal-desc {
+  font-size: 0.9rem; color: #c0c8d8; line-height: 1.72; margin-bottom: 16px;
+}
+#tag-modal-relevance {
+  font-size: 0.88rem; color: var(--muted); line-height: 1.72;
+  padding: 12px 15px; border-radius: 8px;
+  background: var(--surface3);
+  border-left: 3px solid var(--ai);
+  font-style: italic;
+}
+.tag-modal-overlay.cve #tag-modal-relevance { border-left-color: #f87171; }
 
 /* ── Affected Systems ── */
 .affected-block { background: rgba(239,68,68,0.04); border-top: 1px solid rgba(239,68,68,0.15) !important; }
@@ -563,6 +647,17 @@ kbd {
 <body>
 
 <div id="progress-bar"></div>
+
+<div id="tag-modal" class="tag-modal-overlay" onclick="closeTagModal(event)">
+  <div class="tag-modal-box" onclick="event.stopPropagation()">
+    <button class="tag-modal-close" onclick="closeTagModal(event)">&#x2715;</button>
+    <div id="tag-modal-name"></div>
+    <div class="tag-modal-section-label">What it is</div>
+    <div id="tag-modal-desc"></div>
+    <div class="tag-modal-section-label">In this story</div>
+    <div id="tag-modal-relevance"></div>
+  </div>
+</div>
 
 <header class="site-header">
   <div class="eyebrow">Your daily briefing</div>
@@ -649,6 +744,25 @@ window.addEventListener('load', () => {
   if (active) positionIndicator(active);
 });
 
+// ── Tag modal ──
+function openTagModal(e, btn) {
+  e.stopPropagation();
+  const overlay = document.getElementById('tag-modal');
+  const name = btn.dataset.name || '';
+  document.getElementById('tag-modal-name').textContent = name;
+  document.getElementById('tag-modal-desc').textContent = btn.dataset.desc || '';
+  document.getElementById('tag-modal-relevance').textContent = btn.dataset.relevance || '';
+  overlay.classList.toggle('cve', name.toUpperCase().startsWith('CVE-'));
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTagModal(e) {
+  if (e) e.stopPropagation();
+  document.getElementById('tag-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 // ── Story card toggle ──
 function toggleStory(card) { card.classList.toggle('open'); }
 function toggleCard(card) { card.classList.toggle('open'); }
@@ -687,7 +801,9 @@ function showKbdHint() {
 }
 
 document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeTagModal(); return; }
   if (e.target.matches('input, textarea, select')) return;
+  if (document.getElementById('tag-modal').classList.contains('open')) return;
 
   const cards = getActiveCards();
 
@@ -741,9 +857,25 @@ def build_tags_html(tags):
         return ""
     pills = ""
     for t in tags:
-        cls = "tag tag-cve" if str(t).upper().startswith("CVE-") else "tag"
-        pills += f'<span class="{cls}">{esc(t)}</span>'
-    return f'<div class="tag-row">{pills}</div>'
+        # Accept both old string format (rebuild compat) and new object format
+        if isinstance(t, dict):
+            name      = str(t.get("name", "")).strip()
+            desc      = str(t.get("description", "")).strip()
+            relevance = str(t.get("relevance", "")).strip()
+        else:
+            name, desc, relevance = str(t).strip(), "", ""
+        if not name:
+            continue
+        cls = "tag tag-cve" if name.upper().startswith("CVE-") else "tag"
+        pills += (
+            f'<button class="{cls}" '
+            f'data-name="{esc(name)}" '
+            f'data-desc="{esc(desc)}" '
+            f'data-relevance="{esc(relevance)}" '
+            f'onclick="openTagModal(event,this)">'
+            f'{esc(name)}</button>'
+        )
+    return f'<div class="tag-row">{pills}</div>' if pills else ""
 
 
 def build_affected_html(systems):
