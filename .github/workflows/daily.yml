@@ -11,20 +11,20 @@ on:
         default: false
 
 permissions:
-  contents: write   # needed to push to gh-pages branch
+  contents: write   # push to gh-pages branch
   pages: write
-  id-token: write
 
 jobs:
   generate:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b  # v5.3.0
         with:
           python-version: '3.12'
           cache: pip
@@ -33,7 +33,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Checkout gh-pages data
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
         with:
           ref: gh-pages
           path: output
@@ -46,8 +46,9 @@ jobs:
           GMAIL_CLIENT_ID:      ${{ secrets.GMAIL_CLIENT_ID }}
           GMAIL_CLIENT_SECRET:  ${{ secrets.GMAIL_CLIENT_SECRET }}
           GMAIL_REFRESH_TOKEN:  ${{ secrets.GMAIL_REFRESH_TOKEN }}
+          REBUILD_ONLY:         ${{ github.event.inputs.rebuild_only }}
         run: |
-          if [ "${{ github.event.inputs.rebuild_only }}" = "true" ]; then
+          if [ "$REBUILD_ONLY" = "true" ]; then
             python generate_digest.py --rebuild
           else
             python generate_digest.py
