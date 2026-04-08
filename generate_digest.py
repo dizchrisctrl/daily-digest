@@ -55,72 +55,86 @@ def fetch_articles(feeds, max_per_feed=2):
     return articles[:8]
 
 
+STORY_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "headline":          {"type": "string", "description": "Short punchy headline"},
+        "tldr":              {"type": "string", "description": "One sentence that tells the whole story"},
+        "why_it_matters":    {"type": "string", "description": "2-3 sentences on real-world significance"},
+        "concept_title":     {"type": "string", "description": "The core technical concept illustrated (e.g. 'Retrieval-Augmented Generation')"},
+        "concept_explained": {"type": "string", "description": "4 paragraphs separated by newlines. P1: simple real-world analogy. P2: how it technically works. P3: tie to this news story. P4: broader implications."},
+        "visual_ascii":      {"type": "string", "description": "ASCII diagram 15-25 lines using box-drawing chars. Genuinely informative, not decorative."},
+        "public_opinion":    {"type": "string", "description": "Concrete sentiments from HN, Reddit, security Twitter — what communities are saying"},
+        "opinion_assessment":{"type": "string", "description": "Critical analysis: what's valid, overblown, or missing from that public opinion"},
+        "quiz": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "q":       {"type": "string"},
+                    "a":       {"type": "string"},
+                    "explain": {"type": "string"},
+                },
+                "required": ["q", "a", "explain"],
+            },
+            "minItems": 3,
+            "maxItems": 3,
+        },
+        "deep_dive":  {"type": "string", "description": "Socratic question connecting this to bigger trends"},
+        "source_url": {"type": "string"},
+        "source":     {"type": "string"},
+    },
+    "required": ["headline","tldr","why_it_matters","concept_title","concept_explained",
+                 "visual_ascii","public_opinion","opinion_assessment","quiz","deep_dive",
+                 "source_url","source"],
+}
+
+DIGEST_TOOL = {
+    "name": "publish_digest",
+    "description": "Publish the formatted daily digest",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "date":          {"type": "string"},
+            "ai_stories":    {"type": "array", "items": STORY_SCHEMA, "minItems": 3, "maxItems": 3},
+            "cyber_stories": {"type": "array", "items": STORY_SCHEMA, "minItems": 3, "maxItems": 3},
+        },
+        "required": ["date", "ai_stories", "cyber_stories"],
+    },
+}
+
+
 def generate_digest_json(ai_articles, cyber_articles):
     client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
     today  = datetime.now(timezone.utc).strftime("%B %d, %Y")
 
     prompt = f"""Today is {today}. Create a premium daily digest for someone moderately technical — works in or near tech/security, understands concepts, appreciates clear explanations with real depth.
 
-AI/TECH NEWS (pick 3 most notable):
+AI/TECH NEWS (pick the 3 most notable/interesting):
 {json.dumps(ai_articles, indent=2)}
 
-CYBERSECURITY NEWS (pick 3 most notable):
+CYBERSECURITY NEWS (pick the 3 most notable/interesting):
 {json.dumps(cyber_articles, indent=2)}
 
-Return ONLY valid JSON — no markdown fences, no text outside the JSON. Structure:
+For each story:
+- concept_explained: 4 paragraphs. P1: simple real-world analogy. P2: how it technically works. P3: tie to this story. P4: broader implications.
+- visual_ascii: meaningful diagram using box-drawing chars (┌─┐│└┘├┤→←↑↓). 15-25 lines. Labels required.
+- quiz: 3 questions that test real conceptual understanding, not trivia.
+- public_opinion: reference specific community sentiments (HN, Reddit r/technology, r/netsec, security Twitter/X).
+- deep_dive: a Socratic question that forces critical thinking about assumptions or bigger trends.
 
-{{
-  "date": "{today}",
-  "ai_stories": [
-    {{
-      "headline": "Short punchy headline",
-      "tldr": "One sentence that tells the whole story",
-      "why_it_matters": "2-3 sentences. Real-world significance and who is affected.",
-      "concept_title": "The core technical concept this story illustrates (e.g. 'Retrieval-Augmented Generation')",
-      "concept_explained": "4 paragraphs separated by \\n\\n. P1: simple real-world analogy. P2: how it technically works. P3: tie directly back to this news story. P4: broader implications and where this is heading.",
-      "visual_ascii": "A meaningful ASCII diagram illustrating the concept. Use box-drawing chars (┌─┐│└┘├┤┬┴┼→←↑↓). 15-25 lines. Include labels, arrows, and flow. Make it genuinely informative not decorative.",
-      "public_opinion": "What are tech communities saying? Reference specific sentiments from HN, Reddit r/technology, r/netsec, security Twitter/X, etc. Be concrete and quote typical reactions.",
-      "opinion_assessment": "Critical analysis: what in that public opinion is valid? What is overblown or wrong? What important nuance is the public missing?",
-      "quiz": [
-        {{"q": "Question testing real conceptual understanding (not trivia)", "a": "Clear concise answer", "explain": "Why this matters + extra context (1-2 sentences)"}},
-        {{"q": "...", "a": "...", "explain": "..."}},
-        {{"q": "...", "a": "...", "explain": "..."}}
-      ],
-      "deep_dive": "A genuinely thought-provoking Socratic question connecting this story to bigger trends or forcing critical thinking about assumptions.",
-      "source_url": "URL from articles",
-      "source": "Publication name"
-    }}
-  ],
-  "cyber_stories": [
-    {{
-      "headline": "...",
-      "tldr": "...",
-      "why_it_matters": "...",
-      "concept_title": "...",
-      "concept_explained": "...",
-      "visual_ascii": "...",
-      "public_opinion": "...",
-      "opinion_assessment": "...",
-      "quiz": [{{"q": "...", "a": "...", "explain": "..."}}],
-      "deep_dive": "...",
-      "source_url": "...",
-      "source": "..."
-    }}
-  ]
-}}"""
+Call the publish_digest tool with your response."""
 
     response = client.messages.create(
         model="claude-sonnet-4-6",
         max_tokens=8000,
+        tools=[DIGEST_TOOL],
+        tool_choice={"type": "tool", "name": "publish_digest"},
         messages=[{"role": "user", "content": prompt}],
     )
 
-    raw   = response.content[0].text
-    start = raw.find('{')
-    end   = raw.rfind('}') + 1
-    if start == -1 or end == 0:
-        raise ValueError("No JSON in Claude response")
-    return json.loads(raw[start:end])
+    # tool_use guarantees valid structured JSON — no parsing needed
+    return response.content[0].input
 
 
 # ── HTML Template (uses __PLACEHOLDER__ to avoid f-string brace conflicts) ─────
