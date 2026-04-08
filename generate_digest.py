@@ -4,18 +4,24 @@
 import os
 import re
 import json
-import smtplib
+import base64
 import feedparser
 from datetime import datetime, timezone
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import anthropic
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
 
 # ── Config ─────────────────────────────────────────────────────────────────────
 RECIPIENT_EMAIL = "Diazz.christian@gmail.com"
-SENDER_EMAIL    = os.environ["GMAIL_ADDRESS"]
-GMAIL_APP_PWD   = os.environ["GMAIL_APP_PASSWORD"]
+SENDER_EMAIL    = os.environ["GMAIL_ADDRESS"]       # your gmail address
 PAGES_URL       = "https://dizchrisctrl.github.io/daily-digest"
+
+# OAuth2 credentials — send-only scope, inbox is never accessible
+GMAIL_CLIENT_ID     = os.environ["GMAIL_CLIENT_ID"]
+GMAIL_CLIENT_SECRET = os.environ["GMAIL_CLIENT_SECRET"]
+GMAIL_REFRESH_TOKEN = os.environ["GMAIL_REFRESH_TOKEN"]
 
 # ── RSS Feeds ──────────────────────────────────────────────────────────────────
 AI_FEEDS = [
@@ -572,10 +578,19 @@ def send_email(data):
     msg["To"]      = RECIPIENT_EMAIL
     msg.attach(MIMEText(html_body, "html"))
 
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-        smtp.login(SENDER_EMAIL, GMAIL_APP_PWD)
-        smtp.sendmail(SENDER_EMAIL, RECIPIENT_EMAIL, msg.as_string())
-    print("  Email sent")
+    # Gmail API with send-only scope — cannot read or modify inbox
+    creds = Credentials(
+        token=None,
+        refresh_token=GMAIL_REFRESH_TOKEN,
+        client_id=GMAIL_CLIENT_ID,
+        client_secret=GMAIL_CLIENT_SECRET,
+        token_uri="https://oauth2.googleapis.com/token",
+        scopes=["https://www.googleapis.com/auth/gmail.send"],
+    )
+    service = build("gmail", "v1", credentials=creds, cache_discovery=False)
+    raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
+    service.users().messages().send(userId="me", body={"raw": raw}).execute()
+    print("  Email sent via Gmail API (send-only scope)")
 
 
 def save_output(html, data):
