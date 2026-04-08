@@ -430,6 +430,14 @@ def esc(text):
             .replace('"', '&quot;'))
 
 
+def safe_url(url):
+    """Only allow http/https URLs in href attributes — blocks javascript: and data: schemes."""
+    u = str(url).strip()
+    if u.lower().startswith(("http://", "https://")):
+        return esc(u)
+    return "#"
+
+
 def build_story_html(story, color, num):
     quiz_html = ""
     for i, q in enumerate(story.get("quiz", []), 1):
@@ -510,7 +518,7 @@ def build_story_html(story, color, num):
       </div>
 
       <div class="story-footer">
-        <a class="src-link" href="{esc(story.get('source_url','#'))}" target="_blank" rel="noopener">
+        <a class="src-link" href="{safe_url(story.get('source_url','#'))}" target="_blank" rel="noopener noreferrer">
           Read original <span>→</span>
         </a>
         <span class="src-name">{esc(story.get('source',''))}</span>
