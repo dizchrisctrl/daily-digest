@@ -896,10 +896,10 @@ def generate_html(data):
 
 def send_email(data):
     today       = data["date"]
-    ai_items    = "".join(f"<li><strong>{esc(s['headline'])}</strong> &mdash; {esc(s['tldr'])}</li>" for s in data.get("ai_stories", []))
-    cyber_items = "".join(f"<li><strong>{esc(s['headline'])}</strong> &mdash; {esc(s['tldr'])}</li>" for s in data.get("cyber_stories", []))
+    ai_items    = "".join(f"<li><strong>{esc(s.get('headline',''))}</strong> &mdash; {esc(s.get('tldr',''))}</li>" for s in data.get("ai_stories", []))
+    cyber_items = "".join(f"<li><strong>{esc(s.get('headline',''))}</strong> &mdash; {esc(s.get('tldr',''))}</li>" for s in data.get("cyber_stories", []))
     notables_items = "".join(
-        f"<li><span style='color:#94a3b8;font-size:0.75rem'>[{esc(n.get('category',''))}]</span> <strong>{esc(n['headline'])}</strong></li>"
+        f"<li><span style='color:#94a3b8;font-size:0.75rem'>[{esc(n.get('category',''))}]</span> <strong>{esc(n.get('headline',''))}</strong></li>"
         for n in data.get("notables", [])
     )
 
