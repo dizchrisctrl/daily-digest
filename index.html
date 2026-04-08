@@ -147,19 +147,20 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .concept-text p { font-size: 0.93rem; line-height: 1.8; color: #b8c2d4; margin-bottom: 13px; }
 .concept-text p:last-child { margin-bottom: 0; }
 
-/* Terminal / ASCII */
-.terminal { border-radius: 10px; overflow: hidden; border: 1px solid #1e3055; box-shadow: 0 0 40px rgba(125,211,252,0.06); }
-.term-bar { background: #0d1020; padding: 9px 14px; display: flex; align-items: center; gap: 7px; border-bottom: 1px solid #1e3055; }
+/* ── SVG Diagram ── */
+.diagram-wrap { border-radius: 10px; overflow: hidden; border: 1px solid #1e3055; background: #060912; }
+.diagram-bar { background: #0d1020; padding: 9px 14px; display: flex; align-items: center; gap: 7px; border-bottom: 1px solid #1e3055; }
 .dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
 .dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
-.term-title { flex: 1; text-align: center; font-size: 0.67rem; color: #3a4a60; font-family: monospace; }
+.diagram-title { flex: 1; text-align: center; font-size: 0.67rem; color: #3a4a60; font-family: monospace; }
+.diagram-svg { display: block; }
+.diagram-svg svg { width: 100%; height: auto; display: block; }
+/* ASCII fallback for --rebuild with old digest.json */
 pre.ascii {
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.74rem; line-height: 1.5;
   color: #7dd3fc; padding: 16px 18px;
-  background: #060912;
-  overflow-x: auto; white-space: pre;
-  text-shadow: 0 0 12px rgba(125,211,252,0.4);
+  background: #060912; overflow-x: auto; white-space: pre;
 }
 
 /* Opinion block */
@@ -366,7 +367,7 @@ kbd {
   .story-summary { padding: 16px; gap: 10px; }
   .story-summary h2 { font-size: 0.97rem; }
   .block { padding: 16px; }
-  pre.ascii { font-size: 0.6rem; padding: 12px; }
+  pre.ascii { font-size: 0.6rem; padding: 10px; }
   .quiz-grid { grid-template-columns: 1fr; }
   .notable-grid { grid-template-columns: 1fr; }
   .tab-btn { font-size: 0.78rem; padding: 13px 8px; gap: 5px; }
@@ -415,12 +416,12 @@ kbd {
   <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
     <div class="s-left">
       <div class="s-meta">
-        <span class="src-badge" style="background:#818cf81a;color:#818cf8">Ars Technica</span>
+        <span class="src-badge" style="background:#818cf81a;color:#818cf8">Biz &amp; IT - Ars Technica</span>
         <span class="story-num">01</span>
       </div>
-      <h2>Russia's Military Hijacks Thousands of End-of-Life Consumer Routers Across 120 Countries</h2>
-      <div class="tldr"><span class="tldr-tag">TL;DR</span>Russian military intelligence (GRU) has compromised thousands of end-of-life home and small office routers in 120 countries, using them as a botnet to steal credentials and proxy malicious traffic.</div>
-      <div class="tag-row"><button class="tag" data-name="GRU (Unit 26165 / APT28)" data-desc="Russia's Main Intelligence Directorate military cyber unit, also known as Fancy Bear, responsible for numerous high-profile cyber operations against Western targets." data-relevance="Identified as the threat actor behind this campaign, leveraging compromised consumer routers across 120 countries as proxy and credential-harvesting infrastructure." onclick="openTagModal(event,this)">GRU (Unit 26165 / APT28)</button><button class="tag" data-name="OpenWrt" data-desc="An open-source Linux-based firmware for embedded devices, commonly used to replace vendor firmware on consumer routers to extend functionality and security support." data-relevance="Cited in community discussions as a potential mitigation — reflashing EOL routers with actively maintained OpenWrt firmware can close known vulnerabilities, though this isn't scalable to average consumers." onclick="openTagModal(event,this)">OpenWrt</button></div>
+      <h2>Iran-Linked Hackers Hit US Critical Infrastructure as Conflict Escalates</h2>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Iranian state-affiliated hacking groups have disrupted operations at multiple US critical infrastructure sites, escalating cyber operations alongside the physical conflict involving the US and Israel.</div>
+      <div class="tag-row"><button class="tag" data-name="SCADA/HMI" data-desc="Supervisory Control and Data Acquisition systems with Human-Machine Interfaces used to monitor and control industrial processes like water treatment and power distribution." data-relevance="The Iranian-linked attackers targeted internet-exposed SCADA/HMI systems at US critical infrastructure sites to disrupt physical operations." onclick="openTagModal(event,this)">SCADA/HMI</button><button class="tag" data-name="Modbus" data-desc="A serial communication protocol from 1979 widely used in industrial control systems, operating without built-in authentication or encryption." data-relevance="Many of the targeted PLCs communicate via Modbus, which allows unauthenticated command injection once an attacker reaches the OT network." onclick="openTagModal(event,this)">Modbus</button></div>
     </div>
     <div class="chevron">&#9660;</div>
   </div>
@@ -435,62 +436,38 @@ kbd {
         </div>
         <div class="affected-list">
       <div class="affected-item">
-        <span class="affected-name">End-of-life consumer routers (multiple vendors)</span>
-        <span class="affected-ver">All firmware versions on models no longer receiving security updates</span>
+        <span class="affected-name">Unitronics Vision/Samba PLCs</span>
+        <span class="affected-ver">All versions with default credentials and internet-exposed HMIs</span>
       </div>
         </div>
       </div>
       <div class="block">
         <div class="blabel">&#x1F4CC; Why It Matters</div>
-        <p>End-of-life routers no longer receive security patches, making them permanent soft targets. When a nation-state weaponizes these devices at scale, every home network becomes a potential launchpad for espionage, credential theft, and attacks on critical infrastructure. This underscores a systemic problem: manufacturers abandon devices while consumers keep using them for years.</p>
+        <p>Cyberattacks on critical infrastructure — water treatment, energy, and industrial control systems — can have immediate physical consequences for civilian populations. This campaign demonstrates that cyber operations are now a standard escalation tool in geopolitical conflicts, not a theoretical risk. Organizations running operational technology (OT) networks face direct, actionable threats.</p>
       </div>
 
       <div class="block concept-block">
         <div class="blabel">&#x1F9E0; Concept</div>
-        <div class="concept-title" style="color:#818cf8">End-of-Life Device Exploitation &amp; Botnet Infrastructure</div>
-        <div class="concept-text"><p>Imagine a neighborhood full of houses with broken locks that the locksmith refuses to fix because the locks are &quot;too old.&quot; A burglar doesn't need to pick sophisticated locks — they just walk through every unlocked door. That's what happens when routers hit end-of-life: the manufacturer stops issuing patches, but the devices stay online and exposed.</p><p>Technically, end-of-life (EOL) routers stop receiving firmware updates, meaning any newly discovered vulnerability remains permanently exploitable. Attackers scan the internet for known vulnerable models, exploit default credentials or unpatched flaws (often in the router's web management interface or UPnP service), and install persistent malware. The compromised routers then form a botnet — a distributed network of hijacked devices that can proxy traffic, harvest credentials passing through them, launch DDoS attacks, or serve as anonymization layers for further intrusions.</p><p>In this case, Russia's GRU has built exactly this kind of infrastructure across 120 countries, targeting consumer-grade routers that ISPs and users have neglected to replace. The compromised devices are being used to steal credentials and obscure the origin of espionage operations, making attribution harder and giving Russian intelligence a globally distributed attack platform that blends in with normal residential internet traffic.</p><p>This is a wake-up call about the security debt created by hardware abandonment. Unlike software that can be auto-updated, routers sit in closets for a decade. Without mandatory EOL disclosure, recall programs, or ISP-enforced replacement cycles, millions of devices will continue to serve as free infrastructure for nation-state adversaries. The problem will only grow as IoT devices proliferate.</p></div>
+        <div class="concept-title" style="color:#818cf8">ICS/OT Targeting in Nation-State Cyber Campaigns</div>
+        <div class="concept-text"><p>Imagine a factory where every valve, pump, and thermostat is controlled by a specialized remote control system. Now imagine an outsider figured out how to send fake commands to those remote controls — they could open a valve that should stay closed, or shut down a pump keeping water flowing. That's essentially what targeting Industrial Control Systems (ICS) looks like.</p><p>Technically, ICS and Operational Technology (OT) environments use protocols like Modbus, DNP3, and OPC UA to communicate between programmable logic controllers (PLCs), SCADA servers, and human-machine interfaces (HMIs). Many of these systems were designed decades ago without authentication or encryption, assuming they'd never be internet-accessible. Attackers who gain initial access — often through IT-side phishing or exposed remote-access portals — can pivot into the OT network and send commands directly to controllers.</p><p>In this story, Iran-linked groups are exploiting exactly these weaknesses at US industrial sites. Groups like CyberAv3ngers have previously targeted Unitronics PLCs at water utilities; the current campaign appears broader, hitting multiple sectors as geopolitical tensions provide motivation. The attackers don't necessarily need zero-days — misconfigured internet-facing HMIs and default credentials on PLCs are often enough.</p><p>This trend underscores a fundamental problem: the convergence of IT and OT networks has expanded the attack surface dramatically, but security investment in OT has lagged by a decade or more. Every geopolitical conflict now comes with a cyber dimension targeting civilian infrastructure, and defenders must assume that state actors are already probing their industrial networks.</p></div>
       </div>
 
       <div class="block">
         <div class="blabel">&#x1F4CA; Visual Diagram</div>
-        <div class="terminal">
-          <div class="term-bar">
+        <div class="diagram-wrap">
+          <div class="diagram-bar">
             <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-            <span class="term-title">End-of-Life Device Exploitation &amp; Botnet Infrastructure</span>
+            <span class="diagram-title">ICS/OT Targeting in Nation-State Cyber Campaigns</span>
           </div>
-          <pre class="ascii">┌─────────────────────────────────────────────────┐
-│           GRU Command &amp; Control (C2)            │
-└────────────────────┬────────────────────────────┘
-                     │ Encrypted C2 traffic
-         ┌───────────┼───────────┐
-         ▼           ▼           ▼
-   ┌───────────┐┌───────────┐┌───────────┐
-   │ EOL Router││ EOL Router││ EOL Router│  ← 120 countries
-   │ (Home US) ││(Office DE)││ (Home BR) │
-   │ No patches││ No patches││ No patches│
-   └─────┬─────┘└─────┬─────┘└─────┬─────┘
-         │            │            │
-         ▼            ▼            ▼
-   ┌───────────┐┌───────────┐┌───────────┐
-   │ Credential││  Proxy     ││  DDoS     │
-   │ Harvesting││  Layer     ││  Node     │
-   └───────────┘└─────┬─────┘└───────────┘
-                      │
-                      ▼
-            ┌─────────────────┐
-            │  Target Network  │
-            │  (Govt/Military) │
-            │  Traffic appears │
-            │  residential     │
-            └─────────────────┘</pre>
+          <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#818cf8"/></marker></defs><rect width="700" height="340" fill="#060912"/><text x="350" y="28" fill="#818cf8" font-size="14" font-family="monospace" text-anchor="middle" font-weight="bold">ICS/OT Attack Chain — Iran-Linked Campaign</text><rect x="30" y="60" width="110" height="54" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/><text x="85" y="83" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Phishing /</text><text x="85" y="99" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Exposed RDP</text><line x1="140" y1="87" x2="178" y2="87" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah1)"/><rect x="180" y="60" width="110" height="54" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="235" y="83" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">IT Network</text><text x="235" y="99" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">Credential Theft</text><line x1="290" y1="87" x2="328" y2="87" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah1)"/><rect x="330" y="60" width="120" height="54" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/><text x="390" y="83" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">IT→OT Pivot</text><text x="390" y="99" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">Flat network / VPN</text><line x1="450" y1="87" x2="488" y2="87" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah1)"/><rect x="490" y="60" width="120" height="54" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="550" y="83" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">SCADA / HMI</text><text x="550" y="99" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">Command Inject</text><line x1="550" y1="114" x2="550" y2="158" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah1)"/><rect x="490" y="160" width="120" height="54" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/><text x="550" y="183" fill="#818cf8" font-size="12" font-family="monospace" text-anchor="middle" font-weight="bold">PLCs</text><text x="550" y="199" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">Modbus / DNP3</text><line x1="490" y1="187" x2="420" y2="187" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah1)"/><rect x="270" y="160" width="148" height="54" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="344" y="183" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Physical Process</text><text x="344" y="199" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">Pumps, Valves, Grid</text><rect x="80" y="250" width="540" height="60" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1" stroke-dasharray="4,4"/><text x="350" y="275" fill="#818cf8" font-size="12" font-family="monospace" text-anchor="middle">Key Weaknesses: Default PLC creds • No IT/OT segmentation</text><text x="350" y="295" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">Internet-facing HMIs • Lack of OT-specific monitoring</text></svg></div>
         </div>
       </div>
 
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
-        <div class="opinion-q">On r/netsec, commenters are calling this &quot;the completely predictable outcome of zero accountability for EOL hardware&quot; with several pointing out that ISPs knowingly provision EOL routers to customers. HN discussion is focused on the policy angle — multiple highly-upvoted comments argue for mandatory firmware update requirements similar to auto safety recalls. On security Twitter/X, researchers note that the GRU's use of residential IP space makes threat hunting significantly harder, with one DFIR analyst writing &quot;your blocklists are useless when the attack comes from grandma's Netgear.&quot; Reddit r/homelab users are recommending OpenWrt or pfSense as alternatives, though others note most consumers will never flash custom firmware.</div>
+        <div class="opinion-q">On Reddit r/netsec, the dominant reaction is frustration — commenters note that CISA has been warning about Unitronics and similar ICS exposures for years, yet water utilities and small industrial operators lack budgets and expertise to fix them. Security Twitter/X has seen researchers like @GossiTheDog and @RobertMLee emphasizing that the attacks exploit 'embarrassingly basic' misconfigurations rather than sophisticated zero-days. On Hacker News, debate centers on whether the US government bears responsibility for not mandating minimum OT security standards at critical infrastructure sites, with some arguing that voluntary frameworks like NIST CSF have clearly failed for under-resourced operators.</div>
         <div class="blabel">&#x1F50D; Assessment</div>
-        <p>The community frustration is well-placed. The policy gap is real: there's no legal obligation for manufacturers to support devices for any minimum period, and ISPs have no incentive to replace working-but-vulnerable hardware. However, the OpenWrt recommendation, while technically sound, is unrealistic at scale — this is fundamentally a market failure that individual action won't solve. The most actionable insight from the discussion is the attribution difficulty: security teams should be adjusting their threat models to account for attacks originating from residential IP ranges, which many firewalls and SIEM rules currently treat as low-risk.</p>
+        <p>The community frustration is well-founded — these attacks genuinely exploit basic hygiene failures (default credentials, internet-exposed HMIs), not advanced capabilities. However, the framing of 'just patch and segment' understates the reality: many small water utilities and industrial facilities run on razor-thin budgets with zero dedicated security staff. Robert M. Lee's point about basic misconfigurations is technically accurate but risks normalizing the problem. The call for mandatory federal standards has merit but faces real implementation challenges — who pays for compliance at a 50-person municipal water authority? The missing piece in most commentary is the supply chain: PLC manufacturers ship insecure-by-default products, and shifting liability upstream would have far greater impact than blaming end operators.</p>
       </div>
 
       <div class="block">
@@ -498,31 +475,31 @@ kbd {
         <div class="quiz-grid">
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q1 of 3</div>
-        <div class="q-text">Why are end-of-life routers particularly attractive to nation-state actors compared to actively supported devices?</div>
+        <div class="q-text">Why are ICS/OT environments often more vulnerable than traditional IT networks, despite controlling more critical processes?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">EOL routers have permanently unpatched vulnerabilities, are rarely monitored, and their residential IP addresses provide natural cover for blending in with legitimate traffic — making both exploitation and attribution harder.</div>
-          <div class="q-exp">Unlike supported devices where a patch can close an attack vector, EOL devices guarantee persistent access. Combined with the anonymization benefit of residential IPs, they offer a stable, low-detection-risk infrastructure.</div>
+          <div class="q-ans">They were designed for reliability and safety in isolated environments, not for security against network-based attacks. Many use unauthenticated protocols and can't be easily patched without risking downtime.</div>
+          <div class="q-exp">Protocols like Modbus were created in the 1970s-80s for serial communication with no concept of authentication. Patching requires operational windows that critical infrastructure can rarely afford, creating a persistent security gap.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q2 of 3</div>
-        <div class="q-text">How does using compromised consumer routers as proxy layers complicate network defense and threat intelligence?</div>
+        <div class="q-text">What does 'IT/OT convergence' mean, and why does it increase risk in scenarios like this?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Traffic from compromised consumer routers originates from residential IP addresses that are typically whitelisted or deprioritized by security tools, bypassing geo-blocking and reputation-based defenses designed to catch traffic from known malicious infrastructure.</div>
-          <div class="q-exp">Most threat detection relies partly on IP reputation. Residential IPs are generally trusted, so malicious traffic proxied through home routers evades the first layer of automated defense that would flag traffic from known bad IPs or data center ranges.</div>
+          <div class="q-ans">It refers to connecting traditionally isolated industrial control networks to corporate IT networks and the internet. This gives attackers a path from phishing emails to physical process controllers.</div>
+          <div class="q-exp">Previously, an attacker would need physical access to manipulate a PLC. With convergence, compromising a corporate email account can lead to lateral movement into the OT network if segmentation is weak or absent.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q3 of 3</div>
-        <div class="q-text">What systemic factor makes this problem likely to get worse rather than better over time?</div>
+        <div class="q-text">Why might nation-state actors prefer targeting ICS at small utilities over large, well-defended targets?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">The growing number of IoT and connected devices with no standardized update lifecycle, combined with no regulatory mandate for minimum support periods, means the pool of permanently vulnerable devices online is expanding faster than old ones are retired.</div>
-          <div class="q-exp">Hardware manufacturers profit from sales, not long-term support. Without regulation requiring minimum firmware support windows or mandatory EOL notification to consumers, the attack surface grows with every new device category that connects to the internet.</div>
+          <div class="q-ans">Small utilities have minimal security budgets, no dedicated security staff, and often run legacy systems with default credentials — offering easier access with still-significant disruption potential.</div>
+          <div class="q-exp">The aggregate impact of disrupting many small targets can rival hitting one large target, and the likelihood of success is much higher. This makes distributed critical infrastructure an asymmetric warfare advantage.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div></div>
@@ -530,149 +507,14 @@ kbd {
 
       <div class="block deepdive-block">
         <div class="blabel">&#x1F4AD; Deep Dive</div>
-        <p class="deepdive-text">If we accept that millions of EOL devices will always exist on the internet, should the security industry shift from trying to prevent their compromise to assuming they're compromised and building detection/containment around that assumption — and what would that architecture look like?</p>
-      </div>
-
-      <div class="story-footer">
-        <a class="src-link" href="https://arstechnica.com/security/2026/04/russias-military-hacks-thousands-of-consumer-routers-to-steal-credentials/" target="_blank" rel="noopener noreferrer">
-          Read original <span>&#x2192;</span>
-        </a>
-        <span class="src-name">Ars Technica</span>
-      </div>
-
-    </div>
-  </div>
-</article>
-
-<article class="story-card">
-  <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
-    <div class="s-left">
-      <div class="s-meta">
-        <span class="src-badge" style="background:#818cf81a;color:#818cf8">Ars Technica</span>
-        <span class="story-num">02</span>
-      </div>
-      <h2>Iran-Linked Hackers Disrupt Operations at US Critical Infrastructure Sites</h2>
-      <div class="tldr"><span class="tldr-tag">TL;DR</span>Iranian state-affiliated hackers are actively disrupting operations at US critical infrastructure facilities, escalating cyber operations in tandem with the physical conflict involving the US and Israel.</div>
-      <div class="tag-row"><button class="tag" data-name="SCADA/ICS" data-desc="Supervisory Control and Data Acquisition systems and Industrial Control Systems — the hardware and software that monitor and control physical industrial processes like water treatment, power distribution, and manufacturing." data-relevance="The primary target environment in these attacks; Iranian hackers are moving beyond IT network compromise to actively disrupting the OT/ICS systems that control physical infrastructure operations." onclick="openTagModal(event,this)">SCADA/ICS</button><button class="tag" data-name="CyberAv3ngers" data-desc="An Iranian state-affiliated hacking group linked to the IRGC's Cyber-Electronic Command, known for targeting water and energy infrastructure using OT-specific attack techniques." data-relevance="Previously identified attacking US water utilities via exposed Unitronics PLCs; this campaign represents their escalation from opportunistic access to operational disruption of critical infrastructure." onclick="openTagModal(event,this)">CyberAv3ngers</button></div>
-    </div>
-    <div class="chevron">&#9660;</div>
-  </div>
-
-  <div class="story-body">
-    <div class="body-inner">
-      
-      <div class="block affected-block">
-        <div class="affected-header">
-          <div class="blabel">&#x26A0;&#xFE0F; Affected Systems</div>
-          <span class="affected-warning">PATCH CHECK</span>
-        </div>
-        <div class="affected-list">
-      <div class="affected-item">
-        <span class="affected-name">US critical infrastructure ICS/OT systems</span>
-        <span class="affected-ver">Multiple vendors and systems at water, energy, and industrial sites — specific models not yet disclosed</span>
-      </div>
-        </div>
-      </div>
-      <div class="block">
-        <div class="blabel">&#x1F4CC; Why It Matters</div>
-        <p>This marks a significant escalation from Iran's previous pattern of reconnaissance and pre-positioning in critical infrastructure to active disruption of operations. When cyber attacks cross from espionage to operational impact on water, energy, or industrial systems, the consequences can directly affect public safety. The timing — synchronized with kinetic military operations — demonstrates how cyber warfare is now a standard companion to conventional conflict.</p>
-      </div>
-
-      <div class="block concept-block">
-        <div class="blabel">&#x1F9E0; Concept</div>
-        <div class="concept-title" style="color:#818cf8">ICS/OT Attacks and the IT-OT Convergence Risk</div>
-        <div class="concept-text"><p>Think of a factory where the office building (IT) and the factory floor (OT) used to be completely separate — different doors, different keys, no hallway connecting them. Over the past decade, companies built a hallway between them for efficiency. Now, someone who breaks into the office can walk straight to the machines that control physical processes. That's the IT-OT convergence problem.</p><p>Industrial Control Systems (ICS) and Operational Technology (OT) — the SCADA systems, PLCs, and HMIs that control physical processes like water treatment, power generation, and manufacturing — were historically air-gapped from corporate IT networks. Modernization connected them for remote monitoring, predictive maintenance, and efficiency gains. But OT devices often run decades-old software, lack authentication, and weren't designed to resist network-based attacks. Once an attacker pivots from the IT network to the OT environment, they can manipulate physical processes: changing chemical dosages in water plants, opening valves, or shutting down generators.</p><p>Iran-linked groups like CyberAv3ngers have previously targeted US water utilities by exploiting internet-exposed Unitronics PLCs. This latest campaign represents an escalation from probing and pre-positioning to actively disrupting operations at multiple sites. The attacks are timed to coincide with the broader US-Israel-Iran conflict, using cyber operations as an asymmetric force multiplier — cheaper and more deniable than conventional military strikes on US soil.</p><p>The broader implication is that critical infrastructure cybersecurity is no longer a theoretical concern. Geopolitical conflicts now routinely include a cyber dimension that targets civilian infrastructure far from the physical battlefield. The US faces a structural challenge: thousands of water utilities, power cooperatives, and industrial facilities with limited security budgets and aging OT systems that can't simply be patched or replaced overnight.</p></div>
-      </div>
-
-      <div class="block">
-        <div class="blabel">&#x1F4CA; Visual Diagram</div>
-        <div class="terminal">
-          <div class="term-bar">
-            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-            <span class="term-title">ICS/OT Attacks and the IT-OT Convergence Risk</span>
-          </div>
-          <pre class="ascii">┌──────────────────────────────────────────────┐
-│          IRAN-LINKED THREAT ACTOR            │
-└──────────────────┬───────────────────────────┘
-                   │ Initial access
-                   ▼
-┌──────────────────────────────────────────────┐
-│           CORPORATE IT NETWORK               │
-│  ┌──────────┐  ┌──────────┐  ┌────────────┐ │
-│  │ Email/VPN│  │ Active   │  │ File       │ │
-│  │ Gateway  │  │ Directory│  │ Servers    │ │
-│  └──────────┘  └──────────┘  └────────────┘ │
-└──────────────────┬───────────────────────────┘
-     ╔═════════════╧═══════════════╗
-     ║   IT ←→ OT CONVERGENCE     ║  ← Weak segmentation
-     ║   (the dangerous hallway)   ║
-     ╚═════════════╤═══════════════╝
-┌──────────────────▼───────────────────────────┐
-│          OT / ICS ENVIRONMENT                │
-│  ┌──────────┐  ┌──────────┐  ┌────────────┐ │
-│  │  SCADA   │  │   PLCs   │  │   HMIs     │ │
-│  │  Server  │  │(Unitronics│  │(Operator   │ │
-│  │          │  │ etc.)    │  │ Panels)    │ │
-│  └──────────┘  └──────────┘  └────────────┘ │
-│         ▼           ▼            ▼           │
-│  [Water Pumps] [Valves]  [Power Switches]   │
-│          PHYSICAL PROCESS IMPACT             │
-└──────────────────────────────────────────────┘</pre>
-        </div>
-      </div>
-
-      <div class="block opinion-block">
-        <div class="blabel">&#x1F465; Public Opinion</div>
-        <div class="opinion-q">Security Twitter/X is highly engaged, with several OT security researchers emphasizing this is &quot;not a drill anymore&quot; and criticizing CISA advisories as insufficient without funding for small utilities. On r/netsec, the top comments focus on the predictability of this escalation, noting that Iran-linked groups were caught inside US water systems in 2023-2024 and nothing structural changed. HN commenters are debating whether air-gapping is still feasible in modern infrastructure or whether the efficiency gains of connectivity are irreversible. On r/technology, sentiment is more alarmist, with many users shocked that critical infrastructure is vulnerable at all — reflecting a gap between public awareness and the security community's long-standing warnings.</div>
-        <div class="blabel">&#x1F50D; Assessment</div>
-        <p>The security community's frustration is justified — warnings about ICS/OT vulnerability have been issued for over a decade, and the underfunding of small utility cybersecurity is well-documented. The r/technology shock, while understandable, misses that this has been a known problem since Stuxnet (2010). The debate about air-gapping is nuanced: true air gaps are increasingly impractical, but network segmentation, monitoring at the IT-OT boundary, and restricting OT internet exposure are achievable steps that many facilities still haven't implemented. The missing piece in most discussions is the workforce gap — even with funding, there aren't enough OT security professionals to secure thousands of small utilities.</p>
-      </div>
-
-      <div class="block">
-        <div class="blabel">&#x2753; Quiz Yourself</div>
-        <div class="quiz-grid">
-      <div class="qcard" onclick="toggleCard(this)">
-        <div class="q-num">Q1 of 3</div>
-        <div class="q-text">Why is the IT-to-OT lateral movement path particularly dangerous compared to staying within the IT network?</div>
-        <div class="q-answer">
-          <div class="q-divider"></div>
-          <div class="q-ans">Because OT systems directly control physical processes — manipulating them can cause real-world harm like contaminating water supplies, causing power outages, or damaging industrial equipment, whereas IT compromises typically affect data and business operations.</div>
-          <div class="q-exp">The IT-OT boundary is where cyber attacks cross from the digital world into the physical world. OT devices control actuators, valves, and switches that affect human safety, which is why this lateral movement path represents a fundamentally different risk category.</div>
-        </div>
-        <div class="q-hint">&#9660; tap to reveal</div>
-      </div>
-      <div class="qcard" onclick="toggleCard(this)">
-        <div class="q-num">Q2 of 3</div>
-        <div class="q-text">Why do nation-states use cyber attacks on critical infrastructure as part of conventional military conflicts?</div>
-        <div class="q-answer">
-          <div class="q-divider"></div>
-          <div class="q-ans">Cyber attacks on infrastructure are an asymmetric force multiplier — they're cheap, deniable, can be launched remotely against adversaries far from the battlefield, and can degrade civilian morale and government credibility without the escalation risks of kinetic strikes on foreign soil.</div>
-          <div class="q-exp">For a country like Iran that cannot project conventional military force to the US mainland, cyber operations against infrastructure achieve strategic disruption at minimal cost and with plausible deniability, making them an attractive component of hybrid warfare.</div>
-        </div>
-        <div class="q-hint">&#9660; tap to reveal</div>
-      </div>
-      <div class="qcard" onclick="toggleCard(this)">
-        <div class="q-num">Q3 of 3</div>
-        <div class="q-text">What makes small water utilities and rural power cooperatives disproportionately vulnerable compared to large infrastructure operators?</div>
-        <div class="q-answer">
-          <div class="q-divider"></div>
-          <div class="q-ans">They typically have minimal or no dedicated cybersecurity staff, limited budgets, legacy OT equipment that can't be easily updated, and often rely on remote access solutions that create internet-exposed attack surfaces — while facing the same nation-state threats as large operators.</div>
-          <div class="q-exp">The threat is uniform but the defense capability is wildly unequal. A small water district serving 10,000 people faces the same APT groups as a major metro utility, but may have zero security staff and IT managed by a part-time contractor.</div>
-        </div>
-        <div class="q-hint">&#9660; tap to reveal</div>
-      </div></div>
-      </div>
-
-      <div class="block deepdive-block">
-        <div class="blabel">&#x1F4AD; Deep Dive</div>
-        <p class="deepdive-text">If critical infrastructure cyber defense requires specialized OT security skills that the market cannot supply at scale, should governments mandate minimum security standards and provide the funding to meet them — essentially treating cybersecurity as a public utility like the infrastructure it protects?</p>
+        <p class="deepdive-text">If voluntary security frameworks have failed to protect small critical infrastructure operators, should PLC and SCADA manufacturers be held legally liable for shipping products with insecure defaults — and how would that reshape the ICS vendor market?</p>
       </div>
 
       <div class="story-footer">
         <a class="src-link" href="https://arstechnica.com/security/2026/04/iran-linked-hackers-disrupt-operations-at-us-critical-infrastructure-sites/" target="_blank" rel="noopener noreferrer">
           Read original <span>&#x2192;</span>
         </a>
-        <span class="src-name">Ars Technica</span>
+        <span class="src-name">Biz &amp; IT - Ars Technica</span>
       </div>
 
     </div>
@@ -683,12 +525,121 @@ kbd {
   <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
     <div class="s-left">
       <div class="s-meta">
-        <span class="src-badge" style="background:#818cf81a;color:#818cf8">VentureBeat</span>
+        <span class="src-badge" style="background:#818cf81a;color:#818cf8">Biz &amp; IT - Ars Technica</span>
+        <span class="story-num">02</span>
+      </div>
+      <h2>Russia's Military Hacks Thousands of End-of-Life Consumer Routers Across 120 Countries</h2>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Russia's GRU military intelligence has compromised thousands of end-of-life home and small-office routers in 120 countries, turning them into a proxy botnet for credential theft and espionage operations.</div>
+      <div class="tag-row"><button class="tag" data-name="APT28 (Fancy Bear)" data-desc="A cyber espionage group attributed to Russia's GRU military intelligence unit 26165, known for credential theft, espionage, and destructive operations against Western targets." data-relevance="Security researchers have linked the router compromise infrastructure to previously tracked APT28/GRU operations, confirming this as a military intelligence campaign." onclick="openTagModal(event,this)">APT28 (Fancy Bear)</button><button class="tag" data-name="SOCKS Proxy" data-desc="A network protocol that routes arbitrary TCP traffic through an intermediary server, commonly used to anonymize connections or bypass network restrictions." data-relevance="The compromised EOL routers are configured as SOCKS proxy nodes, forming a distributed anonymization network that routes GRU espionage traffic through residential IP addresses." onclick="openTagModal(event,this)">SOCKS Proxy</button></div>
+    </div>
+    <div class="chevron">&#9660;</div>
+  </div>
+
+  <div class="story-body">
+    <div class="body-inner">
+      
+      <div class="block affected-block">
+        <div class="affected-header">
+          <div class="blabel">&#x26A0;&#xFE0F; Affected Systems</div>
+          <span class="affected-warning">PATCH CHECK</span>
+        </div>
+        <div class="affected-list">
+      <div class="affected-item">
+        <span class="affected-name">End-of-life consumer routers (multiple manufacturers)</span>
+        <span class="affected-ver">All firmware versions — no patches available post-EOL</span>
+      </div>
+        </div>
+      </div>
+      <div class="block">
+        <div class="blabel">&#x1F4CC; Why It Matters</div>
+        <p>End-of-life routers that no longer receive security patches exist in millions of homes and small offices worldwide. By compromising them at scale, Russian military intelligence gains a distributed proxy network that makes attribution nearly impossible while enabling credential harvesting and surveillance. This directly affects ordinary consumers and small businesses who don't realize their aging router is now a node in a state-sponsored espionage network.</p>
+      </div>
+
+      <div class="block concept-block">
+        <div class="blabel">&#x1F9E0; Concept</div>
+        <div class="concept-title" style="color:#818cf8">End-of-Life Device Exploitation and Proxy Botnets</div>
+        <div class="concept-text"><p>Think of an end-of-life router like an abandoned building on a busy street. The landlord stopped maintaining it, the locks are broken, and anyone can walk in and use it as a hideout. Now imagine a sophisticated criminal organization sets up shop in thousands of these abandoned buildings across the world, using each one to relay messages so no single building can be traced back to the operation's headquarters.</p><p>Technically, when a router manufacturer declares a product end-of-life (EOL), it stops releasing firmware updates — including security patches. Known vulnerabilities in these devices accumulate and are never fixed. Attackers exploit these unpatched flaws (often remotely via UPnP misconfigurations, default credentials, or known CVEs in outdated firmware) to install persistent implants. The compromised routers are then chained together as SOCKS proxies or VPN relay nodes, routing the attacker's traffic through innocent residential IP addresses. This makes the malicious traffic appear to originate from legitimate home networks, defeating IP-based blocklists and geographic attribution.</p><p>In this campaign, Russia's GRU has weaponized this approach at massive scale — thousands of routers across 120 countries — to steal credentials and conduct espionage. The routers serve as an anonymization layer: when the stolen credentials are exfiltrated or when operators connect to target networks, the traffic appears to come from ordinary ISP customers, not from Russian military infrastructure. Victims likely have no idea their router is participating.</p><p>This highlights a systemic problem in consumer electronics: there is no enforceable requirement for manufacturers to support devices for a minimum period, and no mechanism to force EOL devices offline. As billions of IoT and networking devices age into unsupported status, they become a permanent reservoir of exploitable infrastructure for any sufficiently motivated attacker. The security cost is externalized onto the entire internet.</p></div>
+      </div>
+
+      <div class="block">
+        <div class="blabel">&#x1F4CA; Visual Diagram</div>
+        <div class="diagram-wrap">
+          <div class="diagram-bar">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            <span class="diagram-title">End-of-Life Device Exploitation and Proxy Botnets</span>
+          </div>
+          <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#818cf8"/></marker></defs><rect width="700" height="340" fill="#060912"/><text x="350" y="26" fill="#818cf8" font-size="14" font-family="monospace" text-anchor="middle" font-weight="bold">GRU Proxy Botnet via EOL Routers</text><rect x="20" y="55" width="120" height="50" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/><text x="80" y="76" fill="#818cf8" font-size="12" font-family="monospace" text-anchor="middle" font-weight="bold">GRU C2</text><text x="80" y="92" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Command Server</text><line x1="140" y1="80" x2="195" y2="80" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah2)"/><text x="168" y="72" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">exploit</text><rect x="198" y="45" width="105" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="250" y="68" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">EOL Router A</text><rect x="198" y="88" width="105" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="250" y="111" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">EOL Router B</text><rect x="198" y="131" width="105" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="250" y="154" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">EOL Router N</text><text x="250" y="185" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">120 countries</text><line x1="303" y1="63" x2="380" y2="100" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah2)"/><line x1="303" y1="106" x2="380" y2="106" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah2)"/><line x1="303" y1="149" x2="380" y2="112" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah2)"/><text x="345" y="88" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">SOCKS</text><text x="345" y="99" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">proxy</text><rect x="383" y="80" width="130" height="50" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/><text x="448" y="101" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Anonymized</text><text x="448" y="117" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Traffic</text><line x1="513" y1="105" x2="558" y2="105" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah2)"/><rect x="560" y="80" width="120" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="620" y="101" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Target Orgs</text><text x="620" y="117" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Cred harvesting</text><rect x="60" y="220" width="260" height="90" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/><text x="190" y="244" fill="#818cf8" font-size="12" font-family="monospace" text-anchor="middle" font-weight="bold">Why EOL Routers?</text><text x="190" y="264" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">• No firmware patches since EOL</text><text x="190" y="280" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">• Known CVEs never fixed</text><text x="190" y="296" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">• Residential IPs evade blocklists</text><rect x="370" y="220" width="270" height="90" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/><text x="505" y="244" fill="#818cf8" font-size="12" font-family="monospace" text-anchor="middle" font-weight="bold">Impact</text><text x="505" y="264" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">• Near-impossible attribution</text><text x="505" y="280" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">• Global proxy infrastructure</text><text x="505" y="296" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">• Owners completely unaware</text></svg></div>
+        </div>
+      </div>
+
+      <div class="block opinion-block">
+        <div class="blabel">&#x1F465; Public Opinion</div>
+        <div class="opinion-q">On Hacker News, the top-voted comments express resigned exasperation, with users noting they've been warning about EOL router risks for years and that ISPs bear significant blame for not replacing or isolating deprecated CPE equipment. Reddit r/netsec threads highlight the 120-country scope as unprecedented for a confirmed military operation, with some researchers calling it 'the largest known state botnet built on consumer hardware.' Security Twitter/X discussion from @craaborern and @GreyNoiseIO notes overlap with previously tracked GRU infrastructure (Fancy Bear / APT28), and several researchers point out that many of the compromised routers are models still sold second-hand on Amazon and eBay despite being EOL.</div>
+        <div class="blabel">&#x1F50D; Assessment</div>
+        <p>The community's finger-pointing at ISPs has genuine merit — ISPs provision CPE devices and could enforce lifecycle management or network-level protections. However, blaming ISPs alone ignores the manufacturer responsibility gap: vendors like Netgear, TP-Link, and others EOL devices after just 3-5 years while the hardware remains functional for a decade+. The 'largest state botnet' framing from r/netsec may be slightly overblown — Mirai variants have hit larger numbers — but the distinction is that this is confirmed military intelligence running persistent implants for espionage, not DDoS. The second-hand sales angle is an excellent but under-discussed vector: there's no mechanism to warn buyers that a device is permanently vulnerable.</p>
+      </div>
+
+      <div class="block">
+        <div class="blabel">&#x2753; Quiz Yourself</div>
+        <div class="quiz-grid">
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q1 of 3</div>
+        <div class="q-text">Why do state-sponsored attackers prefer compromising residential routers over renting anonymous VPS infrastructure for proxy operations?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Residential IP addresses are trusted by most security systems and rarely appear on blocklists. Traffic from home IPs blends in with normal internet activity, making detection and attribution far harder than traffic from known VPS/datacenter IP ranges.</div>
+          <div class="q-exp">Most threat intelligence feeds and corporate firewalls flag datacenter IP ranges as suspicious. Residential IPs are inherently trusted, letting attackers bypass these controls entirely.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div>
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q2 of 3</div>
+        <div class="q-text">What makes end-of-life devices fundamentally different from supported-but-unpatched devices from a defender's perspective?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">EOL devices will never receive patches regardless of what vulnerabilities are discovered. There is no remediation path other than replacement or decommissioning, making any known vulnerability permanent.</div>
+          <div class="q-exp">A supported-but-unpatched device has an available fix that can be applied. An EOL device has no fix coming — every new CVE discovered against it is effectively a permanent zero-day.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div>
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q3 of 3</div>
+        <div class="q-text">How does chaining compromised routers as SOCKS proxies help an attacker's operational security beyond just IP obfuscation?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Multi-hop proxy chains mean that even if one node is identified and seized for forensic analysis, it only reveals the previous and next hop — not the full path back to the attacker's true infrastructure.</div>
+          <div class="q-exp">Each proxy node only knows its immediate neighbors in the chain. Investigators must compromise and correlate multiple nodes across multiple jurisdictions (120 countries in this case) to trace back to the origin, which is operationally impractical.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div></div>
+      </div>
+
+      <div class="block deepdive-block">
+        <div class="blabel">&#x1F4AD; Deep Dive</div>
+        <p class="deepdive-text">Should governments mandate minimum security support lifetimes for network devices — similar to how building codes require structural safety — and if so, how would you balance this against the cost burden on manufacturers and consumers?</p>
+      </div>
+
+      <div class="story-footer">
+        <a class="src-link" href="https://arstechnica.com/security/2026/04/russias-military-hacks-thousands-of-consumer-routers-to-steal-credentials/" target="_blank" rel="noopener noreferrer">
+          Read original <span>&#x2192;</span>
+        </a>
+        <span class="src-name">Biz &amp; IT - Ars Technica</span>
+      </div>
+
+    </div>
+  </div>
+</article>
+
+<article class="story-card">
+  <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
+    <div class="s-left">
+      <div class="s-meta">
+        <span class="src-badge" style="background:#818cf81a;color:#818cf8">AI | VentureBeat</span>
         <span class="story-num">03</span>
       </div>
-      <h2>Goose: Block's Free Open-Source AI Coding Agent Takes on Anthropic's $200/Month Claude Code</h2>
-      <div class="tldr"><span class="tldr-tag">TL;DR</span>Block (formerly Square) has released Goose, a free and open-source AI coding agent that offers functionality comparable to Anthropic's Claude Code, which costs up to $200/month, igniting debate about the sustainability of proprietary AI developer tools.</div>
-      <div class="tag-row"><button class="tag" data-name="Goose (Block)" data-desc="An open-source, model-agnostic AI coding agent developed by Block (formerly Square) that can autonomously write, debug, and deploy code from the terminal, supporting multiple LLM backends." data-relevance="The central subject of this story — positioned as a free alternative to Claude Code, demonstrating that the agent orchestration layer can be decoupled from proprietary model access." onclick="openTagModal(event,this)">Goose (Block)</button><button class="tag" data-name="Claude Code" data-desc="Anthropic's proprietary terminal-based AI coding agent that uses the Claude model to autonomously perform software development tasks including writing, debugging, testing, and deploying code." data-relevance="The incumbent tool that Goose challenges; priced at $20-$200/month, its tight coupling to Anthropic's API is both its strength (model quality) and vulnerability (vendor lock-in, cost)." onclick="openTagModal(event,this)">Claude Code</button></div>
+      <h2>Goose: Block's Free Open-Source AI Coding Agent Takes on $200/month Claude Code</h2>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Block (formerly Square) has released Goose, a free open-source AI coding agent that rivals Anthropic's Claude Code in functionality, sparking debate about the sustainability of paid AI developer tools.</div>
+      <div class="tag-row"><button class="tag" data-name="Goose (Block)" data-desc="An open-source, Apache 2.0-licensed AI coding agent developed by Block that can autonomously write, debug, and deploy code via a terminal interface with pluggable LLM backends." data-relevance="Goose is the central subject — a free alternative to Claude Code that supports multiple LLM backends and is gaining rapid developer adoption." onclick="openTagModal(event,this)">Goose (Block)</button><button class="tag" data-name="Claude Code" data-desc="Anthropic's proprietary terminal-based AI agent that uses Claude models to autonomously perform software development tasks including code writing, debugging, and deployment." data-relevance="Claude Code is the incumbent paid tool ($20-$200/month) that Goose is positioned as a free replacement for, driving the open-source vs. proprietary debate." onclick="openTagModal(event,this)">Claude Code</button></div>
     </div>
     <div class="chevron">&#9660;</div>
   </div>
@@ -698,56 +649,31 @@ kbd {
       
       <div class="block">
         <div class="blabel">&#x1F4CC; Why It Matters</div>
-        <p>AI coding agents are rapidly becoming essential developer tools, but pricing models are creating a divide between developers who can afford premium tools and those who can't. Goose's open-source approach challenges the assumption that cutting-edge AI tooling must be expensive, and could reshape how AI coding assistants are monetized — or whether they become loss leaders for larger platform plays.</p>
+        <p>Claude Code has become the go-to terminal-based AI coding assistant, but its $20-$200/month pricing creates a barrier, especially for independent developers and open-source contributors. Goose offering comparable autonomous coding, debugging, and deployment capabilities for free could reshape how AI coding tools are monetized and accelerate the commoditization of AI-assisted development.</p>
       </div>
 
       <div class="block concept-block">
         <div class="blabel">&#x1F9E0; Concept</div>
-        <div class="concept-title" style="color:#818cf8">Open-Source AI Agents vs. Proprietary API-Dependent Tools</div>
-        <div class="concept-text"><p>Imagine two restaurants: one is a high-end place where a chef prepares everything for you at a premium price, and the other gives you the same recipes and a well-equipped kitchen for free — you just need to bring your own ingredients. Goose is the free kitchen; Claude Code is the premium restaurant. Both produce meals, but the cost structure and control are fundamentally different.</p><p>AI coding agents like Claude Code and Goose work by wrapping a large language model with an &quot;agentic&quot; layer — a system that can autonomously plan multi-step tasks, read and write files, execute shell commands, run tests, and iterate on errors. Claude Code is tightly coupled to Anthropic's Claude API, meaning every token of reasoning flows through Anthropic's servers and billing. Goose, being open-source, is model-agnostic: it can connect to various LLM backends (including local models, OpenAI, or Anthropic's own API), giving developers control over cost, privacy, and model selection. The agent logic — the planning, tool use, and code manipulation — is the open-source part.</p><p>In this story, Block has released Goose as a free tool that replicates Claude Code's core capabilities: autonomous code writing, debugging, deployment, and terminal-based operation. The key differentiator isn't just price — it's architectural freedom. Developers using Goose can choose their LLM backend, run models locally for sensitive codebases, and modify the agent's behavior. Claude Code, while polished, locks developers into Anthropic's ecosystem and pricing.</p><p>This reflects a broader pattern in AI tooling: proprietary convenience vs. open-source flexibility. If open-source agents reach parity in quality, the value of proprietary tools shifts entirely to model quality and UX polish. Anthropic's real moat isn't the agent wrapper — it's the Claude model underneath. The risk for Anthropic is that as open-weight models improve, the entire stack becomes commoditized. For the developer ecosystem, this competition is healthy: it pushes prices down and ensures no single vendor controls the AI-augmented development workflow.</p></div>
+        <div class="concept-title" style="color:#818cf8">Open-Source AI Agents vs. Proprietary Developer Tools</div>
+        <div class="concept-text"><p>Imagine two taxi services in a city. One is a polished ride-hailing app that charges premium fares — smooth experience, reliable, but expensive. The other is a community-run ride-sharing cooperative that's free to use, maintained by volunteers, and lets you inspect and modify the car yourself. Both get you from A to B, but they have fundamentally different economics and trade-offs.</p><p>AI coding agents like Claude Code and Goose work by wrapping large language models with agentic scaffolding — the ability to read your codebase, plan multi-step tasks, execute shell commands, write and edit files, run tests, and iterate on errors autonomously. Claude Code uses Anthropic's proprietary Claude models via API, with costs passed to the user through subscription tiers. Goose, being open-source, can plug into multiple LLM backends (including open-weight models you host yourself), giving developers control over both the agent logic and the model powering it.</p><p>Block's strategic play with Goose mirrors what companies like Red Hat and Google have done historically — releasing powerful open-source tools to commoditize a complementary market. Block doesn't need Goose to be a revenue center; it benefits from a larger ecosystem of developers building on its payment and financial platforms. Meanwhile, Anthropic needs Claude Code revenue to fund its expensive model training. This asymmetry is driving the tension in the community.</p><p>Broader, this story is a leading indicator of a pattern we'll see across AI tooling: as model capabilities converge and open-weight alternatives improve, the value increasingly shifts from the model itself to the data, workflow integration, and ecosystem surrounding it. Proprietary AI tools will need to justify their premiums through genuinely differentiated capabilities, not just by being first to market.</p></div>
       </div>
 
       <div class="block">
         <div class="blabel">&#x1F4CA; Visual Diagram</div>
-        <div class="terminal">
-          <div class="term-bar">
+        <div class="diagram-wrap">
+          <div class="diagram-bar">
             <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-            <span class="term-title">Open-Source AI Agents vs. Proprietary API-Dependent Tools</span>
+            <span class="diagram-title">Open-Source AI Agents vs. Proprietary Developer Tools</span>
           </div>
-          <pre class="ascii">┌─────────────────────────────────────────────────┐
-│              DEVELOPER WORKFLOW                  │
-│         &quot;Write feature X, fix bug Y&quot;            │
-└────────────────────┬────────────────────────────┘
-                     │
-        ┌────────────┴────────────┐
-        ▼                         ▼
-┌─────────────────┐     ┌─────────────────┐
-│   CLAUDE CODE   │     │     GOOSE       │
-│   (Proprietary) │     │  (Open-Source)  │
-│                 │     │                 │
-│ ┌─────────────┐ │     │ ┌─────────────┐ │
-│ │ Agent Logic │ │     │ │ Agent Logic │ │
-│ │ (Planning,  │ │     │ │ (Planning,  │ │
-│ │  Tools, I/O)│ │     │ │  Tools, I/O)│ │
-│ └──────┬──────┘ │     │ └──────┬──────┘ │
-│        │ LOCKED  │     │        │ CHOOSE  │
-│        ▼        │     │        ▼        │
-│ ┌─────────────┐ │     │ ┌─────────────┐ │
-│ │ Claude API  │ │     │ │ Any LLM     │ │
-│ │ $20-$200/mo │ │     │ │ Local/Cloud │ │
-│ │             │ │     │ │ Free-$$$    │ │
-│ └─────────────┘ │     │ └─────────────┘ │
-└─────────────────┘     └─────────────────┘
-   Vendor lock-in          Model-agnostic
-   Polished UX             Full control</pre>
+          <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"><defs><marker id="ah3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#818cf8"/></marker></defs><rect width="700" height="340" fill="#060912"/><text x="350" y="26" fill="#818cf8" font-size="14" font-family="monospace" text-anchor="middle" font-weight="bold">Claude Code vs Goose — Architecture Comparison</text><line x1="350" y1="40" x2="350" y2="320" stroke="#252840" stroke-width="1" stroke-dasharray="6,4"/><text x="175" y="54" fill="#818cf8" font-size="13" font-family="monospace" text-anchor="middle">Claude Code (Proprietary)</text><text x="525" y="54" fill="#818cf8" font-size="13" font-family="monospace" text-anchor="middle">Goose (Open Source)</text><rect x="40" y="70" width="260" height="40" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="170" y="95" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Developer Terminal</text><line x1="170" y1="110" x2="170" y2="135" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah3)"/><rect x="40" y="138" width="260" height="40" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/><text x="170" y="163" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Claude Code Agent (closed)</text><line x1="170" y1="178" x2="170" y2="203" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah3)"/><rect x="40" y="206" width="260" height="40" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="170" y="231" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Anthropic Claude API only</text><line x1="170" y1="246" x2="170" y2="271" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah3)"/><rect x="65" y="274" width="210" height="40" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="170" y="293" fill="#7a849a" font-size="12" font-family="monospace" text-anchor="middle">$20–$200/month</text><text x="170" y="308" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Vendor-locked pricing</text><rect x="400" y="70" width="260" height="40" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="530" y="95" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Developer Terminal</text><line x1="530" y1="110" x2="530" y2="135" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah3)"/><rect x="400" y="138" width="260" height="40" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/><text x="530" y="163" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Goose Agent (open source)</text><line x1="530" y1="178" x2="530" y2="203" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah3)"/><rect x="400" y="206" width="120" height="40" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="460" y="231" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Any LLM API</text><rect x="530" y="206" width="130" height="40" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="595" y="231" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Self-hosted LLM</text><line x1="530" y1="246" x2="530" y2="271" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah3)"/><rect x="425" y="274" width="210" height="40" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/><text x="530" y="293" fill="#818cf8" font-size="12" font-family="monospace" text-anchor="middle" font-weight="bold">Free (Apache 2.0)</text><text x="530" y="308" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">BYO model / BYO keys</text></svg></div>
         </div>
       </div>
 
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
-        <div class="opinion-q">On HN, the top thread has hundreds of comments with strong sentiment favoring Goose — developers are sharing benchmarks comparing the two tools and reporting surprisingly comparable results for common tasks. However, several experienced users push back, noting that &quot;free&quot; is misleading since Goose still requires API credits if you use cloud models, and local model quality still lags Claude Sonnet for complex reasoning. On Reddit r/programming, the mood is celebratory, with comments like &quot;Block is doing God's work&quot; and frustration with Anthropic's pricing model being the dominant theme. Security-conscious developers on HN highlight Goose's advantage for proprietary codebases: &quot;I'm not sending my company's code through Anthropic's servers.&quot; On X, some AI researchers caution that the agent wrapper is the easy part — model quality is the real differentiator.</div>
+        <div class="opinion-q">Hacker News discussion is highly active, with top comments calling this 'the Redis/Elastic moment for AI dev tools' — referencing how open-source alternatives disrupted proprietary incumbents. Several HN commenters who've tested both report Goose is 'surprisingly close to Claude Code for everyday tasks but noticeably weaker on complex multi-file refactors.' Reddit r/programming threads are more skeptical, noting that 'free' is misleading since you still pay for LLM API calls unless you self-host, and self-hosted models lag behind Claude's quality. Developer Twitter has Block engineers actively engaging, emphasizing Goose's extensibility via plugins as its key differentiator over Claude Code's closed architecture.</div>
         <div class="blabel">&#x1F50D; Assessment</div>
-        <p>The enthusiasm for Goose is understandable but the &quot;same thing for free&quot; framing is somewhat misleading. Goose's agent logic is free and open-source, but high-quality LLM inference still costs money unless you run local models (which require significant hardware and sacrifice quality). The real story isn't that Goose eliminates costs — it's that it decouples the agent from the model, giving developers choice. The security/privacy argument for local inference is legitimate and underappreciated. The AI researchers on X make the strongest point: as agent frameworks commoditize, Anthropic's competitive advantage rests entirely on Claude's model quality, which is a valid but narrowing moat as open-weight models like Llama and Mistral improve rapidly.</p>
+        <p>The HN comparison to Redis/Elastic is apt but premature — those disruptions played out over years, and Anthropic has time to respond with better model integration that open-source can't easily replicate. The r/programming skepticism about hidden costs is valid and underappreciated: running a capable self-hosted model requires significant GPU investment, so 'free' primarily applies to developers who already have API keys or infrastructure. The real story isn't about cost alone — it's about vendor lock-in vs. flexibility. Goose's multi-backend support means developers aren't tied to Anthropic's pricing decisions or model availability. What's missing from most commentary is the security angle: open-source agents that execute shell commands on your machine deserve serious scrutiny of their sandboxing and permission models, which few reviewers have examined.</p>
       </div>
 
       <div class="block">
@@ -755,31 +681,31 @@ kbd {
         <div class="quiz-grid">
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q1 of 3</div>
-        <div class="q-text">Why is the distinction between the 'agent layer' and the 'model layer' important for understanding the Goose vs. Claude Code comparison?</div>
+        <div class="q-text">Why might a company like Block invest in building and open-sourcing a free AI coding agent rather than monetizing it?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Because the agent layer (planning, tool use, file I/O) is what Goose open-sources, but the expensive and differentiating part is the LLM doing the actual reasoning. Goose doesn't replace the model — it replaces the proprietary wrapper around it, letting you choose your own model backend.</div>
-          <div class="q-exp">This distinction reveals that 'free' refers to the orchestration layer, not the intelligence. If you plug Goose into Claude's API, you still pay Anthropic. The value proposition is flexibility and control, not necessarily zero cost.</div>
+          <div class="q-ans">Block benefits from a larger, more productive developer ecosystem that builds on its payment platforms (Square, Cash App APIs). Commoditizing developer tools drives adoption of Block's revenue-generating products — a classic complement strategy.</div>
+          <div class="q-exp">This follows the strategic principle of 'commoditize your complements' — if developer productivity tools are free, more developers build more software, and more of that software integrates Block's paid financial services.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q2 of 3</div>
-        <div class="q-text">What competitive risk does the commoditization of AI agent frameworks pose to companies like Anthropic?</div>
+        <div class="q-text">What's the key security concern with AI coding agents that can autonomously execute shell commands on your development machine?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">If the agent wrapper becomes a commodity (anyone can build one), Anthropic's value proposition narrows to model quality alone. As open-weight models improve, even that moat erodes, potentially forcing Anthropic into a price war rather than a product differentiation strategy.</div>
-          <div class="q-exp">Claude Code bundles model access + agent logic into one paid product. When the agent logic is available for free, customers only pay for model quality. If a free or cheaper model becomes 'good enough,' Anthropic loses the bundling premium.</div>
+          <div class="q-ans">An agent with shell access could potentially execute destructive commands, exfiltrate code/credentials, or modify files in unintended ways — especially if the underlying model is manipulated via prompt injection or if the agent misinterprets instructions.</div>
+          <div class="q-exp">AI agents operating with system-level permissions represent a new attack surface. Prompt injection could cause the agent to run malicious commands, and insufficient sandboxing means the blast radius of any agent error includes your entire development environment.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q3 of 3</div>
-        <div class="q-text">Why might a security-conscious enterprise prefer an open-source agent like Goose over Claude Code, even if Claude's model is technically superior?</div>
+        <div class="q-text">Why does the ability to swap LLM backends in Goose represent a strategic advantage beyond just cost savings?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Goose can be configured to use locally-hosted models, meaning proprietary source code never leaves the company's infrastructure. With Claude Code, all code context is sent to Anthropic's API servers, creating data exposure and compliance risks.</div>
-          <div class="q-exp">For enterprises handling sensitive IP, regulated data, or government contracts, the ability to run the entire AI coding pipeline on-premises — even with a less capable model — may be a hard requirement that no cloud-only tool can satisfy.</div>
+          <div class="q-ans">It eliminates vendor lock-in, provides resilience against any single provider's outages or price changes, and allows developers to choose specialized models for different tasks or to use models that comply with specific data residency requirements.</div>
+          <div class="q-exp">Backend flexibility means you can route sensitive code through a self-hosted model for privacy, use a fast cheap model for simple edits, and reserve powerful APIs for complex refactors — optimizing for cost, speed, privacy, and quality simultaneously.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div></div>
@@ -787,14 +713,14 @@ kbd {
 
       <div class="block deepdive-block">
         <div class="blabel">&#x1F4AD; Deep Dive</div>
-        <p class="deepdive-text">If AI agent frameworks become commoditized open-source tools and model quality converges across providers, what remains as a sustainable competitive advantage for AI companies — and does this parallel the commoditization of web browsers, databases, or other infrastructure that once commanded premium pricing?</p>
+        <p class="deepdive-text">As AI coding agents become commoditized, will the primary competitive moat shift to the underlying model quality, the agent's tool-use and planning capabilities, or the depth of integration with specific developer workflows — and what does that mean for how AI companies should invest?</p>
       </div>
 
       <div class="story-footer">
         <a class="src-link" href="https://venturebeat.com/infrastructure/claude-code-costs-up-to-usd200-a-month-goose-does-the-same-thing-for-free" target="_blank" rel="noopener noreferrer">
           Read original <span>&#x2192;</span>
         </a>
-        <span class="src-name">VentureBeat</span>
+        <span class="src-name">AI | VentureBeat</span>
       </div>
 
     </div>
@@ -815,8 +741,8 @@ kbd {
         <span class="story-num">01</span>
       </div>
       <h2>Russia Exploits Router Flaws to Mass-Harvest Microsoft Office Auth Tokens</h2>
-      <div class="tldr"><span class="tldr-tag">TL;DR</span>Russian military intelligence hackers compromised 18,000+ networks by exploiting known vulnerabilities in aging routers to intercept Microsoft Office authentication tokens — no malware required.</div>
-      <div class="tag-row"><button class="tag" data-name="Microsoft 365 OAuth Tokens" data-desc="OAuth 2.0 tokens used by Microsoft 365 services (Exchange Online, Teams, SharePoint) to maintain authenticated sessions after initial login and MFA verification." data-relevance="These tokens are the specific target of the campaign — intercepted in transit through compromised routers, they allow attackers to access victims' mailboxes and files without triggering new authentication challenges." onclick="openTagModal(event,this)">Microsoft 365 OAuth Tokens</button><button class="tag" data-name="SOHO Router Firmware CVEs" data-desc="Known, publicly disclosed vulnerabilities in consumer and small-office/home-office router firmware from vendors like Netgear, TP-Link, and ASUS that allow remote code execution or configuration changes." data-relevance="The GRU-linked hackers exploited these known, unpatched vulnerabilities to gain persistent access to routers across 18,000+ networks, turning them into token-interception points." onclick="openTagModal(event,this)">SOHO Router Firmware CVEs</button></div>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Russian state hackers are abusing known vulnerabilities in aging internet routers to intercept Microsoft Office authentication tokens across 18,000+ networks — no malware required.</div>
+      <div class="tag-row"><button class="tag" data-name="OAuth 2.0 Token Flow" data-desc="The authorization framework Microsoft 365 uses to issue access and refresh tokens after user authentication, typically via browser redirect flows." data-relevance="The attack intercepts these token flows at the router level, capturing valid OAuth tokens that grant full account access without needing the user's credentials." onclick="openTagModal(event,this)">OAuth 2.0 Token Flow</button><button class="tag" data-name="SOHO Router CPE" data-desc="Small Office/Home Office customer premises equipment — the routers ISPs provide to end users, often running embedded Linux with infrequent firmware updates." data-relevance="These devices are the attack surface being exploited — known CVEs in their firmware allow the GRU to gain control and intercept traffic across 18,000+ networks." onclick="openTagModal(event,this)">SOHO Router CPE</button></div>
     </div>
     <div class="chevron">&#9660;</div>
   </div>
@@ -832,60 +758,37 @@ kbd {
         <div class="affected-list">
       <div class="affected-item">
         <span class="affected-name">Various SOHO routers (multiple vendors)</span>
-        <span class="affected-ver">Older models with known unpatched firmware vulnerabilities (specific CVEs not yet disclosed)</span>
+        <span class="affected-ver">Older models with known unpatched firmware vulnerabilities (specific CVEs not disclosed)</span>
       </div>
         </div>
       </div>
       <div class="block">
         <div class="blabel">&#x1F4CC; Why It Matters</div>
-        <p>This campaign demonstrates a stealthy, scalable espionage technique that bypasses endpoint security entirely by targeting network infrastructure. Because no malicious code is deployed on victim machines, traditional antivirus and EDR solutions are blind to the theft. Organizations relying solely on endpoint protection while neglecting router firmware updates face silent credential compromise at massive scale.</p>
+        <p>This campaign demonstrates that nation-state actors don't need sophisticated zero-days when unpatched infrastructure hands them the keys. By passively siphoning auth tokens at the network layer, attackers gain persistent access to corporate Microsoft 365 environments without ever touching endpoints — making detection extremely difficult for traditional security tools.</p>
       </div>
 
       <div class="block concept-block">
         <div class="blabel">&#x1F9E0; Concept</div>
-        <div class="concept-title" style="color:#34d399">Authentication Token Interception via Network Infrastructure</div>
-        <div class="concept-text"><p>Imagine your office building's mail room secretly photocopies every security badge that passes through before forwarding it to you. You'd never know — your badge still works, nothing looks different — but someone else now has a perfect copy they can use to walk into any room you can access. That's essentially what's happening at the router level.</p><p>Authentication tokens are short-lived cryptographic credentials that prove a user's identity to services like Microsoft 365 after they've logged in. These tokens travel across the network in HTTP/HTTPS headers. When attackers control a router sitting between the user and Microsoft's servers, they can perform man-in-the-middle interception — capturing these tokens in transit. If TLS inspection is misconfigured or the router can manipulate DNS to redirect traffic through attacker-controlled endpoints, the tokens can be harvested without touching the victim's device.</p><p>In this campaign, Russia's GRU-linked hackers exploited known, unpatched vulnerabilities in consumer and small-business routers to gain persistent access. From that vantage point, they intercepted Office 365 authentication flows across 18,000+ networks. The elegance — and danger — of this approach is that it leaves zero forensic artifacts on endpoints. No malware binary, no suspicious process, no file to scan. The compromise lives entirely in the network layer.</p><p>This represents a broader shift toward &quot;living off the land&quot; at the infrastructure level. As endpoint detection has improved dramatically, sophisticated adversaries are moving upstream to routers, switches, and firewalls — devices that are chronically under-monitored and under-patched. It forces a rethinking of where the security perimeter actually is and highlights the critical importance of network-layer monitoring, certificate pinning, and timely firmware updates for edge devices.</p></div>
+        <div class="concept-title" style="color:#34d399">Authentication Token Theft via Network-Layer Interception</div>
+        <div class="concept-text"><p>Imagine your office building uses key cards. Instead of stealing each person's card, an attacker compromises the card reader at the front door so it silently copies every badge that passes through — nobody notices because the door still opens normally.</p><p>Authentication tokens are temporary credentials that prove a user has already logged in. When you sign into Microsoft Office 365, your browser or app receives a token (like an OAuth access token or session cookie) that gets sent with every subsequent request. If an attacker controls a network device between the user and Microsoft's servers, they can intercept these tokens in transit — a classic man-in-the-middle position. On compromised routers, this can be done by manipulating DNS to redirect traffic through attacker-controlled proxies, or by exploiting the router's ability to inspect and copy passing traffic.</p><p>In this campaign, Russian military intelligence (GRU-linked groups) targeted known, unpatched vulnerabilities in older consumer and small-business routers. Once they owned the router, they could silently harvest Office 365 auth tokens from every user on that network. The beauty of this approach — from the attacker's perspective — is that no malware touches any endpoint, so EDR tools see nothing. The tokens grant the same access as the legitimate user, making the intrusion indistinguishable from normal activity.</p><p>This represents a strategic shift toward infrastructure-layer attacks. As endpoint security improves, adversaries move to the weakest link — the forgotten router running five-year-old firmware. Organizations that focus exclusively on endpoint and cloud security while ignoring network device hygiene leave a massive blind spot that nation-states are now systematically exploiting.</p></div>
       </div>
 
       <div class="block">
         <div class="blabel">&#x1F4CA; Visual Diagram</div>
-        <div class="terminal">
-          <div class="term-bar">
+        <div class="diagram-wrap">
+          <div class="diagram-bar">
             <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-            <span class="term-title">Authentication Token Interception via Network Infrastructure</span>
+            <span class="diagram-title">Authentication Token Theft via Network-Layer Interception</span>
           </div>
-          <pre class="ascii">┌──────────────┐         ┌─────────────────────┐
-│   User PC    │         │  Microsoft 365      │
-│  (no malware)│         │  (Exchange, Teams)  │
-└──────┬───────┘         └──────────┬──────────┘
-       │                            │
-       │  Auth Token in Transit     │
-       │  ┌─────────────────────┐   │
-       └──►  COMPROMISED ROUTER ◄───┘
-          │  (known CVEs,       │
-          │   unpatched fw)     │
-          └─────────┬───────────┘
-                    │
-          Token copied silently
-                    │
-                    v
-          ┌─────────────────────┐
-          │  GRU C2 Server      │
-          │  ┌───────────────┐  │
-          │  │ Stolen Tokens │  │
-          │  │ 18,000+ nets  │  │
-          │  └───────────────┘  │
-          │  Replays tokens to  │
-          │  access mailboxes   │
-          └─────────────────────┘</pre>
+          <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrow1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#34d399"/></marker></defs><rect width="700" height="340" fill="#060912"/><text x="350" y="28" fill="#7a849a" font-size="12" font-family="monospace" text-anchor="middle">ATTACK CHAIN: Router-Based Token Theft</text><rect x="30" y="60" width="120" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="90" y="83" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">User logs in</text><text x="90" y="100" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Office 365</text><line x1="150" y1="87" x2="195" y2="87" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow1)"/><rect x="198" y="60" width="130" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/><text x="263" y="83" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">Compromised</text><text x="263" y="100" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">Router</text><line x1="328" y1="87" x2="375" y2="87" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow1)"/><rect x="378" y="60" width="130" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="443" y="83" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Microsoft 365</text><text x="443" y="100" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Auth Server</text><line x1="443" y1="115" x2="443" y2="148" stroke="#7a849a" stroke-width="1" stroke-dasharray="4,3"/><text x="490" y="140" fill="#7a849a" font-size="10" font-family="monospace">Token issued</text><line x1="378" y1="150" x2="150" y2="150" stroke="#7a849a" stroke-width="1" stroke-dasharray="4,3"/><text x="263" y="168" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Token passes through router</text><rect x="185" y="190" width="160" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/><text x="265" y="212" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">Token Copied</text><text x="265" y="228" fill="#34d399" font-size="10" font-family="monospace" text-anchor="middle">silently duplicated</text><line x1="263" y1="170" x2="263" y2="190" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow1)"/><line x1="345" y1="215" x2="420" y2="215" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow1)"/><rect x="423" y="190" width="140" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="493" y="212" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">GRU C2 Server</text><text x="493" y="228" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">exfiltration</text><rect x="130" y="275" width="440" height="45" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/><text x="350" y="295" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Result: Full mailbox/OneDrive access — no malware on endpoint</text><text x="350" y="310" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">EDR sees nothing • 18,000+ networks affected</text></svg></div>
         </div>
       </div>
 
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
-        <div class="opinion-q">On r/netsec, the top thread emphasizes that 'no malware deployed' is the scariest part — several commenters noted their SIEM would have zero visibility into this. Security Twitter/X saw researchers like Kevin Beaumont highlight that SOHO router patching is 'basically nonexistent in practice' and that this is a natural evolution of APT tradecraft. On Hacker News, discussion centered on whether Microsoft should enforce stricter token binding and certificate pinning, with several commenters arguing that OAuth token theft at the network layer has been a known theoretical risk for years. Reddit's r/sysadmin had frustrated admins pointing out they have no authority over home routers in remote-work environments.</div>
+        <div class="opinion-q">On r/netsec, the top reaction is frustration that known router CVEs from years ago are still being exploited at scale. One commenter noted 'This is what happens when ISPs ship routers and never push firmware updates.' Security Twitter (X) has several researchers pointing out that this is a logical evolution from the Fancy Bear VPNFilter campaign, with @GossiTheDog calling it 'the most efficient credential harvesting op we've seen — zero endpoint footprint.' On Hacker News, discussion centered on whether certificate pinning and TLS 1.3 should have prevented this, with speculation the interception targets OAuth redirect flows or exploits downgrade attacks on older TLS configurations.</div>
         <div class="blabel">&#x1F50D; Assessment</div>
-        <p>The community alarm is well-founded — this attack surface is genuinely under-addressed. The r/sysadmin frustration about remote workers' home routers is particularly valid and highlights a gap that zero-trust architectures were supposed to close but often haven't in practice. The calls for Microsoft to implement stronger token binding are reasonable but overlook the performance and compatibility trade-offs. What's somewhat missing from the discussion is that 18,000 networks likely skews toward SOHO/consumer-grade gear — enterprise networks with proper segmentation and managed routers are less exposed. The real risk population is SMBs and remote workers on aging consumer hardware.</p>
+        <p>The community frustration about unpatched routers is entirely valid — CVE exploitation of edge devices is the #1 initial access vector for nation-states in 2025-2026 per multiple threat reports. The HN discussion about TLS protections is nuanced: while modern TLS should protect token transit, the attackers likely manipulate DNS or inject themselves into OAuth redirect flows at the router level, which TLS alone doesn't fully mitigate. What's missing from most commentary is the ISP accountability angle — many of these routers are ISP-managed CPE devices that individual users cannot patch.</p>
       </div>
 
       <div class="block">
@@ -893,31 +796,31 @@ kbd {
         <div class="quiz-grid">
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q1 of 3</div>
-        <div class="q-text">Why is this attack particularly difficult for endpoint detection and response (EDR) tools to catch?</div>
+        <div class="q-text">Why is this attack particularly hard to detect compared to traditional credential theft?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">The compromise exists entirely at the network infrastructure layer — the router intercepts tokens in transit. No malicious code, files, or processes are ever placed on the user's endpoint, so there's nothing for EDR to detect.</div>
-          <div class="q-exp">EDR tools monitor processes, files, and behaviors on the endpoint itself. When the attack operates at a network device between the user and the service, the endpoint appears completely clean. This is why network-layer monitoring and infrastructure patching are essential complements to endpoint security.</div>
+          <div class="q-ans">Because no malware is deployed to any endpoint — the interception happens at the network infrastructure layer, so EDR and endpoint monitoring tools see only normal user behavior.</div>
+          <div class="q-exp">Traditional credential theft (keyloggers, phishing) leaves artifacts on the user's device. Here, the compromised router copies tokens passively, and the user's login succeeds normally. From the endpoint's perspective, nothing unusual happened.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q2 of 3</div>
-        <div class="q-text">What makes authentication tokens valuable enough to steal instead of passwords directly?</div>
+        <div class="q-text">Why are authentication tokens more valuable to steal than passwords in this scenario?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Tokens grant immediate, authenticated access to services without needing to know or crack passwords, and they bypass multi-factor authentication since MFA has already been completed when the token was issued.</div>
-          <div class="q-exp">A stolen token is a post-authentication credential. The user already proved their identity (including MFA) to get it. The attacker can replay this token to access the user's mailbox, files, and Teams — effectively inheriting a fully authenticated session without ever triggering a login prompt or MFA challenge.</div>
+          <div class="q-ans">Tokens bypass MFA entirely — they represent an already-authenticated session, so the attacker doesn't need the user's password or second factor to gain access.</div>
+          <div class="q-exp">A stolen password still requires passing MFA. But a valid session token proves authentication already happened. The attacker can replay it to access the victim's Office 365 data directly, making MFA irrelevant for that session.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q3 of 3</div>
-        <div class="q-text">Why are consumer/SOHO routers particularly vulnerable to this type of campaign compared to enterprise-grade network equipment?</div>
+        <div class="q-text">What makes consumer/SOHO routers a strategic target for nation-state operations compared to enterprise firewalls?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Consumer routers rarely receive firmware updates (many are EOL), lack centralized management, have no security monitoring agents, and users typically never change default configurations — making known CVEs persist indefinitely.</div>
-          <div class="q-exp">Enterprise routers are typically managed by IT teams with patch schedules, configuration auditing, and network monitoring. Consumer routers are 'set and forget' devices. Many ISP-provided routers stop receiving updates after a few years, leaving known vulnerabilities permanently exploitable at scale.</div>
+          <div class="q-ans">They are rarely patched, often run end-of-life firmware, are managed by no security team, and sit at the edge of thousands of networks — providing massive scale with minimal effort.</div>
+          <div class="q-exp">Enterprise firewalls have dedicated teams monitoring and patching them. Consumer routers are 'set and forget' devices with no automatic updates, no monitoring, and often no one responsible for their security — making them ideal persistent access points at enormous scale.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div></div>
@@ -925,7 +828,7 @@ kbd {
 
       <div class="block deepdive-block">
         <div class="blabel">&#x1F4AD; Deep Dive</div>
-        <p class="deepdive-text">If sophisticated adversaries are increasingly targeting network infrastructure rather than endpoints, does the industry's massive investment in EDR and endpoint-centric zero trust represent a strategic misallocation — and what would a 'network-first' security model actually look like for organizations with thousands of remote workers on unmanaged home networks?</p>
+        <p class="deepdive-text">If nation-states can reliably compromise network infrastructure to harvest credentials without touching endpoints, does our industry's massive investment in endpoint detection and response represent a misallocation of defensive resources — and what would a 'network-infrastructure-first' security model look like?</p>
       </div>
 
       <div class="story-footer">
@@ -946,9 +849,9 @@ kbd {
         <span class="src-badge" style="background:#34d3991a;color:#34d399">Krebs on Security</span>
         <span class="story-num">02</span>
       </div>
-      <h2>Germany Unmasks 'UNKN' — Leader of REvil and GandCrab Ransomware Empires</h2>
-      <div class="tldr"><span class="tldr-tag">TL;DR</span>German authorities have publicly identified 31-year-old Russian national Daniil Shchukin as the operator behind the notorious 'UNKN' handle who ran both the GandCrab and REvil ransomware-as-a-service operations responsible for at least 130 attacks.</div>
-      <div class="tag-row"><button class="tag" data-name="REvil (Sodinokibi)" data-desc="A prolific ransomware-as-a-service operation active 2019-2021, known for high-profile attacks including JBS Foods and the Kaseya VSA supply chain compromise. Used RSA+AES encryption and operated a dark web leak site for double extortion." data-relevance="One of the two RaaS operations directly attributed to Shchukin/UNKN. REvil's 130+ documented attacks in Germany alone formed the basis of the criminal charges." onclick="openTagModal(event,this)">REvil (Sodinokibi)</button><button class="tag" data-name="GandCrab" data-desc="A pioneering ransomware-as-a-service platform active 2018-2019 that popularized the affiliate model, claimed $2B in ransom payments, and 'retired' before REvil launched with shared code and infrastructure." data-relevance="Code and infrastructure overlap between GandCrab and REvil was a key attribution thread that helped investigators link both operations to the same operator over a multi-year timeline." onclick="openTagModal(event,this)">GandCrab</button></div>
+      <h2>Germany Unmasks 'UNKN' — The Man Behind REvil and GandCrab Ransomware Empires</h2>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>German authorities have publicly identified 31-year-old Russian national Daniil Shchukin as the operator behind the handles 'UNKN' who ran both the GandCrab and REvil ransomware-as-a-service operations responsible for at least 130 attacks.</div>
+      <div class="tag-row"><button class="tag" data-name="REvil/Sodinokibi" data-desc="A prolific ransomware-as-a-service operation active from 2019-2021, known for high-profile attacks on Kaseya, JBS Foods, and Travelex, using affiliate-based distribution." data-relevance="One of the two ransomware operations directly attributed to the now-identified operator Shchukin/UNKN, confirming its lineage from GandCrab." onclick="openTagModal(event,this)">REvil/Sodinokibi</button><button class="tag" data-name="GandCrab" data-desc="A pioneering RaaS operation (2018-2019) that popularized the affiliate model for ransomware distribution, claiming $2B+ in ransom payments before its announced retirement." data-relevance="German authorities confirmed GandCrab was run by the same operator as REvil, validating long-held threat intelligence assessments about shared code and infrastructure." onclick="openTagModal(event,this)">GandCrab</button></div>
     </div>
     <div class="chevron">&#9660;</div>
   </div>
@@ -958,55 +861,31 @@ kbd {
       
       <div class="block">
         <div class="blabel">&#x1F4CC; Why It Matters</div>
-        <p>This is one of the first times a major ransomware leader has been fully doxed by a Western government, putting a real name and face to one of cybercrime's most consequential figures. The identification confirms long-suspected links between GandCrab and REvil as successive operations run by the same individual. While arrest remains unlikely given Russia's non-extradition stance, the public identification disrupts UNKN's ability to operate anonymously and signals that attribution capabilities have caught up with even careful operators.</p>
+        <p>This is one of the most significant ransomware attribution events in years, connecting a single individual to two of the most destructive RaaS operations in history. GandCrab and REvil collectively caused billions in damages and pioneered the double-extortion model. Naming and shaming operators — even those sheltered in Russia — raises the cost of cybercrime and disrupts trust within criminal ecosystems.</p>
       </div>
 
       <div class="block concept-block">
         <div class="blabel">&#x1F9E0; Concept</div>
-        <div class="concept-title" style="color:#34d399">Ransomware-as-a-Service (RaaS) Operational Security and Attribution</div>
-        <div class="concept-text"><p>Think of a ransomware-as-a-service operation like a criminal franchise. The franchise owner (the operator) builds the product, manages the brand, provides tools and infrastructure, and takes a cut of every payment. Individual 'affiliates' are like franchisees — they do the actual break-ins and deploy the ransomware, but they rely on the operator's technology and negotiation infrastructure. The operator sits at the top, rarely touching victims directly, which makes them extremely hard to identify.</p><p>RaaS operators like UNKN maintain their anonymity through layers of operational security: communicating only through encrypted channels and forums using pseudonyms, receiving payments exclusively through cryptocurrency mixers, never revealing personal details, and carefully compartmentalizing their affiliate relationships. GandCrab operated from 2018-2019 and 'retired' with claimed earnings of $2 billion before REvil launched as its successor — reusing significant code and infrastructure. Despite these precautions, long-running operations inevitably generate attribution breadcrumbs: cryptocurrency flows, communication metadata, infrastructure registration patterns, and correlations across the operator's digital lifetime.</p><p>German investigators connected Shchukin to at least 130 acts of computer sabotage and extortion between 2019 and 2021 — the peak REvil years that included the devastating Kaseya supply chain attack. The attribution likely combined cryptocurrency tracing (following ransom payments through mixers to eventual cash-out points), signals intelligence, and human intelligence from arrested affiliates who cooperated with authorities. The GandCrab-to-REvil continuity was a key thread — code reuse and infrastructure overlap created a persistent trail.</p><p>Public doxing of cybercriminals represents an evolution in law enforcement strategy. When arrest isn't possible due to safe-harbor countries, naming and shaming serves multiple purposes: it burns the operator's pseudonym (forcing them to rebuild trust), enables sanctions that freeze assets and block business relationships, deters potential affiliates, and demonstrates to other operators that anonymity is not guaranteed. It's part of a broader 'impose costs' doctrine that aims to make cybercrime riskier even without physical custody.</p></div>
+        <div class="concept-title" style="color:#34d399">Ransomware-as-a-Service (RaaS) Operator Model</div>
+        <div class="concept-text"><p>Think of it like a franchise restaurant chain. The franchisor (the RaaS operator) builds the brand, develops the recipes (the malware), and provides the infrastructure (payment portals, leak sites). Franchisees (affiliates) pay a cut of their earnings for the privilege of using the brand and tools. The franchisor never needs to rob a single restaurant themselves.</p><p>In the RaaS model, the operator develops and maintains the ransomware payload, encryption routines, negotiation portals, and cryptocurrency laundering infrastructure. Affiliates — often recruited on dark web forums — receive a customized build of the ransomware and handle the actual intrusions: gaining initial access, moving laterally, exfiltrating data, and deploying the encryptor. Revenue is split, typically 70/30 or 80/20 in favor of the affiliate. The operator manages the 'business' end: updating the malware to evade detection, running the leak blog for double-extortion, and handling ransom negotiations.</p><p>Shchukin, operating as 'UNKN,' allegedly ran this model twice: first with GandCrab (2018-2019), which reportedly earned $2B+ before a staged 'retirement,' then immediately pivoting to REvil/Sodinokibi, which attacked JBS Foods, Kaseya, and hundreds more. German investigators linked both operations through overlapping infrastructure, shared code, and operational patterns — confirming what researchers long suspected: GandCrab didn't die, it rebranded.</p><p>The doxing of RaaS operators matters beyond the individual case. These ecosystems depend on trust and anonymity — affiliates need to trust the operator won't steal their share, and operators need anonymity to avoid arrest. When an operator is publicly named, it fractures that trust, deters potential affiliates, and may trigger infighting as associates worry about their own exposure. Even when arrest is unlikely due to Russian non-cooperation, the exposure itself is a disruption tool.</p></div>
       </div>
 
       <div class="block">
         <div class="blabel">&#x1F4CA; Visual Diagram</div>
-        <div class="terminal">
-          <div class="term-bar">
+        <div class="diagram-wrap">
+          <div class="diagram-bar">
             <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-            <span class="term-title">Ransomware-as-a-Service (RaaS) Operational Security and Attribution</span>
+            <span class="diagram-title">Ransomware-as-a-Service (RaaS) Operator Model</span>
           </div>
-          <pre class="ascii">┌─────────────────────────────────────────┐
-│     UNKN (Daniil Shchukin, age 31)      │
-│     ┌─────────────┐ ┌────────────┐      │
-│     │  GandCrab   │ │   REvil    │      │
-│     │  2018-2019  │►│  2019-2021 │      │
-│     │  (retired)  │ │  (successor│      │
-│     └──────┬──────┘ └──────┬─────┘      │
-│            │    Code &amp; Infra Reuse       │
-└────────────┼───────────────┼────────────┘
-             │               │
-     ┌───────▼───────────────▼───────┐
-     │    RaaS Platform / Portal     │
-     │  ● Ransomware builder         │
-     │  ● Negotiation chat           │
-     │  ● Payment infrastructure     │
-     └───────────────┬───────────────┘
-                     │ 20-30% cut
-        ┌────────────┼────────────┐
-        ▼            ▼            ▼
-   ┌─────────┐ ┌─────────┐ ┌─────────┐
-   │Affiliate│ │Affiliate│ │Affiliate│
-   │   #1    │ │   #2    │ │   #N    │
-   └────┬────┘ └────┬────┘ └────┬────┘
-        ▼            ▼            ▼
-   130+ victims across Germany alone</pre>
+          <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrow2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#34d399"/></marker></defs><rect width="700" height="340" fill="#060912"/><text x="350" y="25" fill="#7a849a" font-size="12" font-family="monospace" text-anchor="middle">TIMELINE: UNKN's Ransomware Operations</text><line x1="60" y1="80" x2="650" y2="80" stroke="#252840" stroke-width="2"/><circle cx="120" cy="80" r="6" fill="#34d399"/><text x="120" y="65" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Jan 2018</text><text x="120" y="105" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">GandCrab</text><text x="120" y="120" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">launches</text><circle cx="270" cy="80" r="6" fill="#34d399"/><text x="270" y="65" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Jun 2019</text><text x="270" y="105" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">GandCrab</text><text x="270" y="120" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">"retires"</text><circle cx="370" cy="80" r="6" fill="#34d399"/><text x="370" y="65" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Sep 2019</text><text x="370" y="105" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">REvil</text><text x="370" y="120" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">emerges</text><circle cx="500" cy="80" r="6" fill="#34d399"/><text x="500" y="65" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Jul 2021</text><text x="500" y="105" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Kaseya attack</text><text x="500" y="120" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">1,500+ victims</text><circle cx="610" cy="80" r="6" fill="#34d399"/><text x="610" y="65" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Apr 2026</text><text x="610" y="105" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">UNKN doxed</text><text x="610" y="120" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Shchukin named</text><rect x="80" y="150" width="250" height="75" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/><text x="205" y="172" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">UNKN (Operator)</text><text x="205" y="190" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Develops malware, runs infra</text><text x="205" y="205" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Manages leak sites &amp; payments</text><line x1="330" y1="187" x2="400" y2="187" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow2)"/><text x="365" y="180" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">20-30%</text><text x="365" y="200" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">cut</text><rect x="403" y="150" width="250" height="75" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="528" y="172" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Affiliates</text><text x="528" y="190" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Gain access, deploy ransomware</text><text x="528" y="205" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">130+ attacks in Germany alone</text><rect x="150" y="260" width="400" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/><text x="350" y="283" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">German BKA: Daniil Shchukin, age 31, Russian</text><text x="350" y="300" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Both GandCrab &amp; REvil linked via shared code &amp; infra</text></svg></div>
         </div>
       </div>
 
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
-        <div class="opinion-q">On r/netsec and security Twitter/X, the reaction has been a mix of satisfaction and pragmatic skepticism. Many researchers celebrated the identification as a milestone in ransomware attribution, with some noting they had suspected GandCrab/REvil continuity for years. Prominent ransomware tracker @pancak3lullz noted 'UNKN was always the white whale — this is huge for accountability even without cuffs.' On Hacker News, commenters debated whether doxing without arrest is meaningful, with the top-voted comment arguing 'it constrains his movement to Russia forever and makes him a liability to anyone who works with him.' Reddit's r/cybersecurity thread saw several former incident responders sharing personal stories of dealing with REvil attacks, expressing emotional closure. Some skeptics on X questioned timing, suggesting the dox may have been enabled by Russian intelligence leaks rather than pure police work.</div>
+        <div class="opinion-q">On r/netsec and security Twitter, the reaction has been a mix of satisfaction and skepticism. @vabornikov noted 'We all suspected GandCrab→REvil was the same crew, nice to see it confirmed with a face.' On Reddit r/cybersecurity, top comments question whether naming matters: 'Cool, now arrest him. Oh wait, he's in Russia.' Several HN commenters praised the German BKA's investigative work but pointed out that UNKN had already been rumored to be arrested by Russian FSB in 2022 — raising questions about what changed. CrowdStrike's Adam Meyers posted on X that this 'validates years of threat intel linking the two operations through code overlap.'</div>
         <div class="blabel">&#x1F50D; Assessment</div>
-        <p>The celebration is warranted — this is genuinely significant attribution work connecting two of the most damaging ransomware operations to a single individual. The skeptics asking 'so what without an arrest?' have a fair point historically, but underestimate the practical impact: UNKN's burned identity makes him toxic to future criminal partners and enables financial sanctions. The speculation about intelligence leaks as a source is plausible but unverifiable. What's missing from most discussion is the role of arrested REvil affiliates (several were detained in 2022) who likely provided crucial human intelligence. The emotional responses from IR professionals highlight the often-overlooked human toll these operations imposed on defenders.</p>
+        <p>The skepticism about arrest prospects is realistic — Russia has historically refused extradition of cybercriminals. However, dismissing the doxing as meaningless underestimates its disruptive value. Named operators lose the ability to operate freely, face potential sanctions on their finances, and — critically — their former affiliates and associates now face exposure risk by association. The confirmation of the GandCrab→REvil link is genuinely significant for threat intelligence, validating years of researcher analysis. What's underappreciated is how this kind of attribution may influence insurance underwriting and legal liability frameworks for ransomware payments.</p>
       </div>
 
       <div class="block">
@@ -1014,31 +893,31 @@ kbd {
         <div class="quiz-grid">
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q1 of 3</div>
-        <div class="q-text">Why would a ransomware operator 'retire' one successful brand (GandCrab) only to immediately launch a successor (REvil)?</div>
+        <div class="q-text">Why would a successful ransomware operator like GandCrab publicly 'retire' only to immediately launch a new operation (REvil)?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Retiring a brand helps evade law enforcement pressure and resets the heat, while launching a successor preserves the operator's technical investment, affiliate network, and revenue stream under a fresh identity with less scrutiny.</div>
-          <div class="q-exp">This is a common RaaS tactic called 'rebranding.' As law enforcement and security researchers close in on a brand, the operator shuts it down — often claiming retirement — then relaunches with new branding but reuses code, infrastructure, and trusted affiliates. It's the cybercriminal equivalent of a company changing its name after a scandal.</div>
+          <div class="q-ans">Rebranding evades law enforcement attention and resets the threat landscape — security vendors have to rebuild detection signatures, and the operator can incorporate lessons learned while shaking off investigations tied to the old brand.</div>
+          <div class="q-exp">Ransomware rebrands are common (Conti→Royal→BlackSuit, DarkSide→BlackMatter). The underlying code, infrastructure, and team persist, but the new name disrupts ongoing investigations, invalidates IOCs, and resets public attention.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q2 of 3</div>
-        <div class="q-text">How can publicly identifying a cybercriminal be an effective law enforcement tool even when arrest is impossible?</div>
+        <div class="q-text">In the RaaS model, why does the operator typically take a smaller percentage (20-30%) than the affiliate (70-80%)?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">It burns their pseudonym and operational trust, enables financial sanctions that freeze assets, restricts international travel, deters future collaborators, and demonstrates attribution capability that raises the perceived risk for all operators.</div>
-          <div class="q-exp">The 'impose costs' doctrine recognizes that cybercrime thrives on anonymity and impunity. Even without arrest, revealing an identity destroys years of carefully built pseudonymous trust. Sanctions can freeze cryptocurrency holdings at compliant exchanges. And the demonstration effect — showing others they can be found — has a chilling effect on recruitment and operations.</div>
+          <div class="q-ans">The operator needs to attract skilled affiliates who take on the highest-risk work — actually breaking into networks. A generous revenue split incentivizes more affiliates, which scales the operation far beyond what the operator could do alone.</div>
+          <div class="q-exp">The operator's advantage is scale: even at 20-30%, they earn from every affiliate's attack simultaneously. Affiliates bear the operational risk of intrusion, so they demand the larger share. It's similar to why app stores take 30% — the platform profits from volume.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q3 of 3</div>
-        <div class="q-text">What types of evidence likely enabled German authorities to connect the UNKN pseudonym to a real identity across years of operations?</div>
+        <div class="q-text">How does publicly identifying a ransomware operator disrupt criminal ecosystems even if arrest is unlikely?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Cryptocurrency tracing through mixers to cash-out points, infrastructure registration overlaps between GandCrab and REvil, communication metadata from seized forum servers, and human intelligence from arrested affiliates who cooperated.</div>
-          <div class="q-exp">Attribution is rarely a single breakthrough — it's the accumulation of small operational security failures over time. Cryptocurrency, despite being pseudonymous, leaves a permanent blockchain trail. Arrested affiliates provide human intelligence. Code reuse and infrastructure overlap between GandCrab and REvil created a persistent thread investigators could follow across the operator's career.</div>
+          <div class="q-ans">It erodes the anonymity and trust that criminal partnerships depend on — affiliates fear association exposure, financial assets can be sanctioned, and the operator's ability to recruit or operate on forums is severely compromised.</div>
+          <div class="q-exp">Cybercriminal ecosystems run on reputation and trust. A doxed operator becomes a liability — other criminals won't work with someone who might be under active surveillance. Financial sanctions can freeze cryptocurrency holdings, and the psychological pressure alone can cause operational mistakes.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div></div>
@@ -1046,7 +925,7 @@ kbd {
 
       <div class="block deepdive-block">
         <div class="blabel">&#x1F4AD; Deep Dive</div>
-        <p class="deepdive-text">If ransomware operators can be identified but not arrested due to geopolitical safe harbors, does the 'name and shame' strategy actually reduce ransomware attacks — or does it merely push operators to adopt better operational security, ultimately making the next generation of cybercriminals harder to catch?</p>
+        <p class="deepdive-text">If ransomware operators can simply rebrand (GandCrab→REvil→?) and continue operating from safe havens, is law enforcement attribution fundamentally a game of Whac-A-Mole — or does the cumulative pressure of repeated exposures eventually create a tipping point that makes the business model unsustainable?</p>
       </div>
 
       <div class="story-footer">
@@ -1064,12 +943,12 @@ kbd {
   <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
     <div class="s-left">
       <div class="s-meta">
-        <span class="src-badge" style="background:#34d3991a;color:#34d399">The Hacker News</span>
+        <span class="src-badge" style="background:#34d3991a;color:#34d399">BleepingComputer</span>
         <span class="story-num">03</span>
       </div>
-      <h2>Chaos Malware Evolves to Target Misconfigured Cloud Deployments with SOCKS Proxy</h2>
-      <div class="tldr"><span class="tldr-tag">TL;DR</span>A new variant of the Chaos botnet malware is pivoting from routers and edge devices to attack misconfigured cloud infrastructure, adding SOCKS proxy capabilities that turn compromised instances into anonymous traffic relays.</div>
-      <div class="tag-row"><button class="tag" data-name="Chaos Botnet" data-desc="A cross-platform (Go-based) botnet malware originally targeting Linux routers and edge devices, capable of DDoS attacks, reverse shell access, and now SOCKS proxy functionality. Compiles for multiple architectures including ARM, MIPS, x86." data-relevance="The specific malware that has evolved to target misconfigured cloud deployments, with its new variant adding SOCKS proxy capability to monetize compromised instances beyond DDoS." onclick="openTagModal(event,this)">Chaos Botnet</button><button class="tag" data-name="Docker Daemon API (TCP 2375/2376)" data-desc="The Docker Engine API allows programmatic management of containers, images, and volumes. Port 2375 is the unencrypted default; 2376 is TLS-encrypted. When exposed without authentication, it grants full container management to anyone." data-relevance="Exposed Docker APIs are one of the primary misconfiguration vectors the Chaos variant scans for, allowing attackers to deploy malicious containers on victim cloud instances without any authentication." onclick="openTagModal(event,this)">Docker Daemon API (TCP 2375/2376)</button><button class="tag" data-name="SOCKS5 Proxy Protocol" data-desc="A network protocol that routes arbitrary TCP (and optionally UDP) traffic through an intermediary server, providing network-level anonymization without application-specific configuration." data-relevance="The key new capability added to this Chaos variant — turns compromised cloud instances into traffic relay nodes that can be sold as anonymization services to other threat actors." onclick="openTagModal(event,this)">SOCKS5 Proxy Protocol</button></div>
+      <h2>Pixel-Sized SVG Images Hide Credit Card Skimmers Across 100 Magento Stores</h2>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Attackers are injecting credit card-stealing JavaScript into nearly 100 Magento e-commerce sites by hiding the malicious code inside a 1×1 pixel SVG image — evading scanners that don't parse image file contents.</div>
+      <div class="tag-row"><button class="tag" data-name="Magento" data-desc="An open-source e-commerce platform (now Adobe Commerce) widely used for online stores, particularly popular among small-to-mid-size merchants." data-relevance="The ~100 compromised stores in this campaign all run Magento, whose extension ecosystem and frequent misconfigurations make it a perennial Magecart target." onclick="openTagModal(event,this)">Magento</button><button class="tag" data-name="SVG (Scalable Vector Graphics)" data-desc="An XML-based vector image format that browsers parse as documents, supporting embedded scripts, CSS, and interactive elements — unlike binary image formats." data-relevance="The attack vector itself — malicious JavaScript is hidden inside a 1×1 pixel SVG file, exploiting the fact that security tools treat SVGs as inert images rather than executable documents." onclick="openTagModal(event,this)">SVG (Scalable Vector Graphics)</button><button class="tag" data-name="Content Security Policy (CSP)" data-desc="An HTTP response header that lets websites declare which sources of content (scripts, styles, images) the browser should trust, preventing unauthorized code execution." data-relevance="A properly configured CSP with strict script-src would block this attack entirely, but most affected Magento stores lack adequate CSP headers." onclick="openTagModal(event,this)">Content Security Policy (CSP)</button></div>
     </div>
     <div class="chevron">&#9660;</div>
   </div>
@@ -1077,57 +956,45 @@ kbd {
   <div class="story-body">
     <div class="body-inner">
       
+      <div class="block affected-block">
+        <div class="affected-header">
+          <div class="blabel">&#x26A0;&#xFE0F; Affected Systems</div>
+          <span class="affected-warning">PATCH CHECK</span>
+        </div>
+        <div class="affected-list">
+      <div class="affected-item">
+        <span class="affected-name">Magento-based e-commerce stores</span>
+        <span class="affected-ver">Multiple versions affected (specific versions not disclosed); approximately 100 stores compromised</span>
+      </div>
+        </div>
+      </div>
       <div class="block">
         <div class="blabel">&#x1F4CC; Why It Matters</div>
-        <p>This evolution signals that commodity botnet operators are following the same workloads that enterprises are moving to the cloud. Misconfigured cloud instances — exposed Docker APIs, default credentials on management interfaces, open Kubernetes dashboards — represent an enormous, poorly defended attack surface. The addition of SOCKS proxy functionality transforms compromised cloud instances into high-bandwidth anonymization infrastructure, enabling secondary criminal operations like credential stuffing and traffic laundering.</p>
+        <p>This technique exploits a blind spot in most security scanners: they treat image files as inert data. By embedding executable JavaScript within SVG's XML structure, attackers bypass content security policies, malware scanners, and manual code reviews that focus on .js files. With nearly 100 stores compromised, real customers are having their payment data stolen in real time.</p>
       </div>
 
       <div class="block concept-block">
         <div class="blabel">&#x1F9E0; Concept</div>
-        <div class="concept-title" style="color:#34d399">Cloud Misconfiguration as an Attack Surface</div>
-        <div class="concept-text"><p>Imagine building a high-security vault but leaving the construction scaffolding up with an unlocked door at the top. The vault itself is impenetrable, but the scaffolding — a temporary setup that was never meant to face the public — gives anyone a way in. Cloud misconfigurations are that scaffolding: management interfaces, debugging ports, and default credentials that were fine in development but devastating in production.</p><p>Cloud platforms like AWS, Azure, and GCP provide powerful infrastructure that's secure by design — but only when configured correctly. Common misconfigurations include: Docker daemon APIs exposed to the internet on port 2375 without TLS authentication, Kubernetes dashboards accessible without credentials, cloud storage buckets with public read/write access, and instances launched with default passwords or overly permissive security groups. Automated scanners constantly sweep the internet for these mistakes, and the window between deploying a misconfigured instance and getting compromised can be minutes.</p><p>The Chaos malware variant documented by Darktrace represents a natural evolution. Previously focused on consumer routers and edge devices (exploiting their weak security), the botnet's operators recognized that misconfigured cloud instances offer something routers can't: high bandwidth, high uptime, and compute resources. The new SOCKS proxy feature is particularly strategic — it turns each compromised cloud instance into an anonymization relay, allowing other criminals to route their traffic through legitimate cloud IP addresses that aren't yet blocklisted.</p><p>This trend has broader implications for the shared responsibility model in cloud computing. Cloud providers secure the infrastructure layer, but customers are responsible for configuring their workloads correctly. As organizations rapidly spin up cloud resources — often through CI/CD pipelines with minimal security review — the gap between deployment speed and security posture widens. Botnet operators are industrializing the exploitation of this gap, and the addition of proxy capabilities creates a secondary economy where compromised instances are monetized as anonymization services for other threat actors.</p></div>
+        <div class="concept-title" style="color:#34d399">SVG-Based Payload Smuggling in Web Skimming Attacks</div>
+        <div class="concept-text"><p>Imagine a security guard at a building entrance who checks every briefcase but waves through picture frames without looking behind them. An attacker hides a weapon taped to the back of a framed photo — it passes right through because 'it's just a picture.'</p><p>SVG (Scalable Vector Graphics) files are fundamentally different from raster images like JPEG or PNG. While JPEGs are binary pixel data, SVGs are XML documents — essentially text files that can contain not just drawing instructions but also embedded JavaScript via &lt;script&gt; tags, event handlers like onload, or even foreignObject elements. When a browser renders an SVG, it parses it as a full XML document and will execute any embedded scripts. Attackers exploit this by creating a tiny 1×1 pixel SVG that visually appears as nothing — but contains obfuscated JavaScript that activates on the checkout page, captures form fields (card number, CVV, expiration), and exfiltrates the data to an attacker-controlled server.</p><p>In this campaign targeting ~100 Magento stores, the attackers injected a reference to a malicious SVG file into the site's template. Because it's a single pixel, it's invisible to shoppers. Most web application firewalls and file integrity monitoring tools classify .svg files as images and skip deep content inspection. The JavaScript inside the SVG fires during checkout, overlays or hooks into the payment form, and silently sends card data to a remote domain — a classic Magecart-style attack with a novel delivery mechanism.</p><p>This technique highlights a fundamental tension in web security: the browser's willingness to execute code from any parsed XML document, combined with security tools' tendency to classify files by extension rather than content. As SVGs become more common in modern web design (icons, logos, illustrations), they become an increasingly attractive smuggling vector. Content Security Policy (CSP) headers that restrict script sources should mitigate this — but only if they're properly configured to prevent inline scripts within SVG contexts, which most sites don't do.</p></div>
       </div>
 
       <div class="block">
         <div class="blabel">&#x1F4CA; Visual Diagram</div>
-        <div class="terminal">
-          <div class="term-bar">
+        <div class="diagram-wrap">
+          <div class="diagram-bar">
             <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-            <span class="term-title">Cloud Misconfiguration as an Attack Surface</span>
+            <span class="diagram-title">SVG-Based Payload Smuggling in Web Skimming Attacks</span>
           </div>
-          <pre class="ascii">  INTERNET SCANNING
-  ┌──────────────────────────────────────┐
-  │  Chaos Botnet Scanner                │
-  │  Probing for:                        │
-  │  ● Docker API :2375 (no auth)        │
-  │  ● K8s Dashboard (no auth)           │
-  │  ● SSH default creds                 │
-  │  ● Exposed mgmt interfaces           │
-  └──────────────┬───────────────────────┘
-                 │ Found misconfigured instance
-                 ▼
-  ┌──────────────────────────────────┐
-  │  COMPROMISED CLOUD INSTANCE     │
-  │  ┌────────────┐ ┌─────────────┐ │
-  │  │ Chaos      │ │ SOCKS Proxy │ │
-  │  │ Implant    │ │ Module      │ │
-  │  └─────┬──────┘ └──────┬──────┘ │
-  │        │               │        │
-  └────────┼───────────────┼────────┘
-           │               │
-     ┌─────▼─────┐   ┌─────▼──────────────┐
-     │ DDoS      │   │ Traffic Laundering  │
-     │ Attacks   │   │ (cred stuffing,     │
-     │           │   │  spam, C2 relay)    │
-     └───────────┘   └────────────────────┘</pre>
+          <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrow3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#34d399"/></marker></defs><rect width="700" height="340" fill="#060912"/><text x="350" y="25" fill="#7a849a" font-size="12" font-family="monospace" text-anchor="middle">DATA FLOW: SVG Skimmer Attack Chain</text><rect x="30" y="55" width="130" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="95" y="78" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Shopper</text><text x="95" y="95" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">visits checkout</text><line x1="160" y1="82" x2="210" y2="82" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow3)"/><rect x="213" y="55" width="155" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="290" y="78" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Magento Store</text><text x="290" y="95" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">serves page + SVG</text><line x1="368" y1="82" x2="418" y2="82" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow3)"/><rect x="421" y="45" width="155" height="70" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/><text x="498" y="70" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">1×1 pixel SVG</text><text x="498" y="87" fill="#34d399" font-size="10" font-family="monospace" text-anchor="middle">&lt;script&gt; inside</text><text x="498" y="102" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">looks like image</text><line x1="498" y1="115" x2="498" y2="155" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow3)"/><rect x="400" y="158" width="195" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/><text x="497" y="180" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">JS executes in browser</text><text x="497" y="196" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">hooks payment form fields</text><line x1="498" y1="208" x2="498" y2="240" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow3)"/><rect x="375" y="243" width="245" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/><text x="497" y="265" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Card data captured</text><text x="497" y="281" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">CC#, CVV, expiry, name</text><line x1="375" y1="268" x2="220" y2="268" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow3)"/><rect x="40" y="243" width="177" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/><text x="128" y="263" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">Attacker C2</text><text x="128" y="279" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">exfil via HTTPS POST</text><rect x="40" y="150" width="180" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/><text x="130" y="172" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">WAF / Scanner</text><text x="130" y="190" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">skips .svg = "image"</text><text x="225" y="178" fill="#34d399" font-size="16" font-family="monospace">✗</text></svg></div>
         </div>
       </div>
 
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
-        <div class="opinion-q">On r/netsec, researchers pointed out that Chaos targeting cloud is 'inevitable — same low-hanging fruit, higher ROI.' Several commenters shared experiences finding exposed Docker sockets on Shodan within their own organizations. Security Twitter/X saw Darktrace's report discussed with some skepticism about vendor-driven threat reports, though most agreed the trend is real. On Hacker News, the discussion gravitated toward IaC (Infrastructure as Code) tools and whether mandatory security linting in CI/CD pipelines could prevent these misconfigurations. One popular comment noted 'the SOCKS proxy addition is the real story — it creates a marketplace for compromised cloud instances.' Reddit's r/devops had a thread about this with developers acknowledging that security groups are often set to 0.0.0.0/0 during testing and 'never get tightened.'</div>
+        <div class="opinion-q">On r/netsec, researchers are calling this 'clever but not new,' noting SVG script injection has been discussed in OWASP contexts for years but rarely seen at this scale in Magecart campaigns. A BleepingComputer commenter pointed out 'CSP should block this, but how many Magento stores actually have proper CSP?' On security Twitter, @maboroshi noted that this defeats most file-upload validation that checks extensions rather than content. HN discussion focused on the broader SVG security model, with several commenters arguing browsers should sandbox SVG execution more aggressively, similar to how iframes can be sandboxed.</div>
         <div class="blabel">&#x1F50D; Assessment</div>
-        <p>The community is correctly identifying this as a natural market evolution — botnets follow value, and cloud instances have more value than home routers. The skepticism about vendor-driven threat reports is healthy but shouldn't obscure the real trend: Shodan data independently confirms massive cloud misconfiguration exposure. The HN discussion about IaC security linting points to the right solution direction, but undersells the organizational challenge — many teams know what to do but lack enforcement mechanisms. The r/devops admission about testing security groups never getting tightened is the real root cause: it's a process failure, not a knowledge gap. The focus on the SOCKS proxy capability is astute — it represents a business model evolution from pure DDoS to multi-revenue botnet operations.</p>
+        <p>The 'not new' crowd is technically correct — SVG script execution is well-documented — but they're underestimating the operational significance: this is the first mass-scale Magecart campaign weaponizing this technique against ~100 stores simultaneously. The CSP point is the most actionable insight — proper script-src directives would block this entirely, but Magento's ecosystem of third-party extensions makes strict CSP notoriously hard to implement. The browser sandboxing argument is interesting but unlikely to change soon, as SVG script execution is deeply embedded in the web platform spec.</p>
       </div>
 
       <div class="block">
@@ -1135,31 +1002,31 @@ kbd {
         <div class="quiz-grid">
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q1 of 3</div>
-        <div class="q-text">Why are misconfigured cloud instances more valuable to botnet operators than compromised consumer routers?</div>
+        <div class="q-text">Why can SVG files contain executable JavaScript while JPEG and PNG files cannot?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Cloud instances offer dramatically higher bandwidth, better uptime, more compute resources, and their IP addresses are associated with legitimate cloud providers — making malicious traffic harder to distinguish from normal business traffic.</div>
-          <div class="q-exp">Consumer routers typically have limited bandwidth (50-500 Mbps), intermittent availability, and residential IP ranges that are easily blocklisted. Cloud instances can have multi-gigabit connections, 99.99% uptime, and IP addresses from AWS/Azure/GCP ranges that security tools are reluctant to block because they'd also block legitimate services.</div>
+          <div class="q-ans">SVGs are XML-based text documents parsed by the browser's XML/HTML engine, which supports &lt;script&gt; tags and event handlers. JPEGs and PNGs are binary raster formats processed by image decoders that don't interpret executable code.</div>
+          <div class="q-exp">The key distinction is parsing context. The browser treats SVG as a document (like HTML), applying its full XML parser including script execution. Binary image formats are decoded by dedicated image libraries that only output pixel data — there's no mechanism to embed or trigger code.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q2 of 3</div>
-        <div class="q-text">What is the strategic value of adding SOCKS proxy functionality to a botnet beyond basic DDoS capability?</div>
+        <div class="q-text">How could a properly configured Content Security Policy (CSP) prevent this SVG-based skimming attack?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">SOCKS proxies transform compromised instances into anonymization relays that can be sold as a service to other criminals for credential stuffing, spam, web scraping, and evading geographic restrictions — creating a secondary revenue stream beyond DDoS-for-hire.</div>
-          <div class="q-exp">A DDoS-only botnet monetizes through one service. Adding proxy capability enables the operator to sell access to their network for any traffic-routing purpose. Credential stuffing attacks need clean IP addresses to avoid rate limiting. Spammers need diverse IPs to avoid blocklists. This diversification makes the botnet more profitable and resilient as a business.</div>
+          <div class="q-ans">A CSP with strict script-src directives (e.g., using nonces or hashes, disallowing 'unsafe-inline') would prevent the inline JavaScript within the SVG from executing, even though the SVG itself loads successfully.</div>
+          <div class="q-exp">CSP controls what scripts the browser is allowed to execute. If the policy only permits scripts from specific trusted sources with valid nonces, the embedded script inside the SVG would be blocked by the browser — the image renders but the malicious code never fires.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q3 of 3</div>
-        <div class="q-text">Under the cloud shared responsibility model, why do misconfigurations like exposed Docker APIs persist despite cloud providers offering secure defaults?</div>
+        <div class="q-text">Why does making the SVG only 1×1 pixel matter for the attack's success?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Cloud providers secure the infrastructure layer but customers own workload configuration. Rapid deployment via CI/CD pipelines, developer convenience shortcuts, lack of security review in deployment processes, and the gap between development and production configurations all contribute to persistent misconfigurations.</div>
-          <div class="q-exp">The shared responsibility model means AWS/Azure/GCP ensure the hypervisor and physical infrastructure are secure, but if a customer exposes port 2375 with no authentication, that's the customer's responsibility. The speed of cloud-native development — where infrastructure is spun up in seconds — often outpaces security review processes, and 'temporary' insecure configurations become permanent.</div>
+          <div class="q-ans">A 1×1 pixel image is invisible to both users and manual code reviewers scanning the page visually. It ensures the malicious SVG loads and executes without anyone noticing an unexpected visual element on the checkout page.</div>
+          <div class="q-exp">The attack needs the SVG to be rendered (so its scripts execute) but not visible (so no one investigates). A 1×1 pixel is technically present in the DOM and gets parsed/executed, but occupies no meaningful visual space — perfect for stealth.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div></div>
@@ -1167,14 +1034,14 @@ kbd {
 
       <div class="block deepdive-block">
         <div class="blabel">&#x1F4AD; Deep Dive</div>
-        <p class="deepdive-text">As botnets evolve from targeting dumb devices to exploiting cloud misconfigurations, should cloud providers bear more responsibility by enforcing secure-by-default configurations (e.g., blocking exposed management ports) even if it limits developer flexibility — or would that fundamentally undermine the cloud's value proposition of programmable, customizable infrastructure?</p>
+        <p class="deepdive-text">Given that SVG's design as an XML document format inherently allows script execution, should the web standards community reconsider whether images loaded via &lt;img&gt; tags should ever be allowed to execute embedded code — and what would break if they enforced a strict no-script policy for all image contexts?</p>
       </div>
 
       <div class="story-footer">
-        <a class="src-link" href="https://thehackernews.com/2026/04/new-chaos-variant-targets-misconfigured.html" target="_blank" rel="noopener noreferrer">
+        <a class="src-link" href="https://www.bleepingcomputer.com/news/security/hackers-use-pixel-large-svg-trick-to-hide-credit-card-stealer/" target="_blank" rel="noopener noreferrer">
           Read original <span>&#x2192;</span>
         </a>
-        <span class="src-name">The Hacker News</span>
+        <span class="src-name">BleepingComputer</span>
       </div>
 
     </div>
@@ -1196,35 +1063,13 @@ kbd {
     <span class="notable-chevron">&#9660;</span>
   </div>
   <h3 class="notable-headline">AI-Driven RAM Shortage Sends SSD Prices Soaring Up to 4x</h3>
-  <p class="notable-summary">The explosive demand for memory in AI data centers is creating a cascading shortage that has driven consumer SSD prices through the roof — a WD Black SN850X 2TB that cost $173 in 2024 now sells for $649. The NAND flash and DRAM supply chains are being consumed by AI infrastructure buildouts, squeezing availability for everything from gaming PCs to enterprise storage.</p>
+  <p class="notable-summary">The massive demand for memory chips to power AI data centers is creating acute shortages that have spilled over into consumer SSD markets. Prices for popular drives like the WD Black SN850X 2TB have nearly quadrupled since late 2025, with the ripple effects hitting PC builders, enterprise storage buyers, and cloud providers alike.</p>
   
   <div class="notable-body">
     <div class="notable-apply">
       <div class="blabel">&#x1F4A1; Why This Applies to You</div>
-      <p>If you're budgeting for hardware — whether personal rigs, on-prem servers, or cloud infrastructure — expect significantly higher storage costs for the foreseeable future. Teams planning capacity expansions or disaster recovery investments should lock in pricing now. This also signals broader inflationary pressure on tech procurement budgets driven by AI's resource appetite.</p>
+      <p>If you manage infrastructure budgets or procurement, expect significantly higher costs for storage and memory through 2026. This also signals broader supply-chain pressure on any hardware that shares NAND or DRAM fab capacity with AI accelerators. Teams should plan ahead for hardware refresh cycles and consider locking in contracts now.</p>
       <a class="notable-read" href="https://www.theverge.com/tech/908916/ssd-storage-shortages-price-increases" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
-        Read original &#x2192;
-      </a>
-    </div>
-  </div>
-</article>
-
-<article class="notable-card" onclick="toggleNotable(this)">
-  <div class="notable-top">
-    <div class="notable-meta">
-      <span class="notable-cat" style="background:#f472b61a;color:#f472b6">Policy</span>
-      <span class="notable-src">Hacker News / The Drive</span>
-    </div>
-    <span class="notable-chevron">&#9660;</span>
-  </div>
-  <h3 class="notable-headline">John Deere to Pay $99M in Landmark Right-to-Repair Settlement</h3>
-  <p class="notable-summary">John Deere has agreed to a $99 million settlement in a right-to-repair case, marking one of the largest payouts in the movement's history. The settlement addresses the company's practice of using software locks to prevent farmers from independently repairing their equipment, a pattern that has drawn scrutiny from regulators and advocacy groups for years.</p>
-  <div class="tag-row"><button class="tag" data-name="John Deere" data-desc="World's largest agricultural equipment manufacturer, known for software-locked repair systems on tractors and combines." data-relevance="Defendant in the settlement; their software-restricted repair model is the central practice being challenged." onclick="openTagModal(event,this)">John Deere</button></div>
-  <div class="notable-body">
-    <div class="notable-apply">
-      <div class="blabel">&#x1F4A1; Why This Applies to You</div>
-      <p>This sets a powerful legal precedent that extends well beyond agriculture — any company using software to lock down hardware repairability is now on notice. For security and embedded systems professionals, this reinforces the trend toward mandatory repairability and diagnostic access, which could reshape how firmware and device software are architected. Expect similar legal challenges targeting automotive, medical device, and consumer electronics manufacturers.</p>
-      <a class="notable-read" href="https://www.thedrive.com/news/john-deere-to-pay-99-million-in-monumental-right-to-repair-settlement" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
         Read original &#x2192;
       </a>
     </div>
@@ -1240,12 +1085,12 @@ kbd {
     <span class="notable-chevron">&#9660;</span>
   </div>
   <h3 class="notable-headline">Strait of Hormuz Reopens After Ceasefire, but Global Shipping Recovery Will Take Months</h3>
-  <p class="notable-summary">A ceasefire has allowed the Strait of Hormuz — through which roughly 20% of the world's oil passes — to reopen after weeks of military disruption. However, massive shipping backlogs, infrastructure damage, and rerouted supply chains mean normalization is months away, with ripple effects across energy markets and global trade.</p>
+  <p class="notable-summary">A ceasefire has eased the weeks-long disruption to the Strait of Hormuz, one of the world's most critical shipping chokepoints for oil and goods. However, massive backlogs, infrastructure damage, and rerouted supply chains mean normal shipping flows won't resume for months.</p>
   
   <div class="notable-body">
     <div class="notable-apply">
       <div class="blabel">&#x1F4A1; Why This Applies to You</div>
-      <p>Tech supply chains that depend on components routed through Asia and the Middle East should brace for continued delays and elevated shipping costs. For anyone in infrastructure or operations, this is a reminder to stress-test supply chain resilience and vendor diversification. Energy price volatility from this disruption will also affect data center operating costs globally.</p>
+      <p>Tech supply chains — especially for semiconductors, components, and energy-intensive operations like data centers — remain vulnerable to geopolitical chokepoints. Security and operations teams should be scenario-planning for prolonged logistics delays and elevated energy costs. This is also a reminder to diversify supplier geography where possible.</p>
       <a class="notable-read" href="https://www.wired.com/story/the-strait-of-hormuz-reopens-but-global-shipping-will-take-months-to-recover/" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
         Read original &#x2192;
       </a>
@@ -1256,19 +1101,19 @@ kbd {
 <article class="notable-card" onclick="toggleNotable(this)">
   <div class="notable-top">
     <div class="notable-meta">
-      <span class="notable-cat" style="background:#4ade801a;color:#4ade80">Society</span>
-      <span class="notable-src">WIRED</span>
+      <span class="notable-cat" style="background:#f472b61a;color:#f472b6">Policy</span>
+      <span class="notable-src">Hacker News / The Drive</span>
     </div>
     <span class="notable-chevron">&#9660;</span>
   </div>
-  <h3 class="notable-headline">Lebanon's Crisis Exposes the Fragility of Government Digital Infrastructure Under Mass Displacement</h3>
-  <p class="notable-summary">With nearly 1 in 5 people displaced by Israeli attacks, Lebanon's emergency management system is buckling under a crisis it was never designed for. The government lacks modern digital infrastructure to coordinate relief, track displaced populations, or manage logistics at scale — turning a military crisis into a compounding humanitarian and systems failure.</p>
-  
+  <h3 class="notable-headline">John Deere to Pay $99M in Landmark Right-to-Repair Settlement</h3>
+  <p class="notable-summary">John Deere has agreed to a $99 million settlement in a right-to-repair case, marking one of the largest financial outcomes in the movement's history. The case centered on Deere's practice of locking down equipment software so only authorized dealers could perform repairs and diagnostics.</p>
+  <div class="tag-row"><button class="tag" data-name="John Deere" data-desc="Major agricultural equipment manufacturer whose tractors and machinery rely heavily on proprietary software and telematics systems." data-relevance="The defendant in this landmark right-to-repair settlement, forced to pay $99M over its software-locking practices on farm equipment." onclick="openTagModal(event,this)">John Deere</button></div>
   <div class="notable-body">
     <div class="notable-apply">
       <div class="blabel">&#x1F4A1; Why This Applies to You</div>
-      <p>This is a case study in what happens when crisis-scale digital infrastructure doesn't exist before it's needed. For those working in govtech, resilience engineering, or humanitarian tech, it highlights the critical need for pre-built, scalable emergency coordination platforms. It also underscores the security implications of mass displacement data — identity systems, refugee tracking, and aid distribution all become attack surfaces.</p>
-      <a class="notable-read" href="https://www.wired.com/story/we-were-not-ready-for-this-lebanons-emergency-system-is-hanging-by-a-thread/" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
+      <p>This settlement sets a powerful precedent that extends well beyond agriculture — any company shipping software-locked hardware (IoT, medical devices, enterprise equipment) should take note. For security professionals, right-to-repair victories often correlate with better vulnerability research access and independent security auditing. Policy teams should watch for legislative momentum this creates in other sectors.</p>
+      <a class="notable-read" href="https://www.thedrive.com/news/john-deere-to-pay-99-million-in-monumental-right-to-repair-settlement" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
         Read original &#x2192;
       </a>
     </div>
@@ -1279,18 +1124,40 @@ kbd {
   <div class="notable-top">
     <div class="notable-meta">
       <span class="notable-cat" style="background:#f472b61a;color:#f472b6">Policy</span>
-      <span class="notable-src">The Verge</span>
+      <span class="notable-src">WIRED</span>
     </div>
     <span class="notable-chevron">&#9660;</span>
   </div>
-  <h3 class="notable-headline">OpenAI Pitches Economic Policy Proposals to Washington — and DC Is Listening</h3>
-  <p class="notable-summary">OpenAI has presented a set of economic policy proposals to Washington lawmakers, positioning itself not just as a technology company but as a policy influencer shaping how the US government thinks about AI's role in the economy. The reception in DC reflects the growing entanglement between frontier AI companies and federal industrial policy.</p>
-  <div class="tag-row"><button class="tag" data-name="OpenAI" data-desc="Leading AI research and deployment company behind GPT models and ChatGPT." data-relevance="The company authoring and presenting economic policy proposals directly to US lawmakers." onclick="openTagModal(event,this)">OpenAI</button></div>
+  <h3 class="notable-headline">Appeals Court Upholds Supply-Chain Risk Label on Anthropic's Claude for Military Use</h3>
+  <p class="notable-summary">A US appeals court ruled that a supply-chain risk label applied to Anthropic should remain in place, creating a conflict with a prior ruling and complicating how the AI company's Claude model can be procured and deployed by the US military. The case raises novel questions about how AI providers are classified in government procurement frameworks.</p>
+  <div class="tag-row"><button class="tag" data-name="Anthropic Claude" data-desc="A frontier large language model developed by Anthropic, used across enterprise and government applications." data-relevance="The specific AI product at the center of conflicting court rulings over US military procurement eligibility." onclick="openTagModal(event,this)">Anthropic Claude</button></div>
   <div class="notable-body">
     <div class="notable-apply">
       <div class="blabel">&#x1F4A1; Why This Applies to You</div>
-      <p>This signals that AI companies are moving from lobbying for light regulation to actively drafting the economic frameworks they'll operate within — a significant power shift. Tech professionals and security leaders should track these proposals closely, as they could influence everything from export controls and compute access to workforce policy and government procurement standards. Understanding the policy landscape is becoming as important as understanding the technology itself.</p>
-      <a class="notable-read" href="https://www.theverge.com/column/908880/openai-made-economic-proposals-heres-what-dc-thinks-of-them" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
+      <p>If you work in govtech, defense contracting, or AI policy, this ruling matters — it signals that AI companies may face procurement friction similar to traditional defense suppliers. Conflicting court rulings create legal uncertainty that could reshape which AI tools are available in government settings. Companies selling AI to government should proactively engage with supply-chain risk frameworks like FedRAMP and CMMC.</p>
+      <a class="notable-read" href="https://www.wired.com/story/anthropic-appeals-court-ruling/" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
+        Read original &#x2192;
+      </a>
+    </div>
+  </div>
+</article>
+
+<article class="notable-card" onclick="toggleNotable(this)">
+  <div class="notable-top">
+    <div class="notable-meta">
+      <span class="notable-cat" style="background:#60a5fa1a;color:#60a5fa">Research</span>
+      <span class="notable-src">IEEE Spectrum</span>
+    </div>
+    <span class="notable-chevron">&#9660;</span>
+  </div>
+  <h3 class="notable-headline">Decentralized Training Gains Traction as a Fix for AI's Energy Crisis</h3>
+  <p class="notable-summary">Researchers and startups are exploring decentralized AI training — distributing model training across geographically dispersed, smaller compute nodes — as a practical near-term answer to the enormous energy demands of centralized data centers. The approach leverages underutilized compute and renewable energy availability across different regions, rather than waiting for nuclear-powered mega-facilities.</p>
+  
+  <div class="notable-body">
+    <div class="notable-apply">
+      <div class="blabel">&#x1F4A1; Why This Applies to You</div>
+      <p>This trend could reshape how engineering teams think about training infrastructure, potentially lowering barriers to entry for organizations that can't access hyperscale data centers. For security professionals, decentralized training introduces new threat surfaces around data integrity, model poisoning, and node authentication. Watch for emerging frameworks and protocols in this space as potential career-relevant skills.</p>
+      <a class="notable-read" href="https://spectrum.ieee.org/decentralized-ai-training-2676670858" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
         Read original &#x2192;
       </a>
     </div>
