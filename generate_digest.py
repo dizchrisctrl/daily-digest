@@ -89,52 +89,59 @@ STORY_SCHEMA = {
                  "source_url","source"],
 }
 
-DIGEST_TOOL = {
-    "name": "publish_digest",
-    "description": "Publish the formatted daily digest",
+SECTION_TOOL = {
+    "name": "publish_stories",
+    "description": "Publish 3 formatted stories for one digest section",
     "input_schema": {
         "type": "object",
         "properties": {
-            "date":          {"type": "string"},
-            "ai_stories":    {"type": "array", "items": STORY_SCHEMA, "minItems": 3, "maxItems": 3},
-            "cyber_stories": {"type": "array", "items": STORY_SCHEMA, "minItems": 3, "maxItems": 3},
+            "stories": {"type": "array", "items": STORY_SCHEMA, "minItems": 3, "maxItems": 3},
         },
-        "required": ["date", "ai_stories", "cyber_stories"],
+        "required": ["stories"],
     },
 }
+
+SECTION_PROMPT = """Today is {today}. Create 3 digest stories for someone moderately technical — works in or near tech/security, understands concepts, appreciates clear explanations with real depth.
+
+NEWS ARTICLES (pick the 3 most notable):
+{articles}
+
+For each story:
+- concept_explained: 4 paragraphs. P1: simple real-world analogy. P2: how it technically works. P3: tie to this story. P4: broader implications.
+- visual_ascii: meaningful diagram using box-drawing chars (┌─┐│└┘├┤→←↑↓). 15-25 lines. Labels required.
+- quiz: 3 questions testing real conceptual understanding, not trivia.
+- public_opinion: reference specific community sentiments (HN, Reddit r/technology, r/netsec, security Twitter/X).
+- deep_dive: a Socratic question forcing critical thinking about assumptions or bigger trends.
+
+Call the publish_stories tool with your 3 stories."""
+
+
+def call_claude_for_section(client, today, articles):
+    """Single section call — stays well within token limits."""
+    prompt = SECTION_PROMPT.format(
+        today=today,
+        articles=json.dumps(articles, indent=2),
+    )
+    response = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=8000,
+        tools=[SECTION_TOOL],
+        tool_choice={"type": "tool", "name": "publish_stories"},
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return response.content[0].input["stories"]
 
 
 def generate_digest_json(ai_articles, cyber_articles):
     client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
     today  = datetime.now(timezone.utc).strftime("%B %d, %Y")
 
-    prompt = f"""Today is {today}. Create a premium daily digest for someone moderately technical — works in or near tech/security, understands concepts, appreciates clear explanations with real depth.
+    print("  → Generating AI stories...")
+    ai_stories    = call_claude_for_section(client, today, ai_articles)
+    print("  → Generating Cybersecurity stories...")
+    cyber_stories = call_claude_for_section(client, today, cyber_articles)
 
-AI/TECH NEWS (pick the 3 most notable/interesting):
-{json.dumps(ai_articles, indent=2)}
-
-CYBERSECURITY NEWS (pick the 3 most notable/interesting):
-{json.dumps(cyber_articles, indent=2)}
-
-For each story:
-- concept_explained: 4 paragraphs. P1: simple real-world analogy. P2: how it technically works. P3: tie to this story. P4: broader implications.
-- visual_ascii: meaningful diagram using box-drawing chars (┌─┐│└┘├┤→←↑↓). 15-25 lines. Labels required.
-- quiz: 3 questions that test real conceptual understanding, not trivia.
-- public_opinion: reference specific community sentiments (HN, Reddit r/technology, r/netsec, security Twitter/X).
-- deep_dive: a Socratic question that forces critical thinking about assumptions or bigger trends.
-
-Call the publish_digest tool with your response."""
-
-    response = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=8000,
-        tools=[DIGEST_TOOL],
-        tool_choice={"type": "tool", "name": "publish_digest"},
-        messages=[{"role": "user", "content": prompt}],
-    )
-
-    # tool_use guarantees valid structured JSON — no parsing needed
-    return response.content[0].input
+    return {"date": today, "ai_stories": ai_stories, "cyber_stories": cyber_stories}
 
 
 # ── HTML Template (uses __PLACEHOLDER__ to avoid f-string brace conflicts) ─────
@@ -168,43 +175,55 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .section { display: none; }
 .section.active { display: block; }
 
-.story-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 32px; overflow: hidden; }
+/* ── Story Card ── */
+.story-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 20px; overflow: hidden; transition: border-color 0.2s; }
+.story-card:hover { border-color: #3d4268; }
 
-.story-header { padding: 28px; }
-.story-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 0.7rem; font-weight: 700; padding: 3px 12px; border-radius: 20px; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.8px; }
-.story-header h2 { font-size: 1.35rem; font-weight: 700; line-height: 1.35; margin-bottom: 12px; }
-.tldr { background: var(--surface2); border-radius: 8px; padding: 12px 16px; font-size: 0.94rem; color: var(--muted); border-left: 3px solid var(--border); }
+/* Clickable summary (always visible) */
+.story-summary { padding: 22px 24px; cursor: pointer; display: flex; align-items: flex-start; gap: 16px; user-select: none; }
+.story-summary:hover { background: #1e2235; }
+.story-summary-text { flex: 1; min-width: 0; }
+.story-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 0.68rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.8px; }
+.story-summary h2 { font-size: 1.15rem; font-weight: 700; line-height: 1.35; margin-bottom: 10px; }
+.tldr { font-size: 0.91rem; color: var(--muted); line-height: 1.6; }
 .tldr strong { color: var(--text); }
+.expand-icon { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--muted); transition: transform 0.3s, background 0.2s; margin-top: 4px; }
+.story-card.open .expand-icon { transform: rotate(180deg); background: var(--border); }
 
-.block { padding: 24px 28px; border-top: 1px solid var(--border); }
-.blabel { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 12px; }
+/* Expandable body */
+.story-body { display: none; border-top: 1px solid var(--border); }
+.story-card.open .story-body { display: block; }
+
+.block { padding: 22px 24px; border-top: 1px solid var(--border); }
+.block:first-child { border-top: none; }
+.blabel { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 10px; }
 
 .concept-block { background: #1c1f33; }
-.concept-text p { font-size: 0.96rem; margin-bottom: 14px; }
+.concept-text p { font-size: 0.95rem; margin-bottom: 13px; }
 .concept-text p:last-child { margin-bottom: 0; }
 
-pre.ascii { font-family: 'Courier New', monospace; font-size: 0.76rem; line-height: 1.45; background: #080b12; color: #7dd3fc; padding: 20px; border-radius: 10px; overflow-x: auto; white-space: pre; border: 1px solid #1e3a5f; }
+pre.ascii { font-family: 'Courier New', monospace; font-size: 0.76rem; line-height: 1.45; background: #080b12; color: #7dd3fc; padding: 18px; border-radius: 10px; overflow-x: auto; white-space: pre; border: 1px solid #1e3a5f; }
 
 .opinion-block { background: #111a11; }
-.opinion-quote { font-style: italic; color: var(--muted); padding: 12px 16px; border-left: 3px solid #22c55e44; margin-bottom: 16px; font-size: 0.94rem; }
+.opinion-quote { font-style: italic; color: var(--muted); padding: 10px 14px; border-left: 3px solid #22c55e44; margin-bottom: 14px; font-size: 0.92rem; }
 
-.quiz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
-.qcard { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 16px; cursor: pointer; transition: border-color 0.2s, transform 0.1s; user-select: none; }
+.quiz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.qcard { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: border-color 0.2s, transform 0.1s; user-select: none; }
 .qcard:hover { border-color: var(--ai); transform: translateY(-1px); }
 .qcard.open { border-color: var(--cyber); }
-.qcard-q { font-weight: 600; font-size: 0.88rem; line-height: 1.5; }
-.qcard-a { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
-.qcard-ans { color: var(--cyber); font-weight: 600; font-size: 0.87rem; margin-bottom: 6px; }
-.qcard-exp { color: var(--muted); font-style: italic; font-size: 0.82rem; }
-.qcard-hint { font-size: 0.7rem; color: var(--muted); margin-top: 8px; }
+.qcard-q { font-weight: 600; font-size: 0.87rem; line-height: 1.5; }
+.qcard-a { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.qcard-ans { color: var(--cyber); font-weight: 600; font-size: 0.86rem; margin-bottom: 5px; }
+.qcard-exp { color: var(--muted); font-style: italic; font-size: 0.81rem; }
+.qcard-hint { font-size: 0.68rem; color: var(--muted); margin-top: 6px; }
 
 .deepdive-block { background: #180d28; }
-.deepdive-text { font-size: 1.02rem; font-style: italic; color: #c4b5fd; padding-left: 16px; border-left: 3px solid var(--purple); line-height: 1.8; }
+.deepdive-text { font-size: 1rem; font-style: italic; color: #c4b5fd; padding-left: 14px; border-left: 3px solid var(--purple); line-height: 1.8; }
 
-.story-footer { padding: 14px 28px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-.src-link { color: var(--ai); text-decoration: none; font-size: 0.87rem; font-weight: 600; }
+.story-footer { padding: 12px 24px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.src-link { color: var(--ai); text-decoration: none; font-size: 0.85rem; font-weight: 600; }
 .src-link:hover { text-decoration: underline; }
-.src-name { color: var(--muted); font-size: 0.8rem; }
+.src-name { color: var(--muted); font-size: 0.78rem; }
 
 .site-footer { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 0.83rem; border-top: 1px solid var(--border); }
 .site-footer a { color: var(--ai); text-decoration: none; }
@@ -248,6 +267,9 @@ function switchTab(id, btn) {
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
 }
+function toggleStory(card) {
+  card.classList.toggle('open');
+}
 function toggleCard(card) {
   const a = card.querySelector('.qcard-a');
   const h = card.querySelector('.qcard-hint');
@@ -290,47 +312,52 @@ def build_story_html(story, color):
 
     return f"""
 <article class="story-card">
-  <div class="story-header">
-    <div class="story-badge" style="background:{color}22;color:{color}">{esc(story.get('source',''))}</div>
-    <h2>{esc(story.get('headline',''))}</h2>
-    <div class="tldr"><strong>TL;DR:</strong> {esc(story.get('tldr',''))}</div>
+  <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
+    <div class="story-summary-text">
+      <div class="story-badge" style="background:{color}22;color:{color}">{esc(story.get('source',''))}</div>
+      <h2>{esc(story.get('headline',''))}</h2>
+      <div class="tldr"><strong>TL;DR:</strong> {esc(story.get('tldr',''))}</div>
+    </div>
+    <div class="expand-icon">▼</div>
   </div>
 
-  <div class="block">
-    <div class="blabel">📌 Why It Matters</div>
-    <p>{esc(story.get('why_it_matters',''))}</p>
-  </div>
+  <div class="story-body">
+    <div class="block">
+      <div class="blabel">📌 Why It Matters</div>
+      <p>{esc(story.get('why_it_matters',''))}</p>
+    </div>
 
-  <div class="block concept-block">
-    <div class="blabel">🧠 Concept: <span style="color:{color}">{esc(story.get('concept_title',''))}</span></div>
-    <div class="concept-text">{concept_paras}</div>
-  </div>
+    <div class="block concept-block">
+      <div class="blabel">🧠 Concept: <span style="color:{color}">{esc(story.get('concept_title',''))}</span></div>
+      <div class="concept-text">{concept_paras}</div>
+    </div>
 
-  <div class="block">
-    <div class="blabel">📊 Visual Diagram</div>
-    <pre class="ascii">{esc(story.get('visual_ascii',''))}</pre>
-  </div>
+    <div class="block">
+      <div class="blabel">📊 Visual Diagram</div>
+      <pre class="ascii">{esc(story.get('visual_ascii',''))}</pre>
+    </div>
 
-  <div class="block opinion-block">
-    <div class="blabel">👥 Public Opinion</div>
-    <div class="opinion-quote">{esc(story.get('public_opinion',''))}</div>
-    <div class="blabel">🔍 Assessment</div>
-    <p>{esc(story.get('opinion_assessment',''))}</p>
-  </div>
+    <div class="block opinion-block">
+      <div class="blabel">👥 Public Opinion</div>
+      <div class="opinion-quote">{esc(story.get('public_opinion',''))}</div>
+      <div class="blabel">🔍 Assessment</div>
+      <p>{esc(story.get('opinion_assessment',''))}</p>
+    </div>
 
-  <div class="block">
-    <div class="blabel">❓ Quiz Yourself</div>
-    <div class="quiz-grid">{quiz_html}</div>
-  </div>
+    <div class="block">
+      <div class="blabel">❓ Quiz Yourself</div>
+      <div class="quiz-grid">{quiz_html}</div>
+    </div>
 
-  <div class="block deepdive-block">
-    <div class="blabel">💭 Deep Dive</div>
-    <p class="deepdive-text">{esc(story.get('deep_dive',''))}</p>
-  </div>
+    <div class="block deepdive-block">
+      <div class="blabel">💭 Deep Dive</div>
+      <p class="deepdive-text">{esc(story.get('deep_dive',''))}</p>
+    </div>
 
-  <div class="story-footer">
-    <a class="src-link" href="{esc(story.get('source_url','#'))}" target="_blank" rel="noopener">Read original →</a>
-    <span class="src-name">{esc(story.get('source',''))}</span>
+    <div class="story-footer">
+      <a class="src-link" href="{esc(story.get('source_url','#'))}" target="_blank" rel="noopener">Read original →</a>
+      <span class="src-name">{esc(story.get('source',''))}</span>
+    </div>
   </div>
 </article>"""
 
