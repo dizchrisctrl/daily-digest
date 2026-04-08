@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '0 12 * * *'   # 7:00 AM EST / 8:00 AM EDT every day
   workflow_dispatch:        # also allows manual trigger from GitHub UI
+    inputs:
+      rebuild_only:
+        description: 'Rebuild HTML from existing data (no Claude calls, no email)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -25,12 +30,24 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Checkout gh-pages data
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: output
+        continue-on-error: true   # first run has no gh-pages yet
+
       - name: Generate digest
         env:
           ANTHROPIC_API_KEY:  ${{ secrets.ANTHROPIC_API_KEY }}
           GMAIL_ADDRESS:      ${{ secrets.GMAIL_ADDRESS }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-        run: python generate_digest.py
+        run: |
+          if [ "${{ github.event.inputs.rebuild_only }}" = "true" ]; then
+            python generate_digest.py --rebuild
+          else
+            python generate_digest.py
+          fi
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
