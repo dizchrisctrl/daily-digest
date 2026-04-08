@@ -51,6 +51,19 @@ def strip_html(text):
     return re.sub(r'<[^>]+>', '', text or '').strip()
 
 
+def sanitize_svg(svg):
+    """Strip dangerous constructs from Claude-generated SVG before inline embedding."""
+    if not svg:
+        return ''
+    svg = re.sub(r'<script[\s>][\s\S]*?</script\s*>', '', svg, flags=re.IGNORECASE)
+    svg = re.sub(r'<foreignObject[\s>][\s\S]*?</foreignObject\s*>', '', svg, flags=re.IGNORECASE)
+    svg = re.sub(r'<image[^>]*/?>(?:[\s\S]*?</image>)?', '', svg, flags=re.IGNORECASE)
+    svg = re.sub(r'\s+on\w+\s*=\s*(?:"[^"]*"|\'[^\']*\')', '', svg, flags=re.IGNORECASE)
+    svg = re.sub(r'((?:xlink:)?href)\s*=\s*["\']javascript:[^"\']*["\']',
+                 r'\1="#"', svg, flags=re.IGNORECASE)
+    return svg.strip()
+
+
 def _single_line(text, max_len=200):
     """Strip newlines/tabs and truncate — for fields that must be single-line in prompts."""
     return re.sub(r'[\r\n\t]+', ' ', strip_html(text or '')).strip()[:max_len]
@@ -92,7 +105,26 @@ STORY_SCHEMA = {
         "why_it_matters":    {"type": "string", "description": "2-3 sentences on real-world significance"},
         "concept_title":     {"type": "string", "description": "The core technical concept illustrated"},
         "concept_explained": {"type": "string", "description": "4 paragraphs separated by newlines. P1: simple real-world analogy. P2: how it technically works. P3: tie to this news story. P4: broader implications."},
-        "visual_ascii":      {"type": "string", "description": "ASCII diagram 15-25 lines using box-drawing chars. Genuinely informative, not decorative."},
+        "visual_svg": {
+            "type": "string",
+            "description": (
+                "A complete <svg> element with viewBox=\"0 0 700 340\". No external refs, no scripts, no event handlers. "
+                "Choose the diagram type that best illuminates this concept: "
+                "attack chain (sequential labelled steps + arrows), "
+                "architecture (component boxes + directed edges), "
+                "data flow (requests/data moving through a system), "
+                "timeline (horizontal sequence of events), "
+                "or comparison (side-by-side columns). "
+                "Styling: background <rect fill=\"#060912\"/>, "
+                "node boxes fill=\"#12152a\" stroke=\"#252840\" rx=\"6\", "
+                "key nodes stroke=\"__ACCENT__\", "
+                "arrowheads via <defs><marker> fill=\"__ACCENT__\", "
+                "primary labels fill=\"#eaedf5\" font-size=\"13\" font-family=\"monospace\", "
+                "secondary labels fill=\"#7a849a\" font-size=\"11\", "
+                "accent callouts fill=\"__ACCENT__\" with fill=\"#060912\" text. "
+                "Produce 8-15 elements. Short precise labels. Show actual directional flow — not just floating labelled boxes."
+            ),
+        },
         "public_opinion":    {"type": "string", "description": "Concrete sentiments from HN, Reddit, security Twitter — what communities are saying"},
         "opinion_assessment":{"type": "string", "description": "Critical analysis: what's valid, overblown, or missing from that public opinion"},
         "quiz": {
@@ -140,7 +172,7 @@ STORY_SCHEMA = {
         },
     },
     "required": ["headline","tldr","why_it_matters","concept_title","concept_explained",
-                 "visual_ascii","public_opinion","opinion_assessment","quiz","deep_dive",
+                 "visual_svg","public_opinion","opinion_assessment","quiz","deep_dive",
                  "source_url","source","tech_tags","affected_systems"],
 }
 
@@ -163,7 +195,15 @@ NEWS ARTICLES (pick the 3 most notable):
 
 For each story:
 - concept_explained: 4 paragraphs. P1: simple real-world analogy. P2: how it technically works. P3: tie to this story. P4: broader implications.
-- visual_ascii: meaningful diagram using box-drawing chars (+-|<>^v). 15-25 lines. Labels required.
+- visual_svg: SVG diagram (viewBox="0 0 700 340"). Pick the right type for the concept:
+    attack chain → boxes left-to-right with labelled arrows showing each step
+    architecture → nodes with directed edges showing components and data flow
+    data flow → directional arrows tracing a request or signal through a system
+    timeline → horizontal bar with labelled events/milestones
+    comparison → two columns (e.g. before/after, secure/insecure)
+  Use accent color {accent_color}. Dark background #060912. Node fill #12152a.
+  Include arrowheads via <defs><marker>. 8-15 elements. Short precise labels.
+  Show actual relationships and flow — not floating boxes with buzzwords.
 - quiz: 3 questions testing real conceptual understanding, not trivia.
 - public_opinion: reference specific community sentiments (HN, Reddit r/technology, r/netsec, security Twitter/X).
 - deep_dive: a Socratic question forcing critical thinking about assumptions or bigger trends.
@@ -229,11 +269,15 @@ Call the publish_notables tool with your 5 items."""
 
 
 # ── Claude calls ───────────────────────────────────────────────────────────────
-def call_claude_for_section(client, today, articles):
-    prompt = SECTION_PROMPT.format(today=today, articles=json.dumps(articles, indent=2))
+def call_claude_for_section(client, today, articles, accent_color="#818cf8"):
+    prompt = SECTION_PROMPT.format(
+        today=today,
+        articles=json.dumps(articles, indent=2),
+        accent_color=accent_color,
+    )
     response = client.messages.create(
         model="claude-opus-4-6",
-        max_tokens=8000,
+        max_tokens=10000,  # SVG content is larger than ASCII
         tools=[SECTION_TOOL],
         tool_choice={"type": "tool", "name": "publish_stories"},
         messages=[{"role": "user", "content": prompt}],
@@ -258,9 +302,9 @@ def generate_digest_json(ai_articles, cyber_articles, notables_articles):
     today  = datetime.now(timezone.utc).strftime("%B %d, %Y")
 
     print("  -> Generating AI stories...")
-    ai_stories = call_claude_for_section(client, today, ai_articles)
+    ai_stories = call_claude_for_section(client, today, ai_articles, accent_color="#818cf8")
     print("  -> Generating Cybersecurity stories...")
-    cyber_stories = call_claude_for_section(client, today, cyber_articles)
+    cyber_stories = call_claude_for_section(client, today, cyber_articles, accent_color="#34d399")
     print("  -> Generating Notables...")
     notables = call_claude_for_notables(client, today, notables_articles)
 
@@ -417,19 +461,20 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .concept-text p { font-size: 0.93rem; line-height: 1.8; color: #b8c2d4; margin-bottom: 13px; }
 .concept-text p:last-child { margin-bottom: 0; }
 
-/* Terminal / ASCII */
-.terminal { border-radius: 10px; overflow: hidden; border: 1px solid #1e3055; box-shadow: 0 0 40px rgba(125,211,252,0.06); }
-.term-bar { background: #0d1020; padding: 9px 14px; display: flex; align-items: center; gap: 7px; border-bottom: 1px solid #1e3055; }
+/* ── SVG Diagram ── */
+.diagram-wrap { border-radius: 10px; overflow: hidden; border: 1px solid #1e3055; background: #060912; }
+.diagram-bar { background: #0d1020; padding: 9px 14px; display: flex; align-items: center; gap: 7px; border-bottom: 1px solid #1e3055; }
 .dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
 .dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
-.term-title { flex: 1; text-align: center; font-size: 0.67rem; color: #3a4a60; font-family: monospace; }
+.diagram-title { flex: 1; text-align: center; font-size: 0.67rem; color: #3a4a60; font-family: monospace; }
+.diagram-svg { display: block; }
+.diagram-svg svg { width: 100%; height: auto; display: block; }
+/* ASCII fallback for --rebuild with old digest.json */
 pre.ascii {
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.74rem; line-height: 1.5;
   color: #7dd3fc; padding: 16px 18px;
-  background: #060912;
-  overflow-x: auto; white-space: pre;
-  text-shadow: 0 0 12px rgba(125,211,252,0.4);
+  background: #060912; overflow-x: auto; white-space: pre;
 }
 
 /* Opinion block */
@@ -636,7 +681,7 @@ kbd {
   .story-summary { padding: 16px; gap: 10px; }
   .story-summary h2 { font-size: 0.97rem; }
   .block { padding: 16px; }
-  pre.ascii { font-size: 0.6rem; padding: 12px; }
+  pre.ascii { font-size: 0.6rem; padding: 10px; }
   .quiz-grid { grid-template-columns: 1fr; }
   .notable-grid { grid-template-columns: 1fr; }
   .tab-btn { font-size: 0.78rem; padding: 13px 8px; gap: 5px; }
@@ -899,6 +944,17 @@ def build_affected_html(systems):
       </div>"""
 
 
+def _build_visual(story):
+    """Return the visual block — SVG preferred, ASCII pre as fallback for old digests."""
+    svg = story.get('visual_svg', '').strip()
+    if svg:
+        return f'<div class="diagram-svg">{sanitize_svg(svg)}</div>'
+    ascii_art = story.get('visual_ascii', '').strip()
+    if ascii_art:
+        return f'<pre class="ascii">{esc(ascii_art)}</pre>'
+    return ''
+
+
 def build_story_html(story, color, num):
     quiz_html = ""
     for i, q in enumerate(story.get("quiz", []), 1):
@@ -955,12 +1011,12 @@ def build_story_html(story, color, num):
 
       <div class="block">
         <div class="blabel">&#x1F4CA; Visual Diagram</div>
-        <div class="terminal">
-          <div class="term-bar">
+        <div class="diagram-wrap">
+          <div class="diagram-bar">
             <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-            <span class="term-title">{esc(story.get('concept_title','diagram'))}</span>
+            <span class="diagram-title">{esc(story.get('concept_title','diagram'))}</span>
           </div>
-          <pre class="ascii">{esc(story.get('visual_ascii',''))}</pre>
+          {_build_visual(story)}
         </div>
       </div>
 
