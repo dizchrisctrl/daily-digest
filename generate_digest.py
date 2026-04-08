@@ -5,6 +5,7 @@ import os
 import re
 import json
 import base64
+import socket
 import feedparser
 from datetime import datetime, timezone
 from email.mime.multipart import MIMEMultipart
@@ -50,21 +51,35 @@ def strip_html(text):
     return re.sub(r'<[^>]+>', '', text or '').strip()
 
 
+def _single_line(text, max_len=200):
+    """Strip newlines/tabs and truncate — for fields that must be single-line in prompts."""
+    return re.sub(r'[\r\n\t]+', ' ', strip_html(text or '')).strip()[:max_len]
+
+
 def fetch_articles(feeds, max_per_feed=2, total_limit=8):
     articles = []
-    for url in feeds:
-        try:
-            feed = feedparser.parse(url, request_headers={"User-Agent": "DailyDigest/1.0"})
-            for entry in feed.entries[:max_per_feed]:
-                summary = strip_html(entry.get("summary", entry.get("description", "")))[:600]
-                articles.append({
-                    "title":   strip_html(entry.get("title", "Untitled")),
-                    "summary": summary,
-                    "link":    entry.get("link", "#"),
-                    "source":  strip_html(feed.feed.get("title", "Unknown Source")),
-                })
-        except Exception as e:
-            print(f"  Feed error [{url}]: {e}")
+    old_timeout = socket.getdefaulttimeout()
+    socket.setdefaulttimeout(15)          # per-connection cap — prevents hung feeds
+    try:
+        for url in feeds:
+            try:
+                feed = feedparser.parse(url, request_headers={"User-Agent": "DailyDigest/1.0"})
+                for entry in feed.entries[:max_per_feed]:
+                    summary = strip_html(entry.get("summary", entry.get("description", "")))[:600]
+                    link    = entry.get("link", "")
+                    # Only pass http/https links into the prompt; others become empty string
+                    if not str(link).lower().startswith(("http://", "https://")):
+                        link = ""
+                    articles.append({
+                        "title":   _single_line(entry.get("title", "Untitled")),
+                        "summary": summary,
+                        "link":    link,
+                        "source":  _single_line(feed.feed.get("title", "Unknown Source")),
+                    })
+            except Exception as e:
+                print(f"  Feed error [{url}]: {e}")
+    finally:
+        socket.setdefaulttimeout(old_timeout)
     return articles[:total_limit]
 
 
@@ -232,6 +247,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
 <title>Daily Digest -- __DATE__</title>
 <style>
 :root {
@@ -883,7 +899,9 @@ def build_notable_html(item, num):
 
 
 def generate_html(data):
-    today    = data["date"]
+    # esc() applied to today: in --rebuild mode it comes from disk (digest.json),
+    # not strftime, so it must be treated as untrusted input.
+    today    = esc(data.get("date", ""))
     ai_html  = "\n".join(build_story_html(s, "#818cf8", i+1) for i, s in enumerate(data.get("ai_stories", [])))
     cy_html  = "\n".join(build_story_html(s, "#34d399", i+1) for i, s in enumerate(data.get("cyber_stories", [])))
     not_html = "\n".join(build_notable_html(item, i+1) for i, item in enumerate(data.get("notables", [])))
@@ -895,7 +913,7 @@ def generate_html(data):
 
 
 def send_email(data):
-    today       = data["date"]
+    today       = esc(data.get("date", ""))
     ai_items    = "".join(f"<li><strong>{esc(s.get('headline',''))}</strong> &mdash; {esc(s.get('tldr',''))}</li>" for s in data.get("ai_stories", []))
     cyber_items = "".join(f"<li><strong>{esc(s.get('headline',''))}</strong> &mdash; {esc(s.get('tldr',''))}</li>" for s in data.get("cyber_stories", []))
     notables_items = "".join(
