@@ -6,86 +6,196 @@
 <title>Daily Digest — April 08, 2026</title>
 <style>
 :root {
-  --bg: #0f1117; --surface: #1a1d2e; --surface2: #222536;
-  --text: #e2e8f0; --muted: #94a3b8;
-  --ai: #818cf8; --cyber: #34d399;
-  --border: #2d3148; --purple: #7c3aed;
+  --bg: #0b0d16; --surface: #12152a; --surface2: #1a1d32; --surface3: #20233c;
+  --text: #eaedf5; --muted: #7a849a; --muted2: #5a6275;
+  --ai: #818cf8; --ai2: #6366f1; --cyber: #34d399; --cyber2: #10b981;
+  --purple: #a78bfa; --amber: #fbbf24;
+  --border: #252840; --border2: #333660;
+  --glow-ai: rgba(129,140,248,0.15); --glow-cyber: rgba(52,211,153,0.15);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; min-height: 100vh; }
 
-.site-header { background: linear-gradient(135deg, #1a1d2e, #0f1117); border-bottom: 1px solid var(--border); padding: 32px 20px; text-align: center; }
-.site-header h1 { font-size: 2.4rem; font-weight: 800; letter-spacing: -1px; background: linear-gradient(90deg, var(--ai), var(--cyber)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.date-badge { display: inline-block; color: var(--muted); font-size: 0.88rem; padding: 4px 14px; border: 1px solid var(--border); border-radius: 20px; margin-top: 10px; }
+/* ── Header ── */
+.site-header {
+  padding: 40px 20px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #161928 0%, var(--bg) 100%);
+}
+.site-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(129,140,248,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.eyebrow { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: var(--muted2); margin-bottom: 14px; }
+.site-header h1 {
+  font-size: 2.8rem; font-weight: 900; letter-spacing: -2px; line-height: 1;
+  background: linear-gradient(130deg, var(--ai) 0%, var(--purple) 45%, var(--cyber) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 14px;
+}
+.date-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--muted); font-size: 0.82rem; padding: 5px 16px;
+  border: 1px solid var(--border2); border-radius: 20px;
+  background: var(--surface2);
+}
+.date-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyber); display: inline-block; }
 
-.tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-.tab-btn { flex: 1; padding: 16px; background: none; border: none; border-bottom: 3px solid transparent; color: var(--muted); font-size: 0.97rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-.tab-btn.ai.active { color: var(--ai); border-bottom-color: var(--ai); }
-.tab-btn.cyber.active { color: var(--cyber); border-bottom-color: var(--cyber); }
+/* ── Tabs ── */
+.tabs-wrap { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
+.tabs { display: flex; max-width: 860px; margin: 0 auto; padding: 0 16px; position: relative; }
+.tab-btn {
+  flex: 1; padding: 15px 16px; background: none; border: none; border-bottom: 2px solid transparent;
+  color: var(--muted); font-size: 0.93rem; font-weight: 600; cursor: pointer;
+  transition: color 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.tab-btn.active { color: var(--text); }
+.tab-indicator {
+  position: absolute; bottom: 0; height: 2px;
+  background: var(--ai); border-radius: 2px 2px 0 0;
+  transition: left 0.3s cubic-bezier(0.4,0,0.2,1), width 0.3s cubic-bezier(0.4,0,0.2,1), background 0.3s;
+}
 
-.content { max-width: 860px; margin: 0 auto; padding: 32px 16px; }
+/* ── Content ── */
+.content { max-width: 860px; margin: 0 auto; padding: 28px 16px 60px; }
 .section { display: none; }
 .section.active { display: block; }
 
+/* Section bar */
+.section-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+}
+.section-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted2); }
+.expand-all {
+  font-size: 0.72rem; font-weight: 600; color: var(--muted);
+  background: var(--surface2); border: 1px solid var(--border);
+  padding: 4px 12px; border-radius: 20px; cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.expand-all:hover { color: var(--text); border-color: var(--border2); }
+
 /* ── Story Card ── */
-.story-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 20px; overflow: hidden; transition: border-color 0.2s; }
-.story-card:hover { border-color: #3d4268; }
+.story-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.story-card:hover { border-color: var(--border2); box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
+.story-card.open { border-color: var(--border2); box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
 
-/* Clickable summary (always visible) */
-.story-summary { padding: 22px 24px; cursor: pointer; display: flex; align-items: flex-start; gap: 16px; user-select: none; }
-.story-summary:hover { background: #1e2235; }
-.story-summary-text { flex: 1; min-width: 0; }
-.story-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 0.68rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.8px; }
-.story-summary h2 { font-size: 1.15rem; font-weight: 700; line-height: 1.35; margin-bottom: 10px; }
-.tldr { font-size: 0.91rem; color: var(--muted); line-height: 1.6; }
-.tldr strong { color: var(--text); }
-.expand-icon { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--muted); transition: transform 0.3s, background 0.2s; margin-top: 4px; }
-.story-card.open .expand-icon { transform: rotate(180deg); background: var(--border); }
+/* Summary row */
+.story-summary {
+  padding: 20px 22px; cursor: pointer;
+  display: flex; align-items: flex-start; gap: 14px;
+  transition: background 0.15s; user-select: none;
+}
+.story-summary:hover { background: rgba(255,255,255,0.025); }
+.s-left { flex: 1; min-width: 0; }
+.s-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+.src-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 2px 9px; border-radius: 20px; }
+.story-num { font-size: 0.68rem; font-weight: 700; color: var(--muted2); font-variant-numeric: tabular-nums; }
+.story-summary h2 { font-size: 1.08rem; font-weight: 700; line-height: 1.4; margin-bottom: 9px; }
+.tldr { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+.tldr-tag {
+  display: inline-block; font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--muted2); background: var(--surface3);
+  padding: 1px 6px; border-radius: 4px; margin-right: 6px; vertical-align: middle;
+}
+.chevron {
+  flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  color: var(--muted2); font-size: 0.65rem; margin-top: 2px;
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), background 0.2s, border-color 0.2s, color 0.2s;
+}
+.story-card.open .chevron { transform: rotate(180deg); background: var(--surface3); border-color: var(--border2); color: var(--muted); }
 
-/* Expandable body */
-.story-body { display: none; border-top: 1px solid var(--border); }
-.story-card.open .story-body { display: block; }
+/* Expandable body — CSS-only animation */
+.story-body { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1); }
+.story-card.open .story-body { max-height: 8000px; transition: max-height 0.9s cubic-bezier(0,0,0.2,1); }
+.body-inner { border-top: 1px solid var(--border); }
 
-.block { padding: 22px 24px; border-top: 1px solid var(--border); }
+/* Blocks */
+.block { padding: 20px 22px; border-top: 1px solid var(--border); }
 .block:first-child { border-top: none; }
-.blabel { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 10px; }
+.blabel { font-size: 0.67rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted2); margin-bottom: 11px; }
+.block p { font-size: 0.93rem; line-height: 1.75; color: #c0c8d8; }
 
-.concept-block { background: #1c1f33; }
-.concept-text p { font-size: 0.95rem; margin-bottom: 13px; }
+/* Concept block */
+.concept-block { background: linear-gradient(180deg, #171b30 0%, #141828 100%); }
+.concept-title { font-size: 0.97rem; font-weight: 700; margin-bottom: 14px; }
+.concept-text p { font-size: 0.93rem; line-height: 1.8; color: #b8c2d4; margin-bottom: 13px; }
 .concept-text p:last-child { margin-bottom: 0; }
 
-pre.ascii { font-family: 'Courier New', monospace; font-size: 0.76rem; line-height: 1.45; background: #080b12; color: #7dd3fc; padding: 18px; border-radius: 10px; overflow-x: auto; white-space: pre; border: 1px solid #1e3a5f; }
+/* Terminal / ASCII */
+.terminal { border-radius: 10px; overflow: hidden; border: 1px solid #1e3055; box-shadow: 0 0 40px rgba(125,211,252,0.06); }
+.term-bar { background: #0d1020; padding: 9px 14px; display: flex; align-items: center; gap: 7px; border-bottom: 1px solid #1e3055; }
+.dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
+.term-title { flex: 1; text-align: center; font-size: 0.67rem; color: #3a4a60; font-family: monospace; }
+pre.ascii {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.74rem; line-height: 1.5;
+  color: #7dd3fc; padding: 16px 18px;
+  background: #060912;
+  overflow-x: auto; white-space: pre;
+  text-shadow: 0 0 12px rgba(125,211,252,0.4);
+}
 
-.opinion-block { background: #111a11; }
-.opinion-quote { font-style: italic; color: var(--muted); padding: 10px 14px; border-left: 3px solid #22c55e44; margin-bottom: 14px; font-size: 0.92rem; }
+/* Opinion block */
+.opinion-block { background: #0d160e; }
+.opinion-q { font-style: italic; color: var(--muted); padding: 11px 15px; border-left: 3px solid rgba(52,211,153,0.4); margin-bottom: 14px; font-size: 0.91rem; line-height: 1.7; border-radius: 0 6px 6px 0; background: rgba(52,211,153,0.04); }
 
-.quiz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
-.qcard { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: border-color 0.2s, transform 0.1s; user-select: none; }
-.qcard:hover { border-color: var(--ai); transform: translateY(-1px); }
+/* Quiz */
+.quiz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+.qcard {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px; cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.15s;
+  user-select: none;
+}
+.qcard:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); border-color: var(--border2); }
 .qcard.open { border-color: var(--cyber); }
-.qcard-q { font-weight: 600; font-size: 0.87rem; line-height: 1.5; }
-.qcard-a { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
-.qcard-ans { color: var(--cyber); font-weight: 600; font-size: 0.86rem; margin-bottom: 5px; }
-.qcard-exp { color: var(--muted); font-style: italic; font-size: 0.81rem; }
-.qcard-hint { font-size: 0.68rem; color: var(--muted); margin-top: 6px; }
+.q-num { font-size: 0.63rem; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px; }
+.q-text { font-weight: 600; font-size: 0.87rem; line-height: 1.5; color: var(--text); }
+.q-answer { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.35s ease, opacity 0.3s ease; }
+.qcard.open .q-answer { max-height: 400px; opacity: 1; }
+.q-divider { height: 1px; background: var(--border); margin: 10px 0; }
+.q-ans { color: var(--cyber); font-weight: 600; font-size: 0.85rem; margin-bottom: 5px; }
+.q-exp { color: var(--muted); font-style: italic; font-size: 0.79rem; line-height: 1.55; }
+.q-hint { font-size: 0.65rem; color: var(--muted2); margin-top: 8px; display: flex; align-items: center; gap: 4px; }
+.qcard.open .q-hint { color: var(--cyber2); }
 
-.deepdive-block { background: #180d28; }
-.deepdive-text { font-size: 1rem; font-style: italic; color: #c4b5fd; padding-left: 14px; border-left: 3px solid var(--purple); line-height: 1.8; }
+/* Deep Dive */
+.deepdive-block { background: linear-gradient(135deg, #110d22 0%, #0e0c1e 100%); position: relative; overflow: hidden; }
+.deepdive-block::after { content: '"'; position: absolute; right: 18px; top: 8px; font-size: 6rem; color: rgba(167,139,250,0.07); font-family: Georgia, serif; line-height: 1; }
+.deepdive-text { font-size: 1.02rem; font-style: italic; color: #c4b5fd; padding-left: 16px; border-left: 3px solid var(--purple); line-height: 1.85; }
 
-.story-footer { padding: 12px 24px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-.src-link { color: var(--ai); text-decoration: none; font-size: 0.85rem; font-weight: 600; }
-.src-link:hover { text-decoration: underline; }
-.src-name { color: var(--muted); font-size: 0.78rem; }
+/* Story footer */
+.story-footer { padding: 11px 22px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; background: rgba(255,255,255,0.015); }
+.src-link { color: var(--ai); text-decoration: none; font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 5px; transition: color 0.15s; }
+.src-link:hover { color: var(--purple); }
+.src-name { color: var(--muted2); font-size: 0.76rem; }
 
-.site-footer { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 0.83rem; border-top: 1px solid var(--border); }
+/* Site footer */
+.site-footer { text-align: center; padding: 40px 20px; color: var(--muted2); font-size: 0.8rem; border-top: 1px solid var(--border); }
 .site-footer a { color: var(--ai); text-decoration: none; }
 
+/* Mobile */
 @media (max-width: 640px) {
-  .site-header h1 { font-size: 1.7rem; }
-  .story-header { padding: 20px; }
-  .story-header h2 { font-size: 1.1rem; }
-  .block { padding: 18px 20px; }
-  pre.ascii { font-size: 0.62rem; padding: 12px; }
+  .site-header h1 { font-size: 2rem; letter-spacing: -1px; }
+  .story-summary { padding: 16px; gap: 10px; }
+  .story-summary h2 { font-size: 0.97rem; }
+  .block { padding: 16px; }
+  pre.ascii { font-size: 0.6rem; padding: 12px; }
   .quiz-grid { grid-template-columns: 1fr; }
 }
 </style>
@@ -93,41 +203,61 @@ pre.ascii { font-family: 'Courier New', monospace; font-size: 0.76rem; line-heig
 <body>
 
 <header class="site-header">
+  <div class="eyebrow">Your daily briefing</div>
   <h1>Daily Digest</h1>
-  <div class="date-badge">April 08, 2026</div>
+  <div class="date-badge"><span class="date-dot"></span>April 08, 2026</div>
 </header>
 
-<nav class="tabs">
-  <button class="tab-btn ai active" onclick="switchTab('ai',this)">🤖 AI &amp; Technology</button>
-  <button class="tab-btn cyber" onclick="switchTab('cyber',this)">🔐 Cybersecurity</button>
-</nav>
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('ai',this)">🤖 AI &amp; Technology</button>
+    <button class="tab-btn" onclick="switchTab('cyber',this)">🔐 Cybersecurity</button>
+    <div class="tab-indicator" id="indicator"></div>
+  </div>
+</div>
 
 <main class="content">
   <section id="ai" class="section active">
+    <div class="section-bar">
+      <span class="section-label">3 stories &mdash; tap to expand</span>
+      <button class="expand-all" onclick="expandAll('ai', this)">Expand all</button>
+    </div>
+    
 <article class="story-card">
   <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
-    <div class="story-summary-text">
-      <div class="story-badge" style="background:#818cf822;color:#818cf8">Biz &amp; IT - Ars Technica</div>
+    <div class="s-left">
+      <div class="s-meta">
+        <span class="src-badge" style="background:#818cf81a;color:#818cf8">Biz &amp; IT - Ars Technica</span>
+        <span class="story-num">01</span>
+      </div>
       <h2>Russia's GRU Turned Your Old Router Into a Spy</h2>
-      <div class="tldr"><strong>TL;DR:</strong> Russia's military intelligence unit hacked thousands of end-of-life consumer routers across 120 countries to harvest credentials and build a covert proxy network.</div>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Russia's military intelligence unit hacked thousands of end-of-life consumer routers across 120 countries to harvest credentials and build a covert proxy network.</div>
     </div>
-    <div class="expand-icon">▼</div>
+    <div class="chevron">▼</div>
   </div>
 
   <div class="story-body">
-    <div class="block">
-      <div class="blabel">📌 Why It Matters</div>
-      <p>End-of-life routers never receive security patches, making them permanent attack surfaces sitting inside trusted home and office networks. When a nation-state controls your router, they sit between you and the internet — able to intercept credentials, redirect traffic, and mask their own operations behind your IP address. Most victims have no idea it happened.</p>
-    </div>
+    <div class="body-inner">
 
-    <div class="block concept-block">
-      <div class="blabel">🧠 Concept: <span style="color:#818cf8">Botnet Proxy Networks &amp; Living-off-the-Land Infrastructure</span></div>
-      <div class="concept-text"><p>Imagine a spy agency that needs to make anonymous phone calls. Instead of using a traceable phone, they break into ordinary people's homes and use their landlines — so every call looks like it came from a random suburban address. When investigators trace the call, they find an innocent household, not the spy. That's exactly what a router botnet proxy network does, just with internet traffic.</p><p>Technically, the attack works in stages. First, the threat actor scans the internet for routers running known-vulnerable firmware — devices that manufacturers stopped updating years ago (end-of-life). They exploit unpatched CVEs to gain root access, then install persistent malware that survives reboots. The compromised routers are enrolled into a command-and-control (C2) network. From there, the operators route their own traffic through the infected devices, exfiltrate credentials captured via man-in-the-middle (MITM) interception, and use the botnet as a launchpad for further intrusions — all while the real source IP stays hidden.</p><p>In this campaign, attributed to Russia's GRU (military intelligence), the targets were specifically end-of-life SOHO (small office/home office) routers in 120 countries. These devices sit at the network perimeter of homes and small businesses — they see all unencrypted traffic, handle DNS resolution, and manage NAT. By owning the router, GRU operators could harvest credentials from unencrypted protocols, perform DNS hijacking, and create persistent footholds in networks that are otherwise hard to penetrate. The scale — thousands of devices — gives them geographic diversity to evade IP-based blocking.</p><p>The broader implication is that consumer hardware has become a geopolitical battleground. Manufacturers abandon firmware support after 3-5 years, but users keep devices running for a decade. There's no automatic patching, no EDR, no SOC watching router logs. Nation-states know this and systematically exploit the graveyard of forgotten hardware. This campaign follows similar operations by Chinese (Volt Typhoon) and other state actors — the router botnet playbook is now standard tradecraft.</p></div>
-    </div>
+      <div class="block">
+        <div class="blabel">📌 Why It Matters</div>
+        <p>End-of-life routers never receive security patches, making them permanent attack surfaces sitting inside trusted home and office networks. When a nation-state controls your router, they sit between you and the internet — able to intercept credentials, redirect traffic, and mask their own operations behind your IP address. Most victims have no idea it happened.</p>
+      </div>
 
-    <div class="block">
-      <div class="blabel">📊 Visual Diagram</div>
-      <pre class="ascii">┌─────────────────────────────────────────────────────┐
+      <div class="block concept-block">
+        <div class="blabel">🧠 Concept</div>
+        <div class="concept-title" style="color:#818cf8">Botnet Proxy Networks &amp; Living-off-the-Land Infrastructure</div>
+        <div class="concept-text"><p>Imagine a spy agency that needs to make anonymous phone calls. Instead of using a traceable phone, they break into ordinary people's homes and use their landlines — so every call looks like it came from a random suburban address. When investigators trace the call, they find an innocent household, not the spy. That's exactly what a router botnet proxy network does, just with internet traffic.</p><p>Technically, the attack works in stages. First, the threat actor scans the internet for routers running known-vulnerable firmware — devices that manufacturers stopped updating years ago (end-of-life). They exploit unpatched CVEs to gain root access, then install persistent malware that survives reboots. The compromised routers are enrolled into a command-and-control (C2) network. From there, the operators route their own traffic through the infected devices, exfiltrate credentials captured via man-in-the-middle (MITM) interception, and use the botnet as a launchpad for further intrusions — all while the real source IP stays hidden.</p><p>In this campaign, attributed to Russia's GRU (military intelligence), the targets were specifically end-of-life SOHO (small office/home office) routers in 120 countries. These devices sit at the network perimeter of homes and small businesses — they see all unencrypted traffic, handle DNS resolution, and manage NAT. By owning the router, GRU operators could harvest credentials from unencrypted protocols, perform DNS hijacking, and create persistent footholds in networks that are otherwise hard to penetrate. The scale — thousands of devices — gives them geographic diversity to evade IP-based blocking.</p><p>The broader implication is that consumer hardware has become a geopolitical battleground. Manufacturers abandon firmware support after 3-5 years, but users keep devices running for a decade. There's no automatic patching, no EDR, no SOC watching router logs. Nation-states know this and systematically exploit the graveyard of forgotten hardware. This campaign follows similar operations by Chinese (Volt Typhoon) and other state actors — the router botnet playbook is now standard tradecraft.</p></div>
+      </div>
+
+      <div class="block">
+        <div class="blabel">📊 Visual Diagram</div>
+        <div class="terminal">
+          <div class="term-bar">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            <span class="term-title">Botnet Proxy Networks &amp; Living-off-the-Land Infrastructure</span>
+          </div>
+          <pre class="ascii">┌─────────────────────────────────────────────────────┐
 │           GRU ROUTER BOTNET ARCHITECTURE            │
 └─────────────────────────────────────────────────────┘
 
@@ -148,80 +278,102 @@ pre.ascii { font-family: 'Courier New', monospace; font-size: 0.76rem; line-heig
          └──→ GRU sees all plaintext traffic
               Appears as: innocent civilian IP
               Real source: completely hidden</pre>
-    </div>
-
-    <div class="block opinion-block">
-      <div class="blabel">👥 Public Opinion</div>
-      <div class="opinion-quote">On r/netsec, the top comment thread focused on operational attribution confidence — users debated whether the GRU fingerprinting was solid or another case of 'probably Russia' assumption. Security Twitter/X saw practitioners like Kevin Beaumont note that this is the third major SOHO router campaign in 18 months, calling ISPs 'criminally negligent' for not mass-quarantining known EOL devices. On Hacker News, the discussion split between people alarmed by the scale and pragmatists pointing out that most home router traffic is TLS-encrypted anyway, limiting credential harvest to specific unencrypted services. Reddit's r/homelab community had a flurry of posts asking how to tell if their router was compromised, with most answers being 'you probably can't without a firmware dump.'</div>
-      <div class="blabel">🔍 Assessment</div>
-      <p>The r/netsec skepticism about attribution is healthy but somewhat overstated — GRU campaigns have documented TTPs (tactics, techniques, procedures) that are fingerprint-distinct from other actors, and multi-agency attribution (FBI, CISA, UK NCSC) carries more weight than single-source claims. The HN point about TLS is valid but undersells the attack: even with encrypted payloads, owning the router enables DNS manipulation, traffic timing analysis, and interception of any legacy protocol (FTP, SMTP without STARTTLS, HTTP). The most underappreciated point in public discourse is the ISP angle — ISPs can technically detect and quarantine botted routers but face no regulatory requirement to do so, which is the actual policy failure here.</p>
-    </div>
-
-    <div class="block">
-      <div class="blabel">❓ Quiz Yourself</div>
-      <div class="quiz-grid">
-      <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">Why are end-of-life routers specifically valuable to attackers compared to targeting servers or endpoints?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">They sit at the network perimeter, see all traffic before encryption endpoints, run no security monitoring software, receive no patches, and are trusted by all devices on the local network — making them invisible, persistent chokepoints.</div>
-          <div class="qcard-exp">Routers operate at OSI Layer 3, before most endpoint security operates. They handle DNS, NAT, and routing — giving an attacker the ability to intercept, redirect, or log traffic passively. Unlike servers, they have no antivirus, no EDR agent, no SIEM integration, and users never log into them after initial setup.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+      </div>
+
+      <div class="block opinion-block">
+        <div class="blabel">👥 Public Opinion</div>
+        <div class="opinion-q">On r/netsec, the top comment thread focused on operational attribution confidence — users debated whether the GRU fingerprinting was solid or another case of 'probably Russia' assumption. Security Twitter/X saw practitioners like Kevin Beaumont note that this is the third major SOHO router campaign in 18 months, calling ISPs 'criminally negligent' for not mass-quarantining known EOL devices. On Hacker News, the discussion split between people alarmed by the scale and pragmatists pointing out that most home router traffic is TLS-encrypted anyway, limiting credential harvest to specific unencrypted services. Reddit's r/homelab community had a flurry of posts asking how to tell if their router was compromised, with most answers being 'you probably can't without a firmware dump.'</div>
+        <div class="blabel">🔍 Assessment</div>
+        <p>The r/netsec skepticism about attribution is healthy but somewhat overstated — GRU campaigns have documented TTPs (tactics, techniques, procedures) that are fingerprint-distinct from other actors, and multi-agency attribution (FBI, CISA, UK NCSC) carries more weight than single-source claims. The HN point about TLS is valid but undersells the attack: even with encrypted payloads, owning the router enables DNS manipulation, traffic timing analysis, and interception of any legacy protocol (FTP, SMTP without STARTTLS, HTTP). The most underappreciated point in public discourse is the ISP angle — ISPs can technically detect and quarantine botted routers but face no regulatory requirement to do so, which is the actual policy failure here.</p>
+      </div>
+
+      <div class="block">
+        <div class="blabel">❓ Quiz Yourself</div>
+        <div class="quiz-grid">
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q1 of 3</div>
+        <div class="q-text">Why are end-of-life routers specifically valuable to attackers compared to targeting servers or endpoints?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">They sit at the network perimeter, see all traffic before encryption endpoints, run no security monitoring software, receive no patches, and are trusted by all devices on the local network — making them invisible, persistent chokepoints.</div>
+          <div class="q-exp">Routers operate at OSI Layer 3, before most endpoint security operates. They handle DNS, NAT, and routing — giving an attacker the ability to intercept, redirect, or log traffic passively. Unlike servers, they have no antivirus, no EDR agent, no SIEM integration, and users never log into them after initial setup.</div>
+        </div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">If most web traffic is TLS-encrypted, what can an attacker who owns your router actually steal or manipulate?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">DNS queries (before encryption), unencrypted protocols (HTTP, FTP, legacy email), TLS certificate validation (via MITM with a rogue cert), traffic metadata (who you talk to, when, how much), and credentials on any service that doesn't enforce HTTPS.</div>
-          <div class="qcard-exp">TLS encrypts the payload but not the destination. DNS queries are often still plaintext, revealing every site visited. An attacker controlling the router can also serve forged DNS responses, redirecting users to phishing sites with valid-looking URLs. Many IoT devices and legacy enterprise tools still use unencrypted protocols.</div>
+        <div class="q-num">Q2 of 3</div>
+        <div class="q-text">If most web traffic is TLS-encrypted, what can an attacker who owns your router actually steal or manipulate?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">DNS queries (before encryption), unencrypted protocols (HTTP, FTP, legacy email), TLS certificate validation (via MITM with a rogue cert), traffic metadata (who you talk to, when, how much), and credentials on any service that doesn't enforce HTTPS.</div>
+          <div class="q-exp">TLS encrypts the payload but not the destination. DNS queries are often still plaintext, revealing every site visited. An attacker controlling the router can also serve forged DNS responses, redirecting users to phishing sites with valid-looking URLs. Many IoT devices and legacy enterprise tools still use unencrypted protocols.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">What makes a router botnet more operationally useful to a nation-state than a cloud-based VPN or Tor for hiding their traffic?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">Compromised consumer routers have legitimate residential IP addresses with clean reputations, are geographically distributed across the actual target country, are not on any blocklist, and don't require the attacker to pay for or maintain infrastructure that could be traced back to them.</div>
-          <div class="qcard-exp">Threat intelligence platforms and firewalls routinely block known VPN exit nodes, Tor relays, and data center IP ranges. A residential IP from a Kansas home router passes those filters. The geographic distribution also lets operators appear as local traffic, evading geo-based anomaly detection.</div>
+        <div class="q-num">Q3 of 3</div>
+        <div class="q-text">What makes a router botnet more operationally useful to a nation-state than a cloud-based VPN or Tor for hiding their traffic?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Compromised consumer routers have legitimate residential IP addresses with clean reputations, are geographically distributed across the actual target country, are not on any blocklist, and don't require the attacker to pay for or maintain infrastructure that could be traced back to them.</div>
+          <div class="q-exp">Threat intelligence platforms and firewalls routinely block known VPN exit nodes, Tor relays, and data center IP ranges. A residential IP from a Kansas home router passes those filters. The geographic distribution also lets operators appear as local traffic, evading geo-based anomaly detection.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div></div>
-    </div>
+      </div>
 
-    <div class="block deepdive-block">
-      <div class="blabel">💭 Deep Dive</div>
-      <p class="deepdive-text">If the fundamental vulnerability here is hardware that outlives its security support lifecycle, why have neither governments nor the market solved this — and what would it actually take: mandatory ISP quarantine of EOL devices, manufacturer-funded extended security support, hardware kill-switches, or something else entirely?</p>
-    </div>
+      <div class="block deepdive-block">
+        <div class="blabel">💭 Deep Dive</div>
+        <p class="deepdive-text">If the fundamental vulnerability here is hardware that outlives its security support lifecycle, why have neither governments nor the market solved this — and what would it actually take: mandatory ISP quarantine of EOL devices, manufacturer-funded extended security support, hardware kill-switches, or something else entirely?</p>
+      </div>
 
-    <div class="story-footer">
-      <a class="src-link" href="https://arstechnica.com/security/2026/04/russias-military-hacks-thousands-of-consumer-routers-to-steal-credentials/" target="_blank" rel="noopener">Read original →</a>
-      <span class="src-name">Biz &amp; IT - Ars Technica</span>
+      <div class="story-footer">
+        <a class="src-link" href="https://arstechnica.com/security/2026/04/russias-military-hacks-thousands-of-consumer-routers-to-steal-credentials/" target="_blank" rel="noopener">
+          Read original <span>→</span>
+        </a>
+        <span class="src-name">Biz &amp; IT - Ars Technica</span>
+      </div>
+
     </div>
   </div>
 </article>
 
 <article class="story-card">
   <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
-    <div class="story-summary-text">
-      <div class="story-badge" style="background:#818cf822;color:#818cf8">Biz &amp; IT - Ars Technica</div>
+    <div class="s-left">
+      <div class="s-meta">
+        <span class="src-badge" style="background:#818cf81a;color:#818cf8">Biz &amp; IT - Ars Technica</span>
+        <span class="story-num">02</span>
+      </div>
       <h2>OpenClaw's Silent Admin Exploit: Why Agentic AI Tools Are a Security Timebomb</h2>
-      <div class="tldr"><strong>TL;DR:</strong> A critical unauthenticated remote access vulnerability in OpenClaw — a viral AI agentic coding tool — let attackers silently gain admin privileges, exposing the systemic security immaturity of the AI agent ecosystem.</div>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>A critical unauthenticated remote access vulnerability in OpenClaw — a viral AI agentic coding tool — let attackers silently gain admin privileges, exposing the systemic security immaturity of the AI agent ecosystem.</div>
     </div>
-    <div class="expand-icon">▼</div>
+    <div class="chevron">▼</div>
   </div>
 
   <div class="story-body">
-    <div class="block">
-      <div class="blabel">📌 Why It Matters</div>
-      <p>AI coding agents like OpenClaw are being given unprecedented access — they read and write files, execute code, call APIs, and manage credentials. A vulnerability in the agent itself isn't just a software bug; it's a master key to everything the agent can touch. As these tools race to market, security is consistently an afterthought, and the blast radius of a compromise is vastly larger than a typical app vulnerability.</p>
-    </div>
+    <div class="body-inner">
 
-    <div class="block concept-block">
-      <div class="blabel">🧠 Concept: <span style="color:#818cf8">Unauthenticated Remote Code Execution in AI Agent Architectures</span></div>
-      <div class="concept-text"><p>Think of an AI coding agent like a supremely capable intern who has been given the keys to every room in the building — the server room, the HR files, the CEO's office — because they need access to do their job. Now imagine the door to hire that intern has no lock on it. Anyone who walks up and knocks can walk in, claim to be the new hire, and get all the same keys. That's what an unauthenticated admin access vulnerability means in this context.</p><p>Technically, agentic AI tools typically run a local or cloud-hosted server that brokers communication between the user, the AI model, and the system's resources (filesystem, shell, APIs). Authentication is supposed to gate who can send commands to that broker. When authentication is missing or bypassable — due to a logic flaw, a missing middleware check, or an improperly exposed API endpoint — an attacker on the same network (or sometimes the open internet, if the agent is cloud-hosted) can send commands as if they were the authenticated admin. In OpenClaw's case, the flaw allowed unauthenticated actors to silently escalate to admin and issue arbitrary commands to the agent's execution environment.</p><p>The OpenClaw vulnerability is particularly alarming because of the tool's blast radius. Unlike a vulnerability in, say, a text editor, OpenClaw agents are explicitly designed to autonomously write and execute code, manage project files, push to repositories, and call external APIs. Admin access to OpenClaw is functionally equivalent to shell access to the developer's machine — plus access to every service the agent is credentialed for. The 'silently' aspect is critical: there was no visible indication to the user that a takeover had occurred, meaning compromised sessions could persist for extended periods.</p><p>This story is a preview of the security crisis coming for the entire AI agent ecosystem. The market pressure to ship fast is causing vendors to bolt authentication and authorization on after the fact, if at all. Traditional security models — network perimeter, least-privilege, audit logs — were designed for software that does what users explicitly tell it to. AI agents act autonomously, chain actions together, and hold persistent credentials. The threat model is categorically different, and the industry hasn't caught up.</p></div>
-    </div>
+      <div class="block">
+        <div class="blabel">📌 Why It Matters</div>
+        <p>AI coding agents like OpenClaw are being given unprecedented access — they read and write files, execute code, call APIs, and manage credentials. A vulnerability in the agent itself isn't just a software bug; it's a master key to everything the agent can touch. As these tools race to market, security is consistently an afterthought, and the blast radius of a compromise is vastly larger than a typical app vulnerability.</p>
+      </div>
 
-    <div class="block">
-      <div class="blabel">📊 Visual Diagram</div>
-      <pre class="ascii">┌─────────────────────────────────────────────────────────┐
+      <div class="block concept-block">
+        <div class="blabel">🧠 Concept</div>
+        <div class="concept-title" style="color:#818cf8">Unauthenticated Remote Code Execution in AI Agent Architectures</div>
+        <div class="concept-text"><p>Think of an AI coding agent like a supremely capable intern who has been given the keys to every room in the building — the server room, the HR files, the CEO's office — because they need access to do their job. Now imagine the door to hire that intern has no lock on it. Anyone who walks up and knocks can walk in, claim to be the new hire, and get all the same keys. That's what an unauthenticated admin access vulnerability means in this context.</p><p>Technically, agentic AI tools typically run a local or cloud-hosted server that brokers communication between the user, the AI model, and the system's resources (filesystem, shell, APIs). Authentication is supposed to gate who can send commands to that broker. When authentication is missing or bypassable — due to a logic flaw, a missing middleware check, or an improperly exposed API endpoint — an attacker on the same network (or sometimes the open internet, if the agent is cloud-hosted) can send commands as if they were the authenticated admin. In OpenClaw's case, the flaw allowed unauthenticated actors to silently escalate to admin and issue arbitrary commands to the agent's execution environment.</p><p>The OpenClaw vulnerability is particularly alarming because of the tool's blast radius. Unlike a vulnerability in, say, a text editor, OpenClaw agents are explicitly designed to autonomously write and execute code, manage project files, push to repositories, and call external APIs. Admin access to OpenClaw is functionally equivalent to shell access to the developer's machine — plus access to every service the agent is credentialed for. The 'silently' aspect is critical: there was no visible indication to the user that a takeover had occurred, meaning compromised sessions could persist for extended periods.</p><p>This story is a preview of the security crisis coming for the entire AI agent ecosystem. The market pressure to ship fast is causing vendors to bolt authentication and authorization on after the fact, if at all. Traditional security models — network perimeter, least-privilege, audit logs — were designed for software that does what users explicitly tell it to. AI agents act autonomously, chain actions together, and hold persistent credentials. The threat model is categorically different, and the industry hasn't caught up.</p></div>
+      </div>
+
+      <div class="block">
+        <div class="blabel">📊 Visual Diagram</div>
+        <div class="terminal">
+          <div class="term-bar">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            <span class="term-title">Unauthenticated Remote Code Execution in AI Agent Architectures</span>
+          </div>
+          <pre class="ascii">┌─────────────────────────────────────────────────────────┐
 │         OPENCLAW AGENT ATTACK SURFACE                   │
 └─────────────────────────────────────────────────────────┘
 
@@ -243,80 +395,102 @@ pre.ascii { font-family: 'Courier New', monospace; font-size: 0.76rem; line-heig
   │  • Call external services • Read env secrets    │
   └─────────────────────────────────────────────────┘
            ↑ Admin access = keys to everything above</pre>
-    </div>
-
-    <div class="block opinion-block">
-      <div class="blabel">👥 Public Opinion</div>
-      <div class="opinion-quote">Security Twitter/X erupted, with researchers like tqbf and others pointing out that this is the inevitable consequence of shipping AI agents with the security rigor of a weekend hackathon project. Ars Technica's comment section had practitioners urging users to 'assume compromise' — a rare and serious recommendation. On Hacker News, a top thread debated whether the 'assume compromise' guidance was alarmist or genuinely warranted, with former incident responders arguing it absolutely is given the agent's privileged access. Reddit's r/netsec highlighted that OpenClaw's growing popularity (referenced in the Arcee story, noting 'OpenClaw users') means the attack surface is massive. Several security researchers noted that the vulnerability class — missing auth on agent control planes — is almost certainly present in other agentic tools that haven't been audited yet.</div>
-      <div class="blabel">🔍 Assessment</div>
-      <p>The 'assume compromise' recommendation is not alarmist — it's the correct incident response posture when you have a silent, unauthenticated admin exploit in a tool with this level of system access. The HN debate about whether it's overblown misunderstands the threat model: this isn't a browser plugin with limited permissions, it's an agent with shell access. Where public discourse is missing nuance is in specificity about *which* OpenClaw deployments were affected (local vs. cloud-hosted, which versions) — the blanket 'assume compromise' may not apply equally to all configurations. The broader point about the AI agent security ecosystem being immature is entirely valid and underappreciated outside security circles.</p>
-    </div>
-
-    <div class="block">
-      <div class="blabel">❓ Quiz Yourself</div>
-      <div class="quiz-grid">
-      <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">Why is a vulnerability in an AI coding agent's authentication layer more dangerous than the same vulnerability in a typical web app?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">Because AI agents hold and autonomously use elevated system permissions — shell access, API credentials, filesystem read/write, git access — that a typical web app doesn't. Bypassing agent auth gives an attacker all of those capabilities simultaneously, often without any user-visible indication.</div>
-          <div class="qcard-exp">A web app auth bypass might expose user data. An agent auth bypass exposes the agent's entire execution environment, which by design has been granted broad system permissions to do its job. The agent is a privileged intermediary, so compromising it is equivalent to compromising everything downstream.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+      </div>
+
+      <div class="block opinion-block">
+        <div class="blabel">👥 Public Opinion</div>
+        <div class="opinion-q">Security Twitter/X erupted, with researchers like tqbf and others pointing out that this is the inevitable consequence of shipping AI agents with the security rigor of a weekend hackathon project. Ars Technica's comment section had practitioners urging users to 'assume compromise' — a rare and serious recommendation. On Hacker News, a top thread debated whether the 'assume compromise' guidance was alarmist or genuinely warranted, with former incident responders arguing it absolutely is given the agent's privileged access. Reddit's r/netsec highlighted that OpenClaw's growing popularity (referenced in the Arcee story, noting 'OpenClaw users') means the attack surface is massive. Several security researchers noted that the vulnerability class — missing auth on agent control planes — is almost certainly present in other agentic tools that haven't been audited yet.</div>
+        <div class="blabel">🔍 Assessment</div>
+        <p>The 'assume compromise' recommendation is not alarmist — it's the correct incident response posture when you have a silent, unauthenticated admin exploit in a tool with this level of system access. The HN debate about whether it's overblown misunderstands the threat model: this isn't a browser plugin with limited permissions, it's an agent with shell access. Where public discourse is missing nuance is in specificity about *which* OpenClaw deployments were affected (local vs. cloud-hosted, which versions) — the blanket 'assume compromise' may not apply equally to all configurations. The broader point about the AI agent security ecosystem being immature is entirely valid and underappreciated outside security circles.</p>
+      </div>
+
+      <div class="block">
+        <div class="blabel">❓ Quiz Yourself</div>
+        <div class="quiz-grid">
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q1 of 3</div>
+        <div class="q-text">Why is a vulnerability in an AI coding agent's authentication layer more dangerous than the same vulnerability in a typical web app?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Because AI agents hold and autonomously use elevated system permissions — shell access, API credentials, filesystem read/write, git access — that a typical web app doesn't. Bypassing agent auth gives an attacker all of those capabilities simultaneously, often without any user-visible indication.</div>
+          <div class="q-exp">A web app auth bypass might expose user data. An agent auth bypass exposes the agent's entire execution environment, which by design has been granted broad system permissions to do its job. The agent is a privileged intermediary, so compromising it is equivalent to compromising everything downstream.</div>
+        </div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">What does 'unauthenticated admin access' mean technically, and why is the 'silent' aspect particularly dangerous for incident response?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">Unauthenticated means the attacker bypasses identity verification entirely — no stolen credentials needed. 'Silent' means the attack leaves no user-facing indicator (no alert, no session warning), making detection dependent on log analysis that most users never perform, allowing persistent access to go unnoticed indefinitely.</div>
-          <div class="qcard-exp">Detection of compromise usually relies on anomaly alerts, user reports, or visible changes. Silent exploits eliminate the user-report vector. Without centralized logging and active monitoring — which most individual developers running local AI agents don't have — the window of undetected access can be unlimited.</div>
+        <div class="q-num">Q2 of 3</div>
+        <div class="q-text">What does 'unauthenticated admin access' mean technically, and why is the 'silent' aspect particularly dangerous for incident response?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Unauthenticated means the attacker bypasses identity verification entirely — no stolen credentials needed. 'Silent' means the attack leaves no user-facing indicator (no alert, no session warning), making detection dependent on log analysis that most users never perform, allowing persistent access to go unnoticed indefinitely.</div>
+          <div class="q-exp">Detection of compromise usually relies on anomaly alerts, user reports, or visible changes. Silent exploits eliminate the user-report vector. Without centralized logging and active monitoring — which most individual developers running local AI agents don't have — the window of undetected access can be unlimited.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">Why does the 'least privilege' security principle become especially important and especially hard to implement for AI agentic tools?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">It's important because agents act autonomously with compounding actions, so excessive permissions multiply risk. It's hard because agents need broad, often unpredictable access to be useful — you can't always know in advance what files, APIs, or commands a coding task will require.</div>
-          <div class="qcard-exp">Least privilege means granting only the permissions actually needed. For deterministic software, you can enumerate those needs. For AI agents that autonomously decide to read a config file, call an API, and run a build script, the permission set is dynamic and context-dependent — making static least-privilege policies very difficult to enforce without breaking functionality.</div>
+        <div class="q-num">Q3 of 3</div>
+        <div class="q-text">Why does the 'least privilege' security principle become especially important and especially hard to implement for AI agentic tools?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">It's important because agents act autonomously with compounding actions, so excessive permissions multiply risk. It's hard because agents need broad, often unpredictable access to be useful — you can't always know in advance what files, APIs, or commands a coding task will require.</div>
+          <div class="q-exp">Least privilege means granting only the permissions actually needed. For deterministic software, you can enumerate those needs. For AI agents that autonomously decide to read a config file, call an API, and run a build script, the permission set is dynamic and context-dependent — making static least-privilege policies very difficult to enforce without breaking functionality.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div></div>
-    </div>
+      </div>
 
-    <div class="block deepdive-block">
-      <div class="blabel">💭 Deep Dive</div>
-      <p class="deepdive-text">If AI coding agents fundamentally need broad system permissions to be useful, and if bolting on authentication after the fact keeps producing these vulnerabilities, does the industry need a new architectural primitive — something like a capability-based permission sandbox specifically designed for autonomous AI actions — and who should be responsible for defining and enforcing that standard?</p>
-    </div>
+      <div class="block deepdive-block">
+        <div class="blabel">💭 Deep Dive</div>
+        <p class="deepdive-text">If AI coding agents fundamentally need broad system permissions to be useful, and if bolting on authentication after the fact keeps producing these vulnerabilities, does the industry need a new architectural primitive — something like a capability-based permission sandbox specifically designed for autonomous AI actions — and who should be responsible for defining and enforcing that standard?</p>
+      </div>
 
-    <div class="story-footer">
-      <a class="src-link" href="https://arstechnica.com/security/2026/04/heres-why-its-prudent-for-openclaw-users-to-assume-compromise/" target="_blank" rel="noopener">Read original →</a>
-      <span class="src-name">Biz &amp; IT - Ars Technica</span>
+      <div class="story-footer">
+        <a class="src-link" href="https://arstechnica.com/security/2026/04/heres-why-its-prudent-for-openclaw-users-to-assume-compromise/" target="_blank" rel="noopener">
+          Read original <span>→</span>
+        </a>
+        <span class="src-name">Biz &amp; IT - Ars Technica</span>
+      </div>
+
     </div>
   </div>
 </article>
 
 <article class="story-card">
   <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
-    <div class="story-summary-text">
-      <div class="story-badge" style="background:#818cf822;color:#818cf8">AI News &amp; Artificial Intelligence | TechCrunch</div>
+    <div class="s-left">
+      <div class="s-meta">
+        <span class="src-badge" style="background:#818cf81a;color:#818cf8">AI News &amp; Artificial Intelligence | TechCrunch</span>
+        <span class="story-num">03</span>
+      </div>
       <h2>26 People, One Giant Open-Source LLM: Arcee Is Proving Scale Isn't Everything</h2>
-      <div class="tldr"><strong>TL;DR:</strong> Arcee, a 26-person startup, built a high-performing open-source LLM that's gaining real traction, challenging the assumption that frontier AI requires frontier-sized teams and budgets.</div>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Arcee, a 26-person startup, built a high-performing open-source LLM that's gaining real traction, challenging the assumption that frontier AI requires frontier-sized teams and budgets.</div>
     </div>
-    <div class="expand-icon">▼</div>
+    <div class="chevron">▼</div>
   </div>
 
   <div class="story-body">
-    <div class="block">
-      <div class="blabel">📌 Why It Matters</div>
-      <p>The AI industry has narratively locked in on the idea that only trillion-dollar companies can build competitive models — Arcee is empirical evidence against that. Open-source LLMs gaining enterprise adoption reshape the economics of AI deployment, reduce vendor lock-in, and shift bargaining power toward users. If a 26-person team can build a model competitive with BigTech offerings, the moat everyone assumed existed around foundation models may be far shallower than believed.</p>
-    </div>
+    <div class="body-inner">
 
-    <div class="block concept-block">
-      <div class="blabel">🧠 Concept: <span style="color:#818cf8">Model Merging &amp; Efficient LLM Development</span></div>
-      <div class="concept-text"><p>Imagine you're a small restaurant trying to compete with a chain that has 500 chefs. Instead of hiring 500 chefs, you hire 5 exceptional ones and have them each deeply master a different cuisine — then you figure out how to combine their specialties into a unified menu that's better than any single chain's generic offering. That's conceptually similar to model merging: rather than training a single massive model from scratch, you combine the strengths of multiple specialized models into one.</p><p>Technically, modern efficient LLM development relies on several compounding techniques. Model merging takes multiple fine-tuned models (each expert in a domain) and mathematically combines their weights — techniques like SLERP, TIES-merging, or DARE allow merging without losing specialization. On top of this, teams use techniques like LoRA (Low-Rank Adaptation) for parameter-efficient fine-tuning, allowing targeted improvement without retraining billions of parameters. Distillation lets a smaller model learn to mimic a larger one's outputs. Together, these techniques let a small team achieve performance that would have required massive compute just two years ago.</p><p>Arcee's approach exemplifies this efficient-development playbook. Rather than competing on raw parameter count or training compute — domains where they'd lose to Google or OpenAI — they compete on architectural cleverness, fine-tuning strategy, and open-source community leverage. Their model gaining popularity with OpenClaw users (a growing agentic coding tool community) is particularly significant: agentic use cases demand reliable instruction-following and code generation, which are fine-tunable properties, not just scale properties. This means Arcee's model is good where it counts for real workloads.</p><p>The broader implication is a potential fracturing of the AI market into two tiers: massive foundation models for cutting-edge research and general tasks, and efficient specialized open-source models for production deployment. Enterprises increasingly prefer the latter — they can run it locally (no data leaving the building), fine-tune it for their domain, and avoid per-token pricing at scale. If Arcee and peers keep delivering, the 'you need GPT-4 or nothing' narrative collapses, and the competitive dynamics of the entire industry shift.</p></div>
-    </div>
+      <div class="block">
+        <div class="blabel">📌 Why It Matters</div>
+        <p>The AI industry has narratively locked in on the idea that only trillion-dollar companies can build competitive models — Arcee is empirical evidence against that. Open-source LLMs gaining enterprise adoption reshape the economics of AI deployment, reduce vendor lock-in, and shift bargaining power toward users. If a 26-person team can build a model competitive with BigTech offerings, the moat everyone assumed existed around foundation models may be far shallower than believed.</p>
+      </div>
 
-    <div class="block">
-      <div class="blabel">📊 Visual Diagram</div>
-      <pre class="ascii">┌──────────────────────────────────────────────────────┐
+      <div class="block concept-block">
+        <div class="blabel">🧠 Concept</div>
+        <div class="concept-title" style="color:#818cf8">Model Merging &amp; Efficient LLM Development</div>
+        <div class="concept-text"><p>Imagine you're a small restaurant trying to compete with a chain that has 500 chefs. Instead of hiring 500 chefs, you hire 5 exceptional ones and have them each deeply master a different cuisine — then you figure out how to combine their specialties into a unified menu that's better than any single chain's generic offering. That's conceptually similar to model merging: rather than training a single massive model from scratch, you combine the strengths of multiple specialized models into one.</p><p>Technically, modern efficient LLM development relies on several compounding techniques. Model merging takes multiple fine-tuned models (each expert in a domain) and mathematically combines their weights — techniques like SLERP, TIES-merging, or DARE allow merging without losing specialization. On top of this, teams use techniques like LoRA (Low-Rank Adaptation) for parameter-efficient fine-tuning, allowing targeted improvement without retraining billions of parameters. Distillation lets a smaller model learn to mimic a larger one's outputs. Together, these techniques let a small team achieve performance that would have required massive compute just two years ago.</p><p>Arcee's approach exemplifies this efficient-development playbook. Rather than competing on raw parameter count or training compute — domains where they'd lose to Google or OpenAI — they compete on architectural cleverness, fine-tuning strategy, and open-source community leverage. Their model gaining popularity with OpenClaw users (a growing agentic coding tool community) is particularly significant: agentic use cases demand reliable instruction-following and code generation, which are fine-tunable properties, not just scale properties. This means Arcee's model is good where it counts for real workloads.</p><p>The broader implication is a potential fracturing of the AI market into two tiers: massive foundation models for cutting-edge research and general tasks, and efficient specialized open-source models for production deployment. Enterprises increasingly prefer the latter — they can run it locally (no data leaving the building), fine-tune it for their domain, and avoid per-token pricing at scale. If Arcee and peers keep delivering, the 'you need GPT-4 or nothing' narrative collapses, and the competitive dynamics of the entire industry shift.</p></div>
+      </div>
+
+      <div class="block">
+        <div class="blabel">📊 Visual Diagram</div>
+        <div class="terminal">
+          <div class="term-bar">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            <span class="term-title">Model Merging &amp; Efficient LLM Development</span>
+          </div>
+          <pre class="ascii">┌──────────────────────────────────────────────────────┐
 │        ARCEE'S EFFICIENT MODEL DEVELOPMENT           │
 └──────────────────────────────────────────────────────┘
 
@@ -340,80 +514,108 @@ pre.ascii { font-family: 'Courier New', monospace; font-size: 0.76rem; line-heig
                              │  Open-source │ Local  │
                              │  26 people   │ Free   │
                              └──────────────────────┘</pre>
-    </div>
-
-    <div class="block opinion-block">
-      <div class="blabel">👥 Public Opinion</div>
-      <div class="opinion-quote">Hacker News loved this story — the thread had a distinctly rooting-for-the-underdog energy, with many comments from engineers who are philosophically committed to open-source AI as a counterweight to Big Tech consolidation. Several HN users noted that Arcee's model being good enough for agentic coding tasks is the real benchmark, not abstract leaderboard scores. On Reddit's r/LocalLLaMA (the community most obsessed with running models locally), Arcee was already well-known and respected, with users sharing fine-tuning guides and benchmark comparisons. AI Twitter/X had more skeptical takes — several researchers questioned whether Arcee's performance claims held up on standardized evals versus cherry-picked demos, and whether 'open-source' meant fully open weights or just accessible weights with use restrictions. Startup Twitter celebrated it as proof that the 'you need billions to compete in AI' narrative is broken.</div>
-      <div class="blabel">🔍 Assessment</div>
-      <p>The r/LocalLLaMA enthusiasm is well-grounded — the community's practical benchmarking is often more rigorous than official leaderboards. The AI Twitter skepticism about eval methodology is fair and important: many 'high-performing' open-source model announcements cherry-pick benchmarks, and the field has a reproducibility problem. The startup community's narrative of 'this disproves the moat' is somewhat premature — Arcee is competitive for specific tasks (coding, instruction-following) but likely not on the full frontier (long-context reasoning, multimodal, etc.). The most underreported angle is the business model question: building open-source models is expensive even with efficient techniques, and Arcee's long-term sustainability deserves scrutiny.</p>
-    </div>
-
-    <div class="block">
-      <div class="blabel">❓ Quiz Yourself</div>
-      <div class="quiz-grid">
-      <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">What is model merging, and why does it allow a small team to compete with organizations that have far more compute resources?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">Model merging mathematically combines the weights of multiple specialized fine-tuned models into one unified model. It requires no new training compute — just the inference-time cost of the merge operation — allowing a small team to leverage the collective work of the open-source community's many specialized models rather than training from scratch.</div>
-          <div class="qcard-exp">Training a large model from scratch requires massive GPU clusters running for months. Merging already-trained models requires only CPU/GPU time for the merge math itself — orders of magnitude cheaper. A small team can curate the best available open-source base models, fine-tune targeted adapters with LoRA (cheaply), and merge the results into a competitive hybrid.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+      </div>
+
+      <div class="block opinion-block">
+        <div class="blabel">👥 Public Opinion</div>
+        <div class="opinion-q">Hacker News loved this story — the thread had a distinctly rooting-for-the-underdog energy, with many comments from engineers who are philosophically committed to open-source AI as a counterweight to Big Tech consolidation. Several HN users noted that Arcee's model being good enough for agentic coding tasks is the real benchmark, not abstract leaderboard scores. On Reddit's r/LocalLLaMA (the community most obsessed with running models locally), Arcee was already well-known and respected, with users sharing fine-tuning guides and benchmark comparisons. AI Twitter/X had more skeptical takes — several researchers questioned whether Arcee's performance claims held up on standardized evals versus cherry-picked demos, and whether 'open-source' meant fully open weights or just accessible weights with use restrictions. Startup Twitter celebrated it as proof that the 'you need billions to compete in AI' narrative is broken.</div>
+        <div class="blabel">🔍 Assessment</div>
+        <p>The r/LocalLLaMA enthusiasm is well-grounded — the community's practical benchmarking is often more rigorous than official leaderboards. The AI Twitter skepticism about eval methodology is fair and important: many 'high-performing' open-source model announcements cherry-pick benchmarks, and the field has a reproducibility problem. The startup community's narrative of 'this disproves the moat' is somewhat premature — Arcee is competitive for specific tasks (coding, instruction-following) but likely not on the full frontier (long-context reasoning, multimodal, etc.). The most underreported angle is the business model question: building open-source models is expensive even with efficient techniques, and Arcee's long-term sustainability deserves scrutiny.</p>
+      </div>
+
+      <div class="block">
+        <div class="blabel">❓ Quiz Yourself</div>
+        <div class="quiz-grid">
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q1 of 3</div>
+        <div class="q-text">What is model merging, and why does it allow a small team to compete with organizations that have far more compute resources?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Model merging mathematically combines the weights of multiple specialized fine-tuned models into one unified model. It requires no new training compute — just the inference-time cost of the merge operation — allowing a small team to leverage the collective work of the open-source community's many specialized models rather than training from scratch.</div>
+          <div class="q-exp">Training a large model from scratch requires massive GPU clusters running for months. Merging already-trained models requires only CPU/GPU time for the merge math itself — orders of magnitude cheaper. A small team can curate the best available open-source base models, fine-tune targeted adapters with LoRA (cheaply), and merge the results into a competitive hybrid.</div>
+        </div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">Why does an open-source LLM being 'good enough for agentic coding tasks' matter more commercially than being best on general benchmarks?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">Agentic coding is a high-value, high-volume enterprise use case with specific, measurable requirements (instruction-following, code correctness, tool use). If an open-source model meets that bar, enterprises can deploy it locally at zero per-token cost, with full control — making 'good enough for the workload' more valuable than 'best on abstract evals.'</div>
-          <div class="qcard-exp">General benchmarks like MMLU measure breadth, but enterprises buy AI for specific workflows. A model that scores 5% lower on MMLU but runs locally, costs nothing per query, and handles code generation reliably is far more attractive for a company processing millions of coding tasks. The commercial moat of frontier models erodes fastest when open-source alternatives hit task-specific thresholds.</div>
+        <div class="q-num">Q2 of 3</div>
+        <div class="q-text">Why does an open-source LLM being 'good enough for agentic coding tasks' matter more commercially than being best on general benchmarks?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Agentic coding is a high-value, high-volume enterprise use case with specific, measurable requirements (instruction-following, code correctness, tool use). If an open-source model meets that bar, enterprises can deploy it locally at zero per-token cost, with full control — making 'good enough for the workload' more valuable than 'best on abstract evals.'</div>
+          <div class="q-exp">General benchmarks like MMLU measure breadth, but enterprises buy AI for specific workflows. A model that scores 5% lower on MMLU but runs locally, costs nothing per query, and handles code generation reliably is far more attractive for a company processing millions of coding tasks. The commercial moat of frontier models erodes fastest when open-source alternatives hit task-specific thresholds.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">What is the difference between 'open weights' and 'truly open-source' for an LLM, and why does it matter?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">Open weights means the model parameters are downloadable and runnable, but may have restrictive licenses (no commercial use, no fine-tuning for certain purposes, usage caps). Truly open-source includes weights, training data, training code, and a permissive license. The distinction matters because open weights alone don't enable full reproducibility, fine-tuning freedom, or commercial deployment without vendor risk.</div>
-          <div class="qcard-exp">Many 'open-source' model releases are actually open weights with Meta's, Mistral's, or others' custom licenses that prohibit commercial use at scale or competing product development. This creates hidden vendor lock-in — you can use the model but remain dependent on the licensor's goodwill. Full open-source (like true Apache 2.0 releases) gives enterprises genuine autonomy.</div>
+        <div class="q-num">Q3 of 3</div>
+        <div class="q-text">What is the difference between 'open weights' and 'truly open-source' for an LLM, and why does it matter?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Open weights means the model parameters are downloadable and runnable, but may have restrictive licenses (no commercial use, no fine-tuning for certain purposes, usage caps). Truly open-source includes weights, training data, training code, and a permissive license. The distinction matters because open weights alone don't enable full reproducibility, fine-tuning freedom, or commercial deployment without vendor risk.</div>
+          <div class="q-exp">Many 'open-source' model releases are actually open weights with Meta's, Mistral's, or others' custom licenses that prohibit commercial use at scale or competing product development. This creates hidden vendor lock-in — you can use the model but remain dependent on the licensor's goodwill. Full open-source (like true Apache 2.0 releases) gives enterprises genuine autonomy.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div></div>
-    </div>
+      </div>
 
-    <div class="block deepdive-block">
-      <div class="blabel">💭 Deep Dive</div>
-      <p class="deepdive-text">If model merging and efficient fine-tuning keep closing the performance gap between small teams and frontier labs, at what point does the AI value chain shift entirely to the data, fine-tuning, and deployment layer — and what does that mean for the $100B+ valuations currently sitting on top of foundation model training?</p>
-    </div>
+      <div class="block deepdive-block">
+        <div class="blabel">💭 Deep Dive</div>
+        <p class="deepdive-text">If model merging and efficient fine-tuning keep closing the performance gap between small teams and frontier labs, at what point does the AI value chain shift entirely to the data, fine-tuning, and deployment layer — and what does that mean for the $100B+ valuations currently sitting on top of foundation model training?</p>
+      </div>
 
-    <div class="story-footer">
-      <a class="src-link" href="https://techcrunch.com/2026/04/07/i-cant-help-rooting-for-tiny-open-source-ai-model-maker-arcee/" target="_blank" rel="noopener">Read original →</a>
-      <span class="src-name">AI News &amp; Artificial Intelligence | TechCrunch</span>
+      <div class="story-footer">
+        <a class="src-link" href="https://techcrunch.com/2026/04/07/i-cant-help-rooting-for-tiny-open-source-ai-model-maker-arcee/" target="_blank" rel="noopener">
+          Read original <span>→</span>
+        </a>
+        <span class="src-name">AI News &amp; Artificial Intelligence | TechCrunch</span>
+      </div>
+
     </div>
   </div>
-</article></section>
+</article>
+  </section>
   <section id="cyber" class="section">
+    <div class="section-bar">
+      <span class="section-label">3 stories &mdash; tap to expand</span>
+      <button class="expand-all" onclick="expandAll('cyber', this)">Expand all</button>
+    </div>
+    
 <article class="story-card">
   <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
-    <div class="story-summary-text">
-      <div class="story-badge" style="background:#34d39922;color:#34d399">Krebs on Security</div>
+    <div class="s-left">
+      <div class="s-meta">
+        <span class="src-badge" style="background:#34d3991a;color:#34d399">Krebs on Security</span>
+        <span class="story-num">01</span>
+      </div>
       <h2>Russia's GRU Turned Your Router Into a Token Vacuum</h2>
-      <div class="tldr"><strong>TL;DR:</strong> Russian military hackers exploited aging router firmware to silently harvest Microsoft Office OAuth tokens from over 18,000 networks — no malware needed.</div>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Russian military hackers exploited aging router firmware to silently harvest Microsoft Office OAuth tokens from over 18,000 networks — no malware needed.</div>
     </div>
-    <div class="expand-icon">▼</div>
+    <div class="chevron">▼</div>
   </div>
 
   <div class="story-body">
-    <div class="block">
-      <div class="blabel">📌 Why It Matters</div>
-      <p>This attack bypasses endpoint detection entirely by compromising network infrastructure before traffic ever reaches a monitored device. Stealing OAuth tokens means attackers get persistent, password-free access to cloud services — MFA doesn't save you once the token is captured. With 18,000+ affected networks, this is one of the broadest credential-theft campaigns ever attributed to a nation-state.</p>
-    </div>
+    <div class="body-inner">
 
-    <div class="block concept-block">
-      <div class="blabel">🧠 Concept: <span style="color:#34d399">OAuth Token Hijacking via Network Infrastructure</span></div>
-      <div class="concept-text"><p>Imagine your gym gives you a wristband at the door that lets you access every machine and class without showing ID again. If someone swipes that wristband mid-visit, they can use every facility pretending to be you — your membership card (password) is useless to them, but the wristband is all they need. Now imagine the attacker didn't break into the gym; they bribed the parking lot attendant to photograph your wristband as you walked in.</p><p>OAuth tokens are short-lived digital credentials issued by identity providers like Microsoft after a successful login. Once issued, these bearer tokens are passed in HTTP headers to prove authentication to services like Office 365, SharePoint, or Teams — no password required. Network-layer interception works by sitting on a compromised router between the client and the internet, where unencrypted token exchanges (or those using predictable patterns) can be sniffed, copied, or replayed. Routers with known, unpatched CVEs can be reconfigured to mirror or forward specific traffic, turning them into passive collection nodes.</p><p>In this campaign, Russia's GRU units (likely APT28/Fancy Bear) exploited known vulnerabilities in older SOHO and enterprise-edge routers to install persistent configurations that harvested OAuth tokens in transit. The key insight is that no malware touched the victim's machine — the attack lived entirely in the network layer. Tokens were exfiltrated and reused to silently access Microsoft cloud services across thousands of organizations, likely spanning government, defense, and critical infrastructure sectors.</p><p>The broader implication is a fundamental challenge to the 'secure the endpoint' paradigm. As organizations invest heavily in EDR, XDR, and zero-trust endpoint controls, network infrastructure — especially aging routers — remains a blind spot. Cloud-native authentication assumes the network is hostile, but most token implementations still have windows of interception. This campaign signals that nation-states are systematically mapping and exploiting those windows at scale.</p></div>
-    </div>
+      <div class="block">
+        <div class="blabel">📌 Why It Matters</div>
+        <p>This attack bypasses endpoint detection entirely by compromising network infrastructure before traffic ever reaches a monitored device. Stealing OAuth tokens means attackers get persistent, password-free access to cloud services — MFA doesn't save you once the token is captured. With 18,000+ affected networks, this is one of the broadest credential-theft campaigns ever attributed to a nation-state.</p>
+      </div>
 
-    <div class="block">
-      <div class="blabel">📊 Visual Diagram</div>
-      <pre class="ascii">┌─────────────────────────────────────────────────────┐
+      <div class="block concept-block">
+        <div class="blabel">🧠 Concept</div>
+        <div class="concept-title" style="color:#34d399">OAuth Token Hijacking via Network Infrastructure</div>
+        <div class="concept-text"><p>Imagine your gym gives you a wristband at the door that lets you access every machine and class without showing ID again. If someone swipes that wristband mid-visit, they can use every facility pretending to be you — your membership card (password) is useless to them, but the wristband is all they need. Now imagine the attacker didn't break into the gym; they bribed the parking lot attendant to photograph your wristband as you walked in.</p><p>OAuth tokens are short-lived digital credentials issued by identity providers like Microsoft after a successful login. Once issued, these bearer tokens are passed in HTTP headers to prove authentication to services like Office 365, SharePoint, or Teams — no password required. Network-layer interception works by sitting on a compromised router between the client and the internet, where unencrypted token exchanges (or those using predictable patterns) can be sniffed, copied, or replayed. Routers with known, unpatched CVEs can be reconfigured to mirror or forward specific traffic, turning them into passive collection nodes.</p><p>In this campaign, Russia's GRU units (likely APT28/Fancy Bear) exploited known vulnerabilities in older SOHO and enterprise-edge routers to install persistent configurations that harvested OAuth tokens in transit. The key insight is that no malware touched the victim's machine — the attack lived entirely in the network layer. Tokens were exfiltrated and reused to silently access Microsoft cloud services across thousands of organizations, likely spanning government, defense, and critical infrastructure sectors.</p><p>The broader implication is a fundamental challenge to the 'secure the endpoint' paradigm. As organizations invest heavily in EDR, XDR, and zero-trust endpoint controls, network infrastructure — especially aging routers — remains a blind spot. Cloud-native authentication assumes the network is hostile, but most token implementations still have windows of interception. This campaign signals that nation-states are systematically mapping and exploiting those windows at scale.</p></div>
+      </div>
+
+      <div class="block">
+        <div class="blabel">📊 Visual Diagram</div>
+        <div class="terminal">
+          <div class="term-bar">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            <span class="term-title">OAuth Token Hijacking via Network Infrastructure</span>
+          </div>
+          <pre class="ascii">┌─────────────────────────────────────────────────────┐
 │           OAUTH TOKEN HIJACK VIA ROUTER             │
 └─────────────────────────────────────────────────────┘
 
@@ -439,80 +641,102 @@ pre.ascii { font-family: 'Courier New', monospace; font-size: 0.76rem; line-heig
                │ SharePoint /   │  ← MFA already passed
                │ Teams Access   │
                └────────────────┘</pre>
-    </div>
-
-    <div class="block opinion-block">
-      <div class="blabel">👥 Public Opinion</div>
-      <div class="opinion-quote">On r/netsec, the dominant reaction was grim recognition: 'This is why network monitoring has to be part of zero-trust, not just endpoint.' Several practitioners flagged that most SMBs and even mid-market orgs have no visibility into router-level traffic anomalies. Security Twitter/X saw professionals pointing out that Conditional Access policies with IP binding and token binding could have mitigated this — but Microsoft's implementation of those features is still incomplete. HN commenters debated whether this represents a failure of Microsoft's token architecture or simply inevitable nation-state tradecraft against under-maintained infrastructure, with the consensus leaning toward 'both.'</div>
-      <div class="blabel">🔍 Assessment</div>
-      <p>The frustration on r/netsec is valid — network infrastructure is chronically under-patched and under-monitored relative to endpoints. The calls for token binding are correct in principle but gloss over the real-world deployment friction: many enterprise environments can't enable strict token binding without breaking legitimate use cases. The HN 'Microsoft architecture failure' thread overcorrects — OAuth 2.0 with short-lived tokens is reasonably designed; the failure is in the assumption that network paths are trustworthy. What's missing from most commentary is scrutiny of router vendors: why do known CVEs in critical infrastructure hardware go unpatched for years across 18,000+ networks?</p>
-    </div>
-
-    <div class="block">
-      <div class="blabel">❓ Quiz Yourself</div>
-      <div class="quiz-grid">
-      <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">Why doesn't MFA protect against OAuth token hijacking once a token has been issued?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">Because MFA validates identity at login time to issue the token, but the token itself is a bearer credential — whoever holds it is authenticated, regardless of how it was obtained.</div>
-          <div class="qcard-exp">OAuth tokens are 'bearer tokens': the server trusts anyone presenting a valid token, similar to a signed check made out to 'bearer.' MFA was already satisfied when the token was minted. Stealing the token post-issuance entirely bypasses the MFA step.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+      </div>
+
+      <div class="block opinion-block">
+        <div class="blabel">👥 Public Opinion</div>
+        <div class="opinion-q">On r/netsec, the dominant reaction was grim recognition: 'This is why network monitoring has to be part of zero-trust, not just endpoint.' Several practitioners flagged that most SMBs and even mid-market orgs have no visibility into router-level traffic anomalies. Security Twitter/X saw professionals pointing out that Conditional Access policies with IP binding and token binding could have mitigated this — but Microsoft's implementation of those features is still incomplete. HN commenters debated whether this represents a failure of Microsoft's token architecture or simply inevitable nation-state tradecraft against under-maintained infrastructure, with the consensus leaning toward 'both.'</div>
+        <div class="blabel">🔍 Assessment</div>
+        <p>The frustration on r/netsec is valid — network infrastructure is chronically under-patched and under-monitored relative to endpoints. The calls for token binding are correct in principle but gloss over the real-world deployment friction: many enterprise environments can't enable strict token binding without breaking legitimate use cases. The HN 'Microsoft architecture failure' thread overcorrects — OAuth 2.0 with short-lived tokens is reasonably designed; the failure is in the assumption that network paths are trustworthy. What's missing from most commentary is scrutiny of router vendors: why do known CVEs in critical infrastructure hardware go unpatched for years across 18,000+ networks?</p>
+      </div>
+
+      <div class="block">
+        <div class="blabel">❓ Quiz Yourself</div>
+        <div class="quiz-grid">
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q1 of 3</div>
+        <div class="q-text">Why doesn't MFA protect against OAuth token hijacking once a token has been issued?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Because MFA validates identity at login time to issue the token, but the token itself is a bearer credential — whoever holds it is authenticated, regardless of how it was obtained.</div>
+          <div class="q-exp">OAuth tokens are 'bearer tokens': the server trusts anyone presenting a valid token, similar to a signed check made out to 'bearer.' MFA was already satisfied when the token was minted. Stealing the token post-issuance entirely bypasses the MFA step.</div>
+        </div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">What makes a compromised router preferable to endpoint malware for this kind of collection operation?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">Routers sit outside EDR/AV coverage, serve as a chokepoint for all network traffic, and a configuration change leaves no process or file artifacts on monitored hosts.</div>
-          <div class="qcard-exp">Endpoint security tools (EDR, AV, SIEM host agents) only see what happens on the machine they're installed on. A router-level tap is invisible to those tools, requires no code execution on the victim's device, and can passively collect from every host on the network simultaneously.</div>
+        <div class="q-num">Q2 of 3</div>
+        <div class="q-text">What makes a compromised router preferable to endpoint malware for this kind of collection operation?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Routers sit outside EDR/AV coverage, serve as a chokepoint for all network traffic, and a configuration change leaves no process or file artifacts on monitored hosts.</div>
+          <div class="q-exp">Endpoint security tools (EDR, AV, SIEM host agents) only see what happens on the machine they're installed on. A router-level tap is invisible to those tools, requires no code execution on the victim's device, and can passively collect from every host on the network simultaneously.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">What is 'token binding' and why would it have limited this attack's effectiveness?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">Token binding cryptographically ties an OAuth token to the specific TLS connection it was issued on, so a token copied from one session cannot be replayed in a different network session.</div>
-          <div class="qcard-exp">Without token binding, a bearer token is like cash — anyone with it can spend it. Token binding embeds a proof of possession (a public key derived from the TLS handshake) into the token itself. A stolen token without the corresponding private key becomes useless on a different connection.</div>
+        <div class="q-num">Q3 of 3</div>
+        <div class="q-text">What is 'token binding' and why would it have limited this attack's effectiveness?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Token binding cryptographically ties an OAuth token to the specific TLS connection it was issued on, so a token copied from one session cannot be replayed in a different network session.</div>
+          <div class="q-exp">Without token binding, a bearer token is like cash — anyone with it can spend it. Token binding embeds a proof of possession (a public key derived from the TLS handshake) into the token itself. A stolen token without the corresponding private key becomes useless on a different connection.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div></div>
-    </div>
+      </div>
 
-    <div class="block deepdive-block">
-      <div class="blabel">💭 Deep Dive</div>
-      <p class="deepdive-text">If zero-trust architecture explicitly assumes the network is hostile — and OAuth tokens are routinely transmitted over networks controlled by adversaries — why does the industry still treat short-lived bearer tokens without cryptographic binding as an acceptable security posture for high-value cloud services?</p>
-    </div>
+      <div class="block deepdive-block">
+        <div class="blabel">💭 Deep Dive</div>
+        <p class="deepdive-text">If zero-trust architecture explicitly assumes the network is hostile — and OAuth tokens are routinely transmitted over networks controlled by adversaries — why does the industry still treat short-lived bearer tokens without cryptographic binding as an acceptable security posture for high-value cloud services?</p>
+      </div>
 
-    <div class="story-footer">
-      <a class="src-link" href="https://krebsonsecurity.com/2026/04/russia-hacked-routers-to-steal-microsoft-office-tokens/" target="_blank" rel="noopener">Read original →</a>
-      <span class="src-name">Krebs on Security</span>
+      <div class="story-footer">
+        <a class="src-link" href="https://krebsonsecurity.com/2026/04/russia-hacked-routers-to-steal-microsoft-office-tokens/" target="_blank" rel="noopener">
+          Read original <span>→</span>
+        </a>
+        <span class="src-name">Krebs on Security</span>
+      </div>
+
     </div>
   </div>
 </article>
 
 <article class="story-card">
   <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
-    <div class="story-summary-text">
-      <div class="story-badge" style="background:#34d39922;color:#34d399">Krebs on Security</div>
+    <div class="s-left">
+      <div class="s-meta">
+        <span class="src-badge" style="background:#34d3991a;color:#34d399">Krebs on Security</span>
+        <span class="story-num">02</span>
+      </div>
       <h2>Germany Unmasks 'UNKN': The Man Behind REvil and GandCrab</h2>
-      <div class="tldr"><strong>TL;DR:</strong> German authorities have publicly identified 31-year-old Russian national Daniil Shchukin as the operator behind both GandCrab and REvil — two of the most lucrative ransomware-as-a-service operations in history.</div>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>German authorities have publicly identified 31-year-old Russian national Daniil Shchukin as the operator behind both GandCrab and REvil — two of the most lucrative ransomware-as-a-service operations in history.</div>
     </div>
-    <div class="expand-icon">▼</div>
+    <div class="chevron">▼</div>
   </div>
 
   <div class="story-body">
-    <div class="block">
-      <div class="blabel">📌 Why It Matters</div>
-      <p>REvil and GandCrab together extorted hundreds of millions of dollars from victims worldwide and pioneered the Ransomware-as-a-Service model that dominates cybercrime today. Unmasking the leadership — even without an arrest — disrupts trust within criminal networks and establishes legal accountability that can follow operators for life. This is also a rare example of a European nation independently attributing a major cybercriminal persona, signaling growing international forensic capability.</p>
-    </div>
+    <div class="body-inner">
 
-    <div class="block concept-block">
-      <div class="blabel">🧠 Concept: <span style="color:#34d399">Ransomware-as-a-Service (RaaS) and Operator Attribution</span></div>
-      <div class="concept-text"><p>Think of a franchise like McDonald's: the corporate owner designs the brand, the systems, and the supply chain, then licenses the operation to local franchisees who run day-to-day. The corporate owner profits from every sale without flipping a single burger. RaaS works identically — a core developer team builds and maintains the ransomware platform, recruits affiliates to execute attacks, and takes a percentage cut (typically 20–30%) of every ransom paid, while affiliates keep the rest.</p><p>The RaaS operator role involves managing affiliate recruitment (on dark-web forums), maintaining the malware build system and encryption key infrastructure, running the negotiation portal victims use to pay ransoms, and handling cryptocurrency laundering. Attribution of operators is hard precisely because they rarely touch victim networks directly — affiliates do the intrusion work. Investigators piece together operator identity through on-chain cryptocurrency tracing, operational security mistakes in dark-web forum posts, infrastructure overlaps, and international law enforcement cooperation.</p><p>Shchukin's unmasking appears to have combined multiple threads: GandCrab forum posts under 'UNKN' with linguistic and timezone patterns, infrastructure reuse between GandCrab and REvil (the latter emerged almost immediately after GandCrab 'retired' in 2019), and likely financial intelligence tracing cryptocurrency withdrawals to identifiable exchange accounts. Germany's focus on 130 domestic incidents gave investigators a concrete legal basis independent of U.S. indictments, building a parallel case file that could survive diplomatic complications.</p><p>The broader significance is what this signals about the industrialization of cybercrime. REvil and GandCrab weren't hacker crews — they were structured businesses with HR (affiliate vetting), product development (ransomware versioning), customer service (victim negotiation), and finance (crypto laundering). Understanding that the 'operator' is a platform CEO, not an attacker, reshapes both law enforcement strategy and corporate defense posture: the real target for disruption is the platform infrastructure, not any individual affiliate.</p></div>
-    </div>
+      <div class="block">
+        <div class="blabel">📌 Why It Matters</div>
+        <p>REvil and GandCrab together extorted hundreds of millions of dollars from victims worldwide and pioneered the Ransomware-as-a-Service model that dominates cybercrime today. Unmasking the leadership — even without an arrest — disrupts trust within criminal networks and establishes legal accountability that can follow operators for life. This is also a rare example of a European nation independently attributing a major cybercriminal persona, signaling growing international forensic capability.</p>
+      </div>
 
-    <div class="block">
-      <div class="blabel">📊 Visual Diagram</div>
-      <pre class="ascii">┌─────────────────────────────────────────────────────┐
+      <div class="block concept-block">
+        <div class="blabel">🧠 Concept</div>
+        <div class="concept-title" style="color:#34d399">Ransomware-as-a-Service (RaaS) and Operator Attribution</div>
+        <div class="concept-text"><p>Think of a franchise like McDonald's: the corporate owner designs the brand, the systems, and the supply chain, then licenses the operation to local franchisees who run day-to-day. The corporate owner profits from every sale without flipping a single burger. RaaS works identically — a core developer team builds and maintains the ransomware platform, recruits affiliates to execute attacks, and takes a percentage cut (typically 20–30%) of every ransom paid, while affiliates keep the rest.</p><p>The RaaS operator role involves managing affiliate recruitment (on dark-web forums), maintaining the malware build system and encryption key infrastructure, running the negotiation portal victims use to pay ransoms, and handling cryptocurrency laundering. Attribution of operators is hard precisely because they rarely touch victim networks directly — affiliates do the intrusion work. Investigators piece together operator identity through on-chain cryptocurrency tracing, operational security mistakes in dark-web forum posts, infrastructure overlaps, and international law enforcement cooperation.</p><p>Shchukin's unmasking appears to have combined multiple threads: GandCrab forum posts under 'UNKN' with linguistic and timezone patterns, infrastructure reuse between GandCrab and REvil (the latter emerged almost immediately after GandCrab 'retired' in 2019), and likely financial intelligence tracing cryptocurrency withdrawals to identifiable exchange accounts. Germany's focus on 130 domestic incidents gave investigators a concrete legal basis independent of U.S. indictments, building a parallel case file that could survive diplomatic complications.</p><p>The broader significance is what this signals about the industrialization of cybercrime. REvil and GandCrab weren't hacker crews — they were structured businesses with HR (affiliate vetting), product development (ransomware versioning), customer service (victim negotiation), and finance (crypto laundering). Understanding that the 'operator' is a platform CEO, not an attacker, reshapes both law enforcement strategy and corporate defense posture: the real target for disruption is the platform infrastructure, not any individual affiliate.</p></div>
+      </div>
+
+      <div class="block">
+        <div class="blabel">📊 Visual Diagram</div>
+        <div class="terminal">
+          <div class="term-bar">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            <span class="term-title">Ransomware-as-a-Service (RaaS) and Operator Attribution</span>
+          </div>
+          <pre class="ascii">┌─────────────────────────────────────────────────────┐
 │         RAAS STRUCTURE: GANDCRAB / REVIL            │
 └─────────────────────────────────────────────────────┘
 
@@ -541,80 +765,102 @@ pre.ascii { font-family: 'Courier New', monospace; font-size: 0.76rem; line-heig
           │  70-80% → Affiliates  │
           │  20-30% → UNKN        │
           └───────────────────────┘</pre>
-    </div>
-
-    <div class="block opinion-block">
-      <div class="blabel">👥 Public Opinion</div>
-      <div class="opinion-quote">On r/netsec and r/cybersecurity, the reaction was cautiously positive but tempered: 'Great attribution work, but he's still in Russia so this changes nothing practically.' Security Twitter/X saw a split between those celebrating the forensic achievement — particularly the cross-gang infrastructure linkage — and cynics noting that U.S. indictments of Russian cybercriminals have existed for years without extraditions. Several researchers pointed out that 'UNKN' was known to the research community by reputation for years; the value here is legal, not intelligence. HN threads focused on the cryptocurrency tracing angle, with debate about whether chain analytics firms deserve more credit than governments publicly acknowledge.</div>
-      <div class="blabel">🔍 Assessment</div>
-      <p>The cynicism about no-arrest attribution is valid at the tactical level — Shchukin is almost certainly not traveling internationally anytime soon. However, this framing misses the strategic value: public attribution creates permanent legal jeopardy, poisons the operator's ability to monetize in any Western-adjacent financial system, and sends a message to mid-level RaaS participants that the 'Russia as safe harbor' guarantee has limits. The cryptocurrency tracing commentary on HN is largely correct — blockchain analytics firms like Chainalysis and TRM Labs do the heavy lifting that governments then launder through official press releases. What's missing from public discussion is the significance of Germany acting independently: European attribution capability is maturing faster than most assume.</p>
-    </div>
-
-    <div class="block">
-      <div class="blabel">❓ Quiz Yourself</div>
-      <div class="quiz-grid">
-      <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">Why would a RaaS operator 'retire' a brand like GandCrab only to immediately launch a successor like REvil?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">To reset law enforcement attention, shed compromised infrastructure, re-vet the affiliate pool, and rebrand away from any heat while maintaining operational continuity and the core platform.</div>
-          <div class="qcard-exp">Criminal infrastructure accumulates risk over time: infiltrated affiliates, burned cryptocurrency addresses, known C2 servers, and active investigations. A 'retirement' lets the operator reset all of these while keeping the core team and codebase. REvil launched with architectural improvements suggesting the GandCrab codebase was directly evolved, not rebuilt from scratch.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+      </div>
+
+      <div class="block opinion-block">
+        <div class="blabel">👥 Public Opinion</div>
+        <div class="opinion-q">On r/netsec and r/cybersecurity, the reaction was cautiously positive but tempered: 'Great attribution work, but he's still in Russia so this changes nothing practically.' Security Twitter/X saw a split between those celebrating the forensic achievement — particularly the cross-gang infrastructure linkage — and cynics noting that U.S. indictments of Russian cybercriminals have existed for years without extraditions. Several researchers pointed out that 'UNKN' was known to the research community by reputation for years; the value here is legal, not intelligence. HN threads focused on the cryptocurrency tracing angle, with debate about whether chain analytics firms deserve more credit than governments publicly acknowledge.</div>
+        <div class="blabel">🔍 Assessment</div>
+        <p>The cynicism about no-arrest attribution is valid at the tactical level — Shchukin is almost certainly not traveling internationally anytime soon. However, this framing misses the strategic value: public attribution creates permanent legal jeopardy, poisons the operator's ability to monetize in any Western-adjacent financial system, and sends a message to mid-level RaaS participants that the 'Russia as safe harbor' guarantee has limits. The cryptocurrency tracing commentary on HN is largely correct — blockchain analytics firms like Chainalysis and TRM Labs do the heavy lifting that governments then launder through official press releases. What's missing from public discussion is the significance of Germany acting independently: European attribution capability is maturing faster than most assume.</p>
+      </div>
+
+      <div class="block">
+        <div class="blabel">❓ Quiz Yourself</div>
+        <div class="quiz-grid">
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q1 of 3</div>
+        <div class="q-text">Why would a RaaS operator 'retire' a brand like GandCrab only to immediately launch a successor like REvil?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">To reset law enforcement attention, shed compromised infrastructure, re-vet the affiliate pool, and rebrand away from any heat while maintaining operational continuity and the core platform.</div>
+          <div class="q-exp">Criminal infrastructure accumulates risk over time: infiltrated affiliates, burned cryptocurrency addresses, known C2 servers, and active investigations. A 'retirement' lets the operator reset all of these while keeping the core team and codebase. REvil launched with architectural improvements suggesting the GandCrab codebase was directly evolved, not rebuilt from scratch.</div>
+        </div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">From a defensive standpoint, why is targeting RaaS operators more effective than targeting individual affiliates?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">Affiliates are interchangeable and easily replaced, but dismantling the operator's platform — key management, payment infrastructure, affiliate portal — disables all current and future affiliates simultaneously.</div>
-          <div class="qcard-exp">RaaS operators are the force multipliers. Taking down one affiliate stops one attack chain. Taking down the operator's decryption key infrastructure (as happened in the Hive takedown) can even retroactively help victims, while eliminating the platform stops dozens of concurrent attack campaigns.</div>
+        <div class="q-num">Q2 of 3</div>
+        <div class="q-text">From a defensive standpoint, why is targeting RaaS operators more effective than targeting individual affiliates?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Affiliates are interchangeable and easily replaced, but dismantling the operator's platform — key management, payment infrastructure, affiliate portal — disables all current and future affiliates simultaneously.</div>
+          <div class="q-exp">RaaS operators are the force multipliers. Taking down one affiliate stops one attack chain. Taking down the operator's decryption key infrastructure (as happened in the Hive takedown) can even retroactively help victims, while eliminating the platform stops dozens of concurrent attack campaigns.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">What operational security failure most commonly enables law enforcement to attribute pseudonymous dark-web operators to real identities?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">Reuse of infrastructure, usernames, writing style, or cryptocurrency addresses across the pseudonymous criminal context and earlier, less-careful online activity — often from years prior.</div>
-          <div class="qcard-exp">Operators rarely make single catastrophic mistakes. Attribution is usually a mosaic: a username used on both a dark-web forum and an old gaming profile, a cryptocurrency address that touched a KYC exchange once years ago, a timezone pattern in post timestamps, or an email used to register early infrastructure. Over years of operation, the probability of at least one linkage approaches certainty.</div>
+        <div class="q-num">Q3 of 3</div>
+        <div class="q-text">What operational security failure most commonly enables law enforcement to attribute pseudonymous dark-web operators to real identities?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Reuse of infrastructure, usernames, writing style, or cryptocurrency addresses across the pseudonymous criminal context and earlier, less-careful online activity — often from years prior.</div>
+          <div class="q-exp">Operators rarely make single catastrophic mistakes. Attribution is usually a mosaic: a username used on both a dark-web forum and an old gaming profile, a cryptocurrency address that touched a KYC exchange once years ago, a timezone pattern in post timestamps, or an email used to register early infrastructure. Over years of operation, the probability of at least one linkage approaches certainty.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div></div>
-    </div>
+      </div>
 
-    <div class="block deepdive-block">
-      <div class="blabel">💭 Deep Dive</div>
-      <p class="deepdive-text">If ransomware operators have structured their businesses as franchises — with developers, affiliates, negotiators, and money launderers as distinct roles — should law enforcement and corporate defenders fundamentally rethink disruption strategy away from individual prosecution and toward targeting the specific chokepoints (key escrow infrastructure, payment portals, affiliate recruitment channels) that make the platform model viable?</p>
-    </div>
+      <div class="block deepdive-block">
+        <div class="blabel">💭 Deep Dive</div>
+        <p class="deepdive-text">If ransomware operators have structured their businesses as franchises — with developers, affiliates, negotiators, and money launderers as distinct roles — should law enforcement and corporate defenders fundamentally rethink disruption strategy away from individual prosecution and toward targeting the specific chokepoints (key escrow infrastructure, payment portals, affiliate recruitment channels) that make the platform model viable?</p>
+      </div>
 
-    <div class="story-footer">
-      <a class="src-link" href="https://krebsonsecurity.com/2026/04/germany-doxes-unkn-head-of-ru-ransomware-gangs-revil-gandcrab/" target="_blank" rel="noopener">Read original →</a>
-      <span class="src-name">Krebs on Security</span>
+      <div class="story-footer">
+        <a class="src-link" href="https://krebsonsecurity.com/2026/04/germany-doxes-unkn-head-of-ru-ransomware-gangs-revil-gandcrab/" target="_blank" rel="noopener">
+          Read original <span>→</span>
+        </a>
+        <span class="src-name">Krebs on Security</span>
+      </div>
+
     </div>
   </div>
 </article>
 
 <article class="story-card">
   <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
-    <div class="story-summary-text">
-      <div class="story-badge" style="background:#34d39922;color:#34d399">The Hacker News</div>
+    <div class="s-left">
+      <div class="s-meta">
+        <span class="src-badge" style="background:#34d3991a;color:#34d399">The Hacker News</span>
+        <span class="story-num">03</span>
+      </div>
       <h2>Claude Mythos Found Thousands of Zero-Days. That Should Excite and Terrify You.</h2>
-      <div class="tldr"><strong>TL;DR:</strong> Anthropic's new frontier model Claude Mythos, deployed via Project Glasswing with partners including AWS, Apple, and Cisco, discovered thousands of previously unknown zero-day vulnerabilities across major systems before public release.</div>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Anthropic's new frontier model Claude Mythos, deployed via Project Glasswing with partners including AWS, Apple, and Cisco, discovered thousands of previously unknown zero-day vulnerabilities across major systems before public release.</div>
     </div>
-    <div class="expand-icon">▼</div>
+    <div class="chevron">▼</div>
   </div>
 
   <div class="story-body">
-    <div class="block">
-      <div class="blabel">📌 Why It Matters</div>
-      <p>AI-assisted vulnerability discovery at this scale represents a phase shift: the bottleneck in finding bugs has historically been human researcher hours, and that bottleneck is now dissolving. The same capability in defensive hands is enormously valuable; in offensive or uncontrolled hands, it compresses the timeline between vulnerability existence and exploitation to near zero. The participation of AWS, Apple, Broadcom, Cisco, and CrowdStrike suggests this isn't a research demo — it's an emerging industry capability with immediate operational deployment.</p>
-    </div>
+    <div class="body-inner">
 
-    <div class="block concept-block">
-      <div class="blabel">🧠 Concept: <span style="color:#34d399">AI-Augmented Vulnerability Research and Automated Zero-Day Discovery</span></div>
-      <div class="concept-text"><p>Imagine hiring a team of security researchers who never sleep, can read every CVE, patch diff, and exploit writeup ever published, and can simultaneously audit millions of lines of code across every major platform — and they work faster every month. Traditional vulnerability research is brutally constrained by human attention: even elite researchers can deeply audit a few hundred thousand lines of code in a year. The 'bugs per researcher-hour' rate has been a natural cap on how fast the attack surface can be understood.</p><p>Modern AI vulnerability research combines several techniques: static analysis over large codebases with learned patterns from historical CVEs, fuzzing guided by neural models that predict which inputs are most likely to trigger edge cases, symbolic execution augmented by LLM-generated hypotheses about program state, and cross-component reasoning that can identify vulnerability chains spanning multiple libraries. Frontier models like Claude Mythos bring an additional capability: natural language understanding of documentation, design specifications, and commit messages, enabling reasoning about intent vs. implementation divergence — a common root cause of security bugs.</p><p>Project Glasswing's reported findings — thousands of zero-days across systems managed by Apple, Cisco, AWS, and Broadcom — suggest the model is operating at a qualitative level beyond prior automated tools. Critically, this appears to be a coordinated disclosure framework: Anthropic and its partners are finding and patching vulnerabilities before they can be exploited, which is the right model. The 'preview version' framing also implies that the publicly released Claude Mythos will be more capable, raising the question of what adversaries with equivalent or near-equivalent models are already finding.</p><p>The broader implication is a fundamental asymmetry disruption. For decades, defenders benefited from the fact that finding bugs was hard — most vulnerabilities went undiscovered for years or forever. AI-scale discovery collapses that dynamic: if a capable model can sweep a codebase for novel vulnerabilities in hours, the 'security through obscurity of complexity' that has implicitly protected much legacy infrastructure evaporates. The industry will need to move from vulnerability-discovery-as-bottleneck to patch-deployment-speed-as-bottleneck — which is a very different operational problem.</p></div>
-    </div>
+      <div class="block">
+        <div class="blabel">📌 Why It Matters</div>
+        <p>AI-assisted vulnerability discovery at this scale represents a phase shift: the bottleneck in finding bugs has historically been human researcher hours, and that bottleneck is now dissolving. The same capability in defensive hands is enormously valuable; in offensive or uncontrolled hands, it compresses the timeline between vulnerability existence and exploitation to near zero. The participation of AWS, Apple, Broadcom, Cisco, and CrowdStrike suggests this isn't a research demo — it's an emerging industry capability with immediate operational deployment.</p>
+      </div>
 
-    <div class="block">
-      <div class="blabel">📊 Visual Diagram</div>
-      <pre class="ascii">┌──────────────────────────────────────────────────────┐
+      <div class="block concept-block">
+        <div class="blabel">🧠 Concept</div>
+        <div class="concept-title" style="color:#34d399">AI-Augmented Vulnerability Research and Automated Zero-Day Discovery</div>
+        <div class="concept-text"><p>Imagine hiring a team of security researchers who never sleep, can read every CVE, patch diff, and exploit writeup ever published, and can simultaneously audit millions of lines of code across every major platform — and they work faster every month. Traditional vulnerability research is brutally constrained by human attention: even elite researchers can deeply audit a few hundred thousand lines of code in a year. The 'bugs per researcher-hour' rate has been a natural cap on how fast the attack surface can be understood.</p><p>Modern AI vulnerability research combines several techniques: static analysis over large codebases with learned patterns from historical CVEs, fuzzing guided by neural models that predict which inputs are most likely to trigger edge cases, symbolic execution augmented by LLM-generated hypotheses about program state, and cross-component reasoning that can identify vulnerability chains spanning multiple libraries. Frontier models like Claude Mythos bring an additional capability: natural language understanding of documentation, design specifications, and commit messages, enabling reasoning about intent vs. implementation divergence — a common root cause of security bugs.</p><p>Project Glasswing's reported findings — thousands of zero-days across systems managed by Apple, Cisco, AWS, and Broadcom — suggest the model is operating at a qualitative level beyond prior automated tools. Critically, this appears to be a coordinated disclosure framework: Anthropic and its partners are finding and patching vulnerabilities before they can be exploited, which is the right model. The 'preview version' framing also implies that the publicly released Claude Mythos will be more capable, raising the question of what adversaries with equivalent or near-equivalent models are already finding.</p><p>The broader implication is a fundamental asymmetry disruption. For decades, defenders benefited from the fact that finding bugs was hard — most vulnerabilities went undiscovered for years or forever. AI-scale discovery collapses that dynamic: if a capable model can sweep a codebase for novel vulnerabilities in hours, the 'security through obscurity of complexity' that has implicitly protected much legacy infrastructure evaporates. The industry will need to move from vulnerability-discovery-as-bottleneck to patch-deployment-speed-as-bottleneck — which is a very different operational problem.</p></div>
+      </div>
+
+      <div class="block">
+        <div class="blabel">📊 Visual Diagram</div>
+        <div class="terminal">
+          <div class="term-bar">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            <span class="term-title">AI-Augmented Vulnerability Research and Automated Zero-Day Discovery</span>
+          </div>
+          <pre class="ascii">┌──────────────────────────────────────────────────────┐
 │     PROJECT GLASSWING: AI VULN DISCOVERY PIPELINE   │
 └──────────────────────────────────────────────────────┘
 
@@ -642,79 +888,104 @@ pre.ascii { font-family: 'Courier New', monospace; font-size: 0.76rem; line-heig
                                       │
                               [CVE Published /
                                Patch Deployed]</pre>
-    </div>
-
-    <div class="block opinion-block">
-      <div class="blabel">👥 Public Opinion</div>
-      <div class="opinion-quote">The reaction split sharply across communities. On HN, the top thread debated whether 'thousands of zero-days' is a meaningful claim or marketing inflation — several security engineers noted that automated tools have always generated high volumes of low-severity findings, and the signal-to-noise ratio matters enormously. On r/netsec, practitioners were more alarmed: 'The same model will be available to nation-states in 18 months. The patch cycle can't keep up.' Security Twitter/X was divided between defensive optimism (CrowdStrike's involvement being cited as a credibility signal) and existential concern from researchers like Trail of Bits alumni noting that coordinated disclosure at this scale is operationally unprecedented. Several AI safety voices flagged that releasing a model capable of autonomous zero-day discovery raises dual-use concerns that Anthropic hasn't fully addressed publicly.</div>
-      <div class="blabel">🔍 Assessment</div>
-      <p>The HN skepticism about finding quality is a legitimate methodological question — 'zero-day' can mean anything from a critical RCE to an obscure DoS in a deprecated library. Anthropic's press materials don't specify severity distribution, which is a significant omission. The r/netsec alarm about adversarial access is well-founded and arguably understated: the question isn't whether nation-states will have equivalent capability but whether they already do. The optimistic framing from CrowdStrike's participation deserves scrutiny — security vendors have strong commercial incentives to associate their brand with frontier AI capability. What's largely missing from public discourse is a serious examination of the coordinated disclosure process at this scale: patching thousands of zero-days across Apple, Cisco, and AWS simultaneously is a logistical and coordination challenge that could itself create vulnerability windows.</p>
-    </div>
-
-    <div class="block">
-      <div class="blabel">❓ Quiz Yourself</div>
-      <div class="quiz-grid">
-      <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">Why does AI-scale vulnerability discovery change the defender/attacker balance more than just 'finding bugs faster'?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">Because it eliminates the implicit security assumption that complexity obscures vulnerabilities — large legacy codebases that were practically unauditable by humans can now be comprehensively analyzed, removing a foundational (if informal) layer of protection.</div>
-          <div class="qcard-exp">Much critical infrastructure runs on software that has never been fully audited — not because it's secure, but because auditing millions of lines of old C code was economically infeasible. AI removes that economic barrier. The bugs were always there; now they can be found systematically, which changes the calculus for both defenders and attackers equally.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+      </div>
+
+      <div class="block opinion-block">
+        <div class="blabel">👥 Public Opinion</div>
+        <div class="opinion-q">The reaction split sharply across communities. On HN, the top thread debated whether 'thousands of zero-days' is a meaningful claim or marketing inflation — several security engineers noted that automated tools have always generated high volumes of low-severity findings, and the signal-to-noise ratio matters enormously. On r/netsec, practitioners were more alarmed: 'The same model will be available to nation-states in 18 months. The patch cycle can't keep up.' Security Twitter/X was divided between defensive optimism (CrowdStrike's involvement being cited as a credibility signal) and existential concern from researchers like Trail of Bits alumni noting that coordinated disclosure at this scale is operationally unprecedented. Several AI safety voices flagged that releasing a model capable of autonomous zero-day discovery raises dual-use concerns that Anthropic hasn't fully addressed publicly.</div>
+        <div class="blabel">🔍 Assessment</div>
+        <p>The HN skepticism about finding quality is a legitimate methodological question — 'zero-day' can mean anything from a critical RCE to an obscure DoS in a deprecated library. Anthropic's press materials don't specify severity distribution, which is a significant omission. The r/netsec alarm about adversarial access is well-founded and arguably understated: the question isn't whether nation-states will have equivalent capability but whether they already do. The optimistic framing from CrowdStrike's participation deserves scrutiny — security vendors have strong commercial incentives to associate their brand with frontier AI capability. What's largely missing from public discourse is a serious examination of the coordinated disclosure process at this scale: patching thousands of zero-days across Apple, Cisco, and AWS simultaneously is a logistical and coordination challenge that could itself create vulnerability windows.</p>
+      </div>
+
+      <div class="block">
+        <div class="blabel">❓ Quiz Yourself</div>
+        <div class="quiz-grid">
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q1 of 3</div>
+        <div class="q-text">Why does AI-scale vulnerability discovery change the defender/attacker balance more than just 'finding bugs faster'?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Because it eliminates the implicit security assumption that complexity obscures vulnerabilities — large legacy codebases that were practically unauditable by humans can now be comprehensively analyzed, removing a foundational (if informal) layer of protection.</div>
+          <div class="q-exp">Much critical infrastructure runs on software that has never been fully audited — not because it's secure, but because auditing millions of lines of old C code was economically infeasible. AI removes that economic barrier. The bugs were always there; now they can be found systematically, which changes the calculus for both defenders and attackers equally.</div>
+        </div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">What is the key operational risk of coordinating the patching of thousands of zero-days discovered by a single AI research project?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">The coordinated disclosure process itself can become a target — if adversaries learn that a specific batch of vulnerabilities is being patched, they can race to exploit the known-but-unpatched window, or the scope of the disclosure could leak and expose unfixed systems.</div>
-          <div class="qcard-exp">Normal CVE disclosure involves one vendor and one vulnerability. Coordinating simultaneous disclosure across Apple, Cisco, AWS, and Broadcom for thousands of issues creates an extraordinarily complex embargo process. Any leak of the vulnerability list before patches ship gives attackers a curated attack queue — the inverse of the intended protective effect.</div>
+        <div class="q-num">Q2 of 3</div>
+        <div class="q-text">What is the key operational risk of coordinating the patching of thousands of zero-days discovered by a single AI research project?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">The coordinated disclosure process itself can become a target — if adversaries learn that a specific batch of vulnerabilities is being patched, they can race to exploit the known-but-unpatched window, or the scope of the disclosure could leak and expose unfixed systems.</div>
+          <div class="q-exp">Normal CVE disclosure involves one vendor and one vulnerability. Coordinating simultaneous disclosure across Apple, Cisco, AWS, and Broadcom for thousands of issues creates an extraordinarily complex embargo process. Any leak of the vulnerability list before patches ship gives attackers a curated attack queue — the inverse of the intended protective effect.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
-        <div class="qcard-q">Why might 'neural-guided fuzzing' find vulnerabilities that traditional coverage-guided fuzzing (like AFL) misses?</div>
-        <div class="qcard-a">
-          <div class="qcard-ans">Traditional fuzzers maximize code coverage using feedback signals, but struggle to construct semantically meaningful inputs for complex parsers or protocol state machines; neural models can generate inputs that satisfy deep logical preconditions required to reach vulnerable code paths.</div>
-          <div class="qcard-exp">AFL and its descendants are excellent at finding shallow bugs where random mutation reaches new code. But many critical vulnerabilities require inputs that satisfy multiple layered conditions — correct protocol state, specific field values, valid checksums — that random mutation almost never satisfies. A model trained on protocol specs and historical exploits can generate structurally valid but adversarially crafted inputs that reach deep vulnerability sites.</div>
+        <div class="q-num">Q3 of 3</div>
+        <div class="q-text">Why might 'neural-guided fuzzing' find vulnerabilities that traditional coverage-guided fuzzing (like AFL) misses?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Traditional fuzzers maximize code coverage using feedback signals, but struggle to construct semantically meaningful inputs for complex parsers or protocol state machines; neural models can generate inputs that satisfy deep logical preconditions required to reach vulnerable code paths.</div>
+          <div class="q-exp">AFL and its descendants are excellent at finding shallow bugs where random mutation reaches new code. But many critical vulnerabilities require inputs that satisfy multiple layered conditions — correct protocol state, specific field values, valid checksums — that random mutation almost never satisfies. A model trained on protocol specs and historical exploits can generate structurally valid but adversarially crafted inputs that reach deep vulnerability sites.</div>
         </div>
-        <div class="qcard-hint">tap to reveal</div>
+        <div class="q-hint">▼ tap to reveal</div>
       </div></div>
-    </div>
+      </div>
 
-    <div class="block deepdive-block">
-      <div class="blabel">💭 Deep Dive</div>
-      <p class="deepdive-text">If a frontier AI model can discover thousands of zero-days in the codebases of the world's most security-conscious companies in a coordinated, controlled research setting — what does that imply about the current state of vulnerability density in less-scrutinized critical infrastructure like industrial control systems, medical devices, and financial clearing networks, and who bears responsibility for systematically auditing them?</p>
-    </div>
+      <div class="block deepdive-block">
+        <div class="blabel">💭 Deep Dive</div>
+        <p class="deepdive-text">If a frontier AI model can discover thousands of zero-days in the codebases of the world's most security-conscious companies in a coordinated, controlled research setting — what does that imply about the current state of vulnerability density in less-scrutinized critical infrastructure like industrial control systems, medical devices, and financial clearing networks, and who bears responsibility for systematically auditing them?</p>
+      </div>
 
-    <div class="story-footer">
-      <a class="src-link" href="https://thehackernews.com/2026/04/anthropics-claude-mythos-finds.html" target="_blank" rel="noopener">Read original →</a>
-      <span class="src-name">The Hacker News</span>
+      <div class="story-footer">
+        <a class="src-link" href="https://thehackernews.com/2026/04/anthropics-claude-mythos-finds.html" target="_blank" rel="noopener">
+          Read original <span>→</span>
+        </a>
+        <span class="src-name">The Hacker News</span>
+      </div>
+
     </div>
   </div>
-</article></section>
+</article>
+  </section>
 </main>
 
 <footer class="site-footer">
-  Daily Digest &middot; Generated with Claude &middot;
-  <a href="https://github.com/dizchrisctrl/daily-digest">GitHub</a>
+  Daily Digest &middot; Generated with Claude &middot; <a href="https://github.com/dizchrisctrl/daily-digest">GitHub</a>
 </footer>
 
 <script>
+const indicator = document.getElementById('indicator');
+
+function positionIndicator(btn) {
+  indicator.style.left  = btn.offsetLeft + 'px';
+  indicator.style.width = btn.offsetWidth + 'px';
+}
+
 function switchTab(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
+  indicator.style.background = id === 'ai' ? '#818cf8' : '#34d399';
+  positionIndicator(btn);
 }
-function toggleStory(card) {
-  card.classList.toggle('open');
-}
-function toggleCard(card) {
-  const a = card.querySelector('.qcard-a');
-  const h = card.querySelector('.qcard-hint');
-  const open = a.style.display === 'block';
-  a.style.display = open ? 'none' : 'block';
-  h.textContent   = open ? 'tap to reveal' : 'tap to hide';
-  card.classList.toggle('open', !open);
+
+window.addEventListener('load', () => {
+  const active = document.querySelector('.tab-btn.active');
+  if (active) positionIndicator(active);
+});
+
+function toggleStory(card) { card.classList.toggle('open'); }
+
+function toggleCard(card) { card.classList.toggle('open'); }
+
+function expandAll(sectionId, btn) {
+  const cards = document.querySelectorAll('#' + sectionId + ' .story-card');
+  const allOpen = [...cards].every(c => c.classList.contains('open'));
+  cards.forEach(c => c.classList.toggle('open', !allOpen));
+  btn.textContent = allOpen ? 'Expand all' : 'Collapse all';
 }
 </script>
 </body>
