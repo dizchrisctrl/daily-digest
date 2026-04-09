@@ -177,23 +177,19 @@ STORY_SCHEMA = {
 }
 
 SECTION_TOOL = {
-    "name": "publish_stories",
-    "description": "Publish 3 formatted stories for one digest section",
-    "input_schema": {
-        "type": "object",
-        "properties": {
-            "stories": {"type": "array", "items": STORY_SCHEMA, "minItems": 3, "maxItems": 3},
-        },
-        "required": ["stories"],
-    },
+    "name": "publish_story",
+    "description": "Publish one fully formatted digest story",
+    "input_schema": STORY_SCHEMA,
 }
 
-SECTION_PROMPT = """Today is {today}. Create 3 digest stories for someone moderately technical — works in or near tech/security, understands concepts, appreciates clear explanations with real depth.
+SECTION_PROMPT = """Today is {today}. Write ONE digest story about the article below for someone moderately technical — works in or near tech/security, understands concepts, appreciates clear explanations with real depth.
 
-NEWS ARTICLES (pick the 3 most notable):
-{articles}
+ARTICLE:
+{article}
 
-For each story:
+Story number {story_num} of 3 for this section.
+
+Guidelines:
 - concept_explained: 4 paragraphs. P1: simple real-world analogy. P2: how it technically works. P3: tie to this story. P4: broader implications.
 - visual_svg: SVG diagram (viewBox="0 0 700 340"). Pick the right type for the concept:
     attack chain → boxes left-to-right with labelled arrows showing each step
@@ -210,7 +206,7 @@ For each story:
 - tech_tags: 0-3 tags max. Only include when you have specific, meaningful context to share. Skip entirely for vulnerabilities if no specific version or tool is confirmed. Never use generic terms (AI, cloud, encryption). Each tag needs a clear description and a relevance sentence tied to this exact story.
 - affected_systems: for vulnerability stories, list each affected system with its version range. Empty array otherwise.
 
-Call the publish_stories tool with your 3 stories."""
+Call the publish_story tool with your story."""
 
 
 # ── Notables schema (broader news highlights with applicability) ───────────────
@@ -269,32 +265,101 @@ Call the publish_notables tool with your 5 items."""
 
 
 # ── Claude calls ───────────────────────────────────────────────────────────────
+def _extract_tool_input(response, key, call_label):
+    """Pull from the first tool_use block.
+
+    If key is None, return the entire input dict (for single-object schemas).
+    If key is a string, return input[key].
+    Raises RuntimeError with diagnostic info on any failure.
+    """
+    if not response.content:
+        raise RuntimeError(f"{call_label}: empty response content (stop_reason={response.stop_reason})")
+    block = response.content[0]
+    if not hasattr(block, "input"):
+        raise RuntimeError(
+            f"{call_label}: expected tool_use block, got {type(block).__name__} "
+            f"(stop_reason={response.stop_reason})"
+        )
+    if key is None:
+        if not block.input:
+            raise RuntimeError(
+                f"{call_label}: tool input is empty. stop_reason={response.stop_reason}"
+            )
+        return block.input
+    if key not in block.input:
+        available = list(block.input.keys())
+        raise RuntimeError(
+            f"{call_label}: tool input missing key '{key}'. "
+            f"Available keys: {available}. stop_reason={response.stop_reason}"
+        )
+    return block.input[key]
+
+
 def call_claude_for_section(client, today, articles, accent_color="#818cf8"):
-    prompt = SECTION_PROMPT.format(
-        today=today,
-        articles=json.dumps(articles, indent=2),
-        accent_color=accent_color,
-    )
-    response = client.messages.create(
+    """Generate 3 stories one at a time to stay within the 8192-token output limit."""
+    # Ask Claude to pick the 3 most notable articles first, then generate one story each
+    top_articles = articles[:8]  # give it up to 8 to choose from
+    stories = []
+    # Use a simple selection pass to pick the 3 best articles
+    selection_prompt = f"""Today is {today}. From these articles, pick the 3 most notable and return their indices (0-based) as a JSON array. Prefer stories with real technical depth or significant impact.
+
+ARTICLES:
+{json.dumps([{"i": i, "title": a.get("title",""), "source": a.get("source","")} for i, a in enumerate(top_articles)], indent=2)}
+
+Reply with only a JSON array of 3 indices, e.g.: [0, 2, 5]"""
+    sel_response = client.messages.create(
         model="claude-opus-4-6",
-        max_tokens=10000,  # SVG content is larger than ASCII
-        tools=[SECTION_TOOL],
-        tool_choice={"type": "tool", "name": "publish_stories"},
-        messages=[{"role": "user", "content": prompt}],
+        max_tokens=50,
+        messages=[{"role": "user", "content": selection_prompt}],
     )
-    return response.content[0].input["stories"]
+    try:
+        indices = json.loads(sel_response.content[0].text.strip())
+        chosen = [top_articles[i] for i in indices if i < len(top_articles)][:3]
+    except Exception:
+        chosen = top_articles[:3]  # fallback: just take first 3
+
+    for story_num, article in enumerate(chosen, start=1):
+        prompt = SECTION_PROMPT.format(
+            today=today,
+            article=json.dumps(article, indent=2),
+            accent_color=accent_color,
+            story_num=story_num,
+        )
+        for attempt in range(1, 3):
+            response = client.messages.create(
+                model="claude-opus-4-6",
+                max_tokens=8000,
+                tools=[SECTION_TOOL],
+                tool_choice={"type": "tool", "name": "publish_story"},
+                messages=[{"role": "user", "content": prompt}],
+            )
+            try:
+                story = _extract_tool_input(response, None, "call_claude_for_section")
+                stories.append(story)
+                break
+            except RuntimeError as exc:
+                if attempt == 2:
+                    raise
+                print(f"  WARNING: story {story_num} attempt {attempt} failed ({exc}), retrying...")
+    return stories
 
 
 def call_claude_for_notables(client, today, articles):
     prompt = NOTABLES_PROMPT.format(today=today, articles=json.dumps(articles, indent=2))
-    response = client.messages.create(
-        model="claude-opus-4-6",
-        max_tokens=4000,
-        tools=[NOTABLES_TOOL],
-        tool_choice={"type": "tool", "name": "publish_notables"},
-        messages=[{"role": "user", "content": prompt}],
-    )
-    return response.content[0].input["items"]
+    for attempt in range(1, 3):
+        response = client.messages.create(
+            model="claude-opus-4-6",
+            max_tokens=4000,
+            tools=[NOTABLES_TOOL],
+            tool_choice={"type": "tool", "name": "publish_notables"},
+            messages=[{"role": "user", "content": prompt}],
+        )
+        try:
+            return _extract_tool_input(response, "items", "call_claude_for_notables")
+        except RuntimeError as exc:
+            if attempt == 2:
+                raise
+            print(f"  WARNING: attempt {attempt} failed ({exc}), retrying...")
 
 
 def generate_digest_json(ai_articles, cyber_articles, notables_articles):
