@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
+<title>Daily Digest -- April 09, 2026</title>
+<style>
+:root {
+  --bg: #0b0d16; --surface: #12152a; --surface2: #1a1d32; --surface3: #20233c;
+  --text: #eaedf5; --muted: #7a849a; --muted2: #5a6275;
+  --ai: #818cf8; --ai2: #6366f1; --cyber: #34d399; --cyber2: #10b981;
+  --notables: #fbbf24; --notables2: #f59e0b;
+  --purple: #a78bfa; --amber: #fbbf24;
+  --border: #252840; --border2: #333660;
+  --glow-ai: rgba(129,140,248,0.15); --glow-cyber: rgba(52,211,153,0.15);
+  --glow-notables: rgba(251,191,36,0.12);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; min-height: 100vh; }
+
+/* ── Progress Bar ── */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--ai), var(--purple), var(--notables));
+  z-index: 9999; transition: width 0.08s linear;
+  box-shadow: 0 0 10px rgba(251,191,36,0.4);
+}
+
+/* ── Header ── */
+.site-header {
+  padding: 44px 20px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #161928 0%, var(--bg) 100%);
+}
+.site-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(129,140,248,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.eyebrow { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: var(--muted2); margin-bottom: 14px; }
+.site-header h1 {
+  font-size: 2.8rem; font-weight: 900; letter-spacing: -2px; line-height: 1;
+  background: linear-gradient(130deg, var(--ai) 0%, var(--purple) 45%, var(--cyber) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 14px;
+}
+.date-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--muted); font-size: 0.82rem; padding: 5px 16px;
+  border: 1px solid var(--border2); border-radius: 20px;
+  background: var(--surface2);
+}
+.date-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyber); display: inline-block; }
+
+/* ── Tabs ── */
+.tabs-wrap { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
+.tabs { display: flex; max-width: 860px; margin: 0 auto; padding: 0 16px; position: relative; }
+.tab-btn {
+  flex: 1; padding: 15px 12px; background: none; border: none; border-bottom: 2px solid transparent;
+  color: var(--muted); font-size: 0.88rem; font-weight: 600; cursor: pointer;
+  transition: color 0.2s; display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+.tab-btn.active { color: var(--text); }
+.tab-indicator {
+  position: absolute; bottom: 0; height: 2px;
+  background: var(--ai); border-radius: 2px 2px 0 0;
+  transition: left 0.3s cubic-bezier(0.4,0,0.2,1), width 0.3s cubic-bezier(0.4,0,0.2,1), background 0.3s;
+}
+
+/* ── Content ── */
+.content { max-width: 860px; margin: 0 auto; padding: 28px 16px 80px; }
+.section { display: none; }
+.section.active { display: block; }
+
+/* Section bar */
+.section-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+}
+.section-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted2); }
+.expand-all {
+  font-size: 0.72rem; font-weight: 600; color: var(--muted);
+  background: var(--surface2); border: 1px solid var(--border);
+  padding: 4px 12px; border-radius: 20px; cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.expand-all:hover { color: var(--text); border-color: var(--border2); }
+
+/* ── Story Card ── */
+.story-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.story-card:hover { border-color: var(--border2); box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
+.story-card.open { border-color: var(--border2); box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
+.story-card.kbd-focus { border-color: var(--ai) !important; box-shadow: 0 0 0 2px rgba(129,140,248,0.25) !important; }
+
+/* Summary row */
+.story-summary {
+  padding: 20px 22px; cursor: pointer;
+  display: flex; align-items: flex-start; gap: 14px;
+  transition: background 0.15s; user-select: none;
+}
+.story-summary:hover { background: rgba(255,255,255,0.025); }
+.s-left { flex: 1; min-width: 0; }
+.s-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+.src-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 2px 9px; border-radius: 20px; }
+.story-num { font-size: 0.68rem; font-weight: 700; color: var(--muted2); font-variant-numeric: tabular-nums; }
+.story-summary h2 { font-size: 1.08rem; font-weight: 700; line-height: 1.4; margin-bottom: 9px; }
+.tldr { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+.tldr-tag {
+  display: inline-block; font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--muted2); background: var(--surface3);
+  padding: 1px 6px; border-radius: 4px; margin-right: 6px; vertical-align: middle;
+}
+.chevron {
+  flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  color: var(--muted2); font-size: 0.65rem; margin-top: 2px;
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), background 0.2s, border-color 0.2s, color 0.2s;
+}
+.story-card.open .chevron { transform: rotate(180deg); background: var(--surface3); border-color: var(--border2); color: var(--muted); }
+
+/* Expandable body */
+.story-body { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1); }
+.story-card.open .story-body { max-height: 8000px; transition: max-height 0.9s cubic-bezier(0,0,0.2,1); }
+.body-inner { border-top: 1px solid var(--border); }
+
+/* Blocks */
+.block { padding: 20px 22px; border-top: 1px solid var(--border); }
+.block:first-child { border-top: none; }
+.blabel { font-size: 0.67rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted2); margin-bottom: 11px; }
+.block p { font-size: 0.93rem; line-height: 1.75; color: #c0c8d8; }
+
+/* Concept block */
+.concept-block { background: linear-gradient(180deg, #171b30 0%, #141828 100%); }
+.concept-title { font-size: 0.97rem; font-weight: 700; margin-bottom: 14px; }
+.concept-text p { font-size: 0.93rem; line-height: 1.8; color: #b8c2d4; margin-bottom: 13px; }
+.concept-text p:last-child { margin-bottom: 0; }
+
+/* ── SVG Diagram ── */
+.diagram-wrap { border-radius: 10px; overflow: hidden; border: 1px solid #1e3055; background: #060912; }
+.diagram-bar { background: #0d1020; padding: 9px 14px; display: flex; align-items: center; gap: 7px; border-bottom: 1px solid #1e3055; }
+.dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
+.diagram-title { flex: 1; text-align: center; font-size: 0.67rem; color: #3a4a60; font-family: monospace; }
+.diagram-svg { display: block; }
+.diagram-svg svg { width: 100%; height: auto; display: block; }
+/* ASCII fallback for --rebuild with old digest.json */
+pre.ascii {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.74rem; line-height: 1.5;
+  color: #7dd3fc; padding: 16px 18px;
+  background: #060912; overflow-x: auto; white-space: pre;
+}
+
+/* Opinion block */
+.opinion-block { background: #0d160e; }
+.opinion-q { font-style: italic; color: var(--muted); padding: 11px 15px; border-left: 3px solid rgba(52,211,153,0.4); margin-bottom: 14px; font-size: 0.91rem; line-height: 1.7; border-radius: 0 6px 6px 0; background: rgba(52,211,153,0.04); }
+
+/* Quiz */
+.quiz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+.qcard {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px; cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.15s;
+  user-select: none;
+}
+.qcard:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); border-color: var(--border2); }
+.qcard.open { border-color: var(--cyber); }
+.q-num { font-size: 0.63rem; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px; }
+.q-text { font-weight: 600; font-size: 0.87rem; line-height: 1.5; color: var(--text); }
+.q-answer { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.35s ease, opacity 0.3s ease; }
+.qcard.open .q-answer { max-height: 400px; opacity: 1; }
+.q-divider { height: 1px; background: var(--border); margin: 10px 0; }
+.q-ans { color: var(--cyber); font-weight: 600; font-size: 0.85rem; margin-bottom: 5px; }
+.q-exp { color: var(--muted); font-style: italic; font-size: 0.79rem; line-height: 1.55; }
+.q-hint { font-size: 0.65rem; color: var(--muted2); margin-top: 8px; display: flex; align-items: center; gap: 4px; }
+.qcard.open .q-hint { color: var(--cyber2); }
+
+/* Deep Dive */
+.deepdive-block { background: linear-gradient(135deg, #110d22 0%, #0e0c1e 100%); position: relative; overflow: hidden; }
+.deepdive-block::after { content: '"'; position: absolute; right: 18px; top: 8px; font-size: 6rem; color: rgba(167,139,250,0.07); font-family: Georgia, serif; line-height: 1; }
+.deepdive-text { font-size: 1.02rem; font-style: italic; color: #c4b5fd; padding-left: 16px; border-left: 3px solid var(--purple); line-height: 1.85; }
+
+/* Story footer */
+.story-footer { padding: 11px 22px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; background: rgba(255,255,255,0.015); }
+.src-link { color: var(--ai); text-decoration: none; font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 5px; transition: color 0.15s; }
+.src-link:hover { color: var(--purple); }
+.src-name { color: var(--muted2); font-size: 0.76rem; }
+
+/* ── Notables Grid ── */
+.notable-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 12px;
+}
+
+.notable-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: border-color 0.25s, box-shadow 0.25s;
+  user-select: none;
+}
+.notable-card:hover { border-color: var(--border2); box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
+.notable-card.open { border-color: rgba(251,191,36,0.35); box-shadow: 0 6px 24px var(--glow-notables); }
+.notable-card.kbd-focus { border-color: var(--notables) !important; box-shadow: 0 0 0 2px rgba(251,191,36,0.2) !important; }
+
+.notable-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.notable-meta { display: flex; align-items: center; gap: 8px; }
+.notable-cat {
+  font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; padding: 2px 9px; border-radius: 20px;
+}
+.notable-src { font-size: 0.72rem; color: var(--muted2); font-weight: 500; }
+.notable-chevron {
+  font-size: 0.65rem; color: var(--muted2);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), color 0.2s;
+}
+.notable-card.open .notable-chevron { transform: rotate(180deg); color: var(--notables); }
+
+.notable-headline { font-size: 0.97rem; font-weight: 700; line-height: 1.4; margin-bottom: 9px; }
+.notable-summary { font-size: 0.86rem; color: var(--muted); line-height: 1.65; }
+
+.notable-body {
+  max-height: 0; overflow: hidden; opacity: 0;
+  transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+}
+.notable-card.open .notable-body { max-height: 600px; opacity: 1; }
+
+.notable-apply {
+  border-top: 1px solid var(--border);
+  margin-top: 14px; padding-top: 14px;
+}
+.notable-apply .blabel { color: var(--notables2); margin-bottom: 8px; }
+.notable-apply p { font-size: 0.88rem; color: #c0c8d8; line-height: 1.7; }
+.notable-read {
+  display: inline-block; margin-top: 12px;
+  color: var(--notables); text-decoration: none;
+  font-size: 0.8rem; font-weight: 600;
+  transition: color 0.15s;
+}
+.notable-read:hover { color: var(--notables2); }
+
+/* ── Keyboard hint ── */
+#kbd-hint {
+  position: fixed; bottom: 24px; right: 20px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 10px 14px;
+  font-size: 0.72rem; color: var(--muted); line-height: 1.9;
+  opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 200;
+}
+#kbd-hint.visible { opacity: 1; }
+kbd {
+  display: inline-block; background: var(--surface3); border: 1px solid var(--border2);
+  border-radius: 4px; padding: 1px 5px; font-family: monospace; font-size: 0.7rem; color: var(--text);
+}
+
+/* ── Tech Tags ── */
+.tag-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.tag {
+  font-size: 0.62rem; font-weight: 600; font-family: 'Courier New', monospace;
+  padding: 3px 9px; border-radius: 5px;
+  background: var(--surface3); color: var(--muted);
+  border: 1px solid var(--border2);
+  cursor: pointer; line-height: 1.4;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.tag:hover { color: var(--text); border-color: var(--muted2); background: #252840; }
+.tag-cve { background: rgba(239,68,68,0.08); color: #f87171; border-color: rgba(239,68,68,0.25); }
+.tag-cve:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.5); }
+
+/* ── Tag Modal ── */
+.tag-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2000;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+  backdrop-filter: blur(6px);
+  padding: 16px;
+}
+.tag-modal-overlay.open { opacity: 1; pointer-events: all; }
+.tag-modal-box {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  padding: 28px 28px 24px;
+  max-width: 460px; width: 100%;
+  position: relative;
+  transform: scale(0.93) translateY(10px);
+  transition: transform 0.22s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.55);
+}
+.tag-modal-overlay.open .tag-modal-box { transform: scale(1) translateY(0); }
+.tag-modal-close {
+  position: absolute; top: 14px; right: 14px;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--surface3); border: 1px solid var(--border2);
+  color: var(--muted); font-size: 0.9rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+.tag-modal-close:hover { background: var(--border2); color: var(--text); }
+#tag-modal-name {
+  font-size: 1.1rem; font-weight: 800;
+  font-family: 'Courier New', monospace;
+  padding-right: 36px; margin-bottom: 18px;
+  color: var(--text);
+}
+.tag-modal-overlay.cve #tag-modal-name { color: #f87171; }
+.tag-modal-section-label {
+  font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--muted2); margin-bottom: 6px;
+}
+#tag-modal-desc {
+  font-size: 0.9rem; color: #c0c8d8; line-height: 1.72; margin-bottom: 16px;
+}
+#tag-modal-relevance {
+  font-size: 0.88rem; color: var(--muted); line-height: 1.72;
+  padding: 12px 15px; border-radius: 8px;
+  background: var(--surface3);
+  border-left: 3px solid var(--ai);
+  font-style: italic;
+}
+.tag-modal-overlay.cve #tag-modal-relevance { border-left-color: #f87171; }
+
+/* ── Affected Systems ── */
+.affected-block { background: rgba(239,68,68,0.04); border-top: 1px solid rgba(239,68,68,0.15) !important; }
+.affected-header { display: flex; align-items: center; gap: 8px; margin-bottom: 13px; }
+.affected-header .blabel { margin-bottom: 0; color: #f87171; }
+.affected-warning { font-size: 0.65rem; color: #f87171; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 4px; padding: 1px 7px; font-weight: 700; }
+.affected-list { display: flex; flex-direction: column; gap: 8px; }
+.affected-item {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  background: var(--surface2); border: 1px solid rgba(239,68,68,0.18);
+  border-radius: 9px; padding: 10px 14px;
+}
+.affected-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+.affected-ver {
+  font-family: 'Courier New', monospace; font-size: 0.77rem;
+  color: #fca5a5; background: rgba(239,68,68,0.1);
+  padding: 3px 9px; border-radius: 5px; border: 1px solid rgba(239,68,68,0.2);
+  white-space: nowrap;
+}
+
+/* Site footer */
+.site-footer { text-align: center; padding: 40px 20px; color: var(--muted2); font-size: 0.8rem; border-top: 1px solid var(--border); }
+.site-footer a { color: var(--ai); text-decoration: none; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  .site-header h1 { font-size: 2rem; letter-spacing: -1px; }
+  .story-summary { padding: 16px; gap: 10px; }
+  .story-summary h2 { font-size: 0.97rem; }
+  .block { padding: 16px; }
+  pre.ascii { font-size: 0.6rem; padding: 10px; }
+  .quiz-grid { grid-template-columns: 1fr; }
+  .notable-grid { grid-template-columns: 1fr; }
+  .tab-btn { font-size: 0.78rem; padding: 13px 8px; gap: 5px; }
+  #kbd-hint { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<div id="tag-modal" class="tag-modal-overlay" onclick="closeTagModal(event)">
+  <div class="tag-modal-box" onclick="event.stopPropagation()">
+    <button class="tag-modal-close" onclick="closeTagModal(event)">&#x2715;</button>
+    <div id="tag-modal-name"></div>
+    <div class="tag-modal-section-label">What it is</div>
+    <div id="tag-modal-desc"></div>
+    <div class="tag-modal-section-label">In this story</div>
+    <div id="tag-modal-relevance"></div>
+  </div>
+</div>
+
+<header class="site-header">
+  <div class="eyebrow">Your daily briefing</div>
+  <h1>Daily Digest</h1>
+  <div class="date-badge"><span class="date-dot"></span>April 09, 2026</div>
+</header>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('ai',this)">&#x1F916; AI &amp; Technology</button>
+    <button class="tab-btn" onclick="switchTab('cyber',this)">&#x1F510; Cybersecurity</button>
+    <button class="tab-btn" onclick="switchTab('notables',this)">&#x1F4F0; Notables</button>
+    <div class="tab-indicator" id="indicator"></div>
+  </div>
+</div>
+
+<main class="content">
+  <section id="ai" class="section active">
+    <div class="section-bar">
+      <span class="section-label">3 stories &mdash; tap to expand</span>
+      <button class="expand-all" onclick="expandAll('ai', this)">Expand all</button>
+    </div>
+    
+<article class="story-card">
+  <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
+    <div class="s-left">
+      <div class="s-meta">
+        <span class="src-badge" style="background:#818cf81a;color:#818cf8">AI News &amp; Artificial Intelligence | TechCrunch</span>
+        <span class="story-num">01</span>
+      </div>
+      <h2>Amazon's $200B Capex Bet: Jassy's Letter Declares War on Nvidia, Intel, and Starlink</h2>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Amazon CEO Andy Jassy used his annual shareholder letter to justify a massive $200 billion capital expenditure plan by positioning Amazon's custom silicon, cloud infrastructure, and satellite efforts as direct competitors to Nvidia, Intel, Starlink, and others.</div>
+      <div class="tag-row"><button class="tag" data-name="AWS Graviton" data-desc="Amazon's custom ARM-based processors designed for cloud workloads, built by Annapurna Labs (acquired by Amazon in 2015). Now in its fourth generation." data-relevance="Graviton is Amazon's proven model for replacing Intel/AMD CPUs in EC2 instances, serving as the template for its broader vertical integration strategy that Jassy's letter defends." onclick="openTagModal(event,this)">AWS Graviton</button><button class="tag" data-name="AWS Trainium" data-desc="Amazon's custom ML training accelerator chip, designed to compete with Nvidia's H100/B200 GPUs for large-scale model training workloads on AWS." data-relevance="Trainium is central to Jassy's argument that Amazon can reduce dependence on Nvidia GPUs, representing the AI-specific pillar of the $200B capex investment." onclick="openTagModal(event,this)">AWS Trainium</button><button class="tag" data-name="Project Kuiper" data-desc="Amazon's planned low-Earth orbit satellite constellation aiming to provide broadband internet, competing directly with SpaceX's Starlink." data-relevance="Jassy specifically called out Starlink as a competitor, positioning Kuiper as part of Amazon's strategy to own connectivity infrastructure alongside compute and AI hardware." onclick="openTagModal(event,this)">Project Kuiper</button></div>
+    </div>
+    <div class="chevron">&#9660;</div>
+  </div>
+
+  <div class="story-body">
+    <div class="body-inner">
+      
+      <div class="block">
+        <div class="blabel">&#x1F4CC; Why It Matters</div>
+        <p>Amazon's vertical integration strategy—building its own chips, networking gear, and satellite constellation—signals a fundamental shift in how hyperscalers view their supply chains. If Amazon successfully replaces key vendors with in-house alternatives, it reshapes pricing power across the entire cloud and semiconductor ecosystem, affecting every company that builds on or sells to AWS.</p>
+      </div>
+
+      <div class="block concept-block">
+        <div class="blabel">&#x1F9E0; Concept</div>
+        <div class="concept-title" style="color:#818cf8">Vertical Integration in Cloud Infrastructure</div>
+        <div class="concept-text"><p>Imagine a restaurant chain that decides to stop buying flour, tomatoes, and cheese from suppliers and instead starts its own farms, mills, and dairy operations. The upfront cost is enormous, but once running, the chain controls quality, price, and supply—and can even sell surplus ingredients to other restaurants.</p><p>In cloud computing, vertical integration means a hyperscaler like Amazon designs its own custom processors (Graviton for general compute, Trainium for AI training, Inferentia for inference), builds its own networking hardware (via Annapurna Labs), and even launches its own satellite constellation (Project Kuiper) rather than depending on Nvidia GPUs, Intel CPUs, or SpaceX's Starlink for connectivity. Each layer of the stack that Amazon owns in-house reduces per-unit costs, eliminates supply chain bottlenecks, and allows tighter hardware-software co-design.</p><p>Jassy's letter is essentially a public justification for spending $200 billion on this strategy. By calling out Nvidia, Intel, and Starlink by name, he's telling shareholders that every dollar of capex is aimed at replacing expensive external dependencies with cheaper, purpose-built Amazon alternatives—turning cost centers into competitive moats and, potentially, new revenue streams as AWS customers adopt these custom offerings.</p><p>The broader implication is an accelerating &quot;balkanization&quot; of the cloud hardware stack. Google has TPUs, Microsoft has Maia, and now Amazon is doubling down across compute, AI accelerators, and even orbital connectivity. For enterprises, this means cloud lock-in deepens: the performance and cost advantages of custom silicon only materialize on that specific provider's platform, making multi-cloud strategies harder to execute in practice.</p></div>
+      </div>
+
+      <div class="block">
+        <div class="blabel">&#x1F4CA; Visual Diagram</div>
+        <div class="diagram-wrap">
+          <div class="diagram-bar">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            <span class="diagram-title">Vertical Integration in Cloud Infrastructure</span>
+          </div>
+          <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#818cf8"/>
+    </marker>
+  </defs>
+  <rect width="700" height="340" fill="#060912"/>
+  
+  <!-- Title -->
+  <text x="350" y="28" text-anchor="middle" fill="#818cf8" font-size="14" font-family="monospace" font-weight="bold">Amazon Vertical Integration vs. External Vendors</text>
+  
+  <!-- Left column: External Vendors -->
+  <text x="175" y="58" text-anchor="middle" fill="#7a849a" font-size="12" font-family="monospace">EXTERNAL VENDORS</text>
+  
+  <rect x="60" y="72" width="230" height="38" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="175" y="96" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Nvidia GPUs (AI/ML)</text>
+  
+  <rect x="60" y="122" width="230" height="38" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="175" y="146" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Intel CPUs (Compute)</text>
+  
+  <rect x="60" y="172" width="230" height="38" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="175" y="196" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Starlink (Connectivity)</text>
+  
+  <rect x="60" y="222" width="230" height="38" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="175" y="246" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">3rd-Party Networking</text>
+  
+  <!-- Arrows: replaces -->
+  <line x1="300" y1="91" x2="400" y2="91" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrowhead)" stroke-dasharray="5,3"/>
+  <line x1="300" y1="141" x2="400" y2="141" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrowhead)" stroke-dasharray="5,3"/>
+  <line x1="300" y1="191" x2="400" y2="191" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrowhead)" stroke-dasharray="5,3"/>
+  <line x1="300" y1="241" x2="400" y2="241" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrowhead)" stroke-dasharray="5,3"/>
+  
+  <!-- Center label -->
+  <text x="350" y="285" text-anchor="middle" fill="#818cf8" font-size="11" font-family="monospace">REPLACED BY</text>
+  
+  <!-- Right column: Amazon In-House -->
+  <text x="525" y="58" text-anchor="middle" fill="#818cf8" font-size="12" font-family="monospace">AMAZON IN-HOUSE</text>
+  
+  <rect x="410" y="72" width="230" height="38" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="525" y="96" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Trainium / Inferentia</text>
+  
+  <rect x="410" y="122" width="230" height="38" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="525" y="146" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Graviton CPUs</text>
+  
+  <rect x="410" y="172" width="230" height="38" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="525" y="196" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Project Kuiper</text>
+  
+  <rect x="410" y="222" width="230" height="38" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="525" y="246" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Annapurna Labs NICs</text>
+  
+  <!-- Bottom: $200B callout -->
+  <rect x="230" y="300" width="240" height="30" rx="12" fill="#818cf8"/>
+  <text x="350" y="320" text-anchor="middle" fill="#060912" font-size="13" font-family="monospace" font-weight="bold">$200B CAPEX INVESTMENT</text>
+</svg></div>
+        </div>
+      </div>
+
+      <div class="block opinion-block">
+        <div class="blabel">&#x1F465; Public Opinion</div>
+        <div class="opinion-q">On Hacker News, the dominant sentiment is skepticism about whether Amazon's custom silicon can truly match Nvidia's CUDA ecosystem—commenters note that raw chip performance is only half the battle when the entire ML toolchain is built around CUDA. Several HN users pointed out that Graviton has been a genuine success story for general compute workloads, lending credibility to the AI chip ambitions. On Reddit's r/technology, reactions are split: some see the letter as shrewd positioning ahead of earnings, while others call it &quot;CEO cope&quot; for spending that hasn't yet shown returns. On X (formerly Twitter), semiconductor analysts noted that the $200B figure exceeds the GDP of many countries and questioned whether Amazon can sustain this pace if cloud growth slows. Security-focused commenters on r/netsec raised concerns about Project Kuiper's attack surface, noting that any satellite internet constellation introduces novel supply chain and ground station security challenges.</div>
+        <div class="blabel">&#x1F50D; Assessment</div>
+        <p>The CUDA lock-in concern is legitimate—Nvidia's moat isn't just hardware but an entire software ecosystem that took a decade to build. However, skeptics underestimate Amazon's ability to compensate with first-party framework integration (SageMaker, Neuron SDK) and aggressive pricing that makes customers tolerate a less mature toolchain. The &quot;CEO cope&quot; framing is too dismissive; AWS has a track record of turning internal tools into dominant products (see: S3, Lambda). The security concerns about Kuiper are valid but early—the constellation is still in deployment, and ground station hardening is a known problem with established mitigations from the Starlink precedent. What's genuinely missing from public discourse is the antitrust dimension: a company that controls the marketplace, the cloud, the chips, the networking, and the orbital connectivity layer raises concentration-of-power questions that go beyond shareholder returns.</p>
+      </div>
+
+      <div class="block">
+        <div class="blabel">&#x2753; Quiz Yourself</div>
+        <div class="quiz-grid">
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q1 of 3</div>
+        <div class="q-text">Why does Amazon's development of custom AI chips like Trainium not automatically threaten Nvidia's market position?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Because Nvidia's competitive moat extends beyond hardware to include CUDA, a deeply entrenched software ecosystem that ML frameworks, libraries, and developer workflows depend on. Matching chip performance alone isn't sufficient.</div>
+          <div class="q-exp">Vertical integration in hardware only captures part of the value chain. Nvidia's dominance relies on CUDA's ubiquity in ML tooling—PyTorch, TensorFlow, and thousands of optimized libraries. Amazon must build a comparable software stack (Neuron SDK) and convince developers to retarget their workloads, which is a multi-year effort regardless of silicon quality.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div>
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q2 of 3</div>
+        <div class="q-text">How does vertical integration in cloud infrastructure deepen vendor lock-in for enterprise customers?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Custom silicon offers price/performance advantages that only exist on one provider's platform. Workloads optimized for Graviton or Trainium don't trivially port to Azure or GCP, making migration costlier and multi-cloud strategies harder.</div>
+          <div class="q-exp">When an enterprise optimizes for Graviton's ARM architecture or Trainium's specific instruction set, they make implicit dependencies on that hardware. Recompiling, retesting, and re-tuning for a different cloud's custom chips (Google TPUs, Microsoft Maia) requires significant engineering effort, creating a switching cost that acts as a retention mechanism.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div>
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q3 of 3</div>
+        <div class="q-text">What is the strategic risk for Amazon if cloud revenue growth slows while $200B in capex is already committed?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">The capital becomes a fixed cost burden that depresses margins, and underutilized custom infrastructure can't easily be repurposed or sold, unlike commodity hardware that has a broader resale market.</div>
+          <div class="q-exp">Custom chips and proprietary satellite constellations are purpose-built for Amazon's ecosystem. If demand doesn't materialize as projected, Amazon can't easily liquidate Trainium chips the way it could resell commodity Nvidia GPUs. The capex becomes a sunk cost that pressures earnings, potentially triggering the kind of investor backlash Jassy's letter is preemptively trying to defuse.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div></div>
+      </div>
+
+      <div class="block deepdive-block">
+        <div class="blabel">&#x1F4AD; Deep Dive</div>
+        <p class="deepdive-text">If every major cloud provider builds its own proprietary chip stack optimized for its own platform, does the promise of &quot;cloud as commodity infrastructure&quot; fundamentally break down—and does this create a new era of mainframe-like lock-in disguised as innovation?</p>
+      </div>
+
+      <div class="story-footer">
+        <a class="src-link" href="https://techcrunch.com/2026/04/09/amazon-ceo-takes-aim-at-nvidia-intel-starlink-more-in-annual-shareholder-letter/" target="_blank" rel="noopener noreferrer">
+          Read original <span>&#x2192;</span>
+        </a>
+        <span class="src-name">AI News &amp; Artificial Intelligence | TechCrunch</span>
+      </div>
+
+    </div>
+  </div>
+</article>
+
+<article class="story-card">
+  <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
+    <div class="s-left">
+      <div class="s-meta">
+        <span class="src-badge" style="background:#818cf81a;color:#818cf8">Biz &amp; IT - Ars Technica</span>
+        <span class="story-num">02</span>
+      </div>
+      <h2>Iran-Linked Hackers Disrupt US Critical Infrastructure Operations</h2>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Iranian-affiliated threat actors have escalated cyberattacks against US industrial and critical infrastructure sites, disrupting operations amid heightened US-Israel-Iran geopolitical tensions.</div>
+      <div class="tag-row"><button class="tag" data-name="ICS/SCADA" data-desc="Industrial Control Systems and Supervisory Control and Data Acquisition — the hardware and software that monitor and control physical industrial processes like water treatment, power generation, and manufacturing." data-relevance="These are the operational technology systems being directly targeted and disrupted by Iran-linked attackers at US critical infrastructure sites." onclick="openTagModal(event,this)">ICS/SCADA</button><button class="tag" data-name="Unitronics Vision/Samba PLCs" data-desc="Programmable logic controllers manufactured by Israeli company Unitronics, commonly used in water and wastewater systems for process automation." data-relevance="Iranian group CyberAv3ngers has previously targeted Unitronics PLCs at US water utilities, exploiting default credentials and internet-exposed management interfaces — a likely vector in the current escalation." onclick="openTagModal(event,this)">Unitronics Vision/Samba PLCs</button></div>
+    </div>
+    <div class="chevron">&#9660;</div>
+  </div>
+
+  <div class="story-body">
+    <div class="body-inner">
+      
+      <div class="block">
+        <div class="blabel">&#x1F4CC; Why It Matters</div>
+        <p>Attacks on critical infrastructure — water treatment, energy, manufacturing — can have physical, real-world consequences far beyond data theft. This escalation signals that nation-state cyber operations are increasingly being used as asymmetric warfare tools in active geopolitical conflicts, and US industrial control systems remain dangerously exposed.</p>
+      </div>
+
+      <div class="block concept-block">
+        <div class="blabel">&#x1F9E0; Concept</div>
+        <div class="concept-title" style="color:#818cf8">IT/OT Convergence and Critical Infrastructure Attack Surface</div>
+        <div class="concept-text"><p>Imagine a factory where the office building (IT) and the factory floor (OT) used to be completely separate — different doors, different keys, no hallway connecting them. Over time, someone built a corridor between the two for convenience. Now an intruder who picks the office lock can walk straight onto the factory floor and mess with the machinery.</p><p>In technical terms, IT (Information Technology) networks handle email, databases, and business logic, while OT (Operational Technology) networks run industrial control systems (ICS), SCADA systems, and programmable logic controllers (PLCs) that physically operate pumps, valves, and turbines. Historically air-gapped, these networks have increasingly been bridged for remote monitoring, efficiency, and cost savings. When attackers compromise the IT side — often through phishing, exposed remote access, or default credentials — they can pivot into OT environments that were never designed with cybersecurity in mind.</p><p>In this case, Iran-linked groups are exploiting exactly this convergence. By targeting US critical infrastructure sites, they can move from conventional network intrusions into operational disruptions — potentially affecting water systems, energy grids, or manufacturing lines. Iranian groups like CyberAv3ngers have previously targeted Israeli-made Unitronics PLCs at US water utilities, and this escalation suggests broader and more impactful campaigns are now underway.</p><p>The broader implication is stark: as geopolitical conflicts intensify, cyberattacks on infrastructure become a low-cost, high-impact retaliation tool. Many US industrial facilities still run legacy OT systems with minimal segmentation, weak authentication, and no continuous monitoring. Defending these environments requires not just better firewalls, but fundamentally rethinking how IT and OT networks interact — and accepting that &quot;air gaps&quot; that exist only on paper provide zero real protection.</p></div>
+      </div>
+
+      <div class="block">
+        <div class="blabel">&#x1F4CA; Visual Diagram</div>
+        <div class="diagram-wrap">
+          <div class="diagram-bar">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            <span class="diagram-title">IT/OT Convergence and Critical Infrastructure Attack Surface</span>
+          </div>
+          <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+  <rect width="700" height="340" fill="#060912"/>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#818cf8"/>
+    </marker>
+  </defs>
+  <!-- Title -->
+  <text x="350" y="28" fill="#818cf8" font-size="14" font-family="monospace" text-anchor="middle" font-weight="bold">IT → OT Attack Chain on Critical Infrastructure</text>
+  <!-- Step 1: Initial Access -->
+  <rect x="20" y="60" width="120" height="60" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
+  <text x="80" y="85" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Initial</text>
+  <text x="80" y="102" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Access</text>
+  <text x="80" y="135" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Phishing / VPN exploit</text>
+  <!-- Arrow 1→2 -->
+  <line x1="140" y1="90" x2="175" y2="90" stroke="#818cf8" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- Step 2: IT Network -->
+  <rect x="180" y="60" width="120" height="60" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="240" y="85" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">IT Network</text>
+  <text x="240" y="102" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Compromise</text>
+  <text x="240" y="135" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Lateral movement</text>
+  <!-- Arrow 2→3 -->
+  <line x1="300" y1="90" x2="335" y2="90" stroke="#818cf8" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- Step 3: IT/OT Bridge -->
+  <rect x="340" y="60" width="120" height="60" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
+  <text x="400" y="85" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">IT/OT</text>
+  <text x="400" y="102" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Pivot</text>
+  <text x="400" y="135" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Weak segmentation</text>
+  <!-- Arrow 3→4 -->
+  <line x1="460" y1="90" x2="495" y2="90" stroke="#818cf8" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- Step 4: OT Impact -->
+  <rect x="500" y="60" width="170" height="60" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
+  <text x="585" y="85" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">OT Disruption</text>
+  <text x="585" y="102" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">ICS / SCADA / PLC</text>
+  <text x="585" y="135" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Physical process impact</text>
+  <!-- Bottom: Targets -->
+  <text x="350" y="185" fill="#818cf8" font-size="12" font-family="monospace" text-anchor="middle">── Targeted Sectors ──</text>
+  <rect x="40" y="205" width="130" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="105" y="234" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Water / Wastewater</text>
+  <rect x="200" y="205" width="130" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="265" y="234" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Energy / Grid</text>
+  <rect x="360" y="205" width="130" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="425" y="234" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Manufacturing</text>
+  <!-- Arrows from OT disruption to sectors -->
+  <line x1="540" y1="120" x2="105" y2="205" stroke="#818cf8" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <line x1="570" y1="120" x2="265" y2="205" stroke="#818cf8" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <line x1="600" y1="120" x2="425" y2="205" stroke="#818cf8" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <!-- Attribution box -->
+  <rect x="180" y="280" width="340" height="44" rx="6" fill="#818cf8" stroke="none"/>
+  <text x="350" y="300" fill="#060912" font-size="13" font-family="monospace" text-anchor="middle" font-weight="bold">Attribution: Iran-linked groups</text>
+  <text x="350" y="316" fill="#060912" font-size="11" font-family="monospace" text-anchor="middle">Geopolitical motive: US-Israel conflict retaliation</text>
+</svg></div>
+        </div>
+      </div>
+
+      <div class="block opinion-block">
+        <div class="blabel">&#x1F465; Public Opinion</div>
+        <div class="opinion-q">On Hacker News, discussion centers on the perennial problem of &quot;air-gapped&quot; OT networks that are in practice connected to the internet via jump hosts or remote monitoring tools, with several commenters noting that &quot;every air gap I've audited has had at least one unauthorized bridge.&quot; Reddit's r/netsec community points to the lack of mandatory security standards for small water utilities and rural infrastructure, calling them &quot;sitting ducks.&quot; On security Twitter/X, researchers highlight that Iranian groups like CyberAv3ngers have been publicly attributed for months but continue operating, with frustration directed at the slow pace of infrastructure hardening. Some voices on r/technology express alarm at the escalation, drawing parallels to Russia's attacks on Ukraine's power grid, while others debate whether the reported disruptions are truly operational or primarily affect IT systems with indirect OT impact.</div>
+        <div class="blabel">&#x1F50D; Assessment</div>
+        <p>The community concern is well-founded — US critical infrastructure security has been a known weak spot for over a decade, and multiple government advisories have confirmed Iranian targeting of water and energy systems. The alarm about small utilities is especially valid; many lack dedicated security staff entirely. However, some commentary overstates the sophistication required — many of these attacks exploit default passwords and internet-exposed management interfaces, not exotic zero-days. The Russia-Ukraine comparison is instructive but imperfect; those attacks involved custom ICS malware like Industroyer, while Iranian operations so far appear more opportunistic. What's genuinely missing from public discourse is discussion of liability and incentive structures — until infrastructure operators face real consequences for leaving PLCs internet-accessible with default credentials, advisories alone won't drive change.</p>
+      </div>
+
+      <div class="block">
+        <div class="blabel">&#x2753; Quiz Yourself</div>
+        <div class="quiz-grid">
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q1 of 3</div>
+        <div class="q-text">Why does the convergence of IT and OT networks create a critical security risk for industrial facilities?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">It allows attackers who compromise standard IT systems (via phishing, VPN exploits, etc.) to pivot into OT systems that control physical processes — systems that were historically isolated and designed without security controls.</div>
+          <div class="q-exp">OT systems like PLCs and SCADA were built for reliability and real-time operation, not security. When connected to IT networks, they inherit all the attack surface of the internet-facing corporate network without having the defenses to handle it.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div>
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q2 of 3</div>
+        <div class="q-text">Why are small water utilities and rural infrastructure sites particularly vulnerable to nation-state cyberattacks?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">They typically lack dedicated cybersecurity staff, run legacy systems with default credentials, may have internet-exposed management interfaces, and often can't afford continuous monitoring or modern segmentation.</div>
+          <div class="q-exp">Nation-state actors don't always need sophisticated tools — they target the weakest links. A small utility with one IT person and a Unitronics PLC using factory-default passwords is far easier to compromise than a hardened enterprise.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div>
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q3 of 3</div>
+        <div class="q-text">What distinguishes an attack that disrupts OT operations from a conventional data breach?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">OT disruptions can cause physical-world consequences — shutting down water treatment, altering chemical processes, or interrupting power generation — whereas data breaches primarily affect information confidentiality.</div>
+          <div class="q-exp">The stakes in OT attacks are fundamentally different: rather than stolen records, the outcomes can include public safety hazards, environmental damage, or cascading failures in interconnected infrastructure systems.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div></div>
+      </div>
+
+      <div class="block deepdive-block">
+        <div class="blabel">&#x1F4AD; Deep Dive</div>
+        <p class="deepdive-text">If nation-states can disrupt critical infrastructure through low-sophistication attacks on internet-exposed PLCs with default credentials, does that suggest the real vulnerability isn't technical at all — but rather a systemic failure of incentives, regulation, and accountability in how we govern critical infrastructure security?</p>
+      </div>
+
+      <div class="story-footer">
+        <a class="src-link" href="https://arstechnica.com/security/2026/04/iran-linked-hackers-disrupt-operations-at-us-critical-infrastructure-sites/" target="_blank" rel="noopener noreferrer">
+          Read original <span>&#x2192;</span>
+        </a>
+        <span class="src-name">Biz &amp; IT - Ars Technica</span>
+      </div>
+
+    </div>
+  </div>
+</article>
+
+<article class="story-card">
+  <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
+    <div class="s-left">
+      <div class="s-meta">
+        <span class="src-badge" style="background:#818cf81a;color:#818cf8">Biz &amp; IT - Ars Technica</span>
+        <span class="story-num">03</span>
+      </div>
+      <h2>Russia's Military Hijacks Thousands of End-of-Life Consumer Routers Across 120 Countries</h2>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Russian military intelligence (GRU) compromised thousands of end-of-life home and small office routers in 120 countries, building a massive proxy network to steal credentials and conduct espionage operations.</div>
+      <div class="tag-row"><button class="tag" data-name="SOHO Router Botnets" data-desc="Networks of compromised small office/home office routers used as proxy infrastructure. Previous examples include VPNFilter (2018) and Cyclops Blink (2022), both attributed to Russian military intelligence." data-relevance="The GRU built this botnet specifically from end-of-life SOHO routers, leveraging their unpatched state and residential IP addresses to create a distributed proxy and credential-harvesting network across 120 countries." onclick="openTagModal(event,this)">SOHO Router Botnets</button><button class="tag" data-name="APT28 / Fancy Bear" data-desc="A cyber espionage group attributed to Russia's GRU (Main Intelligence Directorate), Unit 26165. Known for targeting governments, military organizations, and critical infrastructure since at least 2004." data-relevance="This campaign is consistent with APT28's documented pattern of compromising network edge devices to build covert infrastructure, evolving from their earlier VPNFilter and Cyclops Blink operations." onclick="openTagModal(event,this)">APT28 / Fancy Bear</button></div>
+    </div>
+    <div class="chevron">&#9660;</div>
+  </div>
+
+  <div class="story-body">
+    <div class="body-inner">
+      
+      <div class="block">
+        <div class="blabel">&#x1F4CC; Why It Matters</div>
+        <p>End-of-life routers no longer receive security patches, making them permanently vulnerable targets. When a nation-state weaponizes thousands of these devices across 120 countries, the resulting botnet becomes a stealthy, distributed infrastructure for credential theft and espionage that's extremely difficult to attribute or dismantle. This highlights a systemic problem: millions of unpatched consumer devices remain connected to the internet with no path to remediation.</p>
+      </div>
+
+      <div class="block concept-block">
+        <div class="blabel">&#x1F9E0; Concept</div>
+        <div class="concept-title" style="color:#818cf8">End-of-Life (EOL) Device Exploitation</div>
+        <div class="concept-text"><p>Imagine a neighborhood where some houses still have old locks that the locksmith no longer services. The manufacturer has stopped making replacement parts, so even when a flaw is discovered, no fix is coming. A burglar who finds the master key to these old locks can quietly enter thousands of homes across the country — not to rob them directly, but to use them as relay points for other operations.</p><p>When a device reaches &quot;end of life,&quot; the manufacturer stops releasing firmware updates, including security patches. Any vulnerability discovered after that date remains permanently exploitable. Attackers scan the internet for these devices using tools like Shodan or custom scanners, identify the make and model from exposed banners, and deploy exploits for known, unpatched CVEs. Once compromised, the router can be reflashed or have malware installed that turns it into a proxy node, credential sniffer, or command-and-control relay.</p><p>In this case, Russia's GRU exploited exactly this gap — targeting consumer routers in homes and small offices that had passed their support lifecycle. By compromising devices in 120 countries, they built a globally distributed proxy network. Traffic routed through these legitimate residential IP addresses looks like normal home internet usage, making detection and attribution extraordinarily difficult. The routers were used to steal credentials, likely through man-in-the-middle attacks or by intercepting unencrypted traffic passing through the compromised devices.</p><p>The broader implication is sobering: there are hundreds of millions of EOL network devices connected to the internet worldwide, and that number grows every year. Unlike servers or workstations, routers rarely have endpoint protection, are seldom monitored, and most consumers don't even know when their device has reached end of life. This creates a permanent, expanding attack surface that nation-states and criminal groups can harvest at scale — a shadow infrastructure hiding in plain sight on residential networks.</p></div>
+      </div>
+
+      <div class="block">
+        <div class="blabel">&#x1F4CA; Visual Diagram</div>
+        <div class="diagram-wrap">
+          <div class="diagram-bar">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            <span class="diagram-title">End-of-Life (EOL) Device Exploitation</span>
+          </div>
+          <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#818cf8"/>
+    </marker>
+  </defs>
+  <rect width="700" height="340" fill="#060912"/>
+  
+  <!-- Title -->
+  <text x="350" y="28" fill="#818cf8" font-size="14" font-family="monospace" text-anchor="middle" font-weight="bold">GRU EOL Router Attack Chain</text>
+  
+  <!-- Step 1: Scan -->
+  <rect x="20" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="80" y="84" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">1. Internet</text>
+  <text x="80" y="100" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">   Scan</text>
+  <text x="80" y="122" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Find EOL routers</text>
+  
+  <!-- Arrow 1→2 -->
+  <line x1="140" y1="88" x2="172" y2="88" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arr)"/>
+  
+  <!-- Step 2: Exploit -->
+  <rect x="175" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="235" y="84" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">2. Exploit</text>
+  <text x="235" y="100" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">   Unpatched CVE</text>
+  <text x="235" y="122" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">No fix available</text>
+  
+  <!-- Arrow 2→3 -->
+  <line x1="295" y1="88" x2="327" y2="88" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arr)"/>
+  
+  <!-- Step 3: Install malware -->
+  <rect x="330" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="390" y="84" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">3. Deploy</text>
+  <text x="390" y="100" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">   Malware</text>
+  <text x="390" y="122" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Proxy + sniffer</text>
+  
+  <!-- Arrow 3→4 -->
+  <line x1="450" y1="88" x2="482" y2="88" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arr)"/>
+  
+  <!-- Step 4: Proxy network -->
+  <rect x="485" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="545" y="84" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">4. Proxy</text>
+  <text x="545" y="100" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">   Network</text>
+  <text x="545" y="122" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">120 countries</text>
+  
+  <!-- Lower section: Data flow through compromised router -->
+  <text x="350" y="168" fill="#818cf8" font-size="13" font-family="monospace" text-anchor="middle" font-weight="bold">Credential Theft via Compromised Router</text>
+  
+  <!-- Victim device -->
+  <rect x="30" y="195" width="110" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="85" y="216" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Victim</text>
+  <text x="85" y="232" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Home user</text>
+  
+  <!-- Arrow victim → router -->
+  <line x1="140" y1="220" x2="195" y2="220" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="168" y="212" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">login</text>
+  
+  <!-- Compromised router -->
+  <rect x="198" y="190" width="140" height="60" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
+  <text x="268" y="214" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">EOL Router</text>
+  <text x="268" y="232" fill="#818cf8" font-size="10" font-family="monospace" text-anchor="middle">⚠ COMPROMISED</text>
+  
+  <!-- Arrow router → internet -->
+  <line x1="338" y1="220" x2="393" y2="220" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="366" y="212" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">forwards</text>
+  
+  <!-- Legitimate server -->
+  <rect x="396" y="195" width="110" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="451" y="216" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Legit</text>
+  <text x="451" y="232" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Service</text>
+  
+  <!-- Arrow router → GRU C2 (downward) -->
+  <line x1="268" y1="250" x2="268" y2="290" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="290" y="275" fill="#818cf8" font-size="9" font-family="monospace">copies creds</text>
+  
+  <!-- GRU C2 -->
+  <rect x="198" y="293" width="140" height="40" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
+  <text x="268" y="318" fill="#818cf8" font-size="12" font-family="monospace" text-anchor="middle">GRU C2 Server</text>
+  
+  <!-- GRU label -->
+  <rect x="560" y="293" width="120" height="40" rx="6" fill="#818cf8"/>
+  <text x="620" y="318" fill="#060912" font-size="12" font-family="monospace" text-anchor="middle" font-weight="bold">Nation-State</text>
+  
+  <!-- Arrow C2 → label -->
+  <line x1="338" y1="313" x2="557" y2="313" stroke="#818cf8" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+</svg></div>
+        </div>
+      </div>
+
+      <div class="block opinion-block">
+        <div class="blabel">&#x1F465; Public Opinion</div>
+        <div class="opinion-q">On Hacker News, the dominant sentiment is frustration directed at router manufacturers for abandoning devices while they're still in widespread use — with several commenters noting that a 5-year-old router is &quot;barely broken in&quot; but already EOL. Reddit's r/netsec community is discussing the operational tradecraft, with users noting that residential IP proxy networks are a known TTP for APT28/Fancy Bear and that this is an evolution of earlier campaigns like VPNFilter. On r/technology, the conversation is more consumer-focused, with users asking how they're supposed to know their router is end-of-life and calling for mandatory security update periods similar to automotive recall obligations. Security researchers on X/Twitter are highlighting the 120-country scope as evidence that this is a strategic infrastructure play, not a targeted operation — the GRU is building persistent capability, not chasing specific targets. Some voices are calling for ISPs to proactively block or quarantine traffic from known-EOL devices.</div>
+        <div class="blabel">&#x1F50D; Assessment</div>
+        <p>The frustration with manufacturers is entirely valid — most consumer routers get 2-4 years of updates while remaining in service for 7-10 years, creating a massive window of permanent vulnerability. The comparison to automotive safety recalls is apt but imperfect: cars have regulatory frameworks that routers lack. The ISP quarantine idea sounds attractive but raises practical and legal issues around who decides what's &quot;too old&quot; and whether blocking customer traffic creates liability. What's somewhat underrepresented in the public discussion is the fact that even supported routers often don't auto-update, and many consumers never manually update firmware. The EOL problem is real, but it's nested inside a broader failure of consumer device lifecycle management. The 120-country figure, while alarming, likely represents opportunistic scanning rather than deliberate targeting of all those nations — the GRU is building volume, not geographic coverage per se.</p>
+      </div>
+
+      <div class="block">
+        <div class="blabel">&#x2753; Quiz Yourself</div>
+        <div class="quiz-grid">
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q1 of 3</div>
+        <div class="q-text">Why are end-of-life routers particularly valuable to nation-state attackers compared to other compromised devices?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">EOL routers have permanently unpatched vulnerabilities, sit at the network perimeter intercepting all household traffic, rarely have security monitoring, and their residential IPs make malicious traffic blend in with legitimate usage.</div>
+          <div class="q-exp">Unlike compromised laptops or servers, routers are network-level devices that see all traffic, are never scanned by antivirus, and their residential IP addresses make attack traffic appear legitimate — a perfect combination for persistent, stealthy operations.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div>
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q2 of 3</div>
+        <div class="q-text">What makes this type of botnet harder to detect than a traditional server-based command-and-control infrastructure?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Traffic originates from thousands of legitimate residential IP addresses across 120 countries, making it appear as normal consumer internet activity rather than centralized malicious infrastructure.</div>
+          <div class="q-exp">Traditional C2 servers operate from data centers with identifiable IP ranges. Residential proxy networks distribute operations across home ISP addresses that appear in threat intelligence feeds as benign, defeating IP reputation-based defenses.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div>
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q3 of 3</div>
+        <div class="q-text">If a router manufacturer releases a final firmware update before declaring EOL, why doesn't that solve the security problem?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">New vulnerabilities are discovered continuously after the EOL date. Since no more patches will be released, every future CVE affecting that device remains permanently exploitable.</div>
+          <div class="q-exp">Security is not a one-time fix — it's an ongoing process. The final patch only addresses known vulnerabilities at that point in time. Any vulnerability discovered afterward (which is inevitable for complex software) creates a permanent, widening attack surface.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div></div>
+      </div>
+
+      <div class="block deepdive-block">
+        <div class="blabel">&#x1F4AD; Deep Dive</div>
+        <p class="deepdive-text">If consumer routers typically remain in service 3-5x longer than manufacturers support them, and regulatory mandates for minimum support periods face industry resistance, what alternative market mechanisms or architectural changes could actually close the EOL device gap at scale — and should the cost be borne by manufacturers, consumers, or ISPs?</p>
+      </div>
+
+      <div class="story-footer">
+        <a class="src-link" href="https://arstechnica.com/security/2026/04/russias-military-hacks-thousands-of-consumer-routers-to-steal-credentials/" target="_blank" rel="noopener noreferrer">
+          Read original <span>&#x2192;</span>
+        </a>
+        <span class="src-name">Biz &amp; IT - Ars Technica</span>
+      </div>
+
+    </div>
+  </div>
+</article>
+  </section>
+  <section id="cyber" class="section">
+    <div class="section-bar">
+      <span class="section-label">3 stories &mdash; tap to expand</span>
+      <button class="expand-all" onclick="expandAll('cyber', this)">Expand all</button>
+    </div>
+    
+<article class="story-card">
+  <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
+    <div class="s-left">
+      <div class="s-meta">
+        <span class="src-badge" style="background:#34d3991a;color:#34d399">Krebs on Security</span>
+        <span class="story-num">01</span>
+      </div>
+      <h2>Russian Hackers Exploit Aging Routers to Mass-Harvest Microsoft Office Auth Tokens</h2>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Russia-linked military intelligence hackers exploited known vulnerabilities in outdated internet routers to silently intercept and steal Microsoft Office authentication tokens from over 18,000 networks — all without deploying any malware.</div>
+      <div class="tag-row"><button class="tag" data-name="OAuth Bearer Tokens" data-desc="OAuth 2.0 bearer tokens are access tokens that grant the holder access to protected resources without requiring additional proof of identity. They are the standard authentication mechanism for Microsoft 365 and most cloud services." data-relevance="The attack specifically targeted OAuth bearer tokens issued by Microsoft Office/365 services. Because bearer tokens authenticate whoever presents them — with no device binding — intercepted tokens could be replayed directly by the attackers." onclick="openTagModal(event,this)">OAuth Bearer Tokens</button><button class="tag" data-name="SOHO Router Firmware" data-desc="Small Office/Home Office routers run embedded firmware (often Linux-based) that handles routing, NAT, DNS, and firewall functions for small networks. Vendors include Netgear, TP-Link, ASUS, and others." data-relevance="The attackers exploited known, already-patched vulnerabilities in older SOHO router firmware to gain control of network infrastructure on 18,000+ networks, using them as passive interception points." onclick="openTagModal(event,this)">SOHO Router Firmware</button></div>
+    </div>
+    <div class="chevron">&#9660;</div>
+  </div>
+
+  <div class="story-body">
+    <div class="body-inner">
+      
+      <div class="block affected-block">
+        <div class="affected-header">
+          <div class="blabel">&#x26A0;&#xFE0F; Affected Systems</div>
+          <span class="affected-warning">PATCH CHECK</span>
+        </div>
+        <div class="affected-list">
+      <div class="affected-item">
+        <span class="affected-name">SOHO Internet Routers (multiple vendors)</span>
+        <span class="affected-ver">Older models running unpatched firmware with known vulnerabilities (specific CVEs not yet disclosed)</span>
+      </div>
+      <div class="affected-item">
+        <span class="affected-name">Microsoft Office 365 / Microsoft 365</span>
+        <span class="affected-ver">All versions using OAuth bearer tokens without token binding (DPoP)</span>
+      </div>
+        </div>
+      </div>
+      <div class="block">
+        <div class="blabel">&#x1F4CC; Why It Matters</div>
+        <p>This campaign demonstrates that attackers don't need sophisticated zero-days or custom malware when unpatched network infrastructure does the work for them. By sitting on compromised routers, state-backed hackers gained passive access to authentication tokens — the keys to enterprise email, documents, and cloud services — at massive scale. Organizations that neglect router firmware updates are effectively handing nation-state actors a front-row seat to all their network traffic.</p>
+      </div>
+
+      <div class="block concept-block">
+        <div class="blabel">&#x1F9E0; Concept</div>
+        <div class="concept-title" style="color:#34d399">Authentication Token Interception via Compromised Network Infrastructure</div>
+        <div class="concept-text"><p>Imagine you send a sealed letter through the postal service, but someone has secretly replaced the mailbox with their own. Every letter you drop in gets opened, photographed, resealed, and forwarded — you never notice, but the attacker has a copy of everything. That's essentially what happens when a router sitting between you and a cloud service is under an attacker's control.</p><p>Authentication tokens are short-lived credentials that applications like Microsoft Office use to prove your identity after you've logged in. Instead of sending your password with every request, your device sends a token (often an OAuth token) that says &quot;this user already authenticated.&quot; These tokens travel through your network infrastructure — including your router — typically protected by TLS encryption. However, a compromised router can be configured to perform TLS interception, downgrade connections, or exploit misconfigurations in how tokens are transmitted, especially when older protocols or poorly configured services fall back to less secure transport.</p><p>In this campaign, Russian military intelligence hackers didn't bother writing malware for endpoints. They exploited known, already-patched vulnerabilities in older router firmware to gain control of the routing infrastructure itself. From that vantage point on over 18,000 networks, they harvested Microsoft Office authentication tokens as they transited through the compromised devices. This is a &quot;living off the land&quot; approach taken to the network layer — the attack leaves no trace on the victim's computer because the compromise exists entirely in the infrastructure between the user and Microsoft's servers.</p><p>The broader implication is sobering: network infrastructure is the forgotten attack surface. Organizations spend billions on endpoint detection, email security, and cloud access controls, but routers — especially older SOHO and SMB models — often run for years without firmware updates. When nation-states exploit these devices, they gain access to everything flowing through them. This shifts the security conversation from &quot;protect the endpoint&quot; to &quot;protect the entire path,&quot; and highlights why zero-trust architectures that validate tokens end-to-end, rather than trusting the network, are becoming essential.</p></div>
+      </div>
+
+      <div class="block">
+        <div class="blabel">&#x1F4CA; Visual Diagram</div>
+        <div class="diagram-wrap">
+          <div class="diagram-bar">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            <span class="diagram-title">Authentication Token Interception via Compromised Network Infrastructure</span>
+          </div>
+          <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+  <rect width="700" height="340" fill="#060912"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#34d399"/>
+    </marker>
+    <marker id="redarrow" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ef4444"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="350" y="28" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">ATTACK CHAIN: Router-Based Token Interception</text>
+
+  <!-- Step 1: User -->
+  <rect x="20" y="60" width="110" height="56" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="75" y="84" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">User</text>
+  <text x="75" y="100" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">MS Office app</text>
+
+  <!-- Arrow 1 -->
+  <line x1="130" y1="88" x2="175" y2="88" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="153" y="78" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">OAuth token</text>
+
+  <!-- Step 2: Compromised Router -->
+  <rect x="178" y="50" width="140" height="76" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="248" y="74" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">Compromised</text>
+  <text x="248" y="90" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">Router</text>
+  <text x="248" y="112" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">Known vuln exploited</text>
+
+  <!-- Arrow 2: to Microsoft -->
+  <line x1="318" y1="88" x2="378" y2="88" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="348" y="78" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">forwarded</text>
+
+  <!-- Step 3: Microsoft 365 -->
+  <rect x="382" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="442" y="84" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Microsoft 365</text>
+  <text x="442" y="100" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Cloud services</text>
+
+  <!-- Arrow 3: Token copy to C2 (downward from router) -->
+  <line x1="248" y1="126" x2="248" y2="180" stroke="#ef4444" stroke-width="1.5" marker-end="url(#redarrow)"/>
+  <text x="290" y="158" fill="#ef4444" font-size="10" font-family="monospace" text-anchor="middle">token copy</text>
+
+  <!-- Step 4: C2 / Attacker -->
+  <rect x="178" y="184" width="140" height="56" rx="6" fill="#12152a" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="248" y="206" fill="#ef4444" font-size="12" font-family="monospace" text-anchor="middle">GRU C2 Server</text>
+  <text x="248" y="222" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">Harvests tokens</text>
+
+  <!-- Arrow 4: C2 replays token -->
+  <line x1="318" y1="212" x2="442" y2="160" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#redarrow)"/>
+  
+  <!-- Step 5: Access box -->
+  <rect x="382" y="136" width="120" height="48" rx="6" fill="#12152a" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="442" y="158" fill="#ef4444" font-size="11" font-family="monospace" text-anchor="middle">Token Replay</text>
+  <text x="442" y="172" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">Full account access</text>
+
+  <!-- Scale callout -->
+  <rect x="500" y="185" width="175" height="70" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="587" y="207" fill="#34d399" font-size="13" font-family="monospace" text-anchor="middle">18,000+ networks</text>
+  <text x="587" y="225" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">No malware deployed</text>
+  <text x="587" y="241" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">No endpoint artifacts</text>
+
+  <!-- Bottom note -->
+  <rect x="40" y="280" width="620" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/>
+  <text x="350" y="298" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">KEY INSIGHT: Attack lives entirely in network infrastructure — invisible to endpoint security tools.</text>
+  <text x="350" y="314" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Victims see normal traffic. EDR sees nothing. Routers were the only compromised component.</text>
+</svg></div>
+        </div>
+      </div>
+
+      <div class="block opinion-block">
+        <div class="blabel">&#x1F465; Public Opinion</div>
+        <div class="opinion-q">On Hacker News, the top-voted comments focus on the &quot;depressing inevitability&quot; of router-level attacks, with multiple users pointing out that consumer and small-business routers are effectively &quot;abandoned by vendors within 18 months of sale.&quot; Several commenters noted this validates the push for end-to-end token binding (DPoP) and mutual TLS. On Reddit's r/netsec, the dominant sentiment is frustration that known, patched vulnerabilities were still exploitable at this scale — one highly upvoted comment called it &quot;a patch management failure across an entire ecosystem, not just individual orgs.&quot; Security Twitter/X saw researchers like Kevin Beaumont highlight that this technique leaves virtually zero forensic evidence on endpoints, calling it &quot;the nightmare scenario for IR teams who only look at endpoints.&quot; Others on r/technology expressed alarm at the 18,000-network figure, with several users asking whether ISPs should bear responsibility for forcing firmware updates on customer-premises equipment.</div>
+        <div class="blabel">&#x1F50D; Assessment</div>
+        <p>The community alarm is well-founded. The scale (18,000+ networks) and stealth (no malware, no endpoint artifacts) make this genuinely significant — not overblown. The frustration about router patch management is valid: the security industry has known about this blind spot for over a decade but the incentive structure (vendors abandon devices, consumers never update) hasn't changed. Where the discourse falls short is in over-focusing on the Russia attribution angle at the expense of the structural lesson: any actor — criminal or state — can replicate this technique. The calls for ISP-mandated updates and token-binding protocols like DPoP are the right technical responses, but the conversation underestimates how long it will take to deploy these at scale. Missing from most discussion is the role of Microsoft's own token architecture — questions about why tokens were interceptable in transit and whether stronger token-binding to device identity could have mitigated this deserve more scrutiny.</p>
+      </div>
+
+      <div class="block">
+        <div class="blabel">&#x2753; Quiz Yourself</div>
+        <div class="quiz-grid">
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q1 of 3</div>
+        <div class="q-text">Why did this attack leave no forensic evidence on victim computers?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Because the compromise existed entirely at the router/network infrastructure level — no malware or malicious code was ever deployed to endpoints. The routers intercepted tokens in transit, so endpoint detection tools had nothing to flag.</div>
+          <div class="q-exp">This is the key architectural insight: if an attacker controls the network path rather than the endpoint, traditional EDR and antivirus solutions are blind. The attack surface was the router firmware, not the user's operating system or applications.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div>
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q2 of 3</div>
+        <div class="q-text">What is the difference between an authentication token and a password, and why does stealing tokens bypass many security controls?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">A password is the original credential used to prove identity during login, while a token (like an OAuth access token) is a short-lived proof issued after successful authentication. Stealing a token bypasses MFA because the token is issued after the MFA challenge has already been completed — the attacker replays a post-authentication credential.</div>
+          <div class="q-exp">This is why token-theft attacks are so dangerous: MFA protects the login ceremony, but once a token is issued, it can be used independently. Token binding (tying a token to a specific device's cryptographic identity) is the defense, but it's not yet widely deployed.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div>
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q3 of 3</div>
+        <div class="q-text">Why are older SOHO routers particularly vulnerable to this type of infrastructure-level attack?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">SOHO routers often run outdated firmware with known, publicly disclosed vulnerabilities because vendors stop providing updates shortly after sale, and most owners never manually update firmware. This creates a massive fleet of exploitable devices sitting at the network edge.</div>
+          <div class="q-exp">Unlike enterprise equipment with managed update cycles, consumer and small-business routers have no automatic patching, no monitoring, and no accountability. Known CVEs remain unpatched for years, making them trivially exploitable at scale by any attacker scanning the internet.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div></div>
+      </div>
+
+      <div class="block deepdive-block">
+        <div class="blabel">&#x1F4AD; Deep Dive</div>
+        <p class="deepdive-text">If the fundamental problem is that authentication tokens can be intercepted by compromised infrastructure between the user and the cloud, does the entire model of bearer tokens need to be replaced — and what would a &quot;proof-of-possession&quot; token architecture look like at internet scale?</p>
+      </div>
+
+      <div class="story-footer">
+        <a class="src-link" href="https://krebsonsecurity.com/2026/04/russia-hacked-routers-to-steal-microsoft-office-tokens/" target="_blank" rel="noopener noreferrer">
+          Read original <span>&#x2192;</span>
+        </a>
+        <span class="src-name">Krebs on Security</span>
+      </div>
+
+    </div>
+  </div>
+</article>
+
+<article class="story-card">
+  <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
+    <div class="s-left">
+      <div class="s-meta">
+        <span class="src-badge" style="background:#34d3991a;color:#34d399">Krebs on Security</span>
+        <span class="story-num">02</span>
+      </div>
+      <h2>Germany Unmasks &quot;UNKN&quot; — Leader of REvil and GandCrab Ransomware Gangs</h2>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>German authorities have publicly identified 31-year-old Russian national Daniil Shchukin as the mastermind behind both the GandCrab and REvil ransomware-as-a-service operations, linking him to at least 130 attacks between 2019 and 2021.</div>
+      <div class="tag-row"><button class="tag" data-name="REvil/Sodinokibi" data-desc="A prolific ransomware-as-a-service operation active from 2019 to 2021, responsible for high-profile attacks including the Kaseya VSA supply chain compromise affecting over 1,500 organizations." data-relevance="Shchukin is identified as the operator behind REvil, having transitioned the operation from its predecessor GandCrab while maintaining the same affiliate-driven business model." onclick="openTagModal(event,this)">REvil/Sodinokibi</button><button class="tag" data-name="GandCrab" data-desc="One of the first major ransomware-as-a-service platforms, active from January 2018 to mid-2019, which claimed over $2 billion in ransom payments before its operators announced 'retirement.'" data-relevance="Germany's warrant formally confirms that GandCrab and REvil were run by the same individual, validating years of threat intelligence analysis linking the two operations through code and infrastructure overlap." onclick="openTagModal(event,this)">GandCrab</button></div>
+    </div>
+    <div class="chevron">&#9660;</div>
+  </div>
+
+  <div class="story-body">
+    <div class="body-inner">
+      
+      <div class="block">
+        <div class="blabel">&#x1F4CC; Why It Matters</div>
+        <p>REvil and GandCrab collectively extorted hundreds of millions of dollars from organizations worldwide, pioneering the ransomware-as-a-service model that dominates today's threat landscape. Publicly naming and doxing the operator behind both gangs — someone previously known only as &quot;UNKN&quot; — sends a signal that anonymity in cybercrime has limits, even when the suspect resides in Russia beyond the reach of Western extradition. This identification also formally confirms long-suspected links between GandCrab and REvil as successive operations run by the same individual.</p>
+      </div>
+
+      <div class="block concept-block">
+        <div class="blabel">&#x1F9E0; Concept</div>
+        <div class="concept-title" style="color:#34d399">Ransomware-as-a-Service (RaaS) and Operator Doxing</div>
+        <div class="concept-text"><p>Imagine a franchise restaurant chain: the headquarters develops the recipes, branding, and kitchen systems, then recruits independent operators who run individual locations and split the revenue. In ransomware-as-a-service, the &quot;headquarters&quot; builds the malware, manages leak sites, and handles negotiation infrastructure, while recruited affiliates carry out the actual intrusions and deploy the ransomware — splitting ransom payments, typically 70/30 or 80/20.</p><p>Technically, a RaaS operator like UNKN maintains a backend panel where affiliates register, receive customized ransomware payloads configured with unique victim IDs, and track payments. The operator handles the encryption tooling, the Tor-based payment portals, and often the data-leak extortion sites. GandCrab pioneered this affiliate model starting in 2018, and when it &quot;retired&quot; in mid-2019, much of its codebase, infrastructure patterns, and affiliate network seamlessly transitioned into REvil (also called Sodinokibi) — strongly suggesting continuity of leadership.</p><p>Germany's action is notable because it's a &quot;doxing&quot; — publicly naming and issuing an arrest warrant for Shchukin rather than conducting a quiet takedown. With the suspect in Russia, where extradition is functionally impossible, the strategy shifts to imposing personal consequences: freezing assets, restricting travel, and making the individual toxic to any legitimate financial system. The 130 documented attacks against German targets alone represent a fraction of REvil's global impact, which included the massive Kaseya supply chain attack in July 2021.</p><p>This approach reflects a broader evolution in how Western law enforcement combats ransomware operators sheltered by uncooperative states. When you can't arrest someone, you can still disrupt their life — naming them publicly burns their operational security, makes future operations riskier, and serves as a deterrent to others. It also enables sanctions, which can make ransom payments to that individual legally perilous for victims and their insurers, further squeezing the economic model.</p></div>
+      </div>
+
+      <div class="block">
+        <div class="blabel">&#x1F4CA; Visual Diagram</div>
+        <div class="diagram-wrap">
+          <div class="diagram-bar">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            <span class="diagram-title">Ransomware-as-a-Service (RaaS) and Operator Doxing</span>
+          </div>
+          <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#34d399"/>
+    </marker>
+  </defs>
+  <rect width="700" height="340" fill="#060912"/>
+
+  <!-- Timeline title -->
+  <text x="350" y="28" fill="#eaedf5" font-size="14" font-family="monospace" text-anchor="middle">UNKN / Shchukin — RaaS Timeline</text>
+
+  <!-- Timeline bar -->
+  <line x1="60" y1="80" x2="640" y2="80" stroke="#252840" stroke-width="3"/>
+
+  <!-- Event 1: GandCrab Launch -->
+  <circle cx="100" cy="80" r="7" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="100" y="110" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">Jan 2018</text>
+  <text x="100" y="126" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">GandCrab</text>
+  <text x="100" y="140" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">launches</text>
+
+  <!-- Event 2: GandCrab "retires" -->
+  <circle cx="230" cy="80" r="7" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="230" y="110" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">Jun 2019</text>
+  <text x="230" y="126" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">GandCrab</text>
+  <text x="230" y="140" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">"retires"</text>
+
+  <!-- Arrow showing transition -->
+  <line x1="255" y1="65" x2="315" y2="65" stroke="#34d399" stroke-width="1.5" marker-end="url(#ah)"/>
+  <text x="285" y="58" fill="#34d399" font-size="9" font-family="monospace" text-anchor="middle">code reuse</text>
+
+  <!-- Event 3: REvil emerges -->
+  <circle cx="340" cy="80" r="7" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="340" y="110" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">Mid 2019</text>
+  <text x="340" y="126" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">REvil/</text>
+  <text x="340" y="140" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Sodinokibi</text>
+
+  <!-- Event 4: Kaseya attack -->
+  <circle cx="470" cy="80" r="7" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="470" y="110" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">Jul 2021</text>
+  <text x="470" y="126" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Kaseya attack</text>
+  <text x="470" y="140" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">1500+ victims</text>
+
+  <!-- Event 5: Germany doxes UNKN -->
+  <circle cx="600" cy="80" r="8" fill="#34d399" stroke="#34d399" stroke-width="2"/>
+  <text x="600" y="110" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">Apr 2026</text>
+  <text x="600" y="126" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Germany IDs</text>
+  <text x="600" y="140" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Shchukin</text>
+
+  <!-- RaaS Model Diagram Below -->
+  <rect x="60" y="180" width="150" height="60" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="135" y="205" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">RaaS Operator</text>
+  <text x="135" y="222" fill="#34d399" font-size="10" font-family="monospace" text-anchor="middle">"UNKN" / Shchukin</text>
+
+  <!-- Provides tools arrow -->
+  <line x1="210" y1="210" x2="310" y2="195" stroke="#34d399" stroke-width="1.5" marker-end="url(#ah)"/>
+  <text x="268" y="190" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">payloads + infra</text>
+
+  <line x1="210" y1="210" x2="310" y2="240" stroke="#34d399" stroke-width="1.5" marker-end="url(#ah)"/>
+  <text x="268" y="248" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">leak site + keys</text>
+
+  <!-- Affiliates -->
+  <rect x="315" y="175" width="120" height="35" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="375" y="197" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Affiliate A</text>
+
+  <rect x="315" y="225" width="120" height="35" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="375" y="247" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Affiliate B</text>
+
+  <!-- Attack arrows to victims -->
+  <line x1="435" y1="192" x2="520" y2="192" stroke="#34d399" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="435" y1="242" x2="520" y2="242" stroke="#34d399" stroke-width="1.5" marker-end="url(#ah)"/>
+  <text x="478" y="183" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">deploy</text>
+  <text x="478" y="256" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">deploy</text>
+
+  <!-- Victims -->
+  <rect x="525" y="175" width="130" height="35" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="590" y="197" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">130+ DE victims</text>
+
+  <rect x="525" y="225" width="130" height="35" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="590" y="247" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Global victims</text>
+
+  <!-- Revenue split label -->
+  <rect x="220" y="285" width="260" height="30" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1"/>
+  <text x="350" y="305" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">Ransom split: 20-30% operator / 70-80% affiliate</text>
+</svg></div>
+        </div>
+      </div>
+
+      <div class="block opinion-block">
+        <div class="blabel">&#x1F465; Public Opinion</div>
+        <div class="opinion-q">On Hacker News, top comments noted the strategic brilliance of the doxing approach — &quot;if you can't extradite, you can still make their life miserable&quot; — with several users drawing parallels to the U.S. naming-and-shaming of Chinese PLA hackers in 2014. Reddit's r/netsec community focused on the technical confirmation that GandCrab and REvil were the same operation, something researchers had long suspected based on code overlap but never had officially confirmed by law enforcement. Security Twitter/X saw prominent researchers like @vaboronova and threat intel analysts praising the BKA's work while being skeptical it would lead to actual arrest, given Russia's track record of harboring cybercriminals. Some on r/technology expressed frustration that it took five years after REvil's peak activity to publicly name the operator, questioning whether the intel was actionable earlier.</div>
+        <div class="blabel">&#x1F50D; Assessment</div>
+        <p>The skepticism about arrest is well-founded — Russia has shown virtually no willingness to extradite cybercriminals to the West, and Shchukin is almost certainly safe from prosecution as long as he remains in Russia. However, the frustration about timing may undervalue how painstaking attribution is; connecting a forum handle to a real identity through multiple operational security layers requires years of correlation across cryptocurrency tracing, infrastructure forensics, and human intelligence. The community is right that this is primarily a deterrence play, but they may underestimate the practical impact: public identification enables sanctions, complicates money laundering, and can fracture trust within criminal ecosystems as associates wonder who else has been identified. The confirmed GandCrab-to-REvil link, while long suspected, is genuinely significant for the historical record and for ongoing cases against affiliates.</p>
+      </div>
+
+      <div class="block">
+        <div class="blabel">&#x2753; Quiz Yourself</div>
+        <div class="quiz-grid">
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q1 of 3</div>
+        <div class="q-text">Why would German authorities publicly name a ransomware operator they cannot arrest, rather than keeping the intelligence secret?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Public identification enables sanctions, asset freezes, travel restrictions, and makes it legally risky for victims/insurers to pay ransoms to the named individual — disrupting the economic model even without arrest.</div>
+          <div class="q-exp">When extradition isn't possible, doxing shifts the strategy from criminal prosecution to economic and personal disruption. It also burns the operator's OPSEC, making future operations harder.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div>
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q2 of 3</div>
+        <div class="q-text">What is the key structural feature that distinguishes Ransomware-as-a-Service (RaaS) from a single threat actor conducting ransomware attacks alone?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">RaaS separates the malware development/infrastructure role (the operator) from the intrusion/deployment role (affiliates), creating a franchise model where multiple independent attackers use the same ransomware toolkit and split profits.</div>
+          <div class="q-exp">This division of labor lets RaaS operations scale far beyond what a single actor could achieve, as dozens of affiliates simultaneously attack different targets using centrally maintained malware and payment infrastructure.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div>
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q3 of 3</div>
+        <div class="q-text">What type of evidence would researchers have used to link GandCrab and REvil before this official confirmation?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Code similarity analysis (shared functions, encryption routines, string patterns), overlapping infrastructure (reused C2 servers, domain registration patterns), similar affiliate recruitment practices on forums, and cryptocurrency wallet tracing.</div>
+          <div class="q-exp">Malware families leave technical fingerprints. When a 'new' ransomware shares substantial code, configuration structures, and operational patterns with a 'retired' one, it strongly suggests the same developers repackaged their tools under a new brand.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div></div>
+      </div>
+
+      <div class="block deepdive-block">
+        <div class="blabel">&#x1F4AD; Deep Dive</div>
+        <p class="deepdive-text">If publicly naming cybercriminals in uncooperative jurisdictions becomes a standard law enforcement tool, could it paradoxically incentivize ransomware operators to improve their operational security and adopt more sophisticated anonymization — ultimately making future attribution harder rather than deterring crime?</p>
+      </div>
+
+      <div class="story-footer">
+        <a class="src-link" href="https://krebsonsecurity.com/2026/04/germany-doxes-unkn-head-of-ru-ransomware-gangs-revil-gandcrab/" target="_blank" rel="noopener noreferrer">
+          Read original <span>&#x2192;</span>
+        </a>
+        <span class="src-name">Krebs on Security</span>
+      </div>
+
+    </div>
+  </div>
+</article>
+
+<article class="story-card">
+  <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
+    <div class="s-left">
+      <div class="s-meta">
+        <span class="src-badge" style="background:#34d3991a;color:#34d399">BleepingComputer</span>
+        <span class="story-num">03</span>
+      </div>
+      <h2>Smart Slider 3 Pro Update System Hijacked to Push Backdoored WordPress &amp; Joomla Plugins</h2>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Attackers compromised the update infrastructure for the popular Smart Slider 3 Pro plugin, distributing malicious versions containing multiple backdoors to WordPress and Joomla sites via the trusted auto-update mechanism.</div>
+      <div class="tag-row"><button class="tag" data-name="Smart Slider 3 Pro" data-desc="A popular premium slider/carousel plugin available for both WordPress and Joomla CMS platforms, used to create animated content sections on websites." data-relevance="The plugin's self-hosted update infrastructure was directly compromised, serving as the distribution vector for the backdoored versions pushed to customer sites." onclick="openTagModal(event,this)">Smart Slider 3 Pro</button><button class="tag" data-name="WordPress Plugin Update API" data-desc="The mechanism by which WordPress plugins check for, download, and install new versions — either via the wordpress.org repository or custom update endpoints for premium plugins." data-relevance="Premium plugins like Smart Slider 3 Pro use custom update endpoints outside wordpress.org's oversight, which was the exact trust boundary exploited in this supply chain attack." onclick="openTagModal(event,this)">WordPress Plugin Update API</button></div>
+    </div>
+    <div class="chevron">&#9660;</div>
+  </div>
+
+  <div class="story-body">
+    <div class="body-inner">
+      
+      <div class="block affected-block">
+        <div class="affected-header">
+          <div class="blabel">&#x26A0;&#xFE0F; Affected Systems</div>
+          <span class="affected-warning">PATCH CHECK</span>
+        </div>
+        <div class="affected-list">
+      <div class="affected-item">
+        <span class="affected-name">Smart Slider 3 Pro (WordPress)</span>
+        <span class="affected-ver">Specific compromised version range not yet confirmed — all users of the Pro version with auto-updates enabled during the compromise window are potentially affected</span>
+      </div>
+      <div class="affected-item">
+        <span class="affected-name">Smart Slider 3 Pro (Joomla)</span>
+        <span class="affected-ver">Specific compromised version range not yet confirmed — all users of the Pro version with auto-updates enabled during the compromise window are potentially affected</span>
+      </div>
+        </div>
+      </div>
+      <div class="block">
+        <div class="blabel">&#x1F4CC; Why It Matters</div>
+        <p>Supply chain attacks targeting CMS plugin update systems are particularly dangerous because site administrators trust auto-updates as a security best practice. When the update channel itself is weaponized, the very mechanism meant to keep sites safe becomes the attack vector, potentially compromising thousands of sites simultaneously without any user interaction beyond normal maintenance.</p>
+      </div>
+
+      <div class="block concept-block">
+        <div class="blabel">&#x1F9E0; Concept</div>
+        <div class="concept-title" style="color:#34d399">Software Supply Chain Attacks via Update Hijacking</div>
+        <div class="concept-text"><p>Imagine you get your drinking water delivered weekly from a trusted service. One day, someone breaks into the bottling facility and adds contaminants to the water before it's loaded onto delivery trucks. You'd never suspect the water because you trust the delivery chain — that's essentially what an update supply chain attack does to software.</p><p>Technically, most modern plugins and applications use an auto-update mechanism: the software periodically contacts an update server, checks for new versions, downloads the package, verifies it (sometimes), and installs it. In a supply chain attack, the adversary compromises some part of this pipeline — the build server, the distribution server, the developer's signing keys, or the update API itself. The poisoned update then flows through the legitimate channel, bypassing the trust model that administrators rely on.</p><p>In this Smart Slider 3 Pro incident, attackers hijacked the plugin's update delivery system and pushed a malicious version that contained multiple backdoors. Because WordPress and Joomla sites were configured to accept updates from Smart Slider's infrastructure as trusted, the backdoored code was installed automatically or with a single click by unsuspecting administrators who thought they were simply keeping their site up to date.</p><p>This pattern — poisoning the update well — has become one of the most effective attack strategies in modern cybersecurity. From SolarWinds to Codecov to 3CX, the lesson is consistent: trust in the software supply chain is a single point of failure. For the CMS ecosystem specifically, where millions of sites depend on thousands of third-party plugins, each plugin's update infrastructure is an attack surface. Defenders must adopt strategies like code-signing verification, update integrity checking, behavioral monitoring post-update, and limiting auto-update trust to reduce exposure.</p></div>
+      </div>
+
+      <div class="block">
+        <div class="blabel">&#x1F4CA; Visual Diagram</div>
+        <div class="diagram-wrap">
+          <div class="diagram-bar">
+            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+            <span class="diagram-title">Software Supply Chain Attacks via Update Hijacking</span>
+          </div>
+          <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+  <rect width="700" height="340" fill="#060912"/>
+  <defs>
+    <marker id="arrowG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="#34d399"/>
+    </marker>
+    <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="#ef4444"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="350" y="28" fill="#eaedf5" font-size="14" font-family="monospace" text-anchor="middle" font-weight="bold">Update Supply Chain Attack Flow</text>
+
+  <!-- Step 1: Attacker -->
+  <rect x="20" y="60" width="120" height="50" rx="6" fill="#12152a" stroke="#ef4444" stroke-width="2"/>
+  <text x="80" y="82" fill="#ef4444" font-size="12" font-family="monospace" text-anchor="middle">Attacker</text>
+  <text x="80" y="98" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">compromises infra</text>
+
+  <!-- Arrow 1→2 -->
+  <line x1="140" y1="85" x2="175" y2="85" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowR)"/>
+
+  <!-- Step 2: Update Server -->
+  <rect x="180" y="60" width="130" height="50" rx="6" fill="#12152a" stroke="#ef4444" stroke-width="2"/>
+  <text x="245" y="82" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Update Server</text>
+  <text x="245" y="98" fill="#ef4444" font-size="10" font-family="monospace" text-anchor="middle">⚠ hijacked</text>
+
+  <!-- Arrow 2→3 -->
+  <line x1="310" y1="85" x2="355" y2="85" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowR)"/>
+
+  <!-- Step 3: Malicious Package -->
+  <rect x="360" y="60" width="140" height="50" rx="6" fill="#12152a" stroke="#ef4444" stroke-width="2"/>
+  <text x="430" y="82" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Backdoored Plugin</text>
+  <text x="430" y="98" fill="#ef4444" font-size="10" font-family="monospace" text-anchor="middle">multiple backdoors</text>
+
+  <!-- Arrow 3→4 -->
+  <line x1="500" y1="85" x2="545" y2="85" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowR)"/>
+
+  <!-- Step 4: Victim Sites -->
+  <rect x="550" y="60" width="130" height="50" rx="6" fill="#12152a" stroke="#ef4444" stroke-width="2"/>
+  <text x="615" y="82" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">WP/Joomla Sites</text>
+  <text x="615" y="98" fill="#ef4444" font-size="10" font-family="monospace" text-anchor="middle">auto-updated</text>
+
+  <!-- Divider -->
+  <line x1="30" y1="140" x2="670" y2="140" stroke="#252840" stroke-width="1" stroke-dasharray="4"/>
+  <text x="350" y="162" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">vs. Normal Trusted Update Flow</text>
+
+  <!-- Normal: Developer -->
+  <rect x="20" y="185" width="120" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="80" y="207" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">Developer</text>
+  <text x="80" y="223" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">builds release</text>
+
+  <!-- Arrow N1→N2 -->
+  <line x1="140" y1="210" x2="175" y2="210" stroke="#34d399" stroke-width="2" marker-end="url(#arrowG)"/>
+
+  <!-- Normal: Signing -->
+  <rect x="180" y="185" width="130" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="245" y="207" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Code Signing</text>
+  <text x="245" y="223" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">integrity verified</text>
+
+  <!-- Arrow N2→N3 -->
+  <line x1="310" y1="210" x2="355" y2="210" stroke="#34d399" stroke-width="2" marker-end="url(#arrowG)"/>
+
+  <!-- Normal: Update Server -->
+  <rect x="360" y="185" width="140" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="430" y="207" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Update Server</text>
+  <text x="430" y="223" fill="#34d399" font-size="10" font-family="monospace" text-anchor="middle">✓ trusted source</text>
+
+  <!-- Arrow N3→N4 -->
+  <line x1="500" y1="210" x2="545" y2="210" stroke="#34d399" stroke-width="2" marker-end="url(#arrowG)"/>
+
+  <!-- Normal: Sites -->
+  <rect x="550" y="185" width="130" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="615" y="207" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">WP/Joomla Sites</text>
+  <text x="615" y="223" fill="#34d399" font-size="10" font-family="monospace" text-anchor="middle">safely updated</text>
+
+  <!-- Labels -->
+  <text x="30" y="290" fill="#ef4444" font-size="11" font-family="monospace">⬤ ATTACK: No signing → attacker replaces package at distribution</text>
+  <text x="30" y="315" fill="#34d399" font-size="11" font-family="monospace">⬤ SECURE: Code signing + integrity checks block tampered updates</text>
+</svg></div>
+        </div>
+      </div>
+
+      <div class="block opinion-block">
+        <div class="blabel">&#x1F465; Public Opinion</div>
+        <div class="opinion-q">On Reddit's r/Wordpress, the reaction was immediate frustration mixed with fatigue — users noting this is yet another reason the WordPress plugin ecosystem feels like a &quot;minefield.&quot; Several commenters emphasized that premium/paid plugins with their own update servers (outside wordpress.org) are especially risky because they bypass the .org repository's review process. On r/netsec, discussion focused on the broader supply chain implications, with users drawing parallels to the Polyfill.io CDN compromise and asking why CMS plugin ecosystems still lack mandatory code signing. Security Twitter/X saw researchers like those from Patchstack sharing IOCs and urging immediate audits, while others pointed out that &quot;update your plugins&quot; — the standard security advice — becomes paradoxical when the update itself is the attack. On Hacker News, a common thread was skepticism about the WordPress ecosystem's security model, with commenters arguing that any plugin with its own update server is an unaudited trust anchor.</div>
+        <div class="blabel">&#x1F50D; Assessment</div>
+        <p>The community frustration is well-placed. Premium WordPress plugins that self-host their update infrastructure operate outside the (admittedly imperfect) review mechanisms of wordpress.org, creating unmonitored trust anchors. The comparison to Polyfill.io is apt — both exploit trusted distribution channels. However, some commentary overstates the uniqueness of this to WordPress; Joomla was equally affected, and the fundamental issue — trusting third-party update servers — applies across all software ecosystems. What's genuinely missing from most discussions is a concrete proposal: WordPress could mandate Sigstore-style transparency logging or require plugins to publish signed update manifests. Without structural changes, these incidents will remain a recurring pattern rather than a solved problem.</p>
+      </div>
+
+      <div class="block">
+        <div class="blabel">&#x2753; Quiz Yourself</div>
+        <div class="quiz-grid">
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q1 of 3</div>
+        <div class="q-text">Why are supply chain attacks via plugin update systems particularly effective compared to direct exploitation of a vulnerability in the plugin itself?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">Because the malicious code arrives through a trusted channel that administrators are encouraged to use, bypassing the suspicion that would normally accompany unknown software installation. The trust relationship with the update server means no additional social engineering or exploit is needed.</div>
+          <div class="q-exp">Direct exploitation requires finding and triggering a vulnerability, which may be patched or detected. Supply chain attacks abuse the trust model itself — the admin actively installs the malicious code by following security best practices (keeping plugins updated).</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div>
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q2 of 3</div>
+        <div class="q-text">If Smart Slider 3 Pro had implemented code signing for its updates, how would that have changed the attack scenario?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">The attacker would need to compromise not just the update server but also the developer's private signing key. Without the valid signature, the plugin update mechanism would reject the tampered package, adding a critical additional barrier.</div>
+          <div class="q-exp">Code signing creates a separation between distribution infrastructure and code authenticity. Even if the update server is compromised, the attacker can't produce a validly signed package without the private key, which should be stored separately (e.g., in an HSM or offline).</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div>
+      <div class="qcard" onclick="toggleCard(this)">
+        <div class="q-num">Q3 of 3</div>
+        <div class="q-text">Why might premium plugins with self-hosted update servers pose a greater supply chain risk than plugins distributed through wordpress.org?</div>
+        <div class="q-answer">
+          <div class="q-divider"></div>
+          <div class="q-ans">The wordpress.org repository provides centralized review, malware scanning, and integrity checks. Self-hosted update servers lack these independent verification layers, meaning a single compromise of the vendor's infrastructure can push malicious code directly to all customers with no third-party oversight.</div>
+          <div class="q-exp">Centralized repositories act as an additional trust checkpoint. Self-hosted updates create a direct trust relationship between the vendor's server and the end user's site, with no independent verification — making the vendor's infrastructure a single point of failure.</div>
+        </div>
+        <div class="q-hint">&#9660; tap to reveal</div>
+      </div></div>
+      </div>
+
+      <div class="block deepdive-block">
+        <div class="blabel">&#x1F4AD; Deep Dive</div>
+        <p class="deepdive-text">If the standard security advice is &quot;always update your plugins,&quot; but the update mechanism itself can be weaponized, how should organizations rethink the trust model for third-party CMS extensions — and is there a practical middle ground between auto-updating everything and manually auditing every update?</p>
+      </div>
+
+      <div class="story-footer">
+        <a class="src-link" href="https://www.bleepingcomputer.com/news/security/smart-slider-updates-hijacked-to-push-malicious-wordpress-joomla-versions/" target="_blank" rel="noopener noreferrer">
+          Read original <span>&#x2192;</span>
+        </a>
+        <span class="src-name">BleepingComputer</span>
+      </div>
+
+    </div>
+  </div>
+</article>
+  </section>
+  <section id="notables" class="section">
+    <div class="section-bar">
+      <span class="section-label">5 highlights &mdash; tap to expand</span>
+    </div>
+    <div class="notable-grid">
+      
+<article class="notable-card" onclick="toggleNotable(this)">
+  <div class="notable-top">
+    <div class="notable-meta">
+      <span class="notable-cat" style="background:#38bdf81a;color:#38bdf8">Science</span>
+      <span class="notable-src">Hacker News: Front Page</span>
+    </div>
+    <span class="notable-chevron">&#9660;</span>
+  </div>
+  <h3 class="notable-headline">Emperor Penguin and Antarctic Fur Seal Officially Listed as Endangered</h3>
+  <p class="notable-summary">The IUCN has reclassified the emperor penguin and Antarctic fur seal as endangered, citing climate change as the primary driver. Accelerating Antarctic ice loss is destroying breeding habitats, marking a significant escalation in how climate impacts are being formally recognized for iconic species.</p>
+  <div class="tag-row"><button class="tag" data-name="IUCN Red List" data-desc="The International Union for Conservation of Nature's global standard for assessing species extinction risk." data-relevance="The formal reclassification to 'endangered' status often triggers downstream regulatory and policy responses affecting industries globally." onclick="openTagModal(event,this)">IUCN Red List</button></div>
+  <div class="notable-body">
+    <div class="notable-apply">
+      <div class="blabel">&#x1F4A1; Why This Applies to You</div>
+      <p>Climate-driven regulatory shifts increasingly affect tech companies through ESG disclosure requirements, supply chain sustainability mandates, and carbon reporting standards. For anyone in infrastructure or cloud, expect tightening environmental compliance frameworks. These reclassifications often precede policy action that can reshape procurement and operations requirements.</p>
+      <a class="notable-read" href="https://iucn.org/press-release/202604/emperor-penguin-and-antarctic-fur-seal-now-endangered-due-climate-change-iucn" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
+        Read original &#x2192;
+      </a>
+    </div>
+  </div>
+</article>
+
+<article class="notable-card" onclick="toggleNotable(this)">
+  <div class="notable-top">
+    <div class="notable-meta">
+      <span class="notable-cat" style="background:#60a5fa1a;color:#60a5fa">Research</span>
+      <span class="notable-src">IEEE Spectrum</span>
+    </div>
+    <span class="notable-chevron">&#9660;</span>
+  </div>
+  <h3 class="notable-headline">MEMS Photonics Chip Projects Video at Grain-of-Sand Scale — A Quantum Computing Breakthrough</h3>
+  <p class="notable-summary">Researchers from MITRE, MIT, CU Boulder, and Sandia National Labs developed a tiny MEMS-based photonic chip that can project video at microscopic scale. The chip solves a critical bottleneck in scaling trapped-ion quantum computers: individually controlling millions of laser beams needed to manipulate millions of qubits simultaneously.</p>
+  <div class="tag-row"><button class="tag" data-name="MEMS Photonics" data-desc="Micro-electromechanical systems integrated with photonic circuits for precise light manipulation at tiny scales." data-relevance="The core technology enabling individual laser control of millions of trapped-ion qubits, removing a key scaling barrier for quantum computing." onclick="openTagModal(event,this)">MEMS Photonics</button><button class="tag" data-name="MITRE Quantum Moonshot" data-desc="A multi-institution research initiative led by MITRE aimed at solving fundamental quantum computing scaling challenges." data-relevance="The project that produced this chip, bringing together MIT, CU Boulder, and Sandia to tackle the laser control bottleneck." onclick="openTagModal(event,this)">MITRE Quantum Moonshot</button></div>
+  <div class="notable-body">
+    <div class="notable-apply">
+      <div class="blabel">&#x1F4A1; Why This Applies to You</div>
+      <p>This is a significant engineering milestone toward million-qubit quantum computers, which have major implications for cryptography, drug discovery, and optimization problems. Security professionals should track quantum computing timelines closely as they affect post-quantum cryptography migration planning. Hardware engineers and photonics specialists may see growing demand in this space.</p>
+      <a class="notable-read" href="https://spectrum.ieee.org/mems-photonics" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
+        Read original &#x2192;
+      </a>
+    </div>
+  </div>
+</article>
+
+<article class="notable-card" onclick="toggleNotable(this)">
+  <div class="notable-top">
+    <div class="notable-meta">
+      <span class="notable-cat" style="background:#a78bfa1a;color:#a78bfa">Infrastructure</span>
+      <span class="notable-src">Hacker News: Front Page</span>
+    </div>
+    <span class="notable-chevron">&#9660;</span>
+  </div>
+  <h3 class="notable-headline">Vercel's Claude Code Plugin Caught Sending User Prompts as Telemetry</h3>
+  <p class="notable-summary">A developer discovered that Vercel's plugin for Claude Code was silently reading and transmitting user prompts as telemetry data. The finding, which gained significant traction on Hacker News (124+ points), raises serious questions about consent, data handling, and trust in developer tooling integrations.</p>
+  <div class="tag-row"><button class="tag" data-name="Vercel" data-desc="A cloud platform for frontend development and deployment, widely used in the web development ecosystem." data-relevance="Vercel developed the plugin in question that was found to be transmitting user prompts without clear disclosure." onclick="openTagModal(event,this)">Vercel</button><button class="tag" data-name="Claude Code" data-desc="Anthropic's AI-powered coding assistant designed for terminal-based development workflows." data-relevance="The AI coding tool whose plugin ecosystem was the vector for the telemetry concern." onclick="openTagModal(event,this)">Claude Code</button></div>
+  <div class="notable-body">
+    <div class="notable-apply">
+      <div class="blabel">&#x1F4A1; Why This Applies to You</div>
+      <p>This is a direct supply-chain trust issue for any developer using AI coding assistants with third-party plugins. Teams should audit what data their AI toolchains exfiltrate and establish policies around plugin vetting. It also highlights the broader tension between telemetry-driven product improvement and user privacy in the AI developer tools market.</p>
+      <a class="notable-read" href="https://akshaychugh.xyz/writings/png/vercel-plugin-telemetry" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
+        Read original &#x2192;
+      </a>
+    </div>
+  </div>
+</article>
+
+<article class="notable-card" onclick="toggleNotable(this)">
+  <div class="notable-top">
+    <div class="notable-meta">
+      <span class="notable-cat" style="background:#60a5fa1a;color:#60a5fa">Research</span>
+      <span class="notable-src">IEEE Spectrum</span>
+    </div>
+    <span class="notable-chevron">&#9660;</span>
+  </div>
+  <h3 class="notable-headline">Zero-Trust Platform for Autonomous Drones and Robots Reaches TRL-7 Validation</h3>
+  <p class="notable-summary">GoZTASP, a zero-trust architecture platform for governing autonomous systems like drones, robots, and sensors at mission scale, has reached Technology Readiness Level 7 — meaning validated in an operational environment. The platform integrates heterogeneous autonomous systems under continuous integrity verification and safety constraint enforcement, even in degraded conditions.</p>
+  <div class="tag-row"><button class="tag" data-name="GoZTASP" data-desc="A zero-trust assurance and governance platform designed for heterogeneous autonomous systems operating at mission scale." data-relevance="The platform itself — representing the maturation of zero-trust principles applied beyond IT networks to physical autonomous systems." onclick="openTagModal(event,this)">GoZTASP</button><button class="tag" data-name="Secure Runtime Assurance (SRTA)" data-desc="A continuous verification mechanism that monitors autonomous system integrity and enforces safety constraints in real time." data-relevance="A core component of GoZTASP enabling trust verification of autonomous agents during active operations." onclick="openTagModal(event,this)">Secure Runtime Assurance (SRTA)</button></div>
+  <div class="notable-body">
+    <div class="notable-apply">
+      <div class="blabel">&#x1F4A1; Why This Applies to You</div>
+      <p>As autonomous systems proliferate in logistics, defense, and infrastructure, zero-trust governance of robots and drones will become a critical competency. Security architects should familiarize themselves with frameworks like ZTASP that extend zero-trust beyond traditional IT into cyber-physical systems. This signals growing demand for professionals who can bridge cybersecurity and robotics/IoT.</p>
+      <a class="notable-read" href="https://content.knowledgehub.wiley.com/goztasp-a-zero-trust-platform-for-governing-autonomous-systems-at-mission-scale/" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
+        Read original &#x2192;
+      </a>
+    </div>
+  </div>
+</article>
+
+<article class="notable-card" onclick="toggleNotable(this)">
+  <div class="notable-top">
+    <div class="notable-meta">
+      <span class="notable-cat" style="background:#4ade801a;color:#4ade80">Society</span>
+      <span class="notable-src">WIRED</span>
+    </div>
+    <span class="notable-chevron">&#9660;</span>
+  </div>
+  <h3 class="notable-headline">FBI Failed to Respond to State Investigators for Days After Killing of Renee Good</h3>
+  <p class="notable-summary">WIRED obtained records showing the FBI ignored texts from Minnesota Bureau of Criminal Apprehension investigators for at least two days following the killing of Renee Good. The communication breakdown highlights ongoing concerns about inter-agency coordination and responsiveness at the federal level during critical investigations.</p>
+  
+  <div class="notable-body">
+    <div class="notable-apply">
+      <div class="blabel">&#x1F4A1; Why This Applies to You</div>
+      <p>For those in security and government tech, this underscores how communication infrastructure and inter-agency coordination failures have real-world consequences. It raises questions about whether federal agencies have adequate operational communication tools and protocols. Anyone working on govtech, emergency response systems, or secure communications platforms should note the demand signal here.</p>
+      <a class="notable-read" href="https://www.wired.com/story/the-fbi-didnt-answer-texts-from-minnesota-investigators-for-days-after-renee-goods-killing/" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
+        Read original &#x2192;
+      </a>
+    </div>
+  </div>
+</article>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  Daily Digest &middot; Generated with Claude Opus &middot; <a href="https://github.com/dizchrisctrl/daily-digest">GitHub</a>
+</footer>
+
+<div id="kbd-hint">
+  <kbd>j</kbd> / <kbd>k</kbd> navigate &nbsp; <kbd>Enter</kbd> expand<br>
+  <kbd>1</kbd> AI &nbsp; <kbd>2</kbd> Cyber &nbsp; <kbd>3</kbd> Notables
+</div>
+
+<script>
+const indicator = document.getElementById('indicator');
+const tabColors = { ai: '#818cf8', cyber: '#34d399', notables: '#fbbf24' };
+let currentIndex = -1;
+let kbdTimeout;
+
+// ── Progress bar ──
+window.addEventListener('scroll', () => {
+  const doc = document.documentElement;
+  const pct = doc.scrollHeight - doc.clientHeight > 0
+    ? (doc.scrollTop / (doc.scrollHeight - doc.clientHeight)) * 100 : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+}, { passive: true });
+
+// ── Tab switching ──
+function positionIndicator(btn) {
+  indicator.style.left  = btn.offsetLeft + 'px';
+  indicator.style.width = btn.offsetWidth + 'px';
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  indicator.style.background = tabColors[id] || '#818cf8';
+  positionIndicator(btn);
+  currentIndex = -1;
+  clearKbdFocus();
+}
+
+window.addEventListener('load', () => {
+  const active = document.querySelector('.tab-btn.active');
+  if (active) positionIndicator(active);
+});
+
+// ── Tag modal ──
+function openTagModal(e, btn) {
+  e.stopPropagation();
+  const overlay = document.getElementById('tag-modal');
+  const name = btn.dataset.name || '';
+  document.getElementById('tag-modal-name').textContent = name;
+  document.getElementById('tag-modal-desc').textContent = btn.dataset.desc || '';
+  document.getElementById('tag-modal-relevance').textContent = btn.dataset.relevance || '';
+  overlay.classList.toggle('cve', name.toUpperCase().startsWith('CVE-'));
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTagModal(e) {
+  if (e) e.stopPropagation();
+  document.getElementById('tag-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── Story card toggle ──
+function toggleStory(card) { card.classList.toggle('open'); }
+function toggleCard(card) { card.classList.toggle('open'); }
+function toggleNotable(card) { card.classList.toggle('open'); }
+
+// ── Expand all ──
+function expandAll(sectionId, btn) {
+  const cards = document.querySelectorAll('#' + sectionId + ' .story-card');
+  const allOpen = [...cards].every(c => c.classList.contains('open'));
+  cards.forEach(c => c.classList.toggle('open', !allOpen));
+  btn.textContent = allOpen ? 'Expand all' : 'Collapse all';
+}
+
+// ── Keyboard navigation ──
+function getActiveCards() {
+  const section = document.querySelector('.section.active');
+  return section ? [...section.querySelectorAll('.story-card, .notable-card')] : [];
+}
+
+function clearKbdFocus() {
+  document.querySelectorAll('.kbd-focus').forEach(el => el.classList.remove('kbd-focus'));
+}
+
+function focusCard(cards, idx) {
+  clearKbdFocus();
+  if (idx < 0 || idx >= cards.length) return;
+  cards[idx].classList.add('kbd-focus');
+  cards[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function showKbdHint() {
+  const hint = document.getElementById('kbd-hint');
+  hint.classList.add('visible');
+  clearTimeout(kbdTimeout);
+  kbdTimeout = setTimeout(() => hint.classList.remove('visible'), 2500);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeTagModal(); return; }
+  if (e.target.matches('input, textarea, select')) return;
+  if (document.getElementById('tag-modal').classList.contains('open')) return;
+
+  const cards = getActiveCards();
+
+  if (e.key === 'j' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    currentIndex = Math.min(currentIndex + 1, cards.length - 1);
+    focusCard(cards, currentIndex);
+    showKbdHint();
+  } else if (e.key === 'k' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    currentIndex = Math.max(currentIndex - 1, 0);
+    focusCard(cards, currentIndex);
+    showKbdHint();
+  } else if ((e.key === 'Enter' || e.key === ' ') && currentIndex >= 0 && cards[currentIndex]) {
+    e.preventDefault();
+    cards[currentIndex].classList.toggle('open');
+  } else if (e.key === '1') {
+    switchTab('ai', document.querySelector('[onclick*="\'ai\'"]'));
+    showKbdHint();
+  } else if (e.key === '2') {
+    switchTab('cyber', document.querySelector('[onclick*="\'cyber\'"]'));
+    showKbdHint();
+  } else if (e.key === '3') {
+    switchTab('notables', document.querySelector('[onclick*="\'notables\'"]'));
+    showKbdHint();
+  }
+});
+</script>
+</body>
+</html>
