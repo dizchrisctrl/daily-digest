@@ -125,7 +125,18 @@ STORY_SCHEMA = {
                 "Produce 8-15 elements. Short precise labels. Show actual directional flow — not just floating labelled boxes."
             ),
         },
-        "public_opinion":    {"type": "string", "description": "Concrete sentiments from HN, Reddit, security Twitter — what communities are saying"},
+        "public_opinion": {
+            "type": "array",
+            "description": "Concrete sentiments from HN, Reddit, security Twitter — one entry per source",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "source":    {"type": "string", "description": "Community name, e.g. 'Hacker News', 'Reddit r/netsec', 'Security Twitter'"},
+                    "sentiment": {"type": "string", "description": "1-2 sentence summary of what that community is saying"},
+                },
+                "required": ["source", "sentiment"],
+            },
+        },
         "opinion_assessment":{"type": "string", "description": "Critical analysis: what's valid, overblown, or missing from that public opinion"},
         "quiz": {
             "type": "array",
@@ -201,7 +212,7 @@ Guidelines:
   Include arrowheads via <defs><marker>. 8-15 elements. Short precise labels.
   Show actual relationships and flow — not floating boxes with buzzwords.
 - quiz: 3 questions testing real conceptual understanding, not trivia.
-- public_opinion: reference specific community sentiments (HN, Reddit r/technology, r/netsec, security Twitter/X).
+- public_opinion: one entry per community (HN, Reddit r/technology, r/netsec, security Twitter/X) — each with a source name and 1-2 sentence sentiment summary.
 - deep_dive: a Socratic question forcing critical thinking about assumptions or bigger trends.
 - tech_tags: 0-3 tags max. Only include when you have specific, meaningful context to share. Skip entirely for vulnerabilities if no specific version or tool is confirmed. Never use generic terms (AI, cloud, encryption). Each tag needs a clear description and a relevance sentence tied to this exact story.
 - affected_systems: for vulnerability stories, list each affected system with its version range. Empty array otherwise.
@@ -383,7 +394,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
-<title>Daily Digest -- __DATE__</title>
+<title>The Daily Rundown -- __DATE__</title>
 <style>
 :root {
   --bg: #0b0d16; --surface: #12152a; --surface2: #1a1d32; --surface3: #20233c;
@@ -544,7 +555,8 @@ pre.ascii {
 
 /* Opinion block */
 .opinion-block { background: #0d160e; }
-.opinion-q { font-style: italic; color: var(--muted); padding: 11px 15px; border-left: 3px solid rgba(52,211,153,0.4); margin-bottom: 14px; font-size: 0.91rem; line-height: 1.7; border-radius: 0 6px 6px 0; background: rgba(52,211,153,0.04); }
+.opinion-q { color: var(--muted); padding: 10px 14px; border-left: 3px solid rgba(52,211,153,0.4); margin-bottom: 10px; font-size: 0.91rem; line-height: 1.6; border-radius: 0 6px 6px 0; background: rgba(52,211,153,0.04); }
+.opinion-source { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #34d399; margin-bottom: 4px; font-style: normal; }
 
 /* Quiz */
 .quiz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
@@ -771,7 +783,7 @@ kbd {
 
 <header class="site-header">
   <div class="eyebrow">Your daily briefing</div>
-  <h1>Daily Digest</h1>
+  <h1>The Daily Rundown</h1>
   <div class="date-badge"><span class="date-dot"></span>__DATE__</div>
 </header>
 
@@ -810,7 +822,7 @@ kbd {
 </main>
 
 <footer class="site-footer">
-  Daily Digest &middot; Generated with Claude Opus &middot; <a href="https://github.com/dizchrisctrl/daily-digest">GitHub</a>
+  The Daily Rundown &middot; Generated with Claude Opus &middot; <a href="https://github.com/dizchrisctrl/daily-digest">GitHub</a>
 </footer>
 
 <div id="kbd-hint">
@@ -1087,7 +1099,7 @@ def build_story_html(story, color, num):
 
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
-        <div class="opinion-q">{esc(story.get('public_opinion',''))}</div>
+        {"".join(f'<div class="opinion-q"><span class="opinion-source">{esc(o.get("source",""))}</span>{esc(o.get("sentiment",""))}</div>' for o in (story.get("public_opinion") or []))}
         <div class="blabel">&#x1F50D; Assessment</div>
         <p>{esc(story.get('opinion_assessment',''))}</p>
       </div>
@@ -1178,7 +1190,7 @@ def send_email(data):
 <html><body style="margin:0;padding:0;background:#0f1117;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e2e8f0">
 <div style="max-width:600px;margin:0 auto;padding:24px 16px">
   <div style="text-align:center;padding:28px 0 24px;border-bottom:1px solid #2d3148">
-    <h1 style="margin:0;font-size:1.8rem;font-weight:800;background:linear-gradient(90deg,#818cf8,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Daily Digest</h1>
+    <h1 style="margin:0;font-size:1.8rem;font-weight:800;background:linear-gradient(90deg,#818cf8,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">The Daily Rundown</h1>
     <p style="color:#94a3b8;margin:8px 0 0;font-size:0.9rem">{today}</p>
   </div>
   <div style="padding:24px 0">
@@ -1199,7 +1211,7 @@ def send_email(data):
 </div></body></html>"""
 
     msg            = MIMEMultipart("alternative")
-    msg["Subject"] = f"Daily Digest -- {today}"
+    msg["Subject"] = f"The Daily Rundown -- {today}"
     msg["From"]    = SENDER_EMAIL
     msg["To"]      = RECIPIENT_EMAIL
     msg.attach(MIMEText(html_body, "html"))
@@ -1231,7 +1243,7 @@ if __name__ == "__main__":
     import sys
     rebuild_only = "--rebuild" in sys.argv
 
-    print("[ Daily Digest Generator ]")
+    print("[ The Daily Rundown Generator ]")
 
     if rebuild_only:
         print("\n-> Rebuild mode: loading existing digest.json...")
