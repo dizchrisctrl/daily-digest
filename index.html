@@ -419,7 +419,7 @@ kbd {
   font-family: 'Courier New', monospace; font-size: 0.77rem;
   color: #fca5a5; background: rgba(239,68,68,0.1);
   padding: 3px 9px; border-radius: 5px; border: 1px solid rgba(239,68,68,0.2);
-  white-space: nowrap;
+  white-space: normal; word-break: break-word;
 }
 
 /* Site footer */
@@ -486,10 +486,10 @@ kbd {
         <span class="src-badge" style="background:#818cf81a;color:#818cf8">AI News &amp; Artificial Intelligence | TechCrunch</span>
         <span class="story-num">01</span>
       </div>
-      <h2>Florida AG Opens Investigation into OpenAI After Shooting Allegedly Planned with ChatGPT</h2>
+      <h2>Florida AG Opens Investigation Into OpenAI After Deadly FSU Shooting Allegedly Planned With ChatGPT</h2>
       <div class="pub-date">&#x1F551; Apr 09, 2026 4:11 PM EDT</div>
-      <div class="tldr"><span class="tldr-tag">TL;DR</span>Florida's Attorney General is investigating OpenAI after ChatGPT was reportedly used to plan a shooting at Florida State University that killed two and injured five, with the victim's family planning to sue.</div>
-      <div class="tag-row"><button class="tag" data-name="ChatGPT" data-desc="OpenAI's conversational large language model product, using GPT-series models with RLHF safety training and content filtering layers." data-relevance="The specific AI product alleged to have been used in planning the FSU shooting and now at the center of the Florida AG investigation." onclick="openTagModal(event,this)">ChatGPT</button><button class="tag" data-name="RLHF (Reinforcement Learning from Human Feedback)" data-desc="A training technique where human evaluators rate model outputs to steer the model away from harmful, biased, or unhelpful responses." data-relevance="The primary safety mechanism in ChatGPT whose adequacy is implicitly being questioned — whether RLHF-trained refusal behaviors constitute a sufficient duty of care." onclick="openTagModal(event,this)">RLHF (Reinforcement Learning from Human Feedback)</button></div>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Florida's Attorney General is investigating OpenAI after reports that ChatGPT was used to help plan a mass shooting at Florida State University that killed two and injured five.</div>
+      <div class="tag-row"><button class="tag" data-name="ChatGPT" data-desc="OpenAI's consumer-facing conversational AI product built on large language models, using RLHF alignment and multi-layer safety filtering to moderate outputs." data-relevance="The specific AI product allegedly used by the shooter to plan the FSU attack, and the direct subject of the Florida AG's investigation into whether its safety measures were adequate." onclick="openTagModal(event,this)">ChatGPT</button><button class="tag" data-name="RLHF (Reinforcement Learning from Human Feedback)" data-desc="A training technique where human evaluators rank model outputs, and the model is fine-tuned via reinforcement learning to prefer responses that align with human preferences, including safety refusals." data-relevance="One of the core guardrail mechanisms under scrutiny — whether OpenAI's RLHF-based safety training was sufficient to prevent the model from providing harmful planning assistance." onclick="openTagModal(event,this)">RLHF (Reinforcement Learning from Human Feedback)</button></div>
     </div>
     <div class="chevron">&#9660;</div>
   </div>
@@ -499,13 +499,13 @@ kbd {
       
       <div class="block">
         <div class="blabel">&#x1F4CC; Why It Matters</div>
-        <p>This investigation marks one of the first state-level enforcement actions directly targeting an AI company for real-world violence allegedly facilitated by its product. The outcome could set precedents for AI platform liability that reshape how companies implement safety guardrails, and whether they can be held legally responsible when users circumvent them to cause harm.</p>
+        <p>This investigation marks one of the most significant legal challenges to an AI company over real-world violence allegedly facilitated by its product. The outcome could set precedent for how AI companies are held liable for harmful outputs, potentially reshaping content moderation requirements and the legal framework surrounding generative AI safety guardrails.</p>
       </div>
 
       <div class="block concept-block">
         <div class="blabel">&#x1F9E0; Concept</div>
-        <div class="concept-title" style="color:#818cf8">AI Safety Guardrails and the Liability Gap</div>
-        <div class="concept-text"><p>Imagine a hardware store that sells knives. The store doesn't hand knives to people who say &quot;I want to hurt someone,&quot; but if a buyer phrases their intent differently — &quot;I need something very sharp for a project&quot; — the store completes the sale. AI safety guardrails work similarly: they're filters designed to catch obviously harmful requests, but they can be circumvented by users who know how to rephrase.</p><p>Technically, large language models like ChatGPT use multiple layers of safety controls. These include RLHF (reinforcement learning from human feedback) to train the model away from harmful outputs, system-level prompt instructions that define refusal behavior, and post-generation classifiers that screen outputs before they reach the user. Despite these layers, &quot;jailbreak&quot; techniques — prompt injection, role-play framing, incremental escalation — routinely bypass them. The cat-and-mouse dynamic means no guardrail system is 100% effective.</p><p>In this case, Florida's AG is investigating whether OpenAI's safety measures were adequate to prevent ChatGPT from being used to plan the FSU shooting. The core legal question is whether OpenAI knew or should have known that its guardrails were insufficient to prevent this kind of misuse, and whether the company bears responsibility for outputs that contributed to real-world violence. The victim's family pursuing a lawsuit adds a civil dimension alongside the state investigation.</p><p>This case sits at the frontier of a much larger question: should AI companies be treated more like publishers (liable for content) or like utilities (neutral infrastructure)? Section 230 has historically shielded platforms from liability for user-generated content, but AI-generated content blurs that line because the model actively produces the harmful material rather than merely hosting it. However this investigation resolves, it will influence how every AI company calibrates the tradeoff between model capability and safety restrictions.</p></div>
+        <div class="concept-title" style="color:#818cf8">AI Safety Guardrails and Content Filtering</div>
+        <div class="concept-text"><p>Imagine a hardware store that sells knives, rope, and chemicals — all legal products with legitimate uses. If a clerk noticed a customer asking very specific questions about how to combine those items to hurt someone, you'd expect them to refuse the sale or alert authorities. AI safety guardrails work on a similar principle: they're systems designed to detect when a tool with legitimate uses is being steered toward harmful purposes.</p><p>Technically, large language models like ChatGPT use multiple layers of content filtering. During training, RLHF (Reinforcement Learning from Human Feedback) teaches the model to refuse harmful requests. At inference time, additional classifier models screen both inputs and outputs for dangerous content — violence, weapons instructions, self-harm, etc. OpenAI also employs system-level prompts that instruct the model to decline certain categories of requests. Despite these layers, researchers have consistently demonstrated &quot;jailbreak&quot; techniques that bypass guardrails through prompt injection, role-playing scenarios, or incremental escalation that stays below individual detection thresholds.</p><p>In this case, investigators will likely examine what specific queries the shooter made, whether ChatGPT's safety systems flagged or refused any requests, and whether the model provided actionable planning assistance that materially contributed to the attack. The critical legal and technical question is whether OpenAI's guardrails were adequate — or whether known bypass techniques allowed the model to assist in planning violence that its filters should have caught.</p><p>The broader implications extend well beyond this single case. If courts or regulators determine that AI companies bear liability for harmful outputs that bypass their safety filters, it could fundamentally change the economics and deployment of generative AI. Companies might be forced to implement far more restrictive filtering — potentially degrading utility for legitimate users — or face a new category of product liability that has no clear precedent in software law, since Section 230 protections were designed for platforms hosting user content, not for systems that generate novel responses.</p></div>
       </div>
 
       <div class="block">
@@ -513,74 +513,92 @@ kbd {
         <div class="diagram-wrap">
           <div class="diagram-bar">
             <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-            <span class="diagram-title">AI Safety Guardrails and the Liability Gap</span>
+            <span class="diagram-title">AI Safety Guardrails and Content Filtering</span>
           </div>
           <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
   <rect width="700" height="340" fill="#060912"/>
   <defs>
-    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <path d="M0,0 L8,3 L0,6 Z" fill="#818cf8"/>
-    </marker>
-    <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <path d="M0,0 L8,3 L0,6 Z" fill="#f87171"/>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#818cf8"/>
     </marker>
   </defs>
+
   <!-- Title -->
-  <text x="350" y="28" fill="#818cf8" font-size="14" font-family="monospace" text-anchor="middle" font-weight="bold">AI Safety Guardrail Bypass → Liability Chain</text>
-  <!-- User box -->
-  <rect x="30" y="60" width="120" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="90" y="82" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">User</text>
-  <text x="90" y="98" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Harmful intent</text>
+  <text x="350" y="28" fill="#818cf8" font-size="14" font-family="monospace" text-anchor="middle" font-weight="bold">AI Safety Guardrail Layers — and Where They Can Fail</text>
+
+  <!-- Layer 1: User Input -->
+  <rect x="30" y="55" width="120" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="90" y="78" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">User</text>
+  <text x="90" y="95" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Prompt Input</text>
+
   <!-- Arrow 1 -->
-  <line x1="150" y1="85" x2="195" y2="85" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <text x="173" y="76" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">prompt</text>
-  <!-- Guardrail layer -->
-  <rect x="200" y="55" width="130" height="60" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
-  <text x="265" y="78" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Safety</text>
-  <text x="265" y="94" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Guardrails</text>
-  <text x="265" y="108" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">RLHF + classifiers</text>
-  <!-- Branch: blocked -->
-  <line x1="265" y1="115" x2="265" y2="155" stroke="#4ade80" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <rect x="205" y="158" width="120" height="35" rx="6" fill="#12152a" stroke="#4ade80" stroke-width="1.5"/>
-  <text x="265" y="180" fill="#4ade80" font-size="11" font-family="monospace" text-anchor="middle">✓ Request Refused</text>
-  <!-- Branch: bypassed -->
-  <line x1="330" y1="85" x2="385" y2="85" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowRed)"/>
-  <text x="358" y="76" fill="#f87171" font-size="9" font-family="monospace" text-anchor="middle">jailbreak</text>
-  <!-- LLM -->
-  <rect x="390" y="60" width="110" height="50" rx="6" fill="#12152a" stroke="#f87171" stroke-width="1.5"/>
-  <text x="445" y="82" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">LLM Output</text>
-  <text x="445" y="98" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Harmful content</text>
-  <!-- Arrow to real world -->
-  <line x1="500" y1="85" x2="555" y2="85" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowRed)"/>
-  <text x="528" y="76" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">action</text>
-  <!-- Real world harm -->
-  <rect x="560" y="60" width="120" height="50" rx="6" fill="#12152a" stroke="#f87171" stroke-width="2"/>
-  <text x="620" y="82" fill="#f87171" font-size="12" font-family="monospace" text-anchor="middle">Real-World</text>
-  <text x="620" y="98" fill="#f87171" font-size="12" font-family="monospace" text-anchor="middle">Harm</text>
-  <!-- Liability section -->
-  <text x="350" y="230" fill="#818cf8" font-size="13" font-family="monospace" text-anchor="middle" font-weight="bold">Who is liable?</text>
-  <!-- Three boxes -->
-  <rect x="50" y="250" width="160" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="130" y="272" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">User (perpetrator)</text>
-  <text x="130" y="290" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Criminal liability</text>
-  <rect x="270" y="250" width="160" height="55" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
-  <text x="350" y="272" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">AI Company (OpenAI)</text>
-  <text x="350" y="290" fill="#818cf8" font-size="10" font-family="monospace" text-anchor="middle">Under investigation</text>
-  <rect x="490" y="250" width="160" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="570" y="272" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Platform (neutral?)</text>
-  <text x="570" y="290" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Section 230 unclear</text>
-  <!-- Connecting lines -->
-  <line x1="210" y1="277" x2="268" y2="277" stroke="#818cf8" stroke-width="1" stroke-dasharray="4,3"/>
-  <line x1="432" y1="277" x2="488" y2="277" stroke="#818cf8" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="150" y1="82" x2="195" y2="82" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Layer 2: Input Classifier -->
+  <rect x="200" y="55" width="120" height="55" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
+  <text x="260" y="78" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Input Filter</text>
+  <text x="260" y="95" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Classifier model</text>
+
+  <!-- Arrow 2 -->
+  <line x1="320" y1="82" x2="365" y2="82" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Layer 3: LLM with RLHF -->
+  <rect x="370" y="55" width="120" height="55" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
+  <text x="430" y="78" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">LLM + RLHF</text>
+  <text x="430" y="95" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Trained refusals</text>
+
+  <!-- Arrow 3 -->
+  <line x1="490" y1="82" x2="535" y2="82" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Layer 4: Output Classifier -->
+  <rect x="540" y="55" width="130" height="55" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
+  <text x="605" y="78" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Output Filter</text>
+  <text x="605" y="95" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Safety classifier</text>
+
+  <!-- Bypass techniques section -->
+  <text x="350" y="148" fill="#818cf8" font-size="13" font-family="monospace" text-anchor="middle" font-weight="bold">Known Bypass Techniques</text>
+
+  <!-- Jailbreak box 1 -->
+  <rect x="40" y="168" width="180" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="130" y="189" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Prompt Injection</text>
+  <text x="130" y="205" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">"Ignore instructions..."</text>
+
+  <!-- Dashed arrow up to Input Filter -->
+  <line x1="130" y1="168" x2="240" y2="112" stroke="#818cf8" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Jailbreak box 2 -->
+  <rect x="260" y="168" width="180" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="350" y="189" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Role-play / Fiction</text>
+  <text x="350" y="205" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">"Write a story where..."</text>
+
+  <!-- Dashed arrow up to LLM -->
+  <line x1="350" y1="168" x2="430" y2="112" stroke="#818cf8" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Jailbreak box 3 -->
+  <rect x="480" y="168" width="180" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="570" y="189" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Incremental Queries</text>
+  <text x="570" y="205" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Each below threshold</text>
+
+  <!-- Dashed arrow up to Output Filter -->
+  <line x1="570" y1="168" x2="605" y2="112" stroke="#818cf8" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Legal/Investigation section -->
+  <rect x="120" y="260" width="460" height="60" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
+  <text x="350" y="282" fill="#818cf8" font-size="13" font-family="monospace" text-anchor="middle" font-weight="bold">Florida AG Investigation</text>
+  <text x="350" y="300" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Were guardrails adequate? Did known bypasses enable harm?</text>
+  <text x="350" y="314" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Potential precedent for AI product liability</text>
+
+  <!-- Arrow from guardrail section down to investigation -->
+  <line x1="350" y1="225" x2="350" y2="258" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
 </svg></div>
         </div>
       </div>
 
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
-        <div class="opinion-q"><span class="opinion-source">Hacker News</span>Highly divided. Many commenters argue that holding OpenAI liable is like suing Google for providing search results, while others point out that generative AI actively produces content rather than indexing it, making the comparison flawed.</div><div class="opinion-q"><span class="opinion-source">Reddit r/technology</span>Strongly emotional responses. Top comments express sympathy for victims but skepticism about whether an investigation into OpenAI will prevent future violence, with many viewing it as political positioning by the Florida AG.</div><div class="opinion-q"><span class="opinion-source">Reddit r/netsec</span>Discussion centers on the technical inadequacy of current guardrail systems. Several posters note that jailbreak techniques are trivially available and question whether any safety system can prevent a determined adversary.</div><div class="opinion-q"><span class="opinion-source">Security Twitter/X</span>AI safety researchers are using this case to argue for mandatory red-teaming and third-party audits of guardrail effectiveness, while others warn that overregulation could push harmful AI underground to open-source models with no guardrails at all.</div>
+        <div class="opinion-q"><span class="opinion-source">Hacker News</span>Discussion is sharply divided between those who see this as a dangerous precedent for holding software tools liable for user actions, and those who argue AI companies have unique responsibilities because their products generate novel harmful content rather than merely hosting it.</div><div class="opinion-q"><span class="opinion-source">Reddit r/technology</span>Majority sentiment leans toward accountability for OpenAI, with many commenters drawing comparisons to social media companies' liability for algorithmic amplification of harmful content, though some push back that this is closer to blaming a search engine.</div><div class="opinion-q"><span class="opinion-source">Reddit r/netsec</span>Security researchers note that known jailbreak techniques have been documented for years, and question whether OpenAI has been sufficiently proactive in hardening its safety classifiers against well-published bypass methods.</div><div class="opinion-q"><span class="opinion-source">Security Twitter/X</span>AI safety researchers are using this case to highlight the gap between marketing claims about guardrail effectiveness and the reality of how easily they can be circumvented, with several pointing to their own prior responsible disclosures that went unaddressed.</div>
         <div class="blabel">&#x1F50D; Assessment</div>
-        <p>The public discourse captures a genuine tension but largely misses the nuance. The &quot;suing Google&quot; analogy from HN is materially flawed — search engines retrieve existing information while LLMs generate novel, tailored responses, creating a fundamentally different liability posture. Reddit's political cynicism about the Florida AG may be partially warranted, but dismissing the investigation entirely ignores that state AG actions have historically been the first movers in tech regulation (think Microsoft antitrust, social media investigations). The security community's focus on technical guardrail limitations is the most substantive angle: if jailbreaks are trivially achievable, the legal question becomes whether OpenAI's duty of care extends to making them non-trivial, or whether any reasonable standard was met. What's largely missing from all communities is discussion of the evidentiary question — how much did ChatGPT actually contribute versus information freely available elsewhere — which will likely be the crux of any legal proceeding.</p>
+        <p>The HN concern about precedent is valid — holding AI companies liable for user-initiated violence is legally uncharted territory and could have chilling effects on AI development. However, the comparison to simple tools like search engines understates the issue: ChatGPT generates tailored, synthesized responses that can be far more actionable than search results. The security community's focus on known jailbreak techniques is the most technically substantive angle — if investigators can show that the shooter used well-documented bypass methods that OpenAI was aware of but failed to mitigate, the negligence argument becomes much stronger. Missing from most public discussion is the question of what &quot;adequate&quot; safety filtering actually looks like — there is no industry standard, no regulatory benchmark, and no certification process for AI safety guardrails, which means this investigation is essentially asking OpenAI to defend against a standard that doesn't formally exist yet.</p>
       </div>
 
       <div class="block">
@@ -588,31 +606,31 @@ kbd {
         <div class="quiz-grid">
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q1 of 3</div>
-        <div class="q-text">Why does the publisher vs. utility distinction matter for AI company liability?</div>
+        <div class="q-text">Why might AI safety guardrails based purely on RLHF-trained refusals be insufficient to prevent harmful outputs?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Publishers can be liable for content they produce or curate, while utilities (and platforms under Section 230) generally aren't liable for what users do with their services. Because LLMs generate content rather than merely hosting user content, they may fall closer to the publisher side of this spectrum.</div>
-          <div class="q-exp">This distinction determines the legal framework applied. If an AI model is seen as actively producing harmful content (like a publisher), it has much less legal protection than if it's treated as a neutral tool that users misuse.</div>
+          <div class="q-ans">RLHF teaches the model behavioral patterns during training, but adversarial prompts can exploit the gap between the training distribution and novel inputs. Techniques like role-playing, prompt injection, or gradual escalation can bypass learned refusal behaviors because the model generalizes from training examples rather than having a true understanding of harm.</div>
+          <div class="q-exp">This is why multi-layered defenses (input classifiers, output classifiers, and RLHF together) are used — no single layer is robust against all attacks.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q2 of 3</div>
-        <div class="q-text">Why can't RLHF-based safety guardrails fully prevent harmful AI outputs?</div>
+        <div class="q-text">How does the 'incremental query' jailbreak technique differ from direct prompt injection, and why is it harder to detect?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">RLHF trains models to avoid harmful outputs based on patterns seen during training, but it cannot anticipate every possible adversarial rephrasing or jailbreak technique. Determined users can use prompt injection, role-play framing, or incremental escalation to bypass these learned refusal behaviors.</div>
-          <div class="q-exp">RLHF is a statistical training approach, not a logical safety proof. The model learns tendencies to refuse, but these tendencies can be overridden by inputs that fall outside the patterns the safety training covered — it's a cat-and-mouse game.</div>
+          <div class="q-ans">Incremental querying breaks a harmful request into multiple individually innocuous sub-questions that each pass safety filters on their own. Unlike prompt injection, which tries to override the system prompt in a single exchange, incremental attacks exploit the fact that safety classifiers evaluate individual messages or turns rather than the cumulative intent across an entire conversation.</div>
+          <div class="q-exp">This highlights a fundamental limitation in per-message content filtering — harmful intent can be distributed across many benign-looking interactions.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q3 of 3</div>
-        <div class="q-text">How does AI-generated content differ from search engine results in a liability context?</div>
+        <div class="q-text">Why is Section 230 of the Communications Decency Act unlikely to provide a straightforward defense for AI companies in cases like this?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Search engines retrieve and link to pre-existing content created by third parties, while AI models synthesize and generate novel content in response to prompts. This means the AI company has a more direct role in creating the potentially harmful material.</div>
-          <div class="q-exp">Section 230 was designed for platforms that host or transmit third-party content. When an AI model generates content itself, the 'third-party content' shield becomes much harder to claim, potentially exposing the company to greater liability.</div>
+          <div class="q-ans">Section 230 protects platforms from liability for content created by their users. However, AI-generated responses are created by the model itself — the company's product — not by a third-party user. This means the output may be treated more like a product than hosted content, potentially falling under product liability frameworks rather than platform immunity.</div>
+          <div class="q-exp">This legal distinction between hosting third-party content and generating original content is central to the emerging debate about AI company liability.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div></div>
@@ -620,7 +638,7 @@ kbd {
 
       <div class="block deepdive-block">
         <div class="blabel">&#x1F4AD; Deep Dive</div>
-        <p class="deepdive-text">If AI companies implement increasingly restrictive guardrails to reduce liability, but the same information remains freely available through search engines, open-source models, and libraries — does restricting commercial AI actually reduce harm, or does it merely shift legal responsibility while creating a false sense of safety?</p>
+        <p class="deepdive-text">If we accept that AI companies should be responsible for preventing harmful outputs, how do we define the standard of care — and does requiring near-perfect content filtering inevitably create a system so restrictive that it undermines the legitimate utility that makes these tools valuable in the first place?</p>
       </div>
 
       <div class="story-footer">
@@ -641,10 +659,10 @@ kbd {
         <span class="src-badge" style="background:#818cf81a;color:#818cf8">AI | VentureBeat</span>
         <span class="story-num">02</span>
       </div>
-      <h2>Railway Raises $100M to Build &quot;AI-Native&quot; Cloud, Taking Aim at AWS Complexity</h2>
+      <h2>Railway Raises $100M to Build &quot;AI-Native&quot; Cloud, Taking on AWS Complexity</h2>
       <div class="pub-date">&#x1F551; Jan 22, 2026 9:00 AM EST</div>
-      <div class="tldr"><span class="tldr-tag">TL;DR</span>Cloud platform Railway secured $100 million in Series B funding to challenge AWS and legacy cloud providers by offering simplified, AI-native infrastructure that has already attracted two million developers — all without a marketing budget.</div>
-      <div class="tag-row"><button class="tag" data-name="Railway" data-desc="A developer-focused PaaS platform that simplifies cloud deployment by abstracting away infrastructure management, offering instant deploys from Git repos or Docker containers." data-relevance="Railway is the subject of this funding round, positioning itself as an AI-native alternative to traditional IaaS for deploying AI workloads." onclick="openTagModal(event,this)">Railway</button><button class="tag" data-name="Kubernetes (EKS)" data-desc="An open-source container orchestration system; Amazon EKS is AWS's managed Kubernetes service for deploying containerized applications." data-relevance="EKS represents the kind of complex IaaS tooling Railway aims to abstract away — developers must configure clusters, node pools, and GPU scheduling manually." onclick="openTagModal(event,this)">Kubernetes (EKS)</button></div>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Railway, a developer-focused cloud platform with 2 million users gained through word-of-mouth alone, raised $100M in Series B funding to challenge legacy cloud providers like AWS by offering simplified, AI-optimized infrastructure.</div>
+      <div class="tag-row"><button class="tag" data-name="Railway" data-desc="A developer-focused Platform-as-a-Service that automates deployment, scaling, and infrastructure management, positioning itself as an AI-optimized alternative to traditional cloud providers." data-relevance="Railway is the subject of this story, having raised $100M to scale its PaaS platform that has organically attracted 2 million developers frustrated with AWS/GCP complexity." onclick="openTagModal(event,this)">Railway</button><button class="tag" data-name="Kubernetes" data-desc="An open-source container orchestration system that automates deploying, scaling, and managing containerized applications across clusters of machines." data-relevance="Modern PaaS platforms like Railway typically abstract over Kubernetes under the hood, hiding its operational complexity from developers while leveraging its scheduling and scaling capabilities." onclick="openTagModal(event,this)">Kubernetes</button></div>
     </div>
     <div class="chevron">&#9660;</div>
   </div>
@@ -654,13 +672,13 @@ kbd {
       
       <div class="block">
         <div class="blabel">&#x1F4CC; Why It Matters</div>
-        <p>The hyperscaler cloud model (AWS, GCP, Azure) was designed for general-purpose workloads, but the explosion of AI applications demands different infrastructure patterns — GPU orchestration, rapid scaling, and simplified deployment. Railway's traction signals that a meaningful segment of developers finds existing cloud platforms too complex for modern AI workloads, potentially reshaping how the next generation of applications gets built and deployed.</p>
+        <p>The AI application boom is exposing real pain points in traditional cloud platforms—provisioning GPU clusters, managing model-serving pipelines, and scaling inference workloads require deep DevOps expertise on AWS/GCP/Azure. Railway's rapid organic growth signals genuine developer frustration with incumbent complexity, and $100M in funding gives it runway to build infrastructure purpose-built for AI workloads. If successful, this could reshape how startups and mid-market companies deploy AI without needing dedicated platform engineering teams.</p>
       </div>
 
       <div class="block concept-block">
         <div class="blabel">&#x1F9E0; Concept</div>
         <div class="concept-title" style="color:#818cf8">Platform-as-a-Service (PaaS) vs. Infrastructure-as-a-Service (IaaS)</div>
-        <div class="concept-text"><p>Imagine you need to get across a city. IaaS is like renting a car — you get maximum control, but you're responsible for navigation, parking, fuel, and maintenance. PaaS is more like a ride-hailing service: you tell it where you want to go, and the platform handles everything else. You trade some control for dramatically reduced complexity.</p><p>Technically, IaaS providers like AWS EC2 give you virtual machines, networking primitives, storage volumes, and IAM policies — you assemble everything yourself. PaaS platforms abstract those layers away, exposing a simpler interface: push your code (or container), declare your dependencies, and the platform handles provisioning, scaling, networking, TLS certificates, and observability. Under the hood, PaaS still runs on IaaS (often the hyperscalers themselves), but it hides the operational burden behind opinionated defaults and automation.</p><p>Railway positions itself as a modern PaaS specifically tuned for the AI era. Where a developer deploying an AI inference service on AWS might need to configure EC2 GPU instances, set up load balancers, manage container orchestration with EKS, and wire up autoscaling policies, Railway aims to collapse that into a few clicks or CLI commands. Its organic growth to two million developers — without marketing spend — suggests that the developer experience gap between raw IaaS and what people actually need is enormous.</p><p>The broader trend here is a recurring cycle in infrastructure: each major platform shift (web, mobile, cloud, AI) initially gets built on existing tooling, then spawns purpose-built platforms that match the new workload's unique demands. If AI workloads truly need different primitives — GPU-aware scheduling, model versioning, burst scaling for inference — then &quot;AI-native&quot; PaaS could become a durable category rather than a marketing buzzword.</p></div>
+        <div class="concept-text"><p>Imagine you want to bake a cake. IaaS is like renting a commercial kitchen—you get the oven, countertops, and utilities, but you bring your own ingredients, recipes, and figure out the workflow yourself. PaaS is like a baking subscription kit that arrives with pre-measured ingredients, step-by-step instructions, and a pre-heated oven slot. You focus on the creative part (decorating, flavor choices) while the logistics are handled for you.</p><p>Technically, IaaS providers like AWS EC2 give you virtual machines, networking, and storage primitives. You're responsible for the operating system, runtime, scaling policies, load balancers, CI/CD pipelines, and monitoring. PaaS abstracts all of that away: you push code, and the platform handles building containers, routing traffic, auto-scaling, SSL certificates, and environment management. Under the hood, modern PaaS platforms typically run on Kubernetes or similar orchestration layers, but developers never interact with those details directly.</p><p>Railway sits firmly in the PaaS camp but is positioning itself as &quot;AI-native,&quot; meaning it optimizes specifically for the workloads AI developers care about—GPU allocation, model serving, vector database provisioning, and inference scaling. Its 2 million developers adopted it without any marketing spend, which suggests the simplification it offers over raw AWS/GCP is solving a real pain point, not a manufactured one. The $100M Series B is designed to accelerate this AI-specific infrastructure layer.</p><p>The broader trend here is a recurring cycle in cloud computing: raw infrastructure gets commoditized, then abstraction layers emerge to capture developer productivity gains. We saw it with Heroku over AWS in the 2010s, Vercel over bare compute for frontend, and now Railway for AI workloads. The question is whether these PaaS layers can sustain margins and avoid being undercut when the hyperscalers inevitably build their own simplified AI deployment experiences.</p></div>
       </div>
 
       <div class="block">
@@ -672,75 +690,70 @@ kbd {
           </div>
           <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
       <polygon points="0 0, 8 3, 0 6" fill="#818cf8"/>
     </marker>
   </defs>
-  <!-- Background -->
   <rect width="700" height="340" fill="#060912"/>
-
+  
   <!-- Column Headers -->
-  <text x="185" y="30" fill="#818cf8" font-family="monospace" font-size="14" text-anchor="middle" font-weight="bold">Traditional IaaS (AWS)</text>
-  <text x="525" y="30" fill="#818cf8" font-family="monospace" font-size="14" text-anchor="middle" font-weight="bold">AI-Native PaaS (Railway)</text>
-
+  <text x="175" y="30" fill="#818cf8" font-size="14" font-family="monospace" text-anchor="middle" font-weight="bold">Traditional IaaS (AWS)</text>
+  <text x="525" y="30" fill="#818cf8" font-size="14" font-family="monospace" text-anchor="middle" font-weight="bold">AI-Native PaaS (Railway)</text>
+  
   <!-- Divider -->
-  <line x1="355" y1="15" x2="355" y2="330" stroke="#252840" stroke-width="1" stroke-dasharray="5,5"/>
+  <line x1="350" y1="15" x2="350" y2="330" stroke="#252840" stroke-width="1" stroke-dasharray="6,4"/>
+  
+  <!-- IaaS Stack - left column -->
+  <rect x="60" y="50" width="230" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="175" y="73" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Developer writes code</text>
 
-  <!-- IaaS Column - Stacked boxes -->
-  <rect x="60" y="50" width="250" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="185" y="73" fill="#eaedf5" font-family="monospace" font-size="12" text-anchor="middle">Developer Code</text>
+  <line x1="175" y1="86" x2="175" y2="105" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-  <line x1="185" y1="86" x2="185" y2="105" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <rect x="60" y="108" width="230" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="175" y="131" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Configure VMs, GPUs, VPCs</text>
 
-  <rect x="60" y="108" width="250" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="185" y="131" fill="#eaedf5" font-family="monospace" font-size="12" text-anchor="middle">Container Orchestration (EKS)</text>
+  <line x1="175" y1="144" x2="175" y2="163" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-  <line x1="185" y1="144" x2="185" y2="163" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <rect x="60" y="166" width="230" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="175" y="189" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Set up K8s, Docker, CI/CD</text>
 
-  <rect x="60" y="166" width="250" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="185" y="189" fill="#eaedf5" font-family="monospace" font-size="12" text-anchor="middle">GPU Instance Config (EC2)</text>
+  <line x1="175" y1="202" x2="175" y2="221" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-  <line x1="185" y1="202" x2="185" y2="221" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <rect x="60" y="224" width="230" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="175" y="247" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Manage scaling &amp; monitoring</text>
 
-  <rect x="60" y="224" width="250" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="185" y="247" fill="#eaedf5" font-family="monospace" font-size="12" text-anchor="middle">Load Balancer + Autoscaling</text>
+  <line x1="175" y1="260" x2="175" y2="279" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-  <line x1="185" y1="260" x2="185" y2="279" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <rect x="60" y="282" width="230" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="175" y="305" fill="#7a849a" font-size="12" font-family="monospace" text-anchor="middle">App deployed (hours/days)</text>
 
-  <rect x="60" y="282" width="250" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="185" y="305" fill="#eaedf5" font-family="monospace" font-size="12" text-anchor="middle">Networking / TLS / IAM</text>
+  <!-- PaaS Stack - right column -->
+  <rect x="410" y="50" width="230" height="36" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="525" y="73" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Developer writes code</text>
 
-  <!-- Developer manages label -->
-  <text x="185" y="330" fill="#7a849a" font-family="monospace" font-size="10" text-anchor="middle">↑ Developer manages all layers</text>
+  <line x1="525" y1="86" x2="525" y2="133" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-  <!-- PaaS Column - Simplified -->
-  <rect x="400" y="50" width="250" height="36" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
-  <text x="525" y="73" fill="#eaedf5" font-family="monospace" font-size="12" text-anchor="middle">Developer Code</text>
+  <rect x="410" y="136" width="230" height="50" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="525" y="157" fill="#818cf8" font-size="11" font-family="monospace" text-anchor="middle">Platform auto-handles:</text>
+  <text x="525" y="175" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">GPUs · Containers · Scaling · SSL</text>
 
-  <line x1="525" y1="86" x2="525" y2="115" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="525" y1="186" x2="525" y2="279" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-  <rect x="400" y="118" width="250" height="110" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="525" y="150" fill="#7a849a" font-family="monospace" font-size="11" text-anchor="middle">Platform handles:</text>
-  <text x="525" y="170" fill="#7a849a" font-family="monospace" font-size="11" text-anchor="middle">• GPU scheduling</text>
-  <text x="525" y="188" fill="#7a849a" font-family="monospace" font-size="11" text-anchor="middle">• Auto-scaling</text>
-  <text x="525" y="206" fill="#7a849a" font-family="monospace" font-size="11" text-anchor="middle">• Networking / TLS</text>
+  <rect x="410" y="282" width="230" height="36" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/>
+  <text x="525" y="305" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">App deployed (minutes)</text>
 
-  <line x1="525" y1="228" x2="525" y2="257" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-
-  <rect x="400" y="260" width="250" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="525" y="283" fill="#eaedf5" font-family="monospace" font-size="12" text-anchor="middle">Running AI Service</text>
-
-  <!-- PaaS label -->
-  <text x="525" y="316" fill="#7a849a" font-family="monospace" font-size="10" text-anchor="middle">↑ Developer manages code only</text>
+  <!-- Annotation -->
+  <text x="525" y="240" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">Abstraction layer</text>
+  <text x="525" y="256" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">eliminates DevOps burden</text>
 </svg></div>
         </div>
       </div>
 
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
-        <div class="opinion-q"><span class="opinion-source">Hacker News</span>Commenters are impressed by the 2M-developer organic growth but skeptical about competing long-term with AWS at scale; many note that previous PaaS challengers (Heroku, Render) faced margin pressure once customers outgrew the platform.</div><div class="opinion-q"><span class="opinion-source">Reddit r/technology</span>Generally positive sentiment around simplifying cloud deployment; several users compare Railway favorably to Vercel and Fly.io but question whether 'AI-native' is a real technical distinction or just fundraising vocabulary.</div><div class="opinion-q"><span class="opinion-source">Security Twitter/X</span>Security practitioners raise concerns about the opacity of PaaS abstraction layers — when you can't see the networking and IAM config, auditing and compliance become harder, especially for regulated AI workloads.</div>
+        <div class="opinion-q"><span class="opinion-source">Hacker News</span>Commenters are cautiously optimistic but skeptical about long-term viability, drawing comparisons to Heroku's decline after Salesforce acquisition. Many note Railway's developer experience is genuinely excellent but question whether it can compete on pricing and reliability at scale against hyperscalers.</div><div class="opinion-q"><span class="opinion-source">Reddit r/technology</span>Mixed reactions—some celebrate a potential AWS alternative, while others argue that 'AI-native' is a marketing buzzword and that Railway is essentially Heroku 2.0 with GPU support bolted on. Funding amount impressed many given the lack of marketing spend.</div><div class="opinion-q"><span class="opinion-source">Security Twitter/X</span>Security practitioners raised concerns about PaaS platforms becoming single points of failure and questioned Railway's security posture at enterprise scale, noting that abstraction can hide misconfigurations and that the shared-tenancy GPU model introduces new attack surface.</div>
         <div class="blabel">&#x1F50D; Assessment</div>
-        <p>The Hacker News skepticism is historically well-founded: Heroku's trajectory from developer darling to neglected Salesforce asset is a cautionary tale. However, Railway's timing may be different — AI workloads genuinely have unique infrastructure demands (GPU scheduling, bursty inference loads) that general-purpose IaaS handles poorly out of the box. The &quot;AI-native&quot; skepticism on Reddit is partially valid; the term is marketing-heavy, but the underlying need for GPU-aware, autoscaling deployment is real. The security community's concerns about PaaS opacity are the most substantive critique: as AI regulation tightens globally, enterprises will need deep visibility into how their models are deployed, which could limit Railway's upmarket ambitions unless they invest heavily in compliance tooling.</p>
+        <p>The Heroku comparison is apt and cuts both ways—Heroku proved massive developer demand for PaaS but also demonstrated the difficulty of scaling a platform business against hyperscaler pricing power. The &quot;AI-native is just a buzzword&quot; criticism is partially valid; many PaaS platforms are adding GPU support, but Railway's organic 2M-developer adoption without marketing is genuinely unusual and suggests product-market fit rather than hype-driven growth. Security concerns about PaaS abstraction hiding misconfigurations are legitimate and under-discussed—when developers don't manage their own infrastructure, they often lose visibility into what's actually running, creating blind spots. The missing piece in most commentary is the economic analysis: Railway sits in a margin squeeze between hyperscaler wholesale pricing and developer willingness to pay a premium for convenience, and $100M in funding won't change that structural dynamic.</p>
       </div>
 
       <div class="block">
@@ -748,31 +761,31 @@ kbd {
         <div class="quiz-grid">
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q1 of 3</div>
-        <div class="q-text">Why might an AI inference workload be particularly poorly served by traditional IaaS autoscaling?</div>
+        <div class="q-text">Why does abstracting away infrastructure (PaaS model) create potential security blind spots compared to managing your own IaaS?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">AI inference traffic is often extremely bursty (e.g., sudden spikes when a model goes viral), and GPU instances have much longer cold-start times than CPU instances, meaning traditional autoscaling policies that work for web servers may leave GPU resources either over-provisioned (expensive) or under-provisioned (slow/unavailable).</div>
-          <div class="q-exp">This highlights why 'AI-native' infrastructure needs different scheduling primitives — GPU-aware placement, pre-warming strategies, and inference-specific load balancing that traditional IaaS leaves to the developer.</div>
+          <div class="q-ans">When developers don't directly configure networking, container isolation, and access controls, misconfigurations in the platform layer can go unnoticed. The abstraction that improves productivity also removes visibility into what's actually running underneath.</div>
+          <div class="q-exp">PaaS convenience comes at the cost of control. If the platform has a permissive default security group or a shared-tenancy vulnerability, individual developers may never know because they never interact with that layer directly.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q2 of 3</div>
-        <div class="q-text">What is the fundamental trade-off a developer accepts when choosing PaaS over IaaS?</div>
+        <div class="q-text">What is the core business risk for a PaaS platform competing against hyperscalers like AWS?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">They gain dramatically reduced operational complexity and faster deployment, but sacrifice fine-grained control over infrastructure configuration, networking, and security policies.</div>
-          <div class="q-exp">This trade-off is the core tension in every PaaS adoption decision. For rapid prototyping and small teams it's almost always worthwhile, but large enterprises with strict compliance requirements often need the control that IaaS provides.</div>
+          <div class="q-ans">Margin squeeze—the PaaS runs on top of hyperscaler infrastructure, so it must charge a premium for the abstraction layer, but hyperscalers can build equivalent simplicity features natively and undercut on pricing since they own the underlying compute.</div>
+          <div class="q-exp">This is the classic 'platform risk' or 'aggregator's dilemma.' Heroku ran on AWS, which eventually launched its own simplified services (Elastic Beanstalk, App Runner, Amplify). Railway faces the same dynamic unless it can build defensible differentiation beyond ease-of-use.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q3 of 3</div>
-        <div class="q-text">Railway grew to 2 million developers without marketing spend. What does this 'product-led growth' signal about the developer tools market?</div>
+        <div class="q-text">Why might organic developer adoption (2M users with $0 marketing) be a stronger signal than paid-acquisition growth for an infrastructure company?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">It signals that developer experience is the primary competitive moat in infrastructure — developers choose tools bottom-up based on how quickly they can get productive, and word-of-mouth among developers is more effective than enterprise sales motions for initial adoption.</div>
-          <div class="q-exp">Product-led growth in developer tools (seen with Stripe, Vercel, GitHub) means the product itself is the acquisition channel. This creates a land-and-expand dynamic where individual developers adopt the tool, then bring it into their organizations.</div>
+          <div class="q-ans">Organic adoption indicates developers are actively seeking the product to solve a real pain point, rather than being persuaded by marketing. For infrastructure, where switching costs are high and reliability is critical, word-of-mouth adoption suggests genuine product-market fit.</div>
+          <div class="q-exp">Paid growth can mask weak retention—users acquired through ads often churn quickly. Organic infrastructure adoption means developers tried it, deployed production workloads, and recommended it to peers, which is a much higher bar of validation.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div></div>
@@ -780,7 +793,7 @@ kbd {
 
       <div class="block deepdive-block">
         <div class="blabel">&#x1F4AD; Deep Dive</div>
-        <p class="deepdive-text">If every major platform shift spawns purpose-built PaaS layers (Heroku for web, Firebase for mobile, Railway for AI), what determines whether these platforms become durable businesses or get commoditized by the hyperscalers adding similar abstractions to their own offerings?</p>
+        <p class="deepdive-text">If every &quot;AI-native&quot; PaaS platform ultimately runs on AWS, GCP, or Azure hardware underneath, at what point does the abstraction layer become a liability rather than an advantage—and could hyperscalers simply replicate the developer experience while offering lower prices?</p>
       </div>
 
       <div class="story-footer">
@@ -803,8 +816,8 @@ kbd {
       </div>
       <h2>Iran-Linked Hackers Disrupt US Critical Infrastructure Operations</h2>
       <div class="pub-date">&#x1F551; Apr 08, 2026 4:49 PM EDT</div>
-      <div class="tldr"><span class="tldr-tag">TL;DR</span>Iran-linked threat actors have escalated from espionage to active disruption of US critical infrastructure sites, coinciding with intensified US-Israel military operations.</div>
-      <div class="tag-row"><button class="tag" data-name="ICS/SCADA" data-desc="Industrial Control Systems and Supervisory Control and Data Acquisition — the specialized hardware and software that monitor and control physical industrial processes like water treatment, power generation, and manufacturing." data-relevance="These are the exact systems being targeted by Iran-linked hackers to disrupt physical operations at US critical infrastructure sites." onclick="openTagModal(event,this)">ICS/SCADA</button><button class="tag" data-name="CyberAv3ngers" data-desc="An Iranian government-affiliated threat group linked to Iran's Islamic Revolutionary Guard Corps (IRGC), known for targeting industrial control systems in Western nations." data-relevance="This group has previously targeted US water utilities by exploiting Unitronics PLCs and is a likely actor behind the escalated infrastructure disruptions reported in this story." onclick="openTagModal(event,this)">CyberAv3ngers</button></div>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Iran-affiliated threat actors have escalated cyber operations against US critical infrastructure sites, disrupting industrial operations amid intensifying US-Israel military conflict.</div>
+      <div class="tag-row"><button class="tag" data-name="ICS/SCADA" data-desc="Industrial Control Systems and Supervisory Control and Data Acquisition — the hardware and software stack that monitors and controls physical industrial processes like water treatment, power generation, and manufacturing." data-relevance="These are the specific systems being targeted by Iran-linked threat actors to disrupt operations at US critical infrastructure sites." onclick="openTagModal(event,this)">ICS/SCADA</button><button class="tag" data-name="CyberAv3ngers" data-desc="An Iranian government-affiliated threat group linked to the Islamic Revolutionary Guard Corps (IRGC), known for targeting industrial control systems, particularly Unitronics PLCs used in water and wastewater facilities." data-relevance="This group has been previously identified by CISA as targeting US water infrastructure and is among the Iranian threat actors associated with the escalating campaign against US critical infrastructure." onclick="openTagModal(event,this)">CyberAv3ngers</button></div>
     </div>
     <div class="chevron">&#9660;</div>
   </div>
@@ -814,13 +827,13 @@ kbd {
       
       <div class="block">
         <div class="blabel">&#x1F4CC; Why It Matters</div>
-        <p>This marks a dangerous escalation from intelligence gathering to operational disruption — attacks that can physically affect water, energy, and industrial systems serving millions of Americans. It demonstrates that geopolitical conflicts now routinely extend into cyberspace, with civilian infrastructure becoming a primary target in asymmetric warfare.</p>
+        <p>Attacks on critical infrastructure — water, energy, manufacturing — can cascade into real-world harm affecting millions. This escalation demonstrates that geopolitical conflicts now have a persistent cyber dimension where nation-state hackers target civilian systems as strategic leverage. The pattern of Iran-linked groups probing and disrupting US industrial control systems has been building for years, and this marks a significant operational escalation.</p>
       </div>
 
       <div class="block concept-block">
         <div class="blabel">&#x1F9E0; Concept</div>
-        <div class="concept-title" style="color:#818cf8">ICS/OT Attacks on Critical Infrastructure</div>
-        <div class="concept-text"><p>Imagine a city's water treatment plant as a building with two floors. The top floor is the office — emails, spreadsheets, normal computers. The ground floor is the factory — physical pumps, valves, and chemical mixers controlled by specialized equipment. An ICS/OT attack is like someone breaking into the office floor and finding a stairwell down to the factory floor, where they can now physically manipulate machinery.</p><p>Industrial Control Systems (ICS) and Operational Technology (OT) are the specialized hardware and software that manage physical processes — things like PLCs (Programmable Logic Controllers), SCADA systems, and HMIs (Human-Machine Interfaces). These systems were historically air-gapped from the internet, but modernization and remote monitoring have created network pathways between IT environments (email, web) and OT environments (pumps, turbines, valves). Attackers who breach the IT network can pivot through these pathways to reach controllers that govern physical operations.</p><p>In this story, Iran-linked hackers have moved beyond traditional espionage and are now actively disrupting operations at US critical infrastructure sites. This likely involves compromising IT networks first, then pivoting into OT environments to manipulate or shut down industrial processes. The escalation tracks directly with the intensification of the US-Israel conflict, suggesting these attacks serve as an asymmetric response — hitting civilian infrastructure to impose costs without conventional military engagement.</p><p>The broader implication is stark: every nation-state with a competent cyber program now views critical infrastructure as a legitimate theater of conflict. The convergence of IT and OT networks means that vulnerabilities in standard enterprise systems (phishing, unpatched VPNs, weak credentials) can cascade into physical-world consequences. Defending these environments requires not just better network segmentation, but a fundamental rethinking of how industrial systems are connected, monitored, and isolated.</p></div>
+        <div class="concept-title" style="color:#818cf8">ICS/OT Cyber Attacks on Critical Infrastructure</div>
+        <div class="concept-text"><p>Imagine a city's water treatment plant as a complex kitchen. There are valves that control water flow (like faucets), sensors that measure chemical levels (like thermometers), and programmable controllers that automate the whole process (like a smart oven with preset recipes). An ICS/OT attack is like someone sneaking into that kitchen and reprogramming the oven to burn everything, or turning off the thermometer so nobody notices the food is dangerously undercooked.</p><p>Industrial Control Systems (ICS) and Operational Technology (OT) are the hardware and software that monitor and control physical processes — think pumps, turbines, valves, and conveyor belts. These systems use specialized protocols like Modbus and DNP3 to communicate between sensors, Programmable Logic Controllers (PLCs), and human-machine interfaces (HMIs). Historically, these systems were air-gapped from the internet, but modernization and remote management have increasingly connected them to IT networks, creating new attack surfaces. Attackers who gain access to the IT side can pivot into OT networks, where they can manipulate physical processes or shut down operations entirely.</p><p>In this story, Iran-linked threat groups have moved beyond reconnaissance and initial access into actual disruption of US industrial operations. This likely involves compromising internet-facing IT systems at critical infrastructure sites, then laterally moving into poorly segmented OT networks to interfere with control systems. The escalation from espionage to disruption signals a shift in intent — these actors aren't just gathering intelligence, they're demonstrating the capability and willingness to cause real operational impact on US soil.</p><p>The broader implication is stark: critical infrastructure cybersecurity is now a frontline national security issue. Many US utilities and industrial facilities still run legacy OT systems that were never designed with cybersecurity in mind. As geopolitical tensions drive more nation-states toward offensive cyber operations against civilian infrastructure, the gap between current defenses and the threat level continues to widen. CISA and sector-specific agencies have been pushing for better IT/OT segmentation and monitoring, but adoption remains uneven across the thousands of facilities that make up US critical infrastructure.</p></div>
       </div>
 
       <div class="block">
@@ -828,79 +841,68 @@ kbd {
         <div class="diagram-wrap">
           <div class="diagram-bar">
             <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-            <span class="diagram-title">ICS/OT Attacks on Critical Infrastructure</span>
+            <span class="diagram-title">ICS/OT Cyber Attacks on Critical Infrastructure</span>
           </div>
           <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
   <rect width="700" height="340" fill="#060912"/>
   <defs>
-    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+    <marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
       <polygon points="0 0, 8 3, 0 6" fill="#818cf8"/>
     </marker>
   </defs>
   <!-- Title -->
-  <text x="350" y="28" fill="#818cf8" font-size="14" font-family="monospace" text-anchor="middle">IT → OT Attack Chain on Critical Infrastructure</text>
+  <text x="350" y="28" fill="#818cf8" font-size="14" font-family="monospace" text-anchor="middle" font-weight="bold">ICS/OT Attack Chain: IT → OT Pivot</text>
   <!-- Step 1: Initial Access -->
-  <rect x="20" y="60" width="120" height="55" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/>
+  <rect x="20" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1.5"/>
   <text x="80" y="83" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Initial</text>
   <text x="80" y="100" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Access</text>
-  <text x="80" y="130" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Phishing / VPN</text>
+  <text x="80" y="132" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">VPN / phishing</text>
   <!-- Arrow 1→2 -->
-  <line x1="140" y1="87" x2="172" y2="87" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="140" y1="88" x2="175" y2="88" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah)"/>
   <!-- Step 2: IT Network -->
-  <rect x="175" y="60" width="120" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="235" y="83" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">IT Network</text>
-  <text x="235" y="100" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Compromise</text>
-  <text x="235" y="130" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Lateral movement</text>
+  <rect x="180" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="240" y="83" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">IT Network</text>
+  <text x="240" y="100" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Compromise</text>
+  <text x="240" y="132" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Lateral movement</text>
   <!-- Arrow 2→3 -->
-  <line x1="295" y1="87" x2="327" y2="87" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="300" y1="88" x2="335" y2="88" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah)"/>
   <!-- Step 3: IT/OT Boundary -->
-  <rect x="330" y="60" width="120" height="55" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
-  <text x="390" y="83" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">IT/OT</text>
-  <text x="390" y="100" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Boundary</text>
-  <text x="390" y="130" fill="#818cf8" font-size="10" font-family="monospace" text-anchor="middle">⚠ PIVOT POINT</text>
+  <rect x="340" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
+  <text x="400" y="83" fill="#818cf8" font-size="12" font-family="monospace" text-anchor="middle">IT/OT</text>
+  <text x="400" y="100" fill="#818cf8" font-size="12" font-family="monospace" text-anchor="middle">Boundary</text>
+  <text x="400" y="132" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Weak segmentation</text>
   <!-- Arrow 3→4 -->
-  <line x1="450" y1="87" x2="482" y2="87" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="460" y1="88" x2="495" y2="88" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah)"/>
   <!-- Step 4: OT/ICS -->
-  <rect x="485" y="60" width="120" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="545" y="83" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">OT / ICS</text>
-  <text x="545" y="100" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Systems</text>
-  <text x="545" y="130" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">PLCs / SCADA</text>
-  <!-- Arrow 4→5 -->
-  <line x1="605" y1="87" x2="622" y2="87" stroke="#818cf8" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <!-- Step 5: Impact -->
-  <rect x="625" y="55" width="60" height="65" rx="6" fill="#818cf8" stroke="#818cf8" stroke-width="1.5"/>
-  <text x="655" y="82" fill="#060912" font-size="11" font-family="monospace" text-anchor="middle">DISRUPT</text>
-  <text x="655" y="100" fill="#060912" font-size="11" font-family="monospace" text-anchor="middle">OPS</text>
-  <!-- Lower section: Physical targets -->
-  <text x="350" y="170" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">── Physical Infrastructure Targets ──</text>
-  <!-- Water -->
-  <rect x="60" y="195" width="140" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/>
-  <text x="130" y="217" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">💧 Water</text>
-  <text x="130" y="235" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Treatment Plants</text>
-  <!-- Energy -->
-  <rect x="270" y="195" width="140" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/>
-  <text x="340" y="217" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">⚡ Energy</text>
-  <text x="340" y="235" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Power Grid / Oil</text>
-  <!-- Manufacturing -->
-  <rect x="480" y="195" width="140" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/>
-  <text x="550" y="217" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">🏭 Industrial</text>
-  <text x="550" y="235" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Manufacturing</text>
-  <!-- Arrows from OT to targets -->
-  <line x1="545" y1="115" x2="130" y2="195" stroke="#818cf8" stroke-width="0.8" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
-  <line x1="545" y1="115" x2="340" y2="195" stroke="#818cf8" stroke-width="0.8" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
-  <line x1="545" y1="115" x2="550" y2="195" stroke="#818cf8" stroke-width="0.8" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
-  <!-- Geopolitical context -->
-  <rect x="140" y="280" width="420" height="40" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="1" stroke-dasharray="3,3"/>
-  <text x="350" y="305" fill="#818cf8" font-size="12" font-family="monospace" text-anchor="middle">Geopolitical trigger: US-Israel conflict escalation</text>
+  <rect x="500" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="560" y="83" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">OT/ICS</text>
+  <text x="560" y="100" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Network</text>
+  <text x="560" y="132" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">PLCs / HMIs</text>
+  <!-- Downward arrow from OT to disruption -->
+  <line x1="560" y1="116" x2="560" y2="165" stroke="#818cf8" stroke-width="1.5" marker-end="url(#ah)"/>
+  <!-- Step 5: Disruption -->
+  <rect x="490" y="170" width="140" height="50" rx="6" fill="#12152a" stroke="#818cf8" stroke-width="2"/>
+  <text x="560" y="193" fill="#818cf8" font-size="13" font-family="monospace" text-anchor="middle" font-weight="bold">DISRUPTION</text>
+  <text x="560" y="210" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Ops halted / altered</text>
+  <!-- Lower section: Targets -->
+  <text x="350" y="260" fill="#7a849a" font-size="12" font-family="monospace" text-anchor="middle">— Targeted Sectors —</text>
+  <rect x="60" y="278" width="130" height="40" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/>
+  <text x="125" y="303" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Water / Wastewater</text>
+  <rect x="220" y="278" width="130" height="40" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/>
+  <text x="285" y="303" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Energy / Power</text>
+  <rect x="380" y="278" width="130" height="40" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/>
+  <text x="445" y="303" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Manufacturing</text>
+  <rect x="540" y="278" width="130" height="40" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/>
+  <text x="605" y="303" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Transportation</text>
 </svg></div>
         </div>
       </div>
 
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
-        <div class="opinion-q"><span class="opinion-source">Hacker News</span>Commenters emphasize that poor IT/OT segmentation at most infrastructure sites makes these attacks far easier than they should be, with several noting that CISA warnings about default credentials on PLCs have gone unheeded for years.</div><div class="opinion-q"><span class="opinion-source">Reddit r/technology</span>Strong concern about the physical safety implications, with many users questioning why critical infrastructure is internet-accessible at all and calling for mandatory air-gapping regulations.</div><div class="opinion-q"><span class="opinion-source">Reddit r/netsec</span>Technical discussion focuses on Iranian APT groups like CyberAv3ngers and their known TTPs targeting Unitronics PLCs, with practitioners sharing frustration about the difficulty of patching legacy OT environments.</div><div class="opinion-q"><span class="opinion-source">Security Twitter/X</span>Researchers highlight that this represents a clear escalation from reconnaissance to active disruption, with several noting parallels to Russian attacks on Ukrainian power grids and warning that retaliation cycles could intensify.</div>
+        <div class="opinion-q"><span class="opinion-source">Hacker News</span>Commenters are debating whether these attacks represent a true escalation or just the public disclosure of long-running campaigns. Several note that US offensive cyber operations against Iran rarely get equivalent coverage, creating an asymmetric perception.</div><div class="opinion-q"><span class="opinion-source">Reddit r/technology</span>Strong concern about aging infrastructure and underfunded cybersecurity at municipal utilities. Many users express frustration that warnings about ICS vulnerabilities have been issued for years with little visible improvement.</div><div class="opinion-q"><span class="opinion-source">Reddit r/netsec</span>Technical discussion focuses on the likely attack vectors — exposed Unitronics PLCs and default credentials on HMIs. Some practitioners note that proper network segmentation alone would have prevented most of these compromises.</div><div class="opinion-q"><span class="opinion-source">Security Twitter/X</span>Threat intelligence analysts are linking these operations to known Iranian APT groups like CyberAv3ngers and highlighting CISA advisories from 2023-2024 that warned of exactly this escalation path.</div>
         <div class="blabel">&#x1F50D; Assessment</div>
-        <p>The community concern is well-founded — the technical barriers to these attacks are often embarrassingly low (default passwords, flat networks), and the warnings have been consistent for years. The calls for mandatory air-gapping, however, oversimplify the problem: modern infrastructure requires some degree of connectivity for monitoring and efficiency, and the real issue is poor segmentation and authentication rather than connectivity itself. The comparison to Russian attacks on Ukraine is apt but understates a key difference: Iran's capabilities in OT disruption have historically been less sophisticated, meaning this escalation may signal either improved Iranian tooling or exploitation of particularly weak targets. What's missing from most public discussion is the supply chain angle — many of these industrial systems share common vendors and configurations, meaning a successful attack playbook against one facility may be replicable across dozens.</p>
+        <p>The public discourse accurately identifies the core problem: chronically underfunded OT security at critical infrastructure facilities, especially smaller municipal utilities that lack dedicated security staff. The Hacker News point about asymmetric reporting is valid — US and Israeli offensive cyber operations against Iran are well-documented but rarely framed as &quot;disruption of critical infrastructure.&quot; The r/netsec community's focus on basic hygiene (segmentation, default credentials) is correct but somewhat reductive; achieving proper IT/OT segmentation in legacy environments with decades-old SCADA systems is far more complex and expensive than it sounds. What's largely missing from the conversation is discussion of the policy response needed — liability frameworks, mandatory security baselines for critical infrastructure operators, and whether the current voluntary approach to ICS security is sufficient given a genuine nation-state threat.</p>
       </div>
 
       <div class="block">
@@ -908,31 +910,31 @@ kbd {
         <div class="quiz-grid">
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q1 of 3</div>
-        <div class="q-text">Why is the IT/OT boundary the most critical point in an attack on industrial infrastructure?</div>
+        <div class="q-text">Why does the convergence of IT and OT networks create a particularly dangerous attack surface for critical infrastructure?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">It's the pivot point where attackers cross from the digital enterprise network into the physical control systems that operate machinery, pumps, and valves. Compromising this boundary turns a data breach into a potential physical-world incident.</div>
-          <div class="q-exp">IT networks handle business operations (email, databases), while OT networks control physical processes. The boundary between them — if poorly segmented — allows attackers to escalate from stealing data to manipulating the physical world.</div>
+          <div class="q-ans">OT systems were designed for reliability and safety in isolated environments, not for security against network-based attacks. When connected to IT networks (for remote monitoring, efficiency), they inherit all of IT's internet-facing threats but lack the security controls (patching, authentication, encryption) that IT systems have developed over decades.</div>
+          <div class="q-exp">This is the fundamental tension in ICS security: modernization brings efficiency but exposes systems that may run decades-old software, use plaintext protocols, and can't be easily patched without shutting down physical operations.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q2 of 3</div>
-        <div class="q-text">Why can't critical infrastructure operators simply air-gap all OT systems from the internet to prevent these attacks?</div>
+        <div class="q-text">What distinguishes an ICS/OT cyber attack that causes 'disruption' from one that causes 'destruction,' and why does the distinction matter geopolitically?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Modern infrastructure requires remote monitoring, predictive maintenance data, and operational telemetry that depend on network connectivity. Full air-gapping would sacrifice efficiency, slow incident response, and may not be practical for geographically distributed systems.</div>
-          <div class="q-exp">The real solution is strong segmentation, strict authentication, and monitoring at the IT/OT boundary — not eliminating connectivity entirely, which would cripple operational capabilities.</div>
+          <div class="q-ans">Disruption halts or degrades operations temporarily (e.g., shutting down a pump, causing a plant to switch to manual control) and is generally reversible. Destruction causes permanent physical damage (e.g., Stuxnet destroying centrifuges by spinning them beyond tolerances). The distinction matters because destruction is more likely to be treated as an act of war, while disruption occupies a gray zone that nations exploit for coercion without triggering a full military response.</div>
+          <div class="q-exp">Nation-state actors often calibrate their attacks to stay below the threshold of armed conflict. Disruption sends a message about capability without crossing the line into kinetic-equivalent damage that would justify military retaliation.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q3 of 3</div>
-        <div class="q-text">What makes critical infrastructure an attractive target for nation-state asymmetric warfare?</div>
+        <div class="q-text">Why is network segmentation between IT and OT considered the single most important defense for industrial control systems, even more than patching?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Disrupting civilian infrastructure (water, power, manufacturing) imposes real costs on an adversary's population and economy without requiring conventional military power, making it ideal for nations that can't match their opponent's kinetic capabilities.</div>
-          <div class="q-exp">Nation-states use cyber attacks on infrastructure as a force multiplier — they're cheap to execute, hard to attribute definitively, provide plausible deniability, and create domestic pressure on the target government.</div>
+          <div class="q-ans">Many OT devices (PLCs, RTUs, legacy SCADA) cannot be patched without operational downtime, run obsolete operating systems, or have no patches available at all. Segmentation ensures that even if the IT network is fully compromised, the attacker cannot reach OT systems to manipulate physical processes. It's a compensating control for the inherent unpatchability of many industrial systems.</div>
+          <div class="q-exp">This is why security frameworks like NIST and IEC 62443 emphasize defense-in-depth with segmentation as a primary control — it addresses the reality that you often cannot fix the vulnerability, so you must prevent the attacker from reaching it.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div></div>
@@ -940,7 +942,7 @@ kbd {
 
       <div class="block deepdive-block">
         <div class="blabel">&#x1F4AD; Deep Dive</div>
-        <p class="deepdive-text">If nation-states increasingly treat civilian critical infrastructure as a legitimate target in geopolitical conflicts, how should the doctrine of proportional response apply — and does the difficulty of definitive attribution fundamentally undermine deterrence in cyberspace?</p>
+        <p class="deepdive-text">If nation-states are already demonstrating the ability to disrupt civilian infrastructure during geopolitical conflicts, should critical infrastructure cybersecurity be treated as a national defense function with mandatory standards and government funding — or does that level of centralization create its own risks?</p>
       </div>
 
       <div class="story-footer">
@@ -969,8 +971,8 @@ kbd {
       </div>
       <h2>Russian Hackers Exploit Old Router Flaws to Mass-Harvest Microsoft Office Auth Tokens</h2>
       <div class="pub-date">&#x1F551; Apr 07, 2026 1:02 PM EDT</div>
-      <div class="tldr"><span class="tldr-tag">TL;DR</span>Russia-linked hackers compromised 18,000+ networks by exploiting known vulnerabilities in aging routers to intercept Microsoft Office authentication tokens — all without deploying any malware.</div>
-      <div class="tag-row"><button class="tag" data-name="OAuth 2.0 Token Binding" data-desc="A proposed extension to OAuth that cryptographically binds access and refresh tokens to the TLS connection and client device, preventing token replay from a different network position." data-relevance="The absence of widespread token binding is what makes this router-based interception campaign viable — stolen tokens can be replayed from attacker infrastructure without detection." onclick="openTagModal(event,this)">OAuth 2.0 Token Binding</button><button class="tag" data-name="Microsoft Continuous Access Evaluation (CAE)" data-desc="A Microsoft 365 feature that enables near-real-time token revocation and policy enforcement by allowing resource providers to subscribe to Azure AD security events." data-relevance="CAE could mitigate parts of this attack by detecting token use from anomalous locations and revoking sessions, but adoption across all M365 workloads and tenants is still incomplete." onclick="openTagModal(event,this)">Microsoft Continuous Access Evaluation (CAE)</button></div>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>Russia-linked hackers compromised over 18,000 networks by exploiting known vulnerabilities in aging routers to intercept Microsoft Office authentication tokens — all without deploying any malware.</div>
+      <div class="tag-row"><button class="tag" data-name="OAuth 2.0 Bearer Tokens" data-desc="The standard authorization framework used by Microsoft 365 and most cloud services. Bearer tokens grant access to whoever possesses them, with no proof-of-possession binding to the original client." data-relevance="The stolen tokens were OAuth bearer tokens for Microsoft Office services — their bearer-token design means anyone possessing the token can use it, making network-layer interception directly exploitable." onclick="openTagModal(event,this)">OAuth 2.0 Bearer Tokens</button><button class="tag" data-name="VPNFilter / Router Exploitation Tradecraft" data-desc="A class of attacks targeting embedded network devices (routers, firewalls) using known firmware vulnerabilities, historically associated with Russian APT groups like Sandworm and APT28." data-relevance="This campaign follows the established Russian playbook of compromising consumer/SMB routers via known CVEs to create persistent network-level access — an evolution of tactics first widely reported in the 2018 VPNFilter campaign." onclick="openTagModal(event,this)">VPNFilter / Router Exploitation Tradecraft</button></div>
     </div>
     <div class="chevron">&#9660;</div>
   </div>
@@ -985,24 +987,24 @@ kbd {
         </div>
         <div class="affected-list">
       <div class="affected-item">
-        <span class="affected-name">Consumer/SOHO routers (various vendors)</span>
-        <span class="affected-ver">Older models with known unpatched CVEs — specific vendors and firmware versions not disclosed in report</span>
+        <span class="affected-name">Internet routers (unspecified vendors/models)</span>
+        <span class="affected-ver">Older models with known unpatched firmware vulnerabilities</span>
       </div>
       <div class="affected-item">
         <span class="affected-name">Microsoft Office 365 / Microsoft 365</span>
-        <span class="affected-ver">All versions using OAuth token-based authentication (not a vulnerability in M365 itself, but tokens are the target)</span>
+        <span class="affected-ver">All versions using OAuth bearer token authentication (not a vulnerability in Microsoft's software, but tokens from all versions were targeted)</span>
       </div>
         </div>
       </div>
       <div class="block">
         <div class="blabel">&#x1F4CC; Why It Matters</div>
-        <p>This campaign demonstrates that nation-state actors don't need sophisticated zero-days or custom malware when unpatched network infrastructure gives them a direct path to credential theft. The scale — over 18,000 networks — shows how pervasive the problem of neglected edge devices remains, and the token-theft technique bypasses traditional endpoint security entirely since the compromise happens at the network layer.</p>
+        <p>This campaign demonstrates that unpatched network infrastructure remains a devastating blind spot: attackers can silently harvest credentials at scale without ever touching endpoints, bypassing EDR and antivirus entirely. The 18,000+ affected networks signal this isn't targeted espionage — it's bulk collection, meaning small organizations with neglected routers are just as exposed as high-value targets.</p>
       </div>
 
       <div class="block concept-block">
         <div class="blabel">&#x1F9E0; Concept</div>
         <div class="concept-title" style="color:#34d399">Authentication Token Interception via Compromised Network Infrastructure</div>
-        <div class="concept-text"><p>Imagine a postal worker at a sorting facility who secretly photocopies every house key mailed between a locksmith and homeowners. The homeowner never knows the key was copied because the original still arrives on time. The postal worker now has a duplicate key that opens the front door without ever visiting the house. That's essentially what's happening when attackers intercept authentication tokens at the router level.</p><p>Authentication tokens are short-lived cryptographic credentials that prove a user has already logged in. When you authenticate to Microsoft Office 365, the service issues a token (often an OAuth access token or refresh token) that your device presents on subsequent requests instead of re-entering your password. These tokens travel across the network in HTTPS-encrypted traffic — but if an attacker controls the router itself, they can potentially perform TLS interception, redirect authentication flows to attacker-controlled endpoints, or exploit protocol downgrade attacks to capture tokens in transit. In some configurations, routers with administrative access can also inspect DNS queries and redirect authentication endpoints.</p><p>In this campaign, Russian military intelligence hackers exploited known, already-patched vulnerabilities in older consumer and small-business routers. Once they had control of these routers, they used their privileged network position to harvest Microsoft Office authentication tokens flowing through those devices. Because no malware was installed on any endpoint, traditional antivirus and EDR solutions on user machines saw nothing unusual — the compromise was invisible from the endpoint's perspective.</p><p>This attack pattern highlights a growing blind spot in enterprise and consumer security: the network edge. Organizations invest heavily in endpoint detection, cloud security posture, and identity providers, but the humble router — often running years-old firmware with known CVEs — remains an overlooked attack surface. As authentication increasingly flows through OAuth and token-based systems, controlling the network path between users and identity providers becomes an enormously powerful position for attackers.</p></div>
+        <div class="concept-text"><p>Imagine a postal worker at a sorting facility quietly photocopying every letter that passes through before forwarding it to recipients. The senders and receivers never know their mail was copied because it still arrives on time and unopened. That's essentially what happens when an attacker compromises a router — they gain a silent vantage point to copy traffic flowing through it.</p><p>Authentication tokens are short-lived digital credentials that prove a user has already logged in. When you sign into Microsoft Office (or any OAuth-based service), the identity provider issues a token — essentially a signed pass — that your device presents with each subsequent request. These tokens travel across the network, and if that network's gateway router is compromised, an attacker positioned on it can capture tokens in transit. Even with HTTPS encryption, a compromised router can sometimes exploit protocol downgrade attacks, DNS hijacking, or man-in-the-middle TLS interception if certificate validation is weak or if the router handles SSL termination.</p><p>In this campaign, Russian military intelligence hackers exploited known, already-patched vulnerabilities in older router models that many organizations never updated. Once inside the router, they configured passive token harvesting across 18,000+ networks — no malware on any endpoint, no suspicious files for antivirus to flag. The stolen Microsoft Office tokens gave them authenticated access to victims' email, documents, and cloud resources as if they were legitimate users.</p><p>This attack pattern highlights a fundamental architectural weakness: organizations pour resources into endpoint detection and response (EDR) but neglect the network devices those endpoints depend on. Routers and other edge infrastructure often run for years without firmware updates, creating a massive attack surface that's invisible to most security monitoring. As cloud authentication becomes ubiquitous, protecting the network path those tokens travel is just as critical as protecting the endpoints themselves.</p></div>
       </div>
 
       <div class="block">
@@ -1024,85 +1026,84 @@ kbd {
   </defs>
 
   <!-- Title -->
-  <text x="350" y="28" fill="#7a849a" font-size="12" font-family="monospace" text-anchor="middle">ATTACK CHAIN: Router-Based Token Theft</text>
+  <text x="350" y="28" fill="#7a849a" font-size="12" font-family="monospace" text-anchor="middle">ATTACK CHAIN: Router-Based Token Interception</text>
 
-  <!-- Step 1: Attacker -->
-  <rect x="20" y="55" width="110" height="50" rx="6" fill="#12152a" stroke="#ef4444" stroke-width="1.5"/>
-  <text x="75" y="76" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">GRU Hacker</text>
-  <text x="75" y="92" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">RU mil intel</text>
+  <!-- Step 1: Vulnerable Router -->
+  <rect x="30" y="60" width="120" height="60" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="90" y="85" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Unpatched</text>
+  <text x="90" y="102" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Router</text>
+  <text x="90" y="135" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Known CVEs</text>
 
-  <!-- Arrow 1→2 -->
-  <line x1="130" y1="80" x2="168" y2="80" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrowR)"/>
-  <text x="149" y="72" fill="#ef4444" font-size="9" font-family="monospace" text-anchor="middle">exploit</text>
+  <!-- Arrow 1 -->
+  <line x1="150" y1="90" x2="195" y2="90" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowG)"/>
+  <text x="173" y="82" fill="#34d399" font-size="9" font-family="monospace" text-anchor="middle">exploit</text>
 
-  <!-- Step 2: Vulnerable Router -->
-  <rect x="175" y="55" width="120" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="235" y="76" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Old Router</text>
-  <text x="235" y="92" fill="#34d399" font-size="10" font-family="monospace" text-anchor="middle">known CVEs</text>
+  <!-- Step 2: Compromised Router -->
+  <rect x="200" y="60" width="120" height="60" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="260" y="85" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">Compromised</text>
+  <text x="260" y="102" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">Router</text>
+  <text x="260" y="135" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Passive intercept</text>
 
-  <!-- Arrow 2→3 -->
-  <line x1="295" y1="80" x2="333" y2="80" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowG)"/>
-  <text x="314" y="72" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">intercept</text>
+  <!-- Arrow 2 -->
+  <line x1="320" y1="90" x2="375" y2="90" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowG)"/>
+  <text x="348" y="82" fill="#34d399" font-size="9" font-family="monospace" text-anchor="middle">capture</text>
 
-  <!-- Step 3: Token in Transit -->
-  <rect x="340" y="55" width="130" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="405" y="76" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Auth Token</text>
-  <text x="405" y="92" fill="#34d399" font-size="10" font-family="monospace" text-anchor="middle">OAuth / refresh</text>
+  <!-- Step 3: Token Harvest -->
+  <rect x="380" y="60" width="120" height="60" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="440" y="85" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Auth Token</text>
+  <text x="440" y="102" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Harvested</text>
+  <text x="440" y="135" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">OAuth / session</text>
 
-  <!-- Arrow 3→4 -->
-  <line x1="470" y1="80" x2="508" y2="80" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowG)"/>
-  <text x="489" y="72" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">replay</text>
+  <!-- Arrow 3 -->
+  <line x1="500" y1="90" x2="545" y2="90" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrowR)"/>
+  <text x="523" y="82" fill="#ef4444" font-size="9" font-family="monospace" text-anchor="middle">exfil</text>
 
-  <!-- Step 4: M365 Access -->
-  <rect x="515" y="55" width="160" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="595" y="76" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Microsoft 365</text>
-  <text x="595" y="92" fill="#ef4444" font-size="10" font-family="monospace" text-anchor="middle">unauthorized access</text>
+  <!-- Step 4: Attacker C2 -->
+  <rect x="550" y="60" width="120" height="60" rx="6" fill="#12152a" stroke="#ef4444" stroke-width="2"/>
+  <text x="610" y="85" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">GRU C2</text>
+  <text x="610" y="102" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Server</text>
 
-  <!-- Legitimate flow: User → Router → M365 -->
-  <rect x="20" y="170" width="110" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="75" y="191" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">User Device</text>
-  <text x="75" y="207" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">no malware</text>
+  <!-- Legitimate traffic flow (bottom) -->
+  <rect x="80" y="200" width="110" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="135" y="222" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">User Device</text>
+  <text x="135" y="237" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Office client</text>
 
-  <line x1="130" y1="195" x2="218" y2="195" stroke="#7a849a" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrowG)"/>
-  <text x="174" y="188" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">login request</text>
+  <!-- Arrow: User to Router -->
+  <line x1="190" y1="225" x2="235" y2="225" stroke="#7a849a" stroke-width="1.2" marker-end="url(#arrowG)"/>
+  <text x="213" y="218" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">token</text>
 
-  <!-- Router (shared) arrow down from attack chain -->
-  <rect x="225" y="170" width="120" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="285" y="191" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Compromised</text>
-  <text x="285" y="207" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Router</text>
+  <!-- Compromised Router (bottom ref) -->
+  <rect x="240" y="200" width="110" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="295" y="222" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">Router ☠</text>
+  <text x="295" y="237" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">copies token</text>
 
-  <line x1="345" y1="195" x2="418" y2="195" stroke="#7a849a" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrowG)"/>
-  <text x="381" y="188" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">token passes</text>
+  <!-- Arrow: Router to MS365 -->
+  <line x1="350" y1="225" x2="405" y2="225" stroke="#7a849a" stroke-width="1.2" marker-end="url(#arrowG)"/>
+  <text x="378" y="218" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">forwards</text>
 
-  <rect x="425" y="170" width="130" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="490" y="191" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Microsoft IdP</text>
-  <text x="490" y="207" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">login.microsoft.com</text>
+  <!-- MS365 -->
+  <rect x="410" y="200" width="110" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="465" y="222" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Microsoft 365</text>
+  <text x="465" y="237" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Cloud services</text>
 
-  <!-- Siphon arrow from compromised router to hacker C2 -->
-  <rect x="225" y="270" width="150" height="50" rx="6" fill="#12152a" stroke="#ef4444" stroke-width="1.5"/>
-  <text x="300" y="291" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Attacker C2</text>
-  <text x="300" y="307" fill="#ef4444" font-size="10" font-family="monospace" text-anchor="middle">token exfiltration</text>
-
-  <line x1="285" y1="220" x2="295" y2="265" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrowR)"/>
-  <text x="320" y="248" fill="#ef4444" font-size="9" font-family="monospace" text-anchor="middle">copy token</text>
-
-  <!-- Scale callout -->
-  <rect x="500" y="275" width="175" height="40" rx="12" fill="#34d399"/>
-  <text x="587" y="293" fill="#060912" font-size="11" font-family="monospace" text-anchor="middle" font-weight="bold">18,000+ networks hit</text>
-  <text x="587" y="306" fill="#060912" font-size="10" font-family="monospace" text-anchor="middle">0 malware deployed</text>
+  <!-- Dotted line: router copy to C2 -->
+  <line x1="295" y1="200" x2="610" y2="130" stroke="#ef4444" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrowR)"/>
 
   <!-- Labels -->
-  <text x="20" y="148" fill="#34d399" font-size="11" font-family="monospace">LEGITIMATE FLOW (invisible to EDR):</text>
-  <text x="20" y="45" fill="#ef4444" font-size="11" font-family="monospace">ATTACK CHAIN:</text>
+  <text x="460" y="170" fill="#ef4444" font-size="10" font-family="monospace" text-anchor="middle">stolen token copy → C2</text>
+
+  <!-- No malware callout -->
+  <rect x="200" y="280" width="300" height="30" rx="6" fill="#34d399"/>
+  <text x="350" y="300" fill="#060912" font-size="12" font-family="monospace" text-anchor="middle" font-weight="bold">⚠ No malware on endpoints — invisible to EDR</text>
 </svg></div>
         </div>
       </div>
 
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
-        <div class="opinion-q"><span class="opinion-source">Hacker News</span>Commenters emphasize this as a vindication of the 'patch your routers' mantra and debate whether ISPs should bear liability for shipping and abandoning insecure firmware. Several note the irony that billions are spent on endpoint security while $30 routers remain the weakest link.</div><div class="opinion-q"><span class="opinion-source">Reddit r/netsec</span>Discussion centers on the technical sophistication — or lack thereof — noting these are known CVEs, not zero-days. Users highlight that network-layer token interception bypasses conditional access policies and MFA, calling it an underappreciated attack vector.</div><div class="opinion-q"><span class="opinion-source">Reddit r/technology</span>Broad alarm about the 18,000-network scale. Many users express frustration that consumer routers rarely receive firmware updates and question why Microsoft tokens can be replayed so easily from different network locations.</div><div class="opinion-q"><span class="opinion-source">Security Twitter/X</span>Researchers point out this aligns with prior GRU tradecraft (e.g., VPNFilter) and stress that 'living off the land at the network edge' is becoming a dominant nation-state playbook. Calls for mandatory token binding and network-level attestation are growing.</div>
+        <div class="opinion-q"><span class="opinion-source">Hacker News</span>Commenters are focused on the systemic failure of router firmware patching, with many noting that consumer and SMB routers are effectively 'abandoned-ware' that vendors stop updating within 2-3 years of sale. Several highlighted this as a supply-chain visibility problem.</div><div class="opinion-q"><span class="opinion-source">Reddit r/netsec</span>Security practitioners are expressing frustration that this attack required no zero-days — only known, patched vulns in routers that organizations failed to update. Discussion centers on whether ISPs should bear responsibility for forcing firmware updates on customer-premises equipment.</div><div class="opinion-q"><span class="opinion-source">Reddit r/technology</span>Broader outrage at the scale (18,000+ networks) and the fact that this bypasses all endpoint security. Many users are asking whether their home routers could be affected and debating whether consumer networking hardware needs mandatory auto-update regulations.</div><div class="opinion-q"><span class="opinion-source">Security Twitter/X</span>Researchers are praising Krebs' reporting while noting this is a logical evolution of Russia's known router-targeting campaigns (e.g., VPNFilter in 2018). Multiple analysts are urging organizations to treat routers as tier-1 security assets, not 'set and forget' appliances.</div>
         <div class="blabel">&#x1F50D; Assessment</div>
-        <p>The community reaction is largely on-target. The frustration about neglected router security is valid — ISP-provided and consumer routers have been a known soft underbelly for over a decade. However, some Reddit commentary oversimplifies the token replay problem: Microsoft has been rolling out token binding and continuous access evaluation (CAE) features, but adoption remains patchy and backward compatibility keeps weaker flows alive. The HN debate about ISP liability is important but incomplete — many affected routers are likely customer-owned devices long past end-of-life. The r/netsec community correctly identifies the key insight: this isn't about sophisticated exploits but about the systemic failure to maintain network edge devices. What's missing from most discussions is the geopolitical targeting question — which of those 18,000 networks were intelligence targets versus collateral collection.</p>
+        <p>The community reaction is largely on point — the consensus that unpatched routers are a systemic blind spot is well-supported by years of evidence. However, the discussion somewhat underweights the sophistication of the token-harvesting technique itself: passively intercepting OAuth tokens at router level without triggering endpoint alerts suggests careful operational security and deep protocol knowledge. The calls for ISP-mandated firmware updates are well-intentioned but ignore the complexity of shared responsibility models and the risk of bricking devices. What's genuinely missing from most discussions is the detection gap: if no malware touches endpoints, most organizations have zero visibility into this kind of compromise unless they're actively monitoring for anomalous token usage patterns or impossible-travel authentication events on the identity provider side.</p>
       </div>
 
       <div class="block">
@@ -1110,31 +1111,31 @@ kbd {
         <div class="quiz-grid">
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q1 of 3</div>
-        <div class="q-text">Why was this attack invisible to endpoint detection and response (EDR) tools on user devices?</div>
+        <div class="q-text">Why was this attack particularly difficult to detect using traditional endpoint security tools like EDR or antivirus?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Because the compromise occurred at the router level, not on the endpoint. No malware was installed on any user device — the attacker intercepted tokens in transit through the compromised network infrastructure, which EDR tools don't monitor.</div>
-          <div class="q-exp">EDR tools monitor processes, files, and behavior on the endpoint itself. When the attack happens on a network device sitting between the user and the authentication server, the endpoint sees a normal login flow and has no indication that tokens are being copied in transit.</div>
+          <div class="q-ans">Because the attack operated entirely at the network infrastructure layer (the router), no malicious software was ever installed on user endpoints — so there were no malicious files, processes, or behaviors for endpoint tools to flag.</div>
+          <div class="q-exp">EDR tools monitor processes, file system changes, and behavior on the endpoint itself. When the compromise lives on a separate network device that simply copies traffic passing through it, the endpoint never sees anything anomalous. This is a fundamental visibility gap in endpoint-centric security models.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q2 of 3</div>
-        <div class="q-text">What makes authentication token interception at the router level potentially more dangerous than traditional phishing for credentials?</div>
+        <div class="q-text">What makes stolen authentication tokens particularly valuable compared to stolen passwords?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Router-level interception can harvest tokens at scale from all users on the network passively, doesn't require user interaction or deception, bypasses MFA (since tokens are issued after authentication), and leaves no artifacts on the user's device.</div>
-          <div class="q-exp">Phishing targets individuals and requires them to take an action. Network-level token theft is passive and wholesale — every user's traffic passes through the compromised router. Additionally, tokens are issued after the user has already completed MFA, so the stolen token represents a fully authenticated session.</div>
+          <div class="q-ans">Auth tokens represent an already-authenticated session, so they bypass MFA and login controls entirely. An attacker with a valid token can impersonate the user immediately without needing their password or second factor.</div>
+          <div class="q-exp">Tokens are issued after successful authentication (including MFA). By stealing the token rather than the password, attackers skip the entire authentication ceremony. This is why token theft is sometimes called 'pass-the-cookie' — it's the digital equivalent of cloning someone's building access badge after they've already passed through security.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q3 of 3</div>
-        <div class="q-text">Why would patching the router alone not fully remediate the risk for previously affected users?</div>
+        <div class="q-text">Why did the attackers target routers specifically rather than, say, DNS servers or endpoint software?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Any tokens already harvested before patching could still be valid and in use by the attacker. Organizations would also need to revoke all active sessions and refresh tokens, force re-authentication, and audit for any persistent access the attacker may have established using the stolen tokens.</div>
-          <div class="q-exp">Patching closes the entry point but doesn't invalidate stolen credentials. OAuth refresh tokens can be long-lived (days to months), and attackers may have already used stolen tokens to establish additional persistence — such as registering new OAuth apps, setting up mail forwarding rules, or accessing sensitive data.</div>
+          <div class="q-ans">Routers are the chokepoint through which all network traffic flows, giving attackers passive access to every user's traffic simultaneously. They're also notoriously under-patched and under-monitored compared to endpoints and servers.</div>
+          <div class="q-exp">A compromised router provides a network-level vantage point that scales naturally — every device on that network sends traffic through it. Combined with the fact that routers rarely have security agents, logging, or active monitoring, they represent a high-reward, low-detection-risk target.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div></div>
@@ -1142,7 +1143,7 @@ kbd {
 
       <div class="block deepdive-block">
         <div class="blabel">&#x1F4AD; Deep Dive</div>
-        <p class="deepdive-text">If nation-state actors can achieve mass credential harvesting simply by exploiting known, patchable vulnerabilities in commodity network devices — requiring no zero-days and no endpoint malware — what does this imply about our industry's heavy investment in endpoint-centric security versus the relative neglect of network infrastructure lifecycle management?</p>
+        <p class="deepdive-text">If authentication tokens can be silently harvested at the network layer despite HTTPS encryption, what does this imply about the assumptions we make when we say a connection is &quot;encrypted end-to-end&quot; — and should identity providers be designing token architectures that are resilient even when the network path is fully compromised?</p>
       </div>
 
       <div class="story-footer">
@@ -1165,8 +1166,8 @@ kbd {
       </div>
       <h2>Germany Unmasks &quot;UNKN&quot; — The Man Behind REvil and GandCrab Ransomware Empires</h2>
       <div class="pub-date">&#x1F551; Apr 05, 2026 10:07 PM EDT</div>
-      <div class="tldr"><span class="tldr-tag">TL;DR</span>German authorities have publicly identified 31-year-old Russian national Daniil Shchukin as &quot;UNKN,&quot; the operator behind both the GandCrab and REvil ransomware-as-a-service operations responsible for at least 130 attacks between 2019 and 2021.</div>
-      <div class="tag-row"><button class="tag" data-name="REvil (Sodinokibi)" data-desc="A prolific ransomware-as-a-service operation active from 2019-2021, known for high-profile attacks including the Kaseya supply chain incident and JBS Foods. Used double-extortion tactics combining encryption with data theft." data-relevance="REvil is one of the two ransomware operations allegedly run by the now-identified UNKN. German authorities attribute at least 130 attacks to this operation and its predecessor." onclick="openTagModal(event,this)">REvil (Sodinokibi)</button><button class="tag" data-name="GandCrab" data-desc="An early and highly successful ransomware-as-a-service platform that operated from January 2018 to mid-2019, claiming over $2 billion in ransom payments before its operators announced retirement." data-relevance="German authorities allege GandCrab was the predecessor operation run by the same individual (Shchukin/UNKN), with code and infrastructure continuity into REvil." onclick="openTagModal(event,this)">GandCrab</button></div>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>German authorities have publicly identified 31-year-old Russian national Daniil Shchukin as the operator behind the infamous REvil and GandCrab ransomware-as-a-service operations, linking him to at least 130 cyberattacks between 2019 and 2021.</div>
+      <div class="tag-row"><button class="tag" data-name="REvil/Sodinokibi" data-desc="A major ransomware-as-a-service operation active from 2019 to 2021, responsible for high-profile attacks including the Kaseya supply chain compromise and the JBS Foods attack." data-relevance="German authorities now officially attribute REvil's leadership to Daniil Shchukin, confirming he ran the operation under the handle 'UNKN' and linking it to the predecessor group GandCrab." onclick="openTagModal(event,this)">REvil/Sodinokibi</button><button class="tag" data-name="GandCrab" data-desc="A ransomware-as-a-service platform active from January 2018 to mid-2019, notable for being one of the first professionally operated RaaS platforms with affiliate recruitment on underground forums." data-relevance="The story confirms the long-suspected theory that GandCrab's 'retirement' was a rebrand into REvil, with the same operator running both platforms." onclick="openTagModal(event,this)">GandCrab</button></div>
     </div>
     <div class="chevron">&#9660;</div>
   </div>
@@ -1176,13 +1177,13 @@ kbd {
       
       <div class="block">
         <div class="blabel">&#x1F4CC; Why It Matters</div>
-        <p>REvil and GandCrab were two of the most prolific ransomware-as-a-service operations in history, collectively extorting hundreds of millions of dollars from victims worldwide. Publicly identifying their alleged leader sends a signal that even operators shielded by Russian jurisdiction aren't beyond reach of Western intelligence. This doxing approach — naming and shaming when extradition is impossible — is becoming a key tool in the West's counter-ransomware playbook.</p>
+        <p>REvil and GandCrab were among the most prolific ransomware operations in history, collectively extorting hundreds of millions of dollars from businesses, hospitals, and governments worldwide. Publicly naming and &quot;doxing&quot; a ransomware kingpin — even one likely sheltered in Russia — sends a powerful signal that anonymity in cybercrime has limits, and it gives insurers, sanctions bodies, and future law enforcement actions a concrete identity to work with.</p>
       </div>
 
       <div class="block concept-block">
         <div class="blabel">&#x1F9E0; Concept</div>
-        <div class="concept-title" style="color:#34d399">Ransomware-as-a-Service (RaaS) Operator Model</div>
-        <div class="concept-text"><p>Imagine a crime boss who doesn't rob banks personally but instead designs the tools, maps out escape routes, and recruits teams of burglars — taking a percentage of every heist. The boss never touches a vault, but without them the operation doesn't exist. That's essentially what a RaaS operator does in the cybercrime world.</p><p>In the Ransomware-as-a-Service model, a core operator develops and maintains the ransomware payload, builds the infrastructure for command-and-control servers, payment portals, and data-leak sites, then recruits &quot;affiliates&quot; who carry out the actual intrusions. Affiliates handle initial access — phishing, exploiting vulnerabilities, buying credentials — and deploy the ransomware on victim networks. The operator typically takes 20-40% of each ransom payment, while affiliates keep the rest. This division of labor lets the operation scale massively without the operator ever directly touching a victim's network.</p><p>In this case, German authorities allege that Daniil Shchukin, operating as &quot;UNKN,&quot; ran this exact model across two successive brands. GandCrab operated from roughly 2018-2019 before its operators announced &quot;retirement,&quot; only for the same infrastructure and code lineage to resurface as REvil (also called Sodinokibi). UNKN was the public-facing figure on Russian-language cybercrime forums, recruiting affiliates and managing the operation that hit at least 130 German targets. The continuity between GandCrab and REvil demonstrated how RaaS operators can rebrand while preserving their affiliate networks and technical tooling.</p><p>The broader implication is that dismantling RaaS operations requires targeting the operator tier, not just affiliates. Affiliates are replaceable; operators hold the institutional knowledge, the code, and the business relationships. Germany's decision to publicly identify Shchukin — even without the ability to extradite from Russia — is a strategy of imposing personal costs: travel restrictions, asset seizures, and reputational damage within criminal forums where trust is currency.</p></div>
+        <div class="concept-title" style="color:#34d399">Ransomware-as-a-Service (RaaS)</div>
+        <div class="concept-text"><p>Imagine a criminal franchise model — like a fast-food chain, but for extortion. The franchisor (the RaaS operator) builds the ransomware toolkit, manages the payment infrastructure, and runs the leak site. Affiliates sign up, receive the malware, and carry out the actual attacks against victims. Profits are split, often 70/30 or 80/20, with the operator taking a cut of every ransom paid.</p><p>Technically, a RaaS platform provides affiliates with a builder that generates custom ransomware payloads, a command-and-control panel to track infections, and a negotiation/payment portal (typically Tor-based) where victims interact with attackers. The operator handles encryption key management — only they can issue decryption keys — which keeps affiliates dependent on the platform and prevents them from going rogue. Some operations also run &quot;double extortion&quot; leak sites where stolen data is published if victims refuse to pay.</p><p>In this story, the individual known as &quot;UNKN&quot; allegedly built and operated two successive RaaS platforms: GandCrab (active roughly 2018–2019, which claimed to retire after earning $2 billion) and REvil/Sodinokibi (2019–2021, responsible for high-profile attacks on Kaseya, JBS Foods, and others). German authorities now say both operations were run by the same person — Daniil Shchukin — who recruited affiliates on Russian-language cybercrime forums and orchestrated at least 130 attacks targeting German organizations alone.</p><p>The RaaS model is what makes modern ransomware so scalable and dangerous. By separating the technical development from the operational deployment, it allows a single skilled developer to enable hundreds of less-skilled attackers. Identifying and neutralizing the operator — the person who controls the keys and the infrastructure — is far more impactful than arresting individual affiliates, which is why this doxing matters even if extradition from Russia remains unlikely.</p></div>
       </div>
 
       <div class="block">
@@ -1190,84 +1191,87 @@ kbd {
         <div class="diagram-wrap">
           <div class="diagram-bar">
             <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-            <span class="diagram-title">Ransomware-as-a-Service (RaaS) Operator Model</span>
+            <span class="diagram-title">Ransomware-as-a-Service (RaaS)</span>
           </div>
           <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#34d399"/>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#34d399"/>
     </marker>
   </defs>
   <!-- Background -->
   <rect width="700" height="340" fill="#060912"/>
-  
+
   <!-- Title -->
-  <text x="350" y="28" text-anchor="middle" fill="#34d399" font-size="14" font-family="monospace" font-weight="bold">RaaS Operator Model — GandCrab → REvil</text>
-  
-  <!-- Operator node (top center) -->
-  <rect x="260" y="48" width="180" height="52" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="350" y="69" text-anchor="middle" fill="#34d399" font-size="13" font-family="monospace">UNKN (Operator)</text>
-  <text x="350" y="88" text-anchor="middle" fill="#7a849a" font-size="11" font-family="monospace">Code, Infra, Leak Sites</text>
-  
-  <!-- Affiliate nodes row -->
-  <rect x="40" y="148" width="140" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="110" y="175" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Affiliate A</text>
-  
-  <rect x="220" y="148" width="140" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="290" y="175" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Affiliate B</text>
-  
-  <rect x="400" y="148" width="140" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="470" y="175" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Affiliate C</text>
-  
-  <!-- Forum recruitment label -->
-  <rect x="568" y="148" width="118" height="44" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5" stroke-dasharray="4"/>
-  <text x="627" y="170" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Forum Recruitment</text>
-  <text x="627" y="183" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">by UNKN</text>
-  
-  <!-- Arrows from Operator to Affiliates -->
-  <line x1="310" y1="100" x2="120" y2="148" stroke="#34d399" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <line x1="350" y1="100" x2="290" y2="148" stroke="#34d399" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <line x1="390" y1="100" x2="460" y2="148" stroke="#34d399" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  
-  <!-- Tooling label on arrows -->
-  <text x="190" y="122" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Ransomware + C2</text>
-  <text x="500" y="122" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Ransomware + C2</text>
-  
-  <!-- Victim row -->
-  <rect x="40" y="240" width="140" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="110" y="266" text-anchor="middle" fill="#eaedf5" font-size="11" font-family="monospace">🇩🇪 130+ Victims</text>
-  
-  <rect x="220" y="240" width="140" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="290" y="266" text-anchor="middle" fill="#eaedf5" font-size="11" font-family="monospace">Global Victims</text>
-  
-  <!-- Payment flow box -->
-  <rect x="440" y="240" width="150" height="44" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
-  <text x="515" y="257" text-anchor="middle" fill="#34d399" font-size="12" font-family="monospace">Ransom Payments</text>
-  <text x="515" y="273" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">20-40% → Operator</text>
-  
-  <!-- Arrows from Affiliates to Victims -->
-  <line x1="110" y1="192" x2="110" y2="240" stroke="#34d399" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  <line x1="290" y1="192" x2="290" y2="240" stroke="#34d399" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  
-  <!-- Attack label -->
-  <text x="80" y="220" fill="#7a849a" font-size="10" font-family="monospace">Deploy</text>
-  <text x="260" y="220" fill="#7a849a" font-size="10" font-family="monospace">Deploy</text>
-  
-  <!-- Payment arrow -->
-  <line x1="470" y1="192" x2="515" y2="240" stroke="#34d399" stroke-width="1.3" marker-end="url(#arrowhead)"/>
-  
-  <!-- Rebrand arrow at bottom -->
-  <rect x="150" y="306" width="400" height="26" rx="4" fill="#12152a" stroke="#252840" stroke-width="1"/>
-  <text x="350" y="323" text-anchor="middle" fill="#34d399" font-size="11" font-family="monospace">GandCrab (2018-19) ──rebrand──▸ REvil (2019-21)</text>
+  <text x="350" y="28" text-anchor="middle" fill="#34d399" font-size="14" font-family="monospace" font-weight="bold">RaaS Operator Model: GandCrab → REvil</text>
+
+  <!-- Operator Node (center top) -->
+  <rect x="255" y="48" width="190" height="54" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="350" y="70" text-anchor="middle" fill="#34d399" font-size="13" font-family="monospace">RaaS Operator</text>
+  <text x="350" y="88" text-anchor="middle" fill="#7a849a" font-size="11" font-family="monospace">"UNKN" / Shchukin</text>
+
+  <!-- Provides: Malware Builder -->
+  <rect x="30" y="145" width="145" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="102" y="163" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Malware Builder</text>
+  <text x="102" y="178" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Custom payloads</text>
+
+  <!-- Provides: C2 Panel -->
+  <rect x="200" y="145" width="145" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="272" y="163" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">C2 Panel</text>
+  <text x="272" y="178" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Key mgmt + tracking</text>
+
+  <!-- Provides: Leak/Payment Site -->
+  <rect x="370" y="145" width="155" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="447" y="163" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Leak Site (.onion)</text>
+  <text x="447" y="178" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Extortion + payment</text>
+
+  <!-- Provides: Decryption Keys -->
+  <rect x="550" y="145" width="130" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="615" y="163" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Decrypt Keys</text>
+  <text x="615" y="178" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Operator-controlled</text>
+
+  <!-- Arrows from Operator to components -->
+  <line x1="310" y1="102" x2="110" y2="143" stroke="#34d399" stroke-width="1.2" marker-end="url(#arr)"/>
+  <line x1="340" y1="102" x2="272" y2="143" stroke="#34d399" stroke-width="1.2" marker-end="url(#arr)"/>
+  <line x1="380" y1="102" x2="440" y2="143" stroke="#34d399" stroke-width="1.2" marker-end="url(#arr)"/>
+  <line x1="410" y1="102" x2="600" y2="143" stroke="#34d399" stroke-width="1.2" marker-end="url(#arr)"/>
+
+  <!-- Affiliates row -->
+  <rect x="80" y="230" width="120" height="40" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="140" y="255" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Affiliate #1</text>
+
+  <rect x="230" y="230" width="120" height="40" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="290" y="255" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Affiliate #2</text>
+
+  <rect x="380" y="230" width="120" height="40" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="440" y="255" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Affiliate #N</text>
+
+  <!-- Arrows from tools to affiliates -->
+  <line x1="102" y1="189" x2="140" y2="228" stroke="#7a849a" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+  <line x1="272" y1="189" x2="290" y2="228" stroke="#7a849a" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+  <line x1="447" y1="189" x2="440" y2="228" stroke="#7a849a" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+
+  <!-- Victims row -->
+  <rect x="165" y="295" width="370" height="34" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="350" y="317" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">130+ Victims (Germany alone, 2019–2021)</text>
+
+  <!-- Arrows from affiliates to victims -->
+  <line x1="140" y1="270" x2="250" y2="293" stroke="#34d399" stroke-width="1" marker-end="url(#arr)"/>
+  <line x1="290" y1="270" x2="320" y2="293" stroke="#34d399" stroke-width="1" marker-end="url(#arr)"/>
+  <line x1="440" y1="270" x2="420" y2="293" stroke="#34d399" stroke-width="1" marker-end="url(#arr)"/>
+
+  <!-- Revenue flow label -->
+  <text x="580" y="260" fill="#7a849a" font-size="10" font-family="monospace">70-80% affiliate</text>
+  <text x="580" y="275" fill="#34d399" font-size="10" font-family="monospace">20-30% operator</text>
 </svg></div>
         </div>
       </div>
 
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
-        <div class="opinion-q"><span class="opinion-source">Hacker News</span>Commenters are impressed by the investigative work but skeptical it will lead to an arrest, noting Russia has zero extradition history with Western nations. Several threads discuss whether doxing is an effective deterrent or merely symbolic.</div><div class="opinion-q"><span class="opinion-source">Reddit r/netsec</span>Technical community is focused on the confirmed link between GandCrab and REvil codebases, which many suspected for years. Users are discussing what forensic evidence (code similarities, infrastructure overlaps, forum OPSEC failures) likely enabled the identification.</div><div class="opinion-q"><span class="opinion-source">Reddit r/technology</span>Broadly supportive of naming and shaming, with many users expressing frustration that a known cybercriminal can live freely in Russia. Discussion of whether sanctions and travel bans have any meaningful impact.</div><div class="opinion-q"><span class="opinion-source">Security Twitter/X</span>Researchers are sharing historical OSINT threads that had partially identified UNKN years ago. Several analysts note this validates long-standing theories about GandCrab-REvil continuity and praise German BKA's methodical approach.</div>
+        <div class="opinion-q"><span class="opinion-source">Hacker News</span>Commenters are impressed by the investigative work but skeptical it will lead to an arrest, noting Russia's long history of sheltering cybercriminals. Several highlight the irony that UNKN was reportedly betrayed by former associates, not pure technical investigation.</div><div class="opinion-q"><span class="opinion-source">Reddit r/netsec</span>The technical community is fascinated by the confirmed link between GandCrab and REvil, which had long been suspected but never officially attributed to a single individual. Discussion focuses on OPSEC failures that led to the identification.</div><div class="opinion-q"><span class="opinion-source">Reddit r/technology</span>Broad frustration that naming the suspect won't result in justice as long as Russia refuses extradition. Many users compare it to the U.S. indictments of Chinese and Russian hackers that similarly resulted in no arrests.</div><div class="opinion-q"><span class="opinion-source">Security Twitter/X</span>Researchers are sharing historical UNKN forum posts and noting his distinctive communication style. There's respect for Germany's BKA for taking the public attribution step, with some analysts arguing the doxing itself is a form of deterrence even without prosecution.</div>
         <div class="blabel">&#x1F50D; Assessment</div>
-        <p>The skepticism about extradition is well-founded — Russia has consistently refused to hand over cybercriminals to Western nations, and there's no reason to expect that to change. However, dismissing the doxing as purely symbolic underestimates the practical effects. Named individuals face asset freezes across Western financial systems, can't travel to countries with extradition treaties, and — crucially — become less trustworthy within criminal ecosystems where anonymity is paramount. The r/netsec focus on the GandCrab-to-REvil lineage is the most substantive angle: this confirmation closes an important gap in the historical record of ransomware evolution. What's somewhat missing from public discourse is the question of what intelligence cooperation between Germany, the US, and other partners made this possible — and whether similar identifications of current RaaS operators are in progress.</p>
+        <p>The skepticism about extradition is well-founded — Russia has never extradited a cybercriminal to a Western country, and there's no reason to expect that to change. However, the &quot;it's pointless without arrest&quot; framing misses important second-order effects. Public identification restricts the suspect's travel (Interpol red notices make leaving Russia risky), enables financial sanctions that freeze assets and disrupt money laundering, and can fracture trust within criminal networks where anonymity is currency. The GandCrab-to-REvil link, while long suspected by researchers like those at Secureworks and Flashpoint, now being officially confirmed by a government is significant for attribution science. What's underappreciated is the German angle — 130 attacks in a single country suggests REvil's affiliate network was far more targeted geographically than many assumed, which has implications for how we model ransomware targeting decisions.</p>
       </div>
 
       <div class="block">
@@ -1275,31 +1279,31 @@ kbd {
         <div class="quiz-grid">
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q1 of 3</div>
-        <div class="q-text">In the Ransomware-as-a-Service model, what is the primary role of the 'operator' versus the 'affiliates'?</div>
+        <div class="q-text">In a Ransomware-as-a-Service model, why does the operator — not the affiliate — control the decryption keys?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">The operator develops and maintains the ransomware code, infrastructure (C2 servers, payment portals, leak sites), and recruits affiliates. Affiliates handle the actual intrusions — gaining initial access and deploying the ransomware on victim networks.</div>
-          <div class="q-exp">This division of labor is what makes RaaS so scalable. The operator provides the platform and takes a cut (typically 20-40%), while affiliates do the hands-on hacking. It mirrors franchise business models, where a central entity provides the brand and tools while franchisees execute locally.</div>
+          <div class="q-ans">It prevents affiliates from operating independently, cutting the operator out of the payment chain. If affiliates held their own keys, they could negotiate directly with victims and keep 100% of the ransom.</div>
+          <div class="q-exp">Key management is the central control mechanism in RaaS. The operator's monopoly on decryption is what makes the franchise model work — affiliates must route payments through the platform because only the operator can deliver what the victim actually needs.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q2 of 3</div>
-        <div class="q-text">Why is publicly identifying ('doxing') a ransomware operator considered a meaningful law enforcement action even when arrest and extradition are impossible?</div>
+        <div class="q-text">Why might publicly identifying a ransomware operator be strategically valuable even if arrest and prosecution are impossible?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">It imposes real costs: the named individual faces international asset freezes, travel restrictions, and loss of anonymity — which is critical currency in criminal forums where trust depends on untraceability. It also signals to other operators that their identities may already be known.</div>
-          <div class="q-exp">Anonymity is foundational to how darknet criminals operate. Once your real identity is public, affiliates may distrust you, financial assets in reachable jurisdictions can be seized, and any future attempt to 'go legitimate' is complicated. It's a strategy for imposing consequences short of imprisonment.</div>
+          <div class="q-ans">It restricts the suspect's travel via international warrants, enables targeted financial sanctions, erodes trust in criminal forums (where anonymity is essential), and signals to other operators that attribution is possible.</div>
+          <div class="q-exp">Deterrence in cybercrime isn't binary. Even without imprisonment, identification imposes real costs: frozen assets, inability to travel, paranoia among associates, and reputational damage in underground communities where being 'burned' can end a career.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q3 of 3</div>
-        <div class="q-text">What does the GandCrab-to-REvil transition reveal about how ransomware operations persist despite 'shutdowns'?</div>
+        <div class="q-text">GandCrab publicly 'retired' in 2019 claiming $2B in earnings, and REvil launched shortly after. What does the confirmed single-operator link tell us about ransomware group 'shutdowns'?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">RaaS operators can rebrand while preserving their codebase, infrastructure knowledge, affiliate networks, and operational procedures. A public 'retirement' announcement is often just a reset that sheds law enforcement heat while maintaining continuity under a new name.</div>
-          <div class="q-exp">GandCrab announced retirement in mid-2019, and REvil appeared shortly after with strong code lineage ties. This pattern has repeated with other groups (e.g., DarkSide → BlackMatter). It demonstrates why targeting the operator tier is essential — the people and relationships are what persist across brands.</div>
+          <div class="q-ans">Ransomware shutdowns are often rebrands rather than true cessations. The same operators, infrastructure, and code can resurface under new names to evade law enforcement attention and reset their threat profile.</div>
+          <div class="q-exp">The GandCrab-to-REvil evolution is now the textbook example of ransomware rebranding. Similar patterns have been observed with DarkSide→BlackMatter, Conti→Royal→BlackSuit, and others. A 'shutdown' announcement should be treated as a tactical pause, not a victory.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div></div>
@@ -1307,7 +1311,7 @@ kbd {
 
       <div class="block deepdive-block">
         <div class="blabel">&#x1F4AD; Deep Dive</div>
-        <p class="deepdive-text">If ransomware operators can repeatedly rebrand and continue operations under new names, does the traditional law enforcement model of building cases toward prosecution still make sense — or should the emphasis shift entirely toward disruption operations (infrastructure takedowns, trust erosion, financial sanctions) that impose ongoing costs regardless of whether an arrest ever happens?</p>
+        <p class="deepdive-text">If ransomware operators know they can be identified but not extradited, does public attribution actually change their risk calculus — or does it merely prove to the underground that operating from Russia remains a safe bet?</p>
       </div>
 
       <div class="story-footer">
@@ -1328,10 +1332,10 @@ kbd {
         <span class="src-badge" style="background:#34d3991a;color:#34d399">The Hacker News</span>
         <span class="story-num">03</span>
       </div>
-      <h2>EngageLab SDK Flaw Let Any App on the Same Phone Raid Crypto Wallets</h2>
+      <h2>EngageLab SDK Flaw Let Malicious Apps Escape Android Sandbox, Exposing 50M Users</h2>
       <div class="pub-date">&#x1F551; Apr 09, 2026 1:26 PM EDT</div>
-      <div class="tldr"><span class="tldr-tag">TL;DR</span>A now-patched vulnerability in the EngageLab Android SDK allowed any app on the same device to bypass Android's sandbox and access private data from other apps — putting an estimated 50 million users, including 30 million crypto wallet holders, at risk.</div>
-      <div class="tag-row"><button class="tag" data-name="EngageLab SDK" data-desc="A third-party Android SDK providing push notification and user engagement analytics services, embedded in thousands of apps." data-relevance="The SDK contained the vulnerability — an improperly secured exported component — that allowed cross-app data access on 50M devices." onclick="openTagModal(event,this)">EngageLab SDK</button><button class="tag" data-name="Android Application Sandbox" data-desc="Android's core security model that assigns each app a unique Linux UID and confines it to its own process and file-system space." data-relevance="The flaw bypassed this sandbox boundary, allowing a malicious app to reach into another app's private data through the SDK's exposed component." onclick="openTagModal(event,this)">Android Application Sandbox</button><button class="tag" data-name="Microsoft Defender for Endpoint" data-desc="Microsoft's enterprise endpoint security platform, which includes a mobile threat detection research arm." data-relevance="Microsoft Defender researchers discovered and disclosed the EngageLab SDK vulnerability, leading to the patch." onclick="openTagModal(event,this)">Microsoft Defender for Endpoint</button></div>
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>A now-patched vulnerability in the EngageLab Android SDK allowed any app on the same device to bypass Android's security sandbox and access private data from other apps — including an estimated 30 million cryptocurrency wallets.</div>
+      <div class="tag-row"><button class="tag" data-name="EngageLab SDK" data-desc="A third-party Android SDK used for push notifications and user engagement, embedded in thousands of apps across the Google Play ecosystem." data-relevance="The SDK contained the vulnerable exported component that allowed cross-app data access, directly causing the 50M-user exposure." onclick="openTagModal(event,this)">EngageLab SDK</button><button class="tag" data-name="Android Application Sandbox" data-desc="Android's core security model that isolates each app in its own Linux process with a unique UID, preventing unauthorized inter-app data access." data-relevance="The vulnerability bypassed this sandbox by exposing an unprotected component that served as an application-layer bridge through the kernel-enforced isolation." onclick="openTagModal(event,this)">Android Application Sandbox</button></div>
     </div>
     <div class="chevron">&#9660;</div>
   </div>
@@ -1347,19 +1351,19 @@ kbd {
         <div class="affected-list">
       <div class="affected-item">
         <span class="affected-name">EngageLab Android SDK</span>
-        <span class="affected-ver">Versions prior to the April 2026 patch (specific version range not disclosed)</span>
+        <span class="affected-ver">Versions prior to the April 2026 patch (specific version numbers not disclosed)</span>
       </div>
         </div>
       </div>
       <div class="block">
         <div class="blabel">&#x1F4CC; Why It Matters</div>
-        <p>Third-party SDKs are embedded in thousands of apps, so a single flaw can cascade across an entire ecosystem. Crypto wallets are especially high-value targets because stolen private keys mean irreversible financial loss. This incident underscores how supply-chain risk in mobile development can silently undermine the security promises of otherwise well-built applications.</p>
+        <p>Third-party SDKs are embedded in thousands of apps, so a single flaw can cascade across an entire ecosystem. Cryptocurrency wallets store private keys that control real financial assets, making sandbox escapes in this context potentially devastating. This incident underscores how supply-chain risk in mobile development can silently expose millions of users who never installed the vulnerable component directly.</p>
       </div>
 
       <div class="block concept-block">
         <div class="blabel">&#x1F9E0; Concept</div>
-        <div class="concept-title" style="color:#34d399">Android Application Sandboxing and How SDKs Can Break It</div>
-        <div class="concept-text"><p>Imagine an apartment building where every tenant has their own locked unit. You can't walk into your neighbor's apartment and rummage through their drawers — the building enforces this with separate locks and keys. Android's sandbox works the same way: each app gets its own isolated space, and the operating system prevents one app from reading another's files. But what if a shared utility service — like the building's intercom system — had a flaw that let anyone who buzzed in also unlock every other apartment door?</p><p>Technically, Android assigns each installed app a unique Linux user ID (UID) and runs it in its own process with its own file-system permissions. Inter-process communication is tightly controlled through mechanisms like Intents, Content Providers, and Binder IPC, each governed by permission checks. SDKs that apps embed run inside the host app's process and inherit its UID and permissions. If an SDK exposes a component — say, an exported Content Provider or a Service with weak permission checks — it can inadvertently create a bridge that other apps on the device can exploit to read data they should never see.</p><p>In this case, the EngageLab SDK, used for push notifications and engagement analytics, contained a flaw that effectively punched a hole through Android's sandbox boundaries. A malicious app installed on the same device could leverage this weakness to access private data belonging to apps that had integrated the SDK — including cryptocurrency wallets storing sensitive keys and credentials. Microsoft Defender researchers identified the issue, and the flaw has since been patched, but the blast radius was enormous: roughly 50 million Android users, 30 million of whom had crypto wallets relying on apps containing the vulnerable SDK.</p><p>This pattern — a shared SDK becoming a shared vulnerability — is one of the most dangerous dynamics in mobile security. App developers often integrate dozens of third-party SDKs for analytics, ads, and push notifications without auditing them deeply. Each SDK becomes a trust boundary that inherits the app's full permissions. When one of those SDKs has a flaw, it doesn't just affect a single app; it creates a systemic weakness across every app that ships it, turning a supply-chain problem into a platform-wide exposure.</p></div>
+        <div class="concept-title" style="color:#34d399">Android Application Sandboxing</div>
+        <div class="concept-text"><p>Imagine an apartment building where every tenant has their own locked unit. You can't walk into your neighbor's apartment and rifle through their drawers — the building's design enforces separation. Android's application sandbox works the same way: each app runs in its own isolated environment with its own file storage, and the operating system prevents one app from reading another's private data.</p><p>Technically, Android achieves this by assigning each installed app a unique Linux user ID (UID). The kernel enforces file permissions so that App A's private directory is owned by UID_A, and App B running as UID_B simply cannot read those files. Apps can optionally expose data through controlled interfaces like Content Providers or Intents, but the default posture is strict isolation. This is the foundational security model that keeps your banking app's secrets away from a random flashlight app.</p><p>The EngageLab SDK broke this model. By introducing an improperly secured component — likely an exported Content Provider or Service with overly broad permissions — any other app on the same device could query or interact with the SDK's component to extract private data from the host app. Since EngageLab was integrated into apps including roughly 30 million crypto wallets, an attacker could install a seemingly innocuous app that silently harvested wallet keys, seed phrases, or session tokens from any EngageLab-powered app on the device.</p><p>This pattern is a recurring nightmare in mobile security: developers integrate a popular SDK for push notifications or analytics, and that SDK quietly widens the attack surface of every app it touches. The app developer may write perfectly secure code, but the third-party SDK introduces a hole they never audited. As mobile apps increasingly handle high-value assets like cryptocurrency, the consequences of SDK-level vulnerabilities grow proportionally more severe.</p></div>
       </div>
 
       <div class="block">
@@ -1367,101 +1371,83 @@ kbd {
         <div class="diagram-wrap">
           <div class="diagram-bar">
             <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-            <span class="diagram-title">Android Application Sandboxing and How SDKs Can Break It</span>
+            <span class="diagram-title">Android Application Sandboxing</span>
           </div>
           <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <marker id="arrowG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#34d399"/>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#34d399"/>
     </marker>
-    <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#f87171"/>
+    <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#f87171"/>
     </marker>
   </defs>
+  <!-- Background -->
   <rect width="700" height="340" fill="#060912"/>
 
   <!-- Title -->
-  <text x="350" y="28" fill="#eaedf5" font-size="14" font-family="monospace" text-anchor="middle" font-weight="bold">Attack Chain: SDK Sandbox Bypass</text>
+  <text x="350" y="28" fill="#eaedf5" font-size="14" font-family="monospace" text-anchor="middle">Android Sandbox Bypass via EngageLab SDK</text>
 
-  <!-- Step 1: Malicious App -->
-  <rect x="30" y="60" width="120" height="60" rx="6" fill="#12152a" stroke="#f87171" stroke-width="1.5"/>
-  <text x="90" y="85" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Malicious</text>
-  <text x="90" y="102" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">App</text>
+  <!-- Malicious App -->
+  <rect x="30" y="60" width="130" height="60" rx="6" fill="#12152a" stroke="#f87171" stroke-width="2"/>
+  <text x="95" y="87" fill="#f87171" font-size="12" font-family="monospace" text-anchor="middle">Malicious App</text>
+  <text x="95" y="105" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">(UID_B)</text>
 
-  <!-- Arrow 1 -->
-  <line x1="150" y1="90" x2="195" y2="90" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowG)"/>
-  <text x="173" y="80" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">exploits</text>
+  <!-- Arrow: Malicious App → Exposed SDK Component -->
+  <line x1="160" y1="90" x2="225" y2="90" stroke="#f87171" stroke-width="2" marker-end="url(#arrowRed)"/>
+  <text x="193" y="80" fill="#f87171" font-size="10" font-family="monospace" text-anchor="middle">query</text>
 
-  <!-- Step 2: Vulnerable SDK Component -->
-  <rect x="200" y="60" width="140" height="60" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="270" y="82" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">EngageLab SDK</text>
-  <text x="270" y="100" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">exported component</text>
+  <!-- Exposed SDK Component -->
+  <rect x="230" y="60" width="160" height="60" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="310" y="83" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">EngageLab SDK</text>
+  <text x="310" y="100" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Exported Component</text>
+  <text x="310" y="114" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">(no permission check)</text>
 
-  <!-- Arrow 2 -->
-  <line x1="340" y1="90" x2="385" y2="90" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowG)"/>
-  <text x="363" y="80" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">bypasses</text>
+  <!-- Arrow: SDK → Wallet Private Data -->
+  <line x1="390" y1="90" x2="470" y2="90" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="430" y="80" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">reads</text>
 
-  <!-- Step 3: Android Sandbox -->
-  <rect x="390" y="60" width="130" height="60" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="455" y="82" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Android</text>
-  <text x="455" y="100" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Sandbox</text>
+  <!-- Crypto Wallet App -->
+  <rect x="475" y="55" width="195" height="70" rx="6" fill="#12152a" stroke="#252840" stroke-width="2"/>
+  <text x="572" y="80" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Crypto Wallet App</text>
+  <text x="572" y="97" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">(UID_A) private data:</text>
+  <text x="572" y="112" fill="#f87171" font-size="10" font-family="monospace" text-anchor="middle">keys, seeds, tokens</text>
 
-  <!-- Arrow 3 -->
-  <line x1="520" y1="90" x2="565" y2="90" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowR)"/>
-  <text x="543" y="80" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">reads</text>
+  <!-- Sandbox boundary -->
+  <rect x="220" y="45" width="460" height="95" rx="8" fill="none" stroke="#252840" stroke-width="1" stroke-dasharray="6,4"/>
+  <text x="450" y="155" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">── App A's Sandbox (should be isolated) ──</text>
 
-  <!-- Step 4: Victim App Data -->
-  <rect x="570" y="60" width="110" height="60" rx="6" fill="#12152a" stroke="#f87171" stroke-width="1.5"/>
-  <text x="625" y="82" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Crypto Wallet</text>
-  <text x="625" y="100" fill="#f87171" font-size="11" font-family="monospace" text-anchor="middle">private keys</text>
+  <!-- Normal flow comparison -->
+  <text x="350" y="195" fill="#eaedf5" font-size="13" font-family="monospace" text-anchor="middle">Normal Sandbox Behavior</text>
 
-  <!-- Lower section: Normal vs Exploited -->
-  <text x="175" y="165" fill="#34d399" font-size="13" font-family="monospace" text-anchor="middle" font-weight="bold">Normal (Sandboxed)</text>
-  <text x="525" y="165" fill="#f87171" font-size="13" font-family="monospace" text-anchor="middle" font-weight="bold">Exploited (Bypassed)</text>
+  <!-- Normal Malicious App -->
+  <rect x="30" y="215" width="130" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="2"/>
+  <text x="95" y="240" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Other App</text>
+  <text x="95" y="256" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">(UID_B)</text>
 
-  <!-- Normal: App A -->
-  <rect x="50" y="185" width="100" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="100" y="214" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">App A</text>
+  <!-- Blocked Arrow -->
+  <line x1="160" y1="242" x2="270" y2="242" stroke="#7a849a" stroke-width="2" stroke-dasharray="5,5"/>
+  <text x="215" y="232" fill="#f87171" font-size="11" font-family="monospace" text-anchor="middle">BLOCKED</text>
 
-  <!-- Normal: Sandbox wall -->
-  <rect x="160" y="185" width="30" height="110" rx="3" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="175" y="245" fill="#34d399" font-size="20" font-family="monospace" text-anchor="middle">🔒</text>
+  <!-- Block X -->
+  <text x="280" y="250" fill="#f87171" font-size="22" font-family="monospace" text-anchor="middle">✕</text>
 
-  <!-- Normal: App B -->
-  <rect x="200" y="185" width="100" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="250" y="214" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">App B</text>
+  <!-- Normal Wallet -->
+  <rect x="310" y="215" width="180" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1"/>
+  <text x="400" y="240" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Secure Wallet App</text>
+  <text x="400" y="256" fill="#34d399" font-size="10" font-family="monospace" text-anchor="middle">private data protected</text>
 
-  <!-- Blocked arrow -->
-  <line x1="150" y1="210" x2="162" y2="210" stroke="#7a849a" stroke-width="1.5" stroke-dasharray="4,3"/>
-  <text x="155" y="200" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">✗</text>
-
-  <!-- Exploited: Malicious App -->
-  <rect x="400" y="185" width="100" height="50" rx="6" fill="#12152a" stroke="#f87171" stroke-width="1.5"/>
-  <text x="450" y="214" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Mal App</text>
-
-  <!-- Exploited: Broken wall -->
-  <rect x="510" y="185" width="30" height="110" rx="3" fill="#12152a" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4"/>
-  <text x="525" y="245" fill="#f87171" font-size="20" font-family="monospace" text-anchor="middle">🔓</text>
-
-  <!-- Exploited: Wallet App -->
-  <rect x="550" y="185" width="100" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="600" y="214" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Wallet</text>
-
-  <!-- Exploit arrow -->
-  <line x1="500" y1="210" x2="548" y2="210" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowR)"/>
-
-  <!-- Labels at bottom -->
-  <text x="175" y="315" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Isolation enforced per UID</text>
-  <text x="525" y="315" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">SDK flaw bridges sandbox gap</text>
+  <!-- Label -->
+  <text x="350" y="310" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">SDK's exported component creates a bridge through the sandbox wall</text>
 </svg></div>
         </div>
       </div>
 
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
-        <div class="opinion-q"><span class="opinion-source">Hacker News</span>Commenters are alarmed at the scale (50M users) but unsurprised, noting that blindly trusting third-party SDKs is a systemic problem in mobile development. Several argue Google should mandate stricter SDK isolation at the OS level.</div><div class="opinion-q"><span class="opinion-source">Reddit r/netsec</span>Researchers praise Microsoft's disclosure and emphasize that exported components with weak permission guards are a well-known class of Android vulnerability. Discussion focuses on how SDK auditing should become a standard part of app security reviews.</div><div class="opinion-q"><span class="opinion-source">Reddit r/technology</span>The crypto angle dominates conversation, with users expressing frustration that wallet apps trusted a push-notification SDK with access to their data. Some question whether self-custody is realistic if the underlying platform can be undermined this way.</div><div class="opinion-q"><span class="opinion-source">Security Twitter/X</span>Mobile security professionals highlight this as a textbook supply-chain attack surface. Multiple threads detail how EngageLab's exported components likely worked, with calls for mandatory SBOM (Software Bill of Materials) requirements for app store submissions.</div>
+        <div class="opinion-q"><span class="opinion-source">Hacker News</span>Commenters are frustrated that yet another third-party SDK is the weak link, with many arguing app developers need to audit every dependency they ship — especially for financial apps holding real assets.</div><div class="opinion-q"><span class="opinion-source">Reddit r/netsec</span>Security practitioners are pointing out that exported Android components with missing permission checks are a well-known vulnerability class, and questioning why EngageLab's code was never caught in routine static analysis.</div><div class="opinion-q"><span class="opinion-source">Reddit r/technology</span>Users are alarmed by the 30M crypto wallet figure and questioning whether any wallets were actually exploited before the patch, with some calling for mandatory SDK security audits on app stores.</div><div class="opinion-q"><span class="opinion-source">Security Twitter/X</span>Researchers praise Microsoft Defender's disclosure but note this is a symptom of the broader mobile supply-chain problem — SDK vendors ship code into millions of apps with minimal external review.</div>
         <div class="blabel">&#x1F50D; Assessment</div>
-        <p>The community reaction is well-calibrated. The alarm over scale is justified — 50M users affected by a single SDK is massive. The call for OS-level SDK isolation is forward-thinking but difficult to implement without breaking legitimate IPC patterns. The crypto community's frustration is valid: wallet developers bear responsibility for auditing every dependency they ship, especially when handling private keys. The SBOM argument from security Twitter is the most actionable takeaway — app stores requiring transparency about embedded SDKs would let researchers and users assess risk before installation. What's somewhat missing from the discourse is acknowledgment that this was responsibly disclosed and patched; the outcome here, while scary in scope, represents the security ecosystem working as intended.</p>
+        <p>The alarm over 50M affected users and 30M crypto wallets is justified in terms of potential blast radius, but it's important to note this was a *potential* exposure — there's no public evidence of active exploitation before the patch. The frustration directed at SDK vendors is well-placed: push notification and analytics SDKs are often included as black boxes with little security review. However, the community sometimes underweights the responsibility of app developers who integrate these SDKs without auditing their manifest declarations for exported components. The calls for app store-level SDK audits are gaining traction but face practical challenges — Google Play Protect does some analysis, but the sheer volume of SDK combinations makes comprehensive automated review difficult. The comparison to supply-chain attacks in the npm/PyPI ecosystem is apt and reflects a growing recognition that mobile has the same dependency trust problems as server-side development.</p>
       </div>
 
       <div class="block">
@@ -1469,31 +1455,31 @@ kbd {
         <div class="quiz-grid">
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q1 of 3</div>
-        <div class="q-text">Why does a vulnerability in a third-party SDK affect the host app's private data, rather than just the SDK's own data?</div>
+        <div class="q-text">Why does Android assign each app a unique Linux UID, and how does this relate to the EngageLab vulnerability?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Because an SDK runs inside the host app's process and shares its UID, permissions, and file-system access — it has no separate sandbox of its own.</div>
-          <div class="q-exp">Android sandboxes at the app/UID level, not at the library level. Any code bundled into an APK inherits the app's full privilege set, so a flawed SDK can expose everything the app can access.</div>
+          <div class="q-ans">Unique UIDs let the Linux kernel enforce file-permission boundaries between apps, preventing one app from reading another's private files. The EngageLab SDK bypassed this by exposing an Android component (like a Content Provider) that didn't check the calling app's identity, effectively creating a permission-free bridge through the sandbox.</div>
+          <div class="q-exp">The sandbox relies on kernel-level UID isolation. An exported component without permission checks doesn't violate the kernel boundary — it goes around it by offering an application-layer doorway that any UID can walk through.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q2 of 3</div>
-        <div class="q-text">How could a malicious app on the same device exploit an SDK vulnerability in a different app, given that Android sandboxes are supposed to prevent cross-app access?</div>
+        <div class="q-text">If a developer writes perfectly secure application code, why can an insecure third-party SDK still compromise their app's data?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">If the SDK exposes an Android component (like a Content Provider or Service) with insufficient permission checks, other apps can call into it through standard IPC, bypassing the sandbox.</div>
-          <div class="q-exp">Android's sandbox blocks direct file access between apps, but exported components are designed to be callable by other apps. If those components don't properly validate callers or restrict data access, they become a sanctioned bridge through the sandbox wall.</div>
+          <div class="q-ans">SDKs run inside the same process and UID as the host app, so they have full access to the app's private data and can register components in the app's manifest. A vulnerable SDK component effectively inherits the app's privileges and can expose the app's data to other apps on the device.</div>
+          <div class="q-exp">This is the core supply-chain risk in mobile: your app's security posture is only as strong as the least secure SDK you bundle. The SDK isn't a separate sandbox — it's inside yours.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div>
       <div class="qcard" onclick="toggleCard(this)">
         <div class="q-num">Q3 of 3</div>
-        <div class="q-text">Why are cryptocurrency wallets especially high-risk targets compared to other apps affected by this SDK flaw?</div>
+        <div class="q-text">What is an 'exported component' in Android, and why is it dangerous when left unprotected?</div>
         <div class="q-answer">
           <div class="q-divider"></div>
-          <div class="q-ans">Crypto wallets store private keys that grant irreversible control over funds — unlike a stolen password, a leaked private key cannot be reset, and stolen cryptocurrency generally cannot be recovered.</div>
-          <div class="q-exp">The asymmetry of crypto security means a single data leak can result in permanent, total financial loss. Other apps might leak preferences or usage data, but wallet compromise has immediate, irreversible monetary consequences.</div>
+          <div class="q-ans">An exported component (Activity, Service, Content Provider, or Broadcast Receiver) is one that other apps on the device can interact with. If it's exported without requiring a specific permission or signature check, any app — including malware — can invoke it and potentially extract or manipulate data.</div>
+          <div class="q-exp">Android's manifest declares whether components are exported. Developers sometimes export components for legitimate inter-app communication but forget to add permission restrictions, creating an open door in the sandbox wall.</div>
         </div>
         <div class="q-hint">&#9660; tap to reveal</div>
       </div></div>
@@ -1501,7 +1487,7 @@ kbd {
 
       <div class="block deepdive-block">
         <div class="blabel">&#x1F4AD; Deep Dive</div>
-        <p class="deepdive-text">If Android's per-app sandbox can be undermined by any SDK an app chooses to embed, should app stores shift to requiring SDK-level isolation (similar to how browsers isolate extensions from page content), and what trade-offs in performance and developer flexibility would that introduce?</p>
+        <p class="deepdive-text">If mobile operating systems enforced that all SDK code must run in a separate, lower-privilege sandbox from the host app — similar to how browser extensions have restricted APIs — how would that change the economics of SDK development and the mobile advertising/analytics ecosystem that depends on deep data access?</p>
       </div>
 
       <div class="story-footer">
@@ -1529,13 +1515,13 @@ kbd {
     </div>
     <span class="notable-chevron">&#9660;</span>
   </div>
-  <h3 class="notable-headline">OpenAI Backs Illinois Bill to Limit AI Liability — Even for Mass Casualties</h3>
-  <p class="notable-summary">OpenAI testified in favor of an Illinois bill that would sharply limit when AI companies can be held liable for harms caused by their models, including scenarios involving mass deaths or financial disasters. The bill would set a high bar for plaintiffs, effectively shielding labs from most downstream liability. This is one of the most aggressive liability-limitation efforts yet seen at the state level.</p>
-  <div class="tag-row"><button class="tag" data-name="OpenAI" data-desc="The company behind ChatGPT and GPT-series models, one of the largest AI labs globally." data-relevance="OpenAI is actively lobbying for the bill, using its weight to shape the emerging AI liability framework." onclick="openTagModal(event,this)">OpenAI</button></div>
+  <h3 class="notable-headline">OpenAI Backs Illinois Bill to Limit AI Liability — Even for Mass Harm Scenarios</h3>
+  <p class="notable-summary">OpenAI testified in favor of an Illinois bill that would restrict when AI companies can be held liable, even in cases where their products cause &quot;critical harm&quot; such as mass casualties or financial disasters. The bill represents one of the most aggressive industry-friendly liability frameworks proposed at the state level, and could set precedent for other states.</p>
+  <div class="tag-row"><button class="tag" data-name="OpenAI" data-desc="Major AI lab behind ChatGPT and GPT model family." data-relevance="OpenAI is actively lobbying for liability protections that could define the regulatory environment for the entire AI industry." onclick="openTagModal(event,this)">OpenAI</button></div>
   <div class="notable-body">
     <div class="notable-apply">
       <div class="blabel">&#x1F4A1; Why This Applies to You</div>
-      <p>This bill could set a legislative template that other states follow, reshaping the liability landscape for anyone building on or deploying AI systems. If passed, it may reduce legal risk for AI startups but also shift accountability downstream to deployers and integrators. Tech and security professionals should track this as it could directly affect procurement contracts, insurance requirements, and corporate risk frameworks.</p>
+      <p>This bill could reshape the legal risk landscape for anyone building or deploying AI systems. If liability shields like this spread, enterprises may face less legal friction adopting AI — but also less recourse when things go wrong. Tech and security professionals should track state-level AI legislation closely, as a patchwork of liability regimes will affect compliance strategy.</p>
       <a class="notable-read" href="https://www.wired.com/story/openai-backs-bill-exempt-ai-firms-model-harm-lawsuits/" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
         Read original &#x2192;
       </a>
@@ -1551,13 +1537,13 @@ kbd {
     </div>
     <span class="notable-chevron">&#9660;</span>
   </div>
-  <h3 class="notable-headline">Florida AG Opens Investigation Into OpenAI Over National Security Risks</h3>
-  <p class="notable-summary">Florida Attorney General James Uthmeier launched a formal investigation into OpenAI, citing concerns that the company's data and technology could be falling into the hands of adversarial nations, specifically China. The probe also examines broader public safety risks associated with OpenAI's products. This is a notable escalation of state-level regulatory scrutiny of a major AI company on national security grounds.</p>
-  <div class="tag-row"><button class="tag" data-name="OpenAI" data-desc="The company behind ChatGPT, GPT models, and the Codex coding platform." data-relevance="OpenAI is the direct target of the investigation over alleged national security exposure." onclick="openTagModal(event,this)">OpenAI</button></div>
+  <h3 class="notable-headline">Florida AG Launches Investigation into OpenAI Over National Security Concerns</h3>
+  <p class="notable-summary">Florida Attorney General James Uthmeier has opened an investigation into OpenAI, citing concerns that the company's data and technology could be &quot;falling into the hands of America's enemies, such as the Chinese Communist Party.&quot; The probe adds to growing state-level scrutiny of AI companies on national security grounds, separate from federal efforts.</p>
+  <div class="tag-row"><button class="tag" data-name="OpenAI" data-desc="Leading AI company developing large language models and related products." data-relevance="Subject of the investigation; the probe centers on whether its data practices create national security vulnerabilities." onclick="openTagModal(event,this)">OpenAI</button></div>
   <div class="notable-body">
     <div class="notable-apply">
       <div class="blabel">&#x1F4A1; Why This Applies to You</div>
-      <p>State-level national security investigations into AI companies signal a fragmented but intensifying regulatory environment in the U.S. For security professionals and tech leaders, this underscores growing expectations around data governance, supply chain transparency, and adversary-aware design. Companies building with or on top of OpenAI's APIs may face new due diligence questions from partners and regulators.</p>
+      <p>State-level national security investigations into AI companies signal a new vector of regulatory risk beyond the usual federal oversight. Companies handling sensitive AI models or training data should prepare for data governance scrutiny from unexpected jurisdictions. This trend could also accelerate demand for security and compliance roles focused on AI supply chain integrity.</p>
       <a class="notable-read" href="https://www.theverge.com/policy/909557/openai-florida-investigation" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
         Read original &#x2192;
       </a>
@@ -1573,13 +1559,13 @@ kbd {
     </div>
     <span class="notable-chevron">&#9660;</span>
   </div>
-  <h3 class="notable-headline">China's Scam Crackdown Pushes Crime Syndicates to Target Americans Instead</h3>
-  <p class="notable-summary">As Beijing intensifies domestic fraud enforcement, researchers report that organized scam operations — many based in Southeast Asia — are pivoting to target victims in the U.S. and other Western countries. The shift means the volume and sophistication of cross-border fraud is likely increasing even as China's internal numbers improve. The dynamic illustrates how localized enforcement can displace rather than eliminate cybercrime.</p>
+  <h3 class="notable-headline">China Cracks Down on Domestic Scams While Fraud Syndicates Redirect to Foreign Victims</h3>
+  <p class="notable-summary">Beijing has intensified its crackdown on fraud targeting Chinese citizens, but researchers report that organized crime syndicates are pivoting their operations to target victims in the US and other countries. The shift means the overall scam ecosystem isn't shrinking — it's being redirected outward.</p>
   
   <div class="notable-body">
     <div class="notable-apply">
       <div class="blabel">&#x1F4A1; Why This Applies to You</div>
-      <p>Security teams should anticipate a rise in socially engineered scams, pig-butchering schemes, and fraud attempts targeting English-speaking users. This displacement effect is relevant for anyone running fraud detection, trust &amp; safety, or threat intelligence programs. Understanding the geopolitical drivers behind threat actor migration helps prioritize defensive investments.</p>
+      <p>Security teams should expect an uptick in sophisticated social engineering, pig-butchering, and financial fraud campaigns targeting Western individuals and enterprises. Understanding that these are well-resourced, organized operations — not lone actors — matters for threat modeling. This also has implications for anyone working on fraud detection, identity verification, or anti-abuse tooling.</p>
       <a class="notable-read" href="https://www.wired.com/story/made-in-china-inside-chinas-selective-war-on-the-scam-economy/" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
         Read original &#x2192;
       </a>
@@ -1595,13 +1581,13 @@ kbd {
     </div>
     <span class="notable-chevron">&#9660;</span>
   </div>
-  <h3 class="notable-headline">Tiny Photonic Chip Could Solve Quantum Computing's Laser-Control Bottleneck</h3>
-  <p class="notable-summary">Researchers from MITRE, MIT, CU Boulder, and Sandia National Labs developed a MEMS-based photonic chip capable of projecting video at the scale of a grain of sand, born from the need to simultaneously steer millions of laser beams to control trapped-ion qubits. The chip addresses one of the key engineering bottlenecks preventing quantum computers from scaling to the millions of qubits needed for practical applications in cryptography, drug discovery, and beyond.</p>
-  <div class="tag-row"><button class="tag" data-name="MEMS Photonics" data-desc="Micro-electromechanical systems integrated with photonic circuits to steer and control light at chip scale." data-relevance="The core technology enabling independent control of millions of laser beams needed to scale trapped-ion quantum computers." onclick="openTagModal(event,this)">MEMS Photonics</button><button class="tag" data-name="MITRE Quantum Moonshot" data-desc="A multi-institution research initiative led by MITRE to solve key engineering challenges in scaling quantum computing." data-relevance="The project that produced this chip breakthrough, combining efforts from MITRE, MIT, CU Boulder, and Sandia." onclick="openTagModal(event,this)">MITRE Quantum Moonshot</button></div>
+  <h3 class="notable-headline">MEMS Photonic Chip Enables Grain-of-Sand-Sized Video Projection — A Potential Quantum Computing Breakthrough</h3>
+  <p class="notable-summary">Researchers from MITRE, MIT, CU Boulder, and Sandia National Labs have developed a tiny MEMS-based photonic chip that can project video at the scale of a grain of sand. The work originated from the need to simultaneously control millions of laser beams for trapped-ion qubits, a key bottleneck in scaling quantum computers to millions of qubits.</p>
+  <div class="tag-row"><button class="tag" data-name="MEMS Photonics" data-desc="Micro-electromechanical systems integrated with photonic circuits for precise light steering at chip scale." data-relevance="The core technology enabling the breakthrough — allows simultaneous control of millions of laser beams needed for trapped-ion quantum computing." onclick="openTagModal(event,this)">MEMS Photonics</button><button class="tag" data-name="MITRE Quantum Moonshot" data-desc="A multi-institution research initiative led by MITRE focused on solving scalability challenges in quantum computing." data-relevance="The program that produced this chip as a solution to the qubit-control bottleneck." onclick="openTagModal(event,this)">MITRE Quantum Moonshot</button></div>
   <div class="notable-body">
     <div class="notable-apply">
       <div class="blabel">&#x1F4A1; Why This Applies to You</div>
-      <p>For security professionals, advances toward million-qubit quantum computers directly accelerate the timeline for quantum threats to current cryptographic standards — making post-quantum migration planning more urgent. The MEMS-photonics approach also has potential applications in lidar, AR displays, and optical communications. This is a concrete hardware milestone worth tracking alongside NIST PQC timelines.</p>
+      <p>This addresses one of the hardest engineering problems in scaling quantum computing — controlling individual qubits via precisely steered laser beams. If the approach matures, it could accelerate the timeline for fault-tolerant quantum computers, with downstream implications for cryptography, post-quantum migration planning, and drug discovery. Security professionals should continue tracking quantum readiness milestones.</p>
       <a class="notable-read" href="https://spectrum.ieee.org/mems-photonics" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
         Read original &#x2192;
       </a>
@@ -1617,13 +1603,13 @@ kbd {
     </div>
     <span class="notable-chevron">&#9660;</span>
   </div>
-  <h3 class="notable-headline">Zero-Trust Platform for Autonomous Drones and Robots Reaches Operational Validation</h3>
-  <p class="notable-summary">GoZTASP, a zero-trust assurance and governance platform designed for autonomous systems like drones, robots, and sensor networks, has reached Technology Readiness Level 7 — meaning it has been validated in operational environments. The platform integrates Secure Runtime Assurance and Secure Spatio-Temporal Reasoning to continuously verify integrity and enforce safety constraints across heterogeneous autonomous systems, even under degraded conditions.</p>
-  <div class="tag-row"><button class="tag" data-name="GoZTASP" data-desc="A zero-trust architecture platform for governing heterogeneous autonomous systems including drones, robots, and sensors at mission scale." data-relevance="The platform itself — reaching TRL-7 validation as the first operational zero-trust framework purpose-built for autonomous cyber-physical systems." onclick="openTagModal(event,this)">GoZTASP</button></div>
+  <h3 class="notable-headline">GoZTASP: Zero-Trust Platform for Autonomous Drones and Robots Reaches TRL-7</h3>
+  <p class="notable-summary">A new zero-trust architecture platform called GoZTASP has been validated at Technology Readiness Level 7 for governing autonomous systems — including drones, robots, and sensor networks — in real-world mission environments. It integrates Secure Runtime Assurance and Secure Spatio-Temporal Reasoning to continuously verify system integrity and enforce safety constraints, even under degraded conditions.</p>
+  <div class="tag-row"><button class="tag" data-name="GoZTASP" data-desc="A zero-trust assurance and governance platform designed for heterogeneous autonomous systems operating at mission scale." data-relevance="The platform at the center of the story — extends zero-trust from IT networks to physical autonomous systems like drones and robots." onclick="openTagModal(event,this)">GoZTASP</button></div>
   <div class="notable-body">
     <div class="notable-apply">
       <div class="blabel">&#x1F4A1; Why This Applies to You</div>
-      <p>As autonomous systems proliferate in logistics, defense, and critical infrastructure, zero-trust governance for robots and drones moves from theoretical to essential. Security architects should study this framework as a reference for how zero-trust principles extend beyond IT networks into cyber-physical systems. The TRL-7 milestone signals this is approaching real-world procurement readiness, particularly for defense and public safety contracts.</p>
+      <p>As autonomous systems proliferate in logistics, defense, and infrastructure, applying zero-trust principles beyond traditional IT networks becomes critical. Security architects should study this framework as a model for securing cyber-physical systems where failure modes include physical harm. The TRL-7 milestone means this is moving toward real procurement and deployment, not just academic research.</p>
       <a class="notable-read" href="https://content.knowledgehub.wiley.com/goztasp-a-zero-trust-platform-for-governing-autonomous-systems-at-mission-scale/" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
         Read original &#x2192;
       </a>
