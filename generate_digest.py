@@ -7,7 +7,7 @@ import json
 import base64
 import socket
 import feedparser
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import anthropic
@@ -69,6 +69,29 @@ def _single_line(text, max_len=200):
     return re.sub(r'[\r\n\t]+', ' ', strip_html(text or '')).strip()[:max_len]
 
 
+def _to_eastern(t):
+    """Convert a time.struct_time (UTC) from feedparser to an Eastern time string."""
+    try:
+        import calendar
+        utc_dt = datetime.fromtimestamp(calendar.timegm(t), tz=timezone.utc)
+        # ET = UTC-5 (EST) / UTC-4 (EDT). Use fixed offsets; no pytz needed.
+        # DST: second Sunday of March → first Sunday of November
+        year = utc_dt.year
+        def nth_sunday(month, n):
+            d = datetime(year, month, 1)
+            d += timedelta(days=(6 - d.weekday()) % 7)
+            d += timedelta(weeks=n - 1)
+            return d
+        dst_start = nth_sunday(3, 2).replace(hour=7, tzinfo=timezone.utc)   # 2am ET = 7am UTC
+        dst_end   = nth_sunday(11, 1).replace(hour=6, tzinfo=timezone.utc)  # 2am ET = 6am UTC
+        offset = timedelta(hours=-4) if dst_start <= utc_dt < dst_end else timedelta(hours=-5)
+        et_dt = utc_dt + offset
+        suffix = "EDT" if offset.seconds == 72000 else "EST"  # -4h = 72000s
+        return et_dt.strftime(f"%b %d, %Y %-I:%M %p {suffix}").replace("  ", " ")
+    except Exception:
+        return ""
+
+
 def fetch_articles(feeds, max_per_feed=2, total_limit=8):
     articles = []
     old_timeout = socket.getdefaulttimeout()
@@ -83,11 +106,13 @@ def fetch_articles(feeds, max_per_feed=2, total_limit=8):
                     # Only pass http/https links into the prompt; others become empty string
                     if not str(link).lower().startswith(("http://", "https://")):
                         link = ""
+                    pub = entry.get("published_parsed") or entry.get("updated_parsed")
                     articles.append({
-                        "title":   _single_line(entry.get("title", "Untitled")),
-                        "summary": summary,
-                        "link":    link,
-                        "source":  _single_line(feed.feed.get("title", "Unknown Source")),
+                        "title":    _single_line(entry.get("title", "Untitled")),
+                        "summary":  summary,
+                        "link":     link,
+                        "source":   _single_line(feed.feed.get("title", "Unknown Source")),
+                        "pub_date": _to_eastern(pub) if pub else "",
                     })
             except Exception as e:
                 print(f"  Feed error [{url}]: {e}")
@@ -101,6 +126,7 @@ STORY_SCHEMA = {
     "type": "object",
     "properties": {
         "headline":          {"type": "string", "minLength": 1, "description": "Short punchy headline — required, never empty"},
+        "pub_date":          {"type": "string", "description": "Publication date of the source article — copy exactly from the article's pub_date field"},
         "tldr":              {"type": "string", "minLength": 1, "description": "One sentence that tells the whole story"},
         "why_it_matters":    {"type": "string", "description": "2-3 sentences on real-world significance"},
         "concept_title":     {"type": "string", "description": "The core technical concept illustrated"},
@@ -182,7 +208,7 @@ STORY_SCHEMA = {
             "description": "For vulnerability/CVE stories: list each affected system with its version range. Use an empty array for non-vulnerability stories.",
         },
     },
-    "required": ["headline","tldr","why_it_matters","concept_title","concept_explained",
+    "required": ["headline","pub_date","tldr","why_it_matters","concept_title","concept_explained",
                  "visual_svg","public_opinion","opinion_assessment","quiz","deep_dive",
                  "source_url","source","tech_tags","affected_systems"],
 }
@@ -212,6 +238,7 @@ Guidelines:
   Include arrowheads via <defs><marker>. 8-15 elements. Short precise labels.
   Show actual relationships and flow — not floating boxes with buzzwords.
 - quiz: 3 questions testing real conceptual understanding, not trivia.
+- pub_date: copy the pub_date field exactly from the article JSON — do not modify it.
 - public_opinion: one entry per community (HN, Reddit r/technology, r/netsec, security Twitter/X) — each with a source name and 1-2 sentence sentiment summary.
 - deep_dive: a Socratic question forcing critical thinking about assumptions or bigger trends.
 - tech_tags: 0-3 tags max. Only include when you have specific, meaningful context to share. Skip entirely for vulnerabilities if no specific version or tool is confirmed. Never use generic terms (AI, cloud, encryption). Each tag needs a clear description and a relevance sentence tied to this exact story.
@@ -435,8 +462,6 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .eyebrow { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: var(--muted2); margin-bottom: 14px; }
 .site-header h1 {
   font-size: 2.8rem; font-weight: 900; letter-spacing: -2px; line-height: 1;
-  background: linear-gradient(130deg, var(--ai) 0%, var(--purple) 45%, var(--cyber) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   margin-bottom: 14px;
 }
 .date-badge {
@@ -444,6 +469,28 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
   color: var(--muted); font-size: 0.82rem; padding: 5px 16px;
   border: 1px solid var(--border2); border-radius: 20px;
   background: var(--surface2);
+}
+
+/* ── Animated title ── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes title-in {
+  0%   { opacity: 0; transform: translateY(18px) scale(0.97); filter: blur(6px); }
+  100% { opacity: 1; transform: translateY(0) scale(1);       filter: blur(0); }
+}
+@keyframes glow-pulse {
+  0%, 100% { text-shadow: 0 0 40px rgba(129,140,248,0.0); }
+  50%       { text-shadow: 0 0 60px rgba(129,140,248,0.25), 0 0 120px rgba(167,139,250,0.15); }
+}
+.site-header h1 {
+  background: linear-gradient(130deg, var(--ai) 0%, var(--purple) 30%, var(--cyber) 60%, var(--ai) 100%);
+  background-size: 300% auto;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: title-in 0.8s cubic-bezier(0.22,1,0.36,1) both,
+             shimmer 4s linear 0.8s infinite,
+             glow-pulse 3s ease-in-out 0.8s infinite;
 }
 .date-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyber); display: inline-block; }
 
@@ -505,6 +552,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .s-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
 .src-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 2px 9px; border-radius: 20px; }
 .story-num { font-size: 0.68rem; font-weight: 700; color: var(--muted2); font-variant-numeric: tabular-nums; }
+.pub-date { font-size: 0.68rem; color: var(--muted); margin-left: auto; }
 .story-summary h2 { font-size: 1.08rem; font-weight: 700; line-height: 1.4; margin-bottom: 9px; }
 .tldr { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
 .tldr-tag {
@@ -1064,6 +1112,7 @@ def build_story_html(story, color, num):
       <div class="s-meta">
         <span class="src-badge" style="background:{color}1a;color:{color}">{esc(story.get('source',''))}</span>
         <span class="story-num">{num_str}</span>
+        {f'<span class="pub-date">&#x1F551; {esc(story.get("pub_date",""))}</span>' if story.get('pub_date') else ''}
       </div>
       <h2>{esc(story.get('headline',''))}</h2>
       <div class="tldr"><span class="tldr-tag">TL;DR</span>{esc(story.get('tldr',''))}</div>
