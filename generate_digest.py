@@ -36,6 +36,7 @@ CYBER_FEEDS = [
     "https://feeds.feedburner.com/TheHackersNews",
     "https://www.bleepingcomputer.com/feed/",
     "https://isc.sans.edu/rssfeed_full.xml",
+    "https://www.darkreading.com/rss.xml",
 ]
 
 NOTABLES_FEEDS = [
@@ -1354,7 +1355,7 @@ if __name__ == "__main__":
     else:
         print("\n-> Fetching news...")
         ai_articles       = fetch_articles(AI_FEEDS, max_per_feed=2, total_limit=8)
-        cyber_articles    = fetch_articles(CYBER_FEEDS, max_per_feed=2, total_limit=8)
+        cyber_articles    = fetch_articles(CYBER_FEEDS, max_per_feed=2, total_limit=10)
         notables_articles = fetch_articles(NOTABLES_FEEDS, max_per_feed=3, total_limit=12)
         print(f"  AI: {len(ai_articles)} | Cyber: {len(cyber_articles)} | Notables pool: {len(notables_articles)}")
 
