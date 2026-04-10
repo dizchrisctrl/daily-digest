@@ -837,7 +837,7 @@ kbd {
   font-family: 'Courier New', monospace; font-size: 0.77rem;
   color: #fca5a5; background: rgba(239,68,68,0.1);
   padding: 3px 9px; border-radius: 5px; border: 1px solid rgba(239,68,68,0.2);
-  white-space: nowrap;
+  white-space: normal; word-break: break-word;
 }
 
 /* Site footer */
