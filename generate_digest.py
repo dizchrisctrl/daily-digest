@@ -464,6 +464,10 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
   font-size: 2.8rem; font-weight: 900; letter-spacing: -2px; line-height: 1;
   margin-bottom: 14px;
 }
+.header-tagline {
+  font-size: 0.88rem; color: var(--muted); max-width: 480px; margin: 0 auto 16px;
+  line-height: 1.6; font-style: italic;
+}
 .date-badge {
   display: inline-flex; align-items: center; gap: 8px;
   color: var(--muted); font-size: 0.82rem; padding: 5px 16px;
@@ -832,6 +836,7 @@ kbd {
 <header class="site-header">
   <div class="eyebrow">Your daily briefing</div>
   <h1>The Daily Rundown</h1>
+  <p class="header-tagline">AI, cybersecurity, and the stories that actually matter — digested by Claude so you don't have to doom-scroll for them.</p>
   <div class="date-badge"><span class="date-dot"></span>__DATE__</div>
 </header>
 
