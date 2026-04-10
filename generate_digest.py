@@ -432,6 +432,20 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   --border: #252840; --border2: #333660;
   --glow-ai: rgba(129,140,248,0.15); --glow-cyber: rgba(52,211,153,0.15);
   --glow-notables: rgba(251,191,36,0.12);
+  --header-bg: linear-gradient(180deg, #161928 0%, var(--bg) 100%);
+  --header-glow: rgba(129,140,248,0.12);
+}
+html.light {
+  --bg: #f4f6fb; --surface: #ffffff; --surface2: #eef0f7; --surface3: #e4e7f2;
+  --text: #1a1d2e; --muted: #5a6275; --muted2: #8a93aa;
+  --ai: #4f46e5; --ai2: #4338ca; --cyber: #059669; --cyber2: #047857;
+  --notables: #d97706; --notables2: #b45309;
+  --purple: #7c3aed; --amber: #d97706;
+  --border: #d4d8ec; --border2: #c0c5df;
+  --glow-ai: rgba(79,70,229,0.08); --glow-cyber: rgba(5,150,105,0.08);
+  --glow-notables: rgba(217,119,6,0.08);
+  --header-bg: linear-gradient(180deg, #e8ecf8 0%, var(--bg) 100%);
+  --header-glow: rgba(79,70,229,0.08);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; min-height: 100vh; }
@@ -451,12 +465,12 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
   position: relative;
   overflow: hidden;
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(180deg, #161928 0%, var(--bg) 100%);
+  background: var(--header-bg);
 }
 .site-header::before {
   content: '';
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(129,140,248,0.12) 0%, transparent 70%);
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, var(--header-glow) 0%, transparent 70%);
   pointer-events: none;
 }
 .eyebrow { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: var(--muted2); margin-bottom: 14px; }
@@ -464,6 +478,15 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
   font-size: 2.8rem; font-weight: 900; letter-spacing: -2px; line-height: 1;
   margin-bottom: 14px;
 }
+/* ── Theme toggle ── */
+.theme-toggle {
+  position: absolute; top: 16px; right: 16px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--muted); border-radius: 20px; padding: 5px 12px;
+  font-size: 0.78rem; cursor: pointer; display: flex; align-items: center; gap: 6px;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.theme-toggle:hover { background: var(--surface3); color: var(--text); }
 .header-tagline {
   font-size: 0.88rem; color: var(--muted); max-width: 480px; margin: 0 auto 16px;
   line-height: 1.6; font-style: italic;
@@ -834,6 +857,7 @@ kbd {
 </div>
 
 <header class="site-header">
+  <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">☀️ Light</button>
   <div class="eyebrow">Your daily briefing</div>
   <h1>The Daily Rundown</h1>
   <p class="header-tagline">AI, cybersecurity, and the stories that actually matter — digested by Claude so you don't have to doom-scroll for them.</p>
@@ -974,6 +998,22 @@ function showKbdHint() {
   clearTimeout(kbdTimeout);
   kbdTimeout = setTimeout(() => hint.classList.remove('visible'), 2500);
 }
+
+// ── Theme toggle ──
+function applyTheme(light) {
+  document.documentElement.classList.toggle('light', light);
+  document.getElementById('theme-btn').textContent = light ? '🌙 Dark' : '☀️ Light';
+}
+function toggleTheme() {
+  const isLight = !document.documentElement.classList.contains('light');
+  localStorage.setItem('tdr-theme', isLight ? 'light' : 'dark');
+  applyTheme(isLight);
+}
+(function() {
+  const saved = localStorage.getItem('tdr-theme');
+  const preferLight = saved ? saved === 'light' : window.matchMedia('(prefers-color-scheme: light)').matches;
+  applyTheme(preferLight);
+})();
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeTagModal(); return; }
