@@ -552,7 +552,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .s-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
 .src-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 2px 9px; border-radius: 20px; }
 .story-num { font-size: 0.68rem; font-weight: 700; color: var(--muted2); font-variant-numeric: tabular-nums; }
-.pub-date { font-size: 0.68rem; color: var(--muted); margin-left: auto; }
+.pub-date { font-size: 0.72rem; color: var(--muted2); margin: 4px 0 8px; }
 .story-summary h2 { font-size: 1.08rem; font-weight: 700; line-height: 1.4; margin-bottom: 9px; }
 .tldr { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
 .tldr-tag {
@@ -1112,9 +1112,9 @@ def build_story_html(story, color, num):
       <div class="s-meta">
         <span class="src-badge" style="background:{color}1a;color:{color}">{esc(story.get('source',''))}</span>
         <span class="story-num">{num_str}</span>
-        {f'<span class="pub-date">&#x1F551; {esc(story.get("pub_date",""))}</span>' if story.get('pub_date') else ''}
       </div>
       <h2>{esc(story.get('headline',''))}</h2>
+      {f'<div class="pub-date">&#x1F551; {esc(story.get("pub_date",""))}</div>' if story.get('pub_date') else ''}
       <div class="tldr"><span class="tldr-tag">TL;DR</span>{esc(story.get('tldr',''))}</div>
       {tags_html}
     </div>
