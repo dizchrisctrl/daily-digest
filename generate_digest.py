@@ -807,6 +807,20 @@ details.opinion-entry[open] .opinion-chevron { transform: rotate(90deg); }
 .deepdive-outlook-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--amber); margin-bottom: 6px; }
 .deepdive-outlook-text { font-size: 0.92rem; color: var(--muted); line-height: 1.7; }
 
+/* ── Collapsible blocks ── */
+.collapsible-head { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+.collapsible-head .blabel,
+.collapsible-head .devil-intro,
+.collapsible-head .deepdive-impact-label,
+.collapsible-head .deepdive-outlook-label { margin-bottom: 0; pointer-events: none; flex-shrink: 0; }
+.collapsible-preview { font-size: 0.8rem; color: var(--muted2); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-style: italic; min-width: 0; }
+.collapsible-chevron { font-size: 0.65rem; color: var(--muted2); flex-shrink: 0; transition: transform 0.2s; line-height: 1; }
+.collapsible-head:hover .collapsible-chevron { color: var(--accent, #818cf8); }
+.collapsible-body { display: none; margin-top: 11px; }
+.collapsible.open .collapsible-body { display: block; }
+.collapsible.open .collapsible-chevron { transform: rotate(90deg); }
+.collapsible.open .collapsible-preview { display: none; }
+
 /* Audio player */
 .audio-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
 .audio-btn {
@@ -1278,6 +1292,7 @@ function closeTagModal(e) {
 // ── Story card toggle ──
 function toggleStory(card) { card.classList.toggle('open'); }
 function toggleCard(card) { card.classList.toggle('open'); }
+function toggleCollapse(head) { head.closest('.collapsible').classList.toggle('open'); }
 function toggleNotable(card) { card.classList.toggle('open'); }
 
 // ── Expand all ──
@@ -1530,6 +1545,12 @@ function h(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
+// ── Preview truncator (for collapsible section teasers) ──
+function cmPreview(s, n) {
+  n = n || 90;
+  s = (s || '').trim();
+  return s.length > n ? s.slice(0, n) + '\u2026' : s;
+}
 
 // ── Tags HTML ──
 function cmTagsHtml(tags) {
@@ -1562,6 +1583,7 @@ function cmRenderCard(story, color) {
   // Concept paragraphs
   const cParas = (story.concept_explained||'').split(/\n\n+/).filter(p=>p.trim())
     .map(p=>`<p>${h(p.trim())}</p>`).join('');
+  const conceptFirstPara = ((story.concept_explained||'').split(/\n\n+/)[0] || '').trim();
 
   // Insights
   const quizHtml = (story.quiz||[]).map((q,i) => {
@@ -1583,7 +1605,7 @@ function cmRenderCard(story, color) {
 
   // SVG diagram
   const svgHtml = story.visual_svg
-    ? `<div class="block"><div class="blabel">&#x1F4CA; Visual Diagram</div><div class="diagram-wrap"><div class="diagram-bar"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span><span class="diagram-title">${h(story.concept_title||'diagram')}</span></div><div class="diagram-svg">${cmSanitizeSvg(story.visual_svg)}</div></div></div>`
+    ? `<div class="block collapsible"><div class="collapsible-head" onclick="toggleCollapse(this)"><div class="blabel">&#x1F4CA; Visual Diagram</div><span class="collapsible-preview">${h(story.concept_title||'diagram')} &mdash; see how it works &#x2192;</span><span class="collapsible-chevron">&#9656;</span></div><div class="collapsible-body"><div class="diagram-wrap"><div class="diagram-bar"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span><span class="diagram-title">${h(story.concept_title||'diagram')}</span></div><div class="diagram-svg">${cmSanitizeSvg(story.visual_svg)}</div></div></div></div>`
     : '';
 
   // TTS text (mirrors _build_tts_text logic)
@@ -1632,10 +1654,16 @@ function cmRenderCard(story, color) {
   <div class="story-body"><div class="body-inner">
     ${cmAffectedHtml(story.affected_systems||[])}
     <div class="block"><div class="blabel">&#x1F4CC; Why It Matters</div><p>${h(story.why_it_matters||'')}</p></div>
-    <div class="block concept-block">
-      <div class="blabel">&#x1F9E0; Concept</div>
-      <div class="concept-title" style="color:${color}">${h(story.concept_title||'')}</div>
-      <div class="concept-text">${cParas}</div>
+    <div class="block concept-block collapsible">
+      <div class="collapsible-head" onclick="toggleCollapse(this)">
+        <div class="blabel">&#x1F9E0; Concept</div>
+        <span class="collapsible-preview">${h(story.concept_title||'')} &mdash; ${h(cmPreview(conceptFirstPara))}</span>
+        <span class="collapsible-chevron">&#9656;</span>
+      </div>
+      <div class="collapsible-body">
+        <div class="concept-title" style="color:${color}">${h(story.concept_title||'')}</div>
+        <div class="concept-text">${cParas}</div>
+      </div>
     </div>
     ${svgHtml}
     <div class="block opinion-block">
@@ -1643,17 +1671,23 @@ function cmRenderCard(story, color) {
       ${opinionHtml}
       <div class="blabel" style="margin-top:14px">&#x1F4CA; Sentiment Summary</div>
       <p>${h(story.opinion_assessment||'')}</p>
-      <div class="block devil-block" style="margin-top:14px;padding:14px 16px;border-radius:8px">
-        <div class="devil-intro">&#x1F608; Devil&#x2019;s Advocate</div>
-        <p class="devil-text">${h(story.devils_advocate||'')}</p>
+      <div class="block devil-block collapsible" style="margin-top:14px;padding:14px 16px;border-radius:8px">
+        <div class="collapsible-head" onclick="toggleCollapse(this)">
+          <div class="devil-intro">&#x1F608; Devil&#x2019;s Advocate</div>
+          <span class="collapsible-preview">${h(cmPreview(story.devils_advocate||''))}</span>
+          <span class="collapsible-chevron">&#9656;</span>
+        </div>
+        <div class="collapsible-body">
+          <p class="devil-text">${h(story.devils_advocate||'')}</p>
+        </div>
       </div>
     </div>
     <div class="block"><div class="blabel">&#x1F4A1; Insights</div><div class="insights-grid">${quizHtml}</div></div>
     <div class="block deepdive-block">
       <div class="blabel">&#x1F4AD; Deep Dive</div>
       <p class="deepdive-text">${h(story.deep_dive||'')}</p>
-      ${story.deep_dive_impact?`<div class="deepdive-impact"><div class="deepdive-impact-label">&#x1F3AF; How This Affects You</div><p class="deepdive-impact-text">${h(story.deep_dive_impact)}</p></div>`:''}
-      ${story.deep_dive_outlook?`<div class="deepdive-outlook"><div class="deepdive-outlook-label">&#x1F52D; Outlook</div><p class="deepdive-outlook-text">${h(story.deep_dive_outlook)}</p></div>`:''}
+      ${story.deep_dive_impact?`<div class="deepdive-impact collapsible"><div class="collapsible-head" onclick="toggleCollapse(this)"><div class="deepdive-impact-label">&#x1F3AF; How This Affects You</div><span class="collapsible-preview">${h(cmPreview(story.deep_dive_impact))}</span><span class="collapsible-chevron">&#9656;</span></div><div class="collapsible-body"><p class="deepdive-impact-text">${h(story.deep_dive_impact)}</p></div></div>`:''}
+      ${story.deep_dive_outlook?`<div class="deepdive-outlook collapsible"><div class="collapsible-head" onclick="toggleCollapse(this)"><div class="deepdive-outlook-label">&#x1F52D; Outlook</div><span class="collapsible-preview">${h(cmPreview(story.deep_dive_outlook))}</span><span class="collapsible-chevron">&#9656;</span></div><div class="collapsible-body"><p class="deepdive-outlook-text">${h(story.deep_dive_outlook)}</p></div></div>`:''}
     </div>
     <div class="story-footer">
       <a class="src-link" href="${h(sourceUrl)}" target="_blank" rel="noopener noreferrer">Read original <span>&#x2192;</span></a>
@@ -1900,6 +1934,12 @@ def esc(text):
             .replace('"', '&quot;'))
 
 
+def _preview(text, n=90):
+    """Return first n chars of text with ellipsis if truncated (for collapsible previews)."""
+    t = (text or "").strip()
+    return (t[:n] + "\u2026") if len(t) > n else t
+
+
 def safe_url(url):
     u = str(url).strip()
     if u.lower().startswith(("http://", "https://")):
@@ -2082,20 +2122,32 @@ def build_story_html(story, color, num, story_id=""):
         <p>{esc(story.get('why_it_matters',''))}</p>
       </div>
 
-      <div class="block concept-block">
-        <div class="blabel">&#x1F9E0; Concept</div>
-        <div class="concept-title" style="color:{color}">{esc(story.get('concept_title',''))}</div>
-        <div class="concept-text">{concept_paras}</div>
+      <div class="block concept-block collapsible">
+        <div class="collapsible-head" onclick="toggleCollapse(this)">
+          <div class="blabel">&#x1F9E0; Concept</div>
+          <span class="collapsible-preview">{esc(story.get('concept_title',''))} &mdash; {esc(_preview((story.get('concept_explained','').split(chr(10)+chr(10)) or [''])[0]))}</span>
+          <span class="collapsible-chevron">&#9656;</span>
+        </div>
+        <div class="collapsible-body">
+          <div class="concept-title" style="color:{color}">{esc(story.get('concept_title',''))}</div>
+          <div class="concept-text">{concept_paras}</div>
+        </div>
       </div>
 
-      <div class="block">
-        <div class="blabel">&#x1F4CA; Visual Diagram</div>
-        <div class="diagram-wrap">
-          <div class="diagram-bar">
-            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-            <span class="diagram-title">{esc(story.get('concept_title','diagram'))}</span>
+      <div class="block collapsible">
+        <div class="collapsible-head" onclick="toggleCollapse(this)">
+          <div class="blabel">&#x1F4CA; Visual Diagram</div>
+          <span class="collapsible-preview">{esc(story.get('concept_title','diagram'))} &mdash; see how it works &#x2192;</span>
+          <span class="collapsible-chevron">&#9656;</span>
+        </div>
+        <div class="collapsible-body">
+          <div class="diagram-wrap">
+            <div class="diagram-bar">
+              <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+              <span class="diagram-title">{esc(story.get('concept_title','diagram'))}</span>
+            </div>
+            {_build_visual(story)}
           </div>
-          {_build_visual(story)}
         </div>
       </div>
 
@@ -2104,9 +2156,15 @@ def build_story_html(story, color, num, story_id=""):
         {"".join(f'<details class="opinion-entry"><summary><span class="opinion-chevron">&#9656;</span><span class="opinion-source">{esc(o.get("source",""))}</span><span class="opinion-preview">{esc(o.get("sentiment",""))}</span></summary><div class="opinion-full">{esc(o.get("sentiment",""))}</div></details>' for o in (story.get("public_opinion") or []))}
         <div class="blabel" style="margin-top:14px">&#x1F4CA; Sentiment Summary</div>
         <p>{esc(story.get('opinion_assessment',''))}</p>
-        <div class="block devil-block" style="margin-top:14px;padding:14px 16px;border-radius:8px">
-          <div class="devil-intro">&#x1F608; Devil&#x2019;s Advocate</div>
-          <p class="devil-text">{esc(story.get('devils_advocate',''))}</p>
+        <div class="block devil-block collapsible" style="margin-top:14px;padding:14px 16px;border-radius:8px">
+          <div class="collapsible-head" onclick="toggleCollapse(this)">
+            <div class="devil-intro">&#x1F608; Devil&#x2019;s Advocate</div>
+            <span class="collapsible-preview">{esc(_preview(story.get('devils_advocate','')))}</span>
+            <span class="collapsible-chevron">&#9656;</span>
+          </div>
+          <div class="collapsible-body">
+            <p class="devil-text">{esc(story.get('devils_advocate',''))}</p>
+          </div>
         </div>
       </div>
 
@@ -2118,8 +2176,8 @@ def build_story_html(story, color, num, story_id=""):
       <div class="block deepdive-block">
         <div class="blabel">&#x1F4AD; Deep Dive</div>
         <p class="deepdive-text">{esc(story.get('deep_dive',''))}</p>
-        {f'<div class="deepdive-impact"><div class="deepdive-impact-label">&#x1F3AF; How This Affects You</div><p class="deepdive-impact-text">{esc(story.get("deep_dive_impact",""))}</p></div>' if story.get('deep_dive_impact') else ''}
-        {f'<div class="deepdive-outlook"><div class="deepdive-outlook-label">&#x1F52D; Outlook</div><p class="deepdive-outlook-text">{esc(story.get("deep_dive_outlook",""))}</p></div>' if story.get('deep_dive_outlook') else ''}
+        {f'<div class="deepdive-impact collapsible"><div class="collapsible-head" onclick="toggleCollapse(this)"><div class="deepdive-impact-label">&#x1F3AF; How This Affects You</div><span class="collapsible-preview">{esc(_preview(story.get("deep_dive_impact","")))}</span><span class="collapsible-chevron">&#9656;</span></div><div class="collapsible-body"><p class="deepdive-impact-text">{esc(story.get("deep_dive_impact",""))}</p></div></div>' if story.get('deep_dive_impact') else ''}
+        {f'<div class="deepdive-outlook collapsible"><div class="collapsible-head" onclick="toggleCollapse(this)"><div class="deepdive-outlook-label">&#x1F52D; Outlook</div><span class="collapsible-preview">{esc(_preview(story.get("deep_dive_outlook","")))}</span><span class="collapsible-chevron">&#9656;</span></div><div class="collapsible-body"><p class="deepdive-outlook-text">{esc(story.get("deep_dive_outlook",""))}</p></div></div>' if story.get('deep_dive_outlook') else ''}
       </div>
 
       <div class="story-footer">
