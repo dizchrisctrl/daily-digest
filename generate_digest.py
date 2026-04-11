@@ -716,6 +716,31 @@ details.opinion-entry[open] .opinion-chevron { transform: rotate(90deg); }
 .deepdive-outlook-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--amber); margin-bottom: 6px; }
 .deepdive-outlook-text { font-size: 0.92rem; color: var(--muted); line-height: 1.7; }
 
+/* Audio player */
+.audio-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.audio-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: transparent; border: 1px solid var(--border2); color: var(--muted);
+  border-radius: 20px; padding: 4px 13px; font-size: 0.73rem; font-family: inherit;
+  cursor: pointer; transition: border-color 0.2s, color 0.2s; user-select: none;
+}
+.audio-btn:hover { border-color: var(--ai); color: var(--ai); }
+.audio-btn.au-playing { border-color: var(--cyber); color: var(--cyber); }
+.audio-btn.au-paused  { border-color: var(--amber); color: var(--amber); }
+.audio-stop {
+  display: none; background: transparent; border: 1px solid var(--border);
+  color: var(--muted2); border-radius: 20px; padding: 4px 11px;
+  font-size: 0.73rem; font-family: inherit; cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.audio-stop:hover { border-color: var(--red, #f87171); color: var(--red, #f87171); }
+.audio-stop.au-visible { display: inline-block; }
+.audio-status { font-size: 0.7rem; color: var(--cyber); display: none; align-items: center; gap: 5px; }
+.audio-status.au-visible { display: flex; }
+.audio-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyber); flex-shrink: 0; }
+.au-playing .audio-dot { animation: au-pulse 1.1s ease-in-out infinite; }
+@keyframes au-pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.3; transform:scale(0.7); } }
+
 /* Story footer */
 .story-footer { padding: 11px 22px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; background: rgba(255,255,255,0.015); }
 .src-link { color: var(--ai); text-decoration: none; font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 5px; transition: color 0.15s; }
@@ -1074,6 +1099,61 @@ function toggleTheme() {
   applyTheme(preferLight);
 })();
 
+// ── Audio / Text-to-Speech ──
+(function() {
+  if (!window.speechSynthesis) {
+    document.querySelectorAll('.audio-row').forEach(r => r.style.display = 'none');
+    return;
+  }
+
+  let _current = null; // { card, utterance }
+
+  function _setBtn(card, state) {
+    const btn    = card.querySelector('.audio-btn');
+    const stop   = card.querySelector('.audio-stop');
+    const status = card.querySelector('.audio-status');
+    if (!btn) return;
+    btn.classList.remove('au-playing', 'au-paused');
+    if (state === 'playing') {
+      btn.textContent = '⏸ Pause'; btn.classList.add('au-playing');
+      btn.setAttribute('aria-label', 'Pause narration');
+      stop.classList.add('au-visible'); status.classList.add('au-visible');
+    } else if (state === 'paused') {
+      btn.textContent = '▶ Resume'; btn.classList.add('au-paused');
+      btn.setAttribute('aria-label', 'Resume narration');
+      stop.classList.add('au-visible'); status.classList.remove('au-visible');
+    } else {
+      btn.textContent = '🔊 Listen'; btn.removeAttribute('aria-pressed');
+      btn.setAttribute('aria-label', 'Listen to this story');
+      stop.classList.remove('au-visible'); status.classList.remove('au-visible');
+    }
+  }
+
+  window.toggleAudio = function(card) {
+    const synth = window.speechSynthesis;
+    if (_current && _current.card === card) {
+      if (synth.paused) { synth.resume(); _setBtn(card, 'playing'); }
+      else              { synth.pause();  _setBtn(card, 'paused');  }
+      return;
+    }
+    if (_current) { synth.cancel(); _setBtn(_current.card, 'idle'); _current = null; }
+    const text = card.dataset.tts;
+    if (!text) return;
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.rate = 0.93; utt.pitch = 1.0;
+    utt.onend = utt.onerror = () => { _setBtn(card, 'idle'); _current = null; };
+    _current = { card, utterance: utt };
+    _setBtn(card, 'playing');
+    synth.speak(utt);
+  };
+
+  window.stopAudio = function(e, card) {
+    e.stopPropagation();
+    window.speechSynthesis.cancel();
+    if (_current) { _setBtn(_current.card, 'idle'); _current = null; }
+  };
+})();
+
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeTagModal(); return; }
   if (e.target.matches('input, textarea, select')) return;
@@ -1173,6 +1253,35 @@ def build_affected_html(systems):
       </div>"""
 
 
+def _build_tts_text(story):
+    """Build a clean, naturally readable narration script for a story."""
+    parts = []
+    if story.get('headline'):
+        parts.append(story['headline'] + '.')
+    if story.get('tldr'):
+        parts.append('Summary. ' + story['tldr'])
+    if story.get('why_it_matters'):
+        parts.append('Why it matters. ' + story['why_it_matters'])
+    if story.get('concept_title') and story.get('concept_explained'):
+        concept_text = story['concept_explained'].replace('\n\n', ' ').replace('\n', ' ')
+        parts.append('Concept: ' + story['concept_title'] + '. ' + concept_text)
+    if story.get('opinion_assessment'):
+        parts.append('Public sentiment. ' + story['opinion_assessment'])
+    if story.get('devils_advocate'):
+        parts.append("Devil's advocate. " + story['devils_advocate'])
+    for i, q in enumerate(story.get('quiz', []), 1):
+        lens = q.get('lens', '')
+        label = f'Insight {i}' + (f', {lens} perspective' if lens else '') + '.'
+        parts.append(f'{label} {q.get("q","")} {q.get("a","")} {q.get("explain","")}')
+    if story.get('deep_dive'):
+        parts.append('Deep dive. ' + story['deep_dive'])
+    if story.get('deep_dive_impact'):
+        parts.append('How this affects you. ' + story['deep_dive_impact'])
+    if story.get('deep_dive_outlook'):
+        parts.append('Outlook. ' + story['deep_dive_outlook'])
+    return ' '.join(parts)
+
+
 def _build_visual(story):
     """Return the visual block — SVG preferred, ASCII pre as fallback for old digests."""
     svg = story.get('visual_svg', '').strip()
@@ -1213,8 +1322,10 @@ def build_story_html(story, color, num):
     tags_html    = build_tags_html(story.get("tech_tags", []))
     affected_html = build_affected_html(story.get("affected_systems", []))
 
+    tts_text = esc(_build_tts_text(story))
+
     return f"""
-<article class="story-card">
+<article class="story-card" data-tts="{tts_text}">
   <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
     <div class="s-left">
       <div class="s-meta">
@@ -1225,6 +1336,11 @@ def build_story_html(story, color, num):
       {f'<div class="pub-date">&#x1F551; {esc(story.get("pub_date",""))}</div>' if story.get('pub_date') else ''}
       <div class="tldr"><span class="tldr-tag">TL;DR</span>{esc(story.get('tldr',''))}</div>
       {tags_html}
+      <div class="audio-row" onclick="event.stopPropagation()">
+        <button class="audio-btn" onclick="toggleAudio(this.closest('.story-card'))" aria-label="Listen to this story">&#x1F50A; Listen</button>
+        <button class="audio-stop" onclick="stopAudio(event,this.closest('.story-card'))" aria-label="Stop narration">&#x25A0; Stop</button>
+        <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
+      </div>
     </div>
     <div class="chevron">&#9660;</div>
   </div>
