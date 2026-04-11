@@ -26,26 +26,49 @@ GMAIL_REFRESH_TOKEN = os.environ["GMAIL_REFRESH_TOKEN"]
 
 # ── RSS Feeds ──────────────────────────────────────────────────────────────────
 AI_FEEDS = [
+    # Primary — high-frequency AI/ML coverage
     "https://techcrunch.com/category/artificial-intelligence/feed/",
     "https://venturebeat.com/category/ai/feed/",
     "https://www.technologyreview.com/feed/",
     "https://feeds.arstechnica.com/arstechnica/technology-lab",
+    # Backup — additional high-signal AI sources
+    "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",
+    "https://www.wired.com/feed/category/artificial-intelligence/latest/rss",
+    "https://www.zdnet.com/topic/artificial-intelligence/rss.xml",
+    "https://feeds.feedburner.com/googleblog",           # Google AI announcements
+    "https://openai.com/blog/rss.xml",                   # OpenAI blog
+    "https://www.anthropic.com/rss.xml",                 # Anthropic blog
 ]
 
 CYBER_FEEDS = [
+    # Primary — daily security news
     "https://krebsonsecurity.com/feed/",
     "https://feeds.feedburner.com/TheHackersNews",
     "https://www.bleepingcomputer.com/feed/",
     "https://isc.sans.edu/rssfeed_full.xml",
     "https://www.darkreading.com/rss.xml",
+    # Backup — additional reliable security sources
+    "https://feeds.feedburner.com/securityweek",
+    "https://nakedsecurity.sophos.com/feed/",            # Sophos Naked Security
+    "https://www.schneier.com/blog/atom.xml",            # Schneier on Security
+    "https://grahamcluley.com/feed/",                    # Graham Cluley
+    "https://www.cisa.gov/news-events/cybersecurity-advisories/feed.xml",  # CISA advisories
+    "https://www.csoonline.com/feed/",
 ]
 
 NOTABLES_FEEDS = [
+    # Primary
     "https://www.theverge.com/rss/index.xml",
     "https://www.wired.com/feed/rss",
     "https://feeds.reuters.com/reuters/technologyNews",
     "https://hnrss.org/frontpage",
     "https://spectrum.ieee.org/feeds/feed.rss",
+    # Backup — broader tech/society coverage
+    "https://www.fastcompany.com/technology/rss",
+    "https://feeds.a.dj.com/rss/RSSWSJD.xml",           # WSJ Tech
+    "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml",  # NYT Tech
+    "https://feeds.feedburner.com/TechCrunch",           # TechCrunch broad
+    "https://www.technologyreview.com/feed/",
 ]
 
 
@@ -94,32 +117,82 @@ def _to_eastern(t):
         return ""
 
 
-def fetch_articles(feeds, max_per_feed=2, total_limit=8):
-    articles = []
-    old_timeout = socket.getdefaulttimeout()
-    socket.setdefaulttimeout(15)          # per-connection cap — prevents hung feeds
+def _pub_to_utc(pub):
+    """Convert feedparser time.struct_time (UTC) to an aware datetime."""
+    import calendar
     try:
-        for url in feeds:
-            try:
-                feed = feedparser.parse(url, request_headers={"User-Agent": "DailyDigest/1.0"})
-                for entry in feed.entries[:max_per_feed]:
-                    summary = strip_html(entry.get("summary", entry.get("description", "")))[:600]
-                    link    = entry.get("link", "")
-                    # Only pass http/https links into the prompt; others become empty string
-                    if not str(link).lower().startswith(("http://", "https://")):
-                        link = ""
-                    pub = entry.get("published_parsed") or entry.get("updated_parsed")
-                    articles.append({
-                        "title":    _single_line(entry.get("title", "Untitled")),
-                        "summary":  summary,
-                        "link":     link,
-                        "source":   _single_line(feed.feed.get("title", "Unknown Source")),
-                        "pub_date": _to_eastern(pub) if pub else "",
-                    })
-            except Exception as e:
-                print(f"  Feed error [{url}]: {e}")
-    finally:
-        socket.setdefaulttimeout(old_timeout)
+        return datetime.fromtimestamp(calendar.timegm(pub), tz=timezone.utc)
+    except Exception:
+        return None
+
+
+def fetch_articles(feeds, max_per_feed=2, total_limit=8, max_age_hours=48):
+    """Fetch articles from RSS feeds, keeping only those published within max_age_hours.
+    Falls back to 96 hours if fewer than half of total_limit articles are found."""
+
+    def _collect(cutoff):
+        seen_titles = set()
+        results = []
+        old_timeout = socket.getdefaulttimeout()
+        socket.setdefaulttimeout(15)
+        try:
+            for url in feeds:
+                try:
+                    feed = feedparser.parse(url, request_headers={"User-Agent": "DailyDigest/1.0"})
+                    # Sort entries newest-first before taking max_per_feed
+                    entries = sorted(
+                        feed.entries,
+                        key=lambda e: _pub_to_utc(e.get("published_parsed") or e.get("updated_parsed")) or datetime.min.replace(tzinfo=timezone.utc),
+                        reverse=True,
+                    )
+                    count = 0
+                    for entry in entries:
+                        if count >= max_per_feed:
+                            break
+                        pub = entry.get("published_parsed") or entry.get("updated_parsed")
+                        pub_dt = _pub_to_utc(pub) if pub else None
+                        # Skip articles outside the recency window
+                        if pub_dt and pub_dt < cutoff:
+                            continue
+                        title = _single_line(entry.get("title", "Untitled"))
+                        # Deduplicate by normalised title
+                        title_key = re.sub(r'\W+', '', title.lower())[:60]
+                        if title_key in seen_titles:
+                            continue
+                        seen_titles.add(title_key)
+                        link = entry.get("link", "")
+                        if not str(link).lower().startswith(("http://", "https://")):
+                            link = ""
+                        summary = strip_html(entry.get("summary", entry.get("description", "")))[:600]
+                        results.append({
+                            "title":    title,
+                            "summary":  summary,
+                            "link":     link,
+                            "source":   _single_line(feed.feed.get("title", "Unknown Source")),
+                            "pub_date": _to_eastern(pub) if pub else "",
+                            "_pub_dt":  pub_dt,
+                        })
+                        count += 1
+                except Exception as e:
+                    print(f"  Feed error [{url}]: {e}")
+        finally:
+            socket.setdefaulttimeout(old_timeout)
+        # Sort all collected articles newest-first
+        results.sort(key=lambda a: a.get("_pub_dt") or datetime.min.replace(tzinfo=timezone.utc), reverse=True)
+        return results
+
+    now = datetime.now(timezone.utc)
+    articles = _collect(now - timedelta(hours=max_age_hours))
+
+    if len(articles) < max(2, total_limit // 2):
+        print(f"  ⚠ Only {len(articles)} articles in {max_age_hours}h window — widening to 96h")
+        articles = _collect(now - timedelta(hours=96))
+
+    # Strip internal sort key before returning
+    for a in articles:
+        a.pop("_pub_dt", None)
+
+    print(f"  Fetched {len(articles[:total_limit])} articles (within recency window)")
     return articles[:total_limit]
 
 
@@ -2027,9 +2100,9 @@ if __name__ == "__main__":
         print("\nDone (rebuild only -- no email sent)!")
     else:
         print("\n-> Fetching news...")
-        ai_articles       = fetch_articles(AI_FEEDS, max_per_feed=2, total_limit=8)
-        cyber_articles    = fetch_articles(CYBER_FEEDS, max_per_feed=2, total_limit=10)
-        notables_articles = fetch_articles(NOTABLES_FEEDS, max_per_feed=3, total_limit=12)
+        ai_articles       = fetch_articles(AI_FEEDS,       max_per_feed=2, total_limit=10)
+        cyber_articles    = fetch_articles(CYBER_FEEDS,    max_per_feed=2, total_limit=12)
+        notables_articles = fetch_articles(NOTABLES_FEEDS, max_per_feed=2, total_limit=14)
         print(f"  AI: {len(ai_articles)} | Cyber: {len(cyber_articles)} | Notables pool: {len(notables_articles)}")
 
         print("\n-> Generating with Claude Opus...")
