@@ -834,12 +834,16 @@ details.opinion-entry[open] .opinion-chevron { transform: rotate(90deg); }
 .share-btn:hover { border-color: var(--purple); color: var(--purple); }
 .share-btn.share-active { border-color: var(--purple); color: var(--purple); }
 .share-popover {
-  display: none; position: absolute; bottom: calc(100% + 10px); left: 0;
+  display: none; position: absolute; top: calc(100% + 10px); right: 0;
   background: var(--surface2); border: 1px solid var(--border2);
   border-radius: 14px; padding: 12px; min-width: 220px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.45); z-index: 200;
 }
 .share-popover.open { display: block; }
+/* Popover opens upward when at the bottom of the panel */
+.share-popover-up {
+  top: auto; bottom: calc(100% + 10px);
+}
 .share-popover-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
   letter-spacing: 1.5px; color: var(--muted2); margin-bottom: 10px; }
 .share-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
@@ -1581,20 +1585,6 @@ def build_story_html(story, color, num, story_id=""):
         <button class="audio-btn" onclick="toggleAudio(this.closest('.story-card'))" aria-label="Listen to this story">&#x1F50A; Listen</button>
         <button class="audio-stop" onclick="stopAudio(event,this.closest('.story-card'))" aria-label="Stop narration">&#x25A0; Stop</button>
         <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
-        <div class="share-wrap">
-          <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
-          <div class="share-popover" onclick="event.stopPropagation()">
-            <div class="share-popover-title">Share this story</div>
-            <div class="share-grid">
-              <a class="share-option so-x" href="{esc(share_links['x'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
-              <a class="share-option so-whatsapp" href="{esc(share_links['whatsapp'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
-              <a class="share-option so-telegram" href="{esc(share_links['telegram'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
-              <a class="share-option so-linkedin" href="{esc(share_links['linkedin'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
-              <div class="share-divider"></div>
-              <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
     <div class="chevron">&#9660;</div>
@@ -1652,7 +1642,20 @@ def build_story_html(story, color, num, story_id=""):
         <a class="src-link" href="{safe_url(story.get('source_url','#'))}" target="_blank" rel="noopener noreferrer">
           Read original <span>&#x2192;</span>
         </a>
-        <span class="src-name">{esc(story.get('source',''))}</span>
+        <div class="share-wrap" onclick="event.stopPropagation()">
+          <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
+          <div class="share-popover share-popover-up" onclick="event.stopPropagation()">
+            <div class="share-popover-title">Share this story</div>
+            <div class="share-grid">
+              <a class="share-option so-x" href="{esc(share_links['x'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
+              <a class="share-option so-whatsapp" href="{esc(share_links['whatsapp'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
+              <a class="share-option so-telegram" href="{esc(share_links['telegram'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
+              <a class="share-option so-linkedin" href="{esc(share_links['linkedin'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
+              <div class="share-divider"></div>
+              <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
