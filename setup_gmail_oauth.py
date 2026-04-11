@@ -20,9 +20,9 @@ except ImportError:
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
 print("""
-╔══════════════════════════════════════════════════════════════╗
-║          Gmail OAuth2 Setup — Send-Only Access               ║
-╚══════════════════════════════════════════════════════════════╝
+================================================================
+         Gmail OAuth2 Setup -- Send-Only Access
+================================================================
 
 This grants the digest SEND-ONLY access to Gmail.
 Your inbox cannot be read, searched, or modified.
@@ -34,11 +34,11 @@ Before running this script you need:
 Steps:
   1. Go to https://console.cloud.google.com
   2. Create a new project (or use existing)
-  3. APIs & Services → Enable APIs → search "Gmail API" → Enable
-  4. APIs & Services → Credentials → Create Credentials → OAuth client ID
-  5. Application type: Desktop app → Create
-  6. Download JSON → save as client_secrets.json in this folder
-  7. APIs & Services → OAuth consent screen → set to "Production"
+  3. APIs & Services -> Enable APIs -> search "Gmail API" -> Enable
+  4. APIs & Services -> Credentials -> Create Credentials -> OAuth client ID
+  5. Application type: Desktop app -> Create
+  6. Download JSON -> save as client_secrets.json in this folder
+  7. APIs & Services -> OAuth consent screen -> set to "Production"
      (this prevents the 7-day token expiry for testing apps)
 
 Press Enter when client_secrets.json is ready...
@@ -64,9 +64,9 @@ flow = InstalledAppFlow.from_client_secrets_file("client_secrets.json", SCOPES)
 creds = flow.run_local_server(port=0)
 
 print("""
-╔══════════════════════════════════════════════════════════════╗
-║  Authorization successful! Add these as GitHub secrets:      ║
-╚══════════════════════════════════════════════════════════════╝
+================================================================
+  Authorization successful! Add these as GitHub secrets:
+================================================================
 
 Go to: https://github.com/dizchrisctrl/daily-digest/settings/secrets/actions
 """)
