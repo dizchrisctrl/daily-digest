@@ -164,7 +164,8 @@ STORY_SCHEMA = {
                 "required": ["source", "sentiment"],
             },
         },
-        "opinion_assessment":{"type": "string", "description": "Critical analysis: what's valid, overblown, or missing from that public opinion"},
+        "opinion_assessment":{"type": "string", "description": "2-3 sentences summarizing the overall collective sentiment across all communities — what is the dominant mood, the shared concern or excitement, and the key theme running through all the reactions"},
+        "devils_advocate":   {"type": "string", "description": "A sharp, provocative counter-perspective that challenges the dominant public sentiment. Reveal an overlooked irony, an inconvenient truth, or a reframe that makes the reader stop and think differently about the story. Should feel like a genuine twist, not a mild qualification."},
         "quiz": {
             "type": "array",
             "items": {
@@ -179,7 +180,8 @@ STORY_SCHEMA = {
             "minItems": 3,
             "maxItems": 3,
         },
-        "deep_dive":  {"type": "string", "description": "Socratic question connecting this to bigger trends"},
+        "deep_dive":  {"type": "string", "description": "A riveting 3-4 sentence narrative that synthesizes everything in the story — the concept, the event, the opinions, the stakes — into a single compelling thread. Write it like the opening of a great longform piece: draw the reader in, raise the tension, and leave them wanting more."},
+        "deep_dive_impact": {"type": "string", "description": "2-3 sentences on how this story directly affects the reader — their day-to-day work, the tools they use, their security posture, or their career trajectory. Be specific and personal, not generic."},
         "source_url": {"type": "string"},
         "source":     {"type": "string"},
         "tech_tags": {
@@ -210,8 +212,8 @@ STORY_SCHEMA = {
         },
     },
     "required": ["headline","pub_date","tldr","why_it_matters","concept_title","concept_explained",
-                 "visual_svg","public_opinion","opinion_assessment","quiz","deep_dive",
-                 "source_url","source","tech_tags","affected_systems"],
+                 "visual_svg","public_opinion","opinion_assessment","devils_advocate","quiz","deep_dive",
+                 "deep_dive_impact","source_url","source","tech_tags","affected_systems"],
 }
 
 SECTION_TOOL = {
@@ -241,7 +243,10 @@ Guidelines:
 - quiz: 3 insight cards that add conceptual depth. Each card has a thought-provoking hook (q) that draws the reader into a concept, a crisp key insight or takeaway (a), and a brief explanation (explain) connecting it to broader trends or implications. Avoid trivia — these should feel like "aha" moments that make the story richer.
 - pub_date: copy the pub_date field exactly from the article JSON — do not modify it.
 - public_opinion: one entry per community (HN, Reddit r/technology, r/netsec, security Twitter/X) — each with a source name and 1-2 sentence sentiment summary.
-- deep_dive: a Socratic question forcing critical thinking about assumptions or bigger trends.
+- opinion_assessment: 2-3 sentences capturing the dominant collective mood across all communities. What is everyone feeling, and why?
+- devils_advocate: challenge the dominant sentiment with a sharp counter-perspective — an overlooked irony, an inconvenient truth, or a reframe that makes the reader reconsider the story. Make it feel like a genuine twist, not a mild qualification.
+- deep_dive: 3-4 sentences that synthesize the full story — concept, event, stakes, and tensions — into a compelling narrative thread. Write like the opening of great longform journalism: draw the reader in, raise the tension, leave them wanting more.
+- deep_dive_impact: 2-3 sentences on how this directly affects the reader — their work, their tools, their security posture, or their career. Be specific and personal.
 - tech_tags: 0-3 tags max. Only include when you have specific, meaningful context to share. Skip entirely for vulnerabilities if no specific version or tool is confirmed. Never use generic terms (AI, cloud, encryption). Each tag needs a clear description and a relevance sentence tied to this exact story.
 - affected_systems: for vulnerability stories, list each affected system with its version range. Empty array otherwise.
 
@@ -681,10 +686,18 @@ details.opinion-entry[open] .opinion-chevron { transform: rotate(90deg); }
 .q-hint { font-size: 0.65rem; color: var(--muted2); margin-top: 8px; display: flex; align-items: center; gap: 4px; }
 .qcard.open .q-hint { color: var(--cyber2); }
 
+/* Devil's Advocate */
+.devil-block { background: rgba(239,68,68,0.04); border-left: 3px solid rgba(239,68,68,0.5) !important; }
+.devil-intro { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #ef4444; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.devil-text { font-size: 0.94rem; color: var(--muted); line-height: 1.7; font-style: italic; }
+
 /* Deep Dive */
 .deepdive-block { background: var(--deepdive-bg); position: relative; overflow: hidden; }
 .deepdive-block::after { content: '"'; position: absolute; right: 18px; top: 8px; font-size: 6rem; color: var(--deepdive-quote-color); font-family: Georgia, serif; line-height: 1; }
 .deepdive-text { font-size: 1.02rem; font-style: italic; color: var(--deepdive-text-color); padding-left: 16px; border-left: 3px solid var(--purple); line-height: 1.85; }
+.deepdive-impact { margin-top: 18px; padding: 14px 16px; background: rgba(139,92,246,0.07); border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); }
+.deepdive-impact-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--purple); margin-bottom: 6px; }
+.deepdive-impact-text { font-size: 0.92rem; color: var(--muted); line-height: 1.7; }
 
 /* Story footer */
 .story-footer { padding: 11px 22px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; background: rgba(255,255,255,0.015); }
@@ -1222,8 +1235,12 @@ def build_story_html(story, color, num):
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
         {"".join(f'<details class="opinion-entry"><summary><span class="opinion-chevron">&#9656;</span><span class="opinion-source">{esc(o.get("source",""))}</span><span class="opinion-preview">{esc(o.get("sentiment",""))}</span></summary><div class="opinion-full">{esc(o.get("sentiment",""))}</div></details>' for o in (story.get("public_opinion") or []))}
-        <div class="blabel" style="margin-top:14px">&#x1F50D; Assessment</div>
+        <div class="blabel" style="margin-top:14px">&#x1F4CA; Sentiment Summary</div>
         <p>{esc(story.get('opinion_assessment',''))}</p>
+        <div class="block devil-block" style="margin-top:14px;padding:14px 16px;border-radius:8px">
+          <div class="devil-intro">&#x1F608; Devil&#x2019;s Advocate</div>
+          <p class="devil-text">{esc(story.get('devils_advocate',''))}</p>
+        </div>
       </div>
 
       <div class="block">
@@ -1234,6 +1251,7 @@ def build_story_html(story, color, num):
       <div class="block deepdive-block">
         <div class="blabel">&#x1F4AD; Deep Dive</div>
         <p class="deepdive-text">{esc(story.get('deep_dive',''))}</p>
+        {f'<div class="deepdive-impact"><div class="deepdive-impact-label">&#x1F3AF; How This Affects You</div><p class="deepdive-impact-text">{esc(story.get("deep_dive_impact",""))}</p></div>' if story.get('deep_dive_impact') else ''}
       </div>
 
       <div class="story-footer">
