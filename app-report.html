@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Digest — App Report</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0b0e1a;
+    --surface:   #111827;
+    --border:    #1e2a3a;
+    --text:      #e2e8f0;
+    --muted:     #64748b;
+    --accent-ai: #818cf8;
+    --accent-cy: #34d399;
+    --accent-nb: #fbbf24;
+    --accent-gh: #a78bfa;
+    --accent-gm: #f87171;
+    --accent-sc: #38bdf8;
+    --pill-bg:   #1e293b;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 0 16px 80px;
+  }
+
+  /* ── Header ── */
+  header {
+    max-width: 860px;
+    margin: 48px auto 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 32px;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--accent-ai), var(--accent-cy));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .tagline {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 560px;
+  }
+  .meta-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .pill {
+    background: var(--pill-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .pill span { color: var(--text); }
+
+  /* ── Nav ── */
+  nav {
+    max-width: 860px;
+    margin: 0 auto 40px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  nav a {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.83rem;
+    transition: all .15s;
+  }
+  nav a:hover { border-color: var(--accent-ai); color: var(--accent-ai); }
+
+  /* ── Section wrapper ── */
+  .section {
+    max-width: 860px;
+    margin: 0 auto 56px;
+  }
+  .section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── Flow diagram ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    margin-bottom: 12px;
+  }
+  .flow-step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 0.83rem;
+    white-space: nowrap;
+  }
+  .flow-arrow {
+    color: var(--muted);
+    padding: 0 6px;
+    font-size: 1rem;
+  }
+  .flow-note {
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-top: 8px;
+  }
+
+  /* ── Component cards ── */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .card-title { font-weight: 700; font-size: 0.93rem; }
+  .card-sub   { font-size: 0.78rem; color: var(--muted); }
+  .card-desc  { font-size: 0.83rem; color: #94a3b8; line-height: 1.55; }
+
+  /* accent variants */
+  .ai  { border-top: 2px solid var(--accent-ai); }
+  .cy  { border-top: 2px solid var(--accent-cy); }
+  .nb  { border-top: 2px solid var(--accent-nb); }
+  .gh  { border-top: 2px solid var(--accent-gh); }
+  .gm  { border-top: 2px solid var(--accent-gm); }
+  .sc  { border-top: 2px solid var(--accent-sc); }
+  .ai .card-icon { background: #1e1f3a; color: var(--accent-ai); }
+  .cy .card-icon { background: #0d2b22; color: var(--accent-cy); }
+  .nb .card-icon { background: #2b2210; color: var(--accent-nb); }
+  .gh .card-icon { background: #1e1830; color: var(--accent-gh); }
+  .gm .card-icon { background: #2b1414; color: var(--accent-gm); }
+  .sc .card-icon { background: #0d1f2b; color: var(--accent-sc); }
+
+  /* ── Toggle explainer ── */
+  .explainer { margin-top: 10px; }
+  .toggle-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 0.74rem;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all .15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .toggle-btn:hover { border-color: var(--accent-ai); color: var(--accent-ai); }
+  .toggle-btn .arrow { transition: transform .2s; display: inline-block; }
+  .toggle-btn.open .arrow { transform: rotate(90deg); }
+  .explain-body {
+    display: none;
+    margin-top: 10px;
+    background: #0d1117;
+    border-left: 2px solid var(--border);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    font-size: 0.81rem;
+    color: #94a3b8;
+    line-height: 1.6;
+  }
+  .explain-body.open { display: block; }
+
+  /* ── Security section ── */
+  .sec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .sec-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .sec-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .sec-title { font-size: 0.87rem; font-weight: 600; }
+  .severity {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .sev-pass    { background: #0d2b22; color: #34d399; }
+  .sev-info    { background: #0d1f2b; color: #38bdf8; }
+  .sev-low     { background: #1e2511; color: #a3e635; }
+  .sev-medium  { background: #2b1f0a; color: #fbbf24; }
+  .sev-high    { background: #2b1414; color: #f87171; }
+  .sec-desc { font-size: 0.79rem; color: #94a3b8; line-height: 1.55; }
+  .sec-status {
+    font-size: 0.73rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+    margin-top: 2px;
+  }
+  .sec-status .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+  .dot-green  { background: #34d399; }
+  .dot-yellow { background: #fbbf24; }
+  .dot-blue   { background: #38bdf8; }
+
+  /* ── Deps table ── */
+  .dep-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.83rem;
+  }
+  .dep-table th {
+    text-align: left;
+    color: var(--muted);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0 12px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dep-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .dep-table tr:last-child td { border-bottom: none; }
+  .dep-table tr:hover td { background: #111827; }
+  .dep-name { font-family: monospace; font-size: 0.85rem; color: var(--accent-sc); }
+  .dep-ver  { font-family: monospace; font-size: 0.82rem; color: var(--muted); }
+  .dep-use  { color: #94a3b8; }
+
+  /* ── Feeds table ── */
+  .feed-group { margin-bottom: 24px; }
+  .feed-group-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
+  }
+  .feed-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .feed-list li {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 14px;
+    font-size: 0.81rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .feed-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .feed-url { font-family: monospace; font-size: 0.77rem; color: var(--muted); margin-left: auto; }
+
+  /* ── Output fields table ── */
+  .field-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+  .field-table th {
+    text-align: left;
+    color: var(--muted);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0 10px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .field-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .field-table tr:last-child td { border-bottom: none; }
+  .field-name { font-family: monospace; font-size: 0.82rem; color: var(--accent-ai); }
+  .field-type { font-family: monospace; font-size: 0.78rem; color: var(--muted); }
+  .field-desc { color: #94a3b8; }
+
+  /* ── Summary verdict ── */
+  .verdict-box {
+    background: var(--surface);
+    border: 1px solid #1e3a2a;
+    border-left: 4px solid var(--accent-cy);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .verdict-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
+  .verdict-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+  .verdict-sub { font-size: 0.83rem; color: #94a3b8; }
+
+  /* ── Footer ── */
+  footer {
+    max-width: 860px;
+    margin: 40px auto 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 0.78rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">App Documentation</div>
+  <h1>Daily Digest</h1>
+  <p class="tagline">A fully automated pipeline that fetches tech and security news, generates AI-written deep-dive stories, and delivers them as a GitHub Pages site and email — every morning at 7 AM.</p>
+  <div class="meta-pills">
+    <div class="pill">Language: <span>Python 3.12</span></div>
+    <div class="pill">AI Model: <span>Claude Opus 4.6</span></div>
+    <div class="pill">Schedule: <span>Daily 7:00 AM EST</span></div>
+    <div class="pill">Hosting: <span>GitHub Pages</span></div>
+    <div class="pill">Email: <span>Gmail API (send-only)</span></div>
+    <div class="pill">Proxy: <span>Cloudflare Worker</span></div>
+    <div class="pill">Rate Limit: <span>10 cards/week (KV)</span></div>
+    <div class="pill">Repo: <span>dizchrisctrl/daily-digest</span></div>
+  </div>
+</header>
+
+<nav>
+  <a href="#overview">Overview</a>
+  <a href="#pipeline">Pipeline</a>
+  <a href="#feeds">RSS Feeds</a>
+  <a href="#ai">AI Generation</a>
+  <a href="#cardmaker">Card Maker</a>
+  <a href="#output">Output</a>
+  <a href="#delivery">Delivery</a>
+  <a href="#infra">Infrastructure</a>
+  <a href="#deps">Dependencies</a>
+  <a href="#security">Security</a>
+</nav>
+
+<!-- ══ OVERVIEW ══════════════════════════════════════════════════════════ -->
+<section class="section" id="overview">
+  <div class="section-label" style="color: var(--accent-ai)">What It Does</div>
+  <div class="flow">
+    <div class="flow-step">RSS Feeds</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Article fetch</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Claude Opus</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">HTML + JSON</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">GitHub Pages</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Email</div>
+  </div>
+  <p class="flow-note">Triggered every day at 07:00 EST via GitHub Actions cron. Total runtime: ~6 minutes.</p>
+</section>
+
+<!-- ══ PIPELINE ══════════════════════════════════════════════════════════ -->
+<section class="section" id="pipeline">
+  <div class="section-label" style="color: var(--accent-ai)">Pipeline Steps</div>
+  <div class="cards">
+
+    <div class="card ai">
+      <div class="card-head">
+        <div class="card-icon">1</div>
+        <div>
+          <div class="card-title">Fetch Articles</div>
+          <div class="card-sub">fetch_articles()</div>
+        </div>
+      </div>
+      <div class="card-desc">Polls 31 RSS feeds across three categories (10 AI, 11 Cyber, 10 Notables). Only articles published in the last 48 hours are considered — older entries are skipped. Caps at 2 entries per feed and a 15-second socket timeout. Strips HTML from summaries and sanitises titles to single lines to prevent prompt injection.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">Think of this as a news clipping service with a freshness filter. It visits 31 trusted news sites, grabs only the latest headlines (within 48 hours), and tidies them up before passing them along. The 15-second timeout means it won't get stuck waiting forever if a site is down.</div>
+      </div>
+    </div>
+
+    <div class="card ai">
+      <div class="card-head">
+        <div class="card-icon">2</div>
+        <div>
+          <div class="card-title">Select Top Articles</div>
+          <div class="card-sub">call_claude_for_section() — selection pass</div>
+        </div>
+      </div>
+      <div class="card-desc">Sends up to 8 article titles to Claude Opus with a lightweight prompt asking it to return 3 indices (the most notable stories). Uses a 50-token budget — no story content yet.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">Before spending time writing full stories, the app asks Claude to quickly scan the headlines and pick the three most interesting ones — like asking an editor to skim the wire and flag the top stories before assigning writers.</div>
+      </div>
+    </div>
+
+    <div class="card ai">
+      <div class="card-head">
+        <div class="card-icon">3</div>
+        <div>
+          <div class="card-title">Generate Stories</div>
+          <div class="card-sub">call_claude_for_section() × 3</div>
+        </div>
+      </div>
+      <div class="card-desc">One Claude Opus API call per story (3 per section, 7 total including Notables). Each call uses <em>tool_use</em> with a strict JSON schema — forcing structured output for every field including the SVG diagram. Max 8,000 tokens per call.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">Instead of asking Claude to write a free-form article, the app hands it a form to fill in. Claude must supply a headline, summary, diagram, quiz questions, and more — all in a specific format. This makes the output reliable and machine-readable, not just a wall of text. One story per API call avoids hitting Claude's output size limit.</div>
+      </div>
+    </div>
+
+    <div class="card nb">
+      <div class="card-head">
+        <div class="card-icon">4</div>
+        <div>
+          <div class="card-title">Generate Notables</div>
+          <div class="card-sub">call_claude_for_notables()</div>
+        </div>
+      </div>
+      <div class="card-desc">Single call returning 5 shorter highlights (headline, summary, applicability, category) from a broader pool drawn from 10 feeds including The Verge, Wired, Reuters, Hacker News, IEEE Spectrum, Fast Company, WSJ Tech, NYT Tech, TechCrunch, and MIT Tech Review.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">The Notables section covers broader tech and world news — not just AI or security. It's a lighter format: a short summary and a note on why it matters to someone in tech. Claude picks the 5 most relevant from the pool and returns them all in one go.</div>
+      </div>
+    </div>
+
+    <div class="card gh">
+      <div class="card-head">
+        <div class="card-icon">5</div>
+        <div>
+          <div class="card-title">Build HTML</div>
+          <div class="card-sub">generate_html() + save_output()</div>
+        </div>
+      </div>
+      <div class="card-desc">Assembles the full interactive webpage from a Python string template. Injects escaped story data, inline SVG diagrams, the Cloudflare Worker URL (baked from <code>WORKER_URL</code> env var), and a static JS block for tabs, keyboard navigation, deep-link sharing with highlight animation, TTS, and the Card Maker. Writes <code>output/index.html</code>, <code>output/digest.json</code>, <code>output/guide.html</code>, and per-story OG redirect pages under <code>output/s/</code>.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">Once all stories are ready, the app assembles them into a web page — the same way you'd slot pieces into a template document. Everything is baked into a single HTML file with no external requests needed, so it works reliably as a static site.</div>
+      </div>
+    </div>
+
+    <div class="card gm">
+      <div class="card-head">
+        <div class="card-icon">6</div>
+        <div>
+          <div class="card-title">Send Email</div>
+          <div class="card-sub">send_email()</div>
+        </div>
+      </div>
+      <div class="card-desc">Composes a short HTML digest email (headlines + TLDRs + a link to the full page) and sends it via the Gmail API using OAuth2 refresh-token flow. No password — send-only scope, cannot read the inbox.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">The app sends email the same way a trusted app like Notion or Todoist would — it has a permission token that only allows sending, not reading. No password is ever stored. The token is kept in GitHub's encrypted secrets vault and never touches the code.</div>
+      </div>
+    </div>
+
+    <div class="card gh">
+      <div class="card-head">
+        <div class="card-icon">7</div>
+        <div>
+          <div class="card-title">Deploy to Pages</div>
+          <div class="card-sub">peaceiris/actions-gh-pages</div>
+        </div>
+      </div>
+      <div class="card-desc">The <code>output/</code> folder is pushed to the <code>gh-pages</code> branch by a SHA-pinned GitHub Action, replacing the previous day's content. The site is publicly accessible at the configured Pages URL.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">GitHub Pages works like a simple file server — whatever is in a special branch gets served as a website. This step takes today's freshly built HTML file and publishes it there, overwriting yesterday's version. The site always shows the latest digest.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ CARD MAKER ════════════════════════════════════════════════════════ -->
+<section class="section" id="cardmaker">
+  <div class="section-label" style="color: var(--accent-ai)">Card Maker (Interactive)</div>
+  <div class="cards">
+
+    <div class="card ai">
+      <div class="card-head">
+        <div class="card-icon">&#x2728;</div>
+        <div>
+          <div class="card-title">On-Demand Story Cards</div>
+          <div class="card-sub">Card Maker tab · browser-based</div>
+        </div>
+      </div>
+      <div class="card-desc">The Card Maker tab lets any visitor paste an article URL and generate a full story card using the same format as the daily digest — headline, TL;DR, SVG diagram, Insights, Devil's Advocate, Deep Dive, and more. All processing happens through the Cloudflare Worker proxy.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">Instead of waiting for the daily run, you can generate a story card for any article you find interesting — right now, in the browser. Paste the URL, click Generate, and the same AI that writes the morning digest creates a card in the same format.</div>
+      </div>
+    </div>
+
+    <div class="card sc">
+      <div class="card-head">
+        <div class="card-icon">&#x2601;</div>
+        <div>
+          <div class="card-title">Cloudflare Worker Proxy</div>
+          <div class="card-sub">daily-digest-proxy.dizchrisctrl.workers.dev</div>
+        </div>
+      </div>
+      <div class="card-desc">A serverless edge function deployed to Cloudflare. Handles two tasks: (1) fetches article HTML server-side to bypass CORS restrictions, (2) proxies Anthropic API calls so the API key is never exposed in the browser. The Worker URL is baked into the page at build time from the <code>WORKER_URL</code> GitHub secret.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">A Cloudflare Worker is like a tiny server that runs at the edge of the internet — extremely fast and free for low traffic. The Card Maker never calls Anthropic or the article URL directly from your browser. Everything goes through the Worker, which holds the API key securely and adds proper headers.</div>
+      </div>
+    </div>
+
+    <div class="card sc">
+      <div class="card-head">
+        <div class="card-icon">&#x23F3;</div>
+        <div>
+          <div class="card-title">Weekly Rate Limiting</div>
+          <div class="card-sub">Cloudflare KV · 10 cards / week</div>
+        </div>
+      </div>
+      <div class="card-desc">The Worker tracks card generation count in Cloudflare KV (a key-value store). Key = Monday date of the current week (e.g. <code>cards_2026_04_13</code>). Counter increments on each successful API call. Returns HTTP 429 with a friendly message when the weekly limit of 10 is reached. Resets automatically every Monday. Keys expire after 14 days for self-cleanup.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">KV is Cloudflare's simple key-value database. The Worker reads and increments a counter stored there on each card request. Because this check happens on the server, it can't be bypassed by the browser. The key auto-deletes after 2 weeks so the database stays clean.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ RSS FEEDS ══════════════════════════════════════════════════════════ -->
+<section class="section" id="feeds">
+  <div class="section-label" style="color: var(--accent-cy)">RSS Feed Sources</div>
+
+  <p style="color: var(--muted); font-size:0.83rem; margin-bottom:16px">31 feeds total · 48-hour recency filter applied · up to 2 entries per feed per run</p>
+
+  <div class="feed-group">
+    <div class="feed-group-title" style="color: var(--accent-ai)">AI &amp; Technology (10 feeds · up to 10 articles selected)</div>
+    <ul class="feed-list">
+      <li><div class="feed-dot" style="background:var(--accent-ai)"></div> TechCrunch AI <span class="feed-url">techcrunch.com/category/artificial-intelligence/feed/</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-ai)"></div> VentureBeat AI <span class="feed-url">venturebeat.com/category/ai/feed/</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-ai)"></div> MIT Technology Review <span class="feed-url">technologyreview.com/feed/</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-ai)"></div> Ars Technica <span class="feed-url">feeds.arstechnica.com/arstechnica/technology-lab</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-ai)"></div> The Verge AI <span class="feed-url">theverge.com/rss/ai-artificial-intelligence/index.xml</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-ai)"></div> Wired AI <span class="feed-url">wired.com/feed/category/artificial-intelligence/latest/rss</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-ai)"></div> ZDNet AI <span class="feed-url">zdnet.com/topic/artificial-intelligence/rss.xml</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-ai)"></div> Google Blog <span class="feed-url">feeds.feedburner.com/googleblog</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-ai)"></div> OpenAI Blog <span class="feed-url">openai.com/blog/rss.xml</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-ai)"></div> Anthropic Blog <span class="feed-url">anthropic.com/rss.xml</span></li>
+    </ul>
+  </div>
+
+  <div class="feed-group">
+    <div class="feed-group-title" style="color: var(--accent-cy)">Cybersecurity (11 feeds · up to 12 articles selected)</div>
+    <ul class="feed-list">
+      <li><div class="feed-dot" style="background:var(--accent-cy)"></div> Krebs on Security <span class="feed-url">krebsonsecurity.com/feed/</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-cy)"></div> The Hacker News <span class="feed-url">feeds.feedburner.com/TheHackersNews</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-cy)"></div> BleepingComputer <span class="feed-url">bleepingcomputer.com/feed/</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-cy)"></div> SANS ISC <span class="feed-url">isc.sans.edu/rssfeed_full.xml</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-cy)"></div> Dark Reading <span class="feed-url">darkreading.com/rss.xml</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-cy)"></div> SecurityWeek <span class="feed-url">feeds.feedburner.com/securityweek</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-cy)"></div> Sophos Naked Security <span class="feed-url">nakedsecurity.sophos.com/feed/</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-cy)"></div> Schneier on Security <span class="feed-url">schneier.com/blog/atom.xml</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-cy)"></div> Graham Cluley <span class="feed-url">grahamcluley.com/feed/</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-cy)"></div> CISA Advisories <span class="feed-url">cisa.gov/news-events/cybersecurity-advisories/feed.xml</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-cy)"></div> CSO Online <span class="feed-url">csoonline.com/feed/</span></li>
+    </ul>
+  </div>
+
+  <div class="feed-group">
+    <div class="feed-group-title" style="color: var(--accent-nb)">Notables (10 feeds · up to 5 highlights selected)</div>
+    <ul class="feed-list">
+      <li><div class="feed-dot" style="background:var(--accent-nb)"></div> The Verge <span class="feed-url">theverge.com/rss/index.xml</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-nb)"></div> Wired <span class="feed-url">wired.com/feed/rss</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-nb)"></div> Reuters Technology <span class="feed-url">feeds.reuters.com/reuters/technologyNews</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-nb)"></div> Hacker News Front Page <span class="feed-url">hnrss.org/frontpage</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-nb)"></div> IEEE Spectrum <span class="feed-url">spectrum.ieee.org/feeds/feed.rss</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-nb)"></div> Fast Company Tech <span class="feed-url">fastcompany.com/technology/rss</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-nb)"></div> WSJ Tech <span class="feed-url">feeds.a.dj.com/rss/RSSWSJD.xml</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-nb)"></div> NYT Technology <span class="feed-url">rss.nytimes.com/services/xml/rss/nyt/Technology.xml</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-nb)"></div> TechCrunch (broad) <span class="feed-url">feeds.feedburner.com/TechCrunch</span></li>
+      <li><div class="feed-dot" style="background:var(--accent-nb)"></div> MIT Technology Review <span class="feed-url">technologyreview.com/feed/</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══ AI GENERATION ═════════════════════════════════════════════════════ -->
+<section class="section" id="ai">
+  <div class="section-label" style="color: var(--accent-ai)">AI Story Fields</div>
+  <p style="color: var(--muted); font-size:0.83rem; margin-bottom:16px">Each deep-dive story (AI section and Cybersecurity section) is a structured object. Claude Opus must populate every required field via the <code>publish_story</code> tool.</p>
+  <table class="field-table">
+    <tr>
+      <th>Field</th><th>Type</th><th>Description</th>
+    </tr>
+    <tr><td class="field-name">headline</td><td class="field-type">string</td><td class="field-desc">Short punchy title — never empty</td></tr>
+    <tr><td class="field-name">tldr</td><td class="field-type">string</td><td class="field-desc">One sentence that tells the whole story</td></tr>
+    <tr><td class="field-name">why_it_matters</td><td class="field-type">string</td><td class="field-desc">2–3 sentences on real-world significance</td></tr>
+    <tr><td class="field-name">concept_title</td><td class="field-type">string</td><td class="field-desc">The core technical concept being illustrated</td></tr>
+    <tr><td class="field-name">concept_explained</td><td class="field-type">string</td><td class="field-desc">4 paragraphs: analogy → how it works → tie to story → broader implications</td></tr>
+    <tr><td class="field-name">visual_svg</td><td class="field-type">string</td><td class="field-desc">Complete &lt;svg&gt; diagram (700×340). Types: attack chain, architecture, data flow, timeline, comparison. Dark theme, accent colour per section.</td></tr>
+    <tr><td class="field-name">public_opinion</td><td class="field-type">string</td><td class="field-desc">What HN, Reddit, security Twitter are saying about this — collapsible section in the page</td></tr>
+    <tr><td class="field-name">opinion_assessment</td><td class="field-type">string</td><td class="field-desc">Critical analysis of public opinion — what's valid, overblown, or missing</td></tr>
+    <tr><td class="field-name">devils_advocate</td><td class="field-type">string</td><td class="field-desc">A sharp counter-perspective that challenges the dominant sentiment — an overlooked irony or reframe that makes the reader stop and think differently</td></tr>
+    <tr><td class="field-name">quiz</td><td class="field-type">array[3]</td><td class="field-desc">Three Insight cards, each with a <code>lens</code> (Scientific / Historical / Societal), a thought-provoking hook (<code>q</code>), a crisp key insight (<code>a</code>), and a 2–3 sentence explanation (<code>explain</code>)</td></tr>
+    <tr><td class="field-name">deep_dive</td><td class="field-type">string</td><td class="field-desc">A Socratic question connecting the story to bigger trends</td></tr>
+    <tr><td class="field-name">deep_dive_impact</td><td class="field-type">string</td><td class="field-desc">2–3 sentences on how this story directly affects the reader — their work, tools, security posture, or career. Personal and specific.</td></tr>
+    <tr><td class="field-name">deep_dive_outlook</td><td class="field-type">string</td><td class="field-desc">2–3 sentences on what is likely to happen next — what trends this story accelerates or disrupts, what to watch in the coming weeks or months</td></tr>
+    <tr><td class="field-name">source_url / source</td><td class="field-type">string</td><td class="field-desc">Original article URL and publication name</td></tr>
+    <tr><td class="field-name">tech_tags</td><td class="field-type">array[0–3]</td><td class="field-desc">Clickable tag objects with name, description, and relevance. Only specific tech — no generic terms like "AI" or "cloud".</td></tr>
+    <tr><td class="field-name">affected_systems</td><td class="field-type">array</td><td class="field-desc">For CVE/vulnerability stories: system name + affected version range. Empty for non-vulnerability stories.</td></tr>
+  </table>
+</section>
+
+<!-- ══ OUTPUT ════════════════════════════════════════════════════════════ -->
+<section class="section" id="output">
+  <div class="section-label" style="color: var(--accent-gh)">Output Files</div>
+  <div class="cards">
+
+    <div class="card gh">
+      <div class="card-head">
+        <div class="card-icon">&#128196;</div>
+        <div>
+          <div class="card-title">index.html</div>
+          <div class="card-sub">output/index.html → gh-pages branch</div>
+        </div>
+      </div>
+      <div class="card-desc">The full interactive digest page. Single self-contained file — no CDN dependencies, no external requests. Includes tabbed navigation (AI / Cyber / Notables), keyboard shortcuts (j/k, 1/2/3, Enter, Escape), tag modals, scroll progress bar, and inline SVG diagrams.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">The main deliverable — a complete web page baked into one file. Open it in any browser with no internet connection and everything still works. All styles, scripts, and images are embedded directly. This makes it fast, private, and reliable.</div>
+      </div>
+    </div>
+
+    <div class="card gh">
+      <div class="card-head">
+        <div class="card-icon">&#123;&#125;</div>
+        <div>
+          <div class="card-title">digest.json</div>
+          <div class="card-sub">output/digest.json → gh-pages branch</div>
+        </div>
+      </div>
+      <div class="card-desc">The raw structured data for the day's digest. Preserved on the gh-pages branch so the <code>--rebuild</code> mode can regenerate the HTML without calling Claude again — useful for template changes and debugging.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">The "source of truth" data file — all stories in structured JSON. If you update the page design, you can rebuild the HTML from this file instantly without paying for another Claude API call. It's also what you'd use if you wanted to build a different frontend.</div>
+      </div>
+    </div>
+
+    <div class="card gh">
+      <div class="card-head">
+        <div class="card-icon">&#128214;</div>
+        <div>
+          <div class="card-title">guide.html</div>
+          <div class="card-sub">output/guide.html → gh-pages branch</div>
+        </div>
+      </div>
+      <div class="card-desc">The reader guide explaining how the digest works, how it's secured, and how to use Card Maker. Built from <code>daily-rundown-explainer.html</code> — copied as-is into the output folder so it's accessible at the site URL alongside the main digest.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">A companion page that lives at the same site URL. Readers can open it to understand what they're looking at, how the AI works, and how sharing and Card Maker work. It's a static copy so no extra build step is needed.</div>
+      </div>
+    </div>
+
+    <div class="card gh">
+      <div class="card-head">
+        <div class="card-icon">&#128279;</div>
+        <div>
+          <div class="card-title">/s/story-*.html</div>
+          <div class="card-sub">output/s/ → gh-pages branch</div>
+        </div>
+      </div>
+      <div class="card-desc">Per-story OG redirect pages — one per story (e.g. <code>s/story-ai-1.html</code>). Each has Open Graph meta tags (title, description, image) for rich link previews when shared on social media, plus a <code>&lt;meta refresh&gt;</code> and JS redirect that sends visitors to the correct story on the main digest page, auto-expanding and highlighting the card.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">When you share a story link, social media platforms read the OG tags from this redirect page to generate a rich preview card (headline + description). When a user clicks the link, they land here for a fraction of a second, then get sent straight to the correct story on the main page — which opens and highlights automatically.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ DELIVERY ══════════════════════════════════════════════════════════ -->
+<section class="section" id="delivery">
+  <div class="section-label" style="color: var(--accent-gm)">Email Delivery</div>
+  <div class="cards">
+
+    <div class="card gm">
+      <div class="card-head">
+        <div class="card-icon">&#9993;</div>
+        <div>
+          <div class="card-title">Gmail API</div>
+          <div class="card-sub">OAuth2 · gmail.send scope only</div>
+        </div>
+      </div>
+      <div class="card-desc">Sends an HTML summary email containing today's headlines, TLDRs, and a link to the full digest. Authenticates using a refresh token — no password stored anywhere. The OAuth consent screen is published (Production mode), so the refresh token does not expire.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">Rather than storing a Gmail password, the app uses a permission token that Google issued after you clicked "Allow" during setup. This token can only send emails — it cannot read, search, or delete anything. Google can revoke it at any time from your account settings, and the app would immediately stop working until re-authorized.</div>
+      </div>
+    </div>
+
+    <div class="card gm">
+      <div class="card-head">
+        <div class="card-icon">&#128272;</div>
+        <div>
+          <div class="card-title">OAuth2 Credentials</div>
+          <div class="card-sub">Stored in GitHub Actions Secrets</div>
+        </div>
+      </div>
+      <div class="card-desc">Four secrets: <code>GMAIL_ADDRESS</code>, <code>GMAIL_CLIENT_ID</code>, <code>GMAIL_CLIENT_SECRET</code>, <code>GMAIL_REFRESH_TOKEN</code>. Injected as environment variables at runtime — never written to disk, never logged.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">GitHub's Secrets are an encrypted vault — you put values in, and only your Actions workflows can read them back. The values are masked in all logs. It's the equivalent of keeping your keys in a safe rather than taped to the front door.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ INFRASTRUCTURE ════════════════════════════════════════════════════ -->
+<section class="section" id="infra">
+  <div class="section-label" style="color: var(--accent-gh)">Infrastructure</div>
+  <div class="cards">
+
+    <div class="card gh">
+      <div class="card-head">
+        <div class="card-icon">&#9899;</div>
+        <div>
+          <div class="card-title">GitHub Actions Workflow</div>
+          <div class="card-sub">.github/workflows/daily.yml</div>
+        </div>
+      </div>
+      <div class="card-desc">Runs on <code>ubuntu-latest</code> at 12:00 UTC (07:00 EST) daily. Steps: checkout → setup Python 3.12 → install deps → checkout gh-pages data → generate digest → deploy. Supports manual trigger with optional <code>--rebuild</code> flag.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">GitHub Actions is a free cloud computer that runs your script on a schedule. Every morning at 7 AM, GitHub spins up a fresh Linux machine, runs the digest script, and throws the machine away when it's done. No server to maintain, no always-on cost.</div>
+      </div>
+    </div>
+
+    <div class="card gh">
+      <div class="card-head">
+        <div class="card-icon">&#127760;</div>
+        <div>
+          <div class="card-title">GitHub Pages</div>
+          <div class="card-sub">gh-pages branch · public site</div>
+        </div>
+      </div>
+      <div class="card-desc">The <code>gh-pages</code> branch serves as the web root. Protected from deletions and force-pushes. Only the Actions bot can commit to it. Each run replaces the previous day's content.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">GitHub Pages turns a Git branch into a website. Every time the workflow runs, it pushes the new HTML into that branch, which GitHub automatically serves at your Pages URL. It's free static hosting with zero config.</div>
+      </div>
+    </div>
+
+    <div class="card sc">
+      <div class="card-head">
+        <div class="card-icon">&#128272;</div>
+        <div>
+          <div class="card-title">Actions Permissions</div>
+          <div class="card-sub">Minimal — contents:write, pages:write</div>
+        </div>
+      </div>
+      <div class="card-desc">The workflow only has the two permissions it actually needs. <code>id-token: write</code> (OIDC cloud auth) was explicitly removed. All three actions are pinned to full commit SHAs — not floating version tags — to prevent supply chain attacks.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">Pinning an action to a commit SHA is like saying "I trust this exact version of the code, not whatever gets tagged v4 in the future." If someone hijacked the action repo and pushed malicious code under the same tag, your workflow would be unaffected because it's locked to a specific snapshot.</div>
+      </div>
+    </div>
+
+    <div class="card sc">
+      <div class="card-head">
+        <div class="card-icon">&#x2601;</div>
+        <div>
+          <div class="card-title">Cloudflare Worker</div>
+          <div class="card-sub">cloudflare-worker/index.js · always-on edge</div>
+        </div>
+      </div>
+      <div class="card-desc">Serverless proxy deployed to Cloudflare's global edge network. CORS is restricted to <code>dizchrisctrl.github.io</code>, <code>localhost</code>, and <code>127.0.0.1</code>. Two operational modes: <strong>fetch mode</strong> (<code>{ fetch_url }</code>) fetches article HTML server-side; <strong>proxy mode</strong> forwards signed Anthropic API requests. Rate limit enforced via Cloudflare KV binding <code>RATE_LIMIT</code>.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">The Worker is a middleman that runs permanently at Cloudflare's edge — no server to maintain, no cost at low traffic. When the Card Maker needs to fetch an article or call Claude, it asks the Worker instead of going directly. The Worker adds the API key, enforces rate limits, and returns the result.</div>
+      </div>
+    </div>
+
+    <div class="card sc">
+      <div class="card-head">
+        <div class="card-icon">&#9201;</div>
+        <div>
+          <div class="card-title">Job Timeout</div>
+          <div class="card-sub">timeout-minutes: 15</div>
+        </div>
+      </div>
+      <div class="card-desc">The job is hard-capped at 15 minutes. Normal runs complete in ~6 minutes. The timeout prevents a stuck API call or feed from burning Actions minutes against the monthly free quota.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">Without a timeout, if the script ever got stuck in an infinite loop or a server stopped responding, GitHub would let it run for up to 6 hours — burning through your free compute minutes. The 15-minute cap acts as an automatic kill switch.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ DEPENDENCIES ══════════════════════════════════════════════════════ -->
+<section class="section" id="deps">
+  <div class="section-label" style="color: var(--accent-sc)">Dependencies</div>
+  <table class="dep-table">
+    <tr>
+      <th>Package</th><th>Pinned Version</th><th>Purpose</th>
+    </tr>
+    <tr>
+      <td class="dep-name">anthropic</td>
+      <td class="dep-ver">0.49.0</td>
+      <td class="dep-use">Anthropic Python SDK — Claude Opus API calls, tool_use structured output</td>
+    </tr>
+    <tr>
+      <td class="dep-name">feedparser</td>
+      <td class="dep-ver">6.0.11</td>
+      <td class="dep-use">Parse RSS/Atom feeds from news sources</td>
+    </tr>
+    <tr>
+      <td class="dep-name">google-auth</td>
+      <td class="dep-ver">2.29.0</td>
+      <td class="dep-use">Google OAuth2 credentials and token refresh</td>
+    </tr>
+    <tr>
+      <td class="dep-name">google-auth-httplib2</td>
+      <td class="dep-ver">0.2.0</td>
+      <td class="dep-use">HTTP transport adapter for google-auth</td>
+    </tr>
+    <tr>
+      <td class="dep-name">google-api-python-client</td>
+      <td class="dep-ver">2.127.0</td>
+      <td class="dep-use">Gmail API client for sending email</td>
+    </tr>
+  </table>
+  <p style="margin-top:12px; font-size:0.78rem; color:var(--muted)">All packages are pinned to exact versions. Standard library modules used: <code>os, re, json, base64, socket, datetime, email.mime</code>.</p>
+</section>
+
+<!-- ══ SECURITY ══════════════════════════════════════════════════════════ -->
+<section class="section" id="security">
+  <div class="section-label" style="color: var(--accent-cy)">Security Assessment</div>
+
+  <div class="verdict-box">
+    <div class="verdict-icon">&#10003;</div>
+    <div>
+      <div class="verdict-title">Overall Posture: Good — Pass with Notes</div>
+      <div class="verdict-sub">No critical or high findings active. Strong controls in place for a personal automated pipeline. Remaining items are low-severity hardening steps.</div>
+    </div>
+  </div>
+
+  <div class="sec-grid">
+
+    <div class="sec-item">
+      <div class="sec-head">
+        <div class="sec-title">Output Escaping (XSS)</div>
+        <span class="severity sev-pass">Secured</span>
+      </div>
+      <div class="sec-desc">All dynamic values rendered into HTML pass through <code>esc()</code>. URLs are validated through <code>safe_url()</code> which enforces <code>http://</code> or <code>https://</code> scheme only, blocking <code>javascript:</code> URIs.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">If an RSS feed injects something like <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> into a headline, <code>esc()</code> converts the angle brackets into harmless display characters before they reach the page. The browser sees text, not code.</div>
+      </div>
+      <div class="sec-status"><span class="dot dot-green"></span>Implemented in generate_html() and send_email()</div>
+    </div>
+
+    <div class="sec-item">
+      <div class="sec-head">
+        <div class="sec-title">SVG Sanitisation</div>
+        <span class="severity sev-pass">Secured</span>
+      </div>
+      <div class="sec-desc"><code>sanitize_svg()</code> strips <code>&lt;script&gt;</code>, <code>&lt;foreignObject&gt;</code>, <code>&lt;image&gt;</code>, inline <code>on*</code> event handlers, and <code>javascript:</code> hrefs from every Claude-generated SVG before it is embedded inline.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">SVG is a vector image format but it can also run JavaScript. Even though Claude generates the SVG, this step scrubs out anything that could execute code — acting as a safety net regardless of what the AI produces.</div>
+      </div>
+      <div class="sec-status"><span class="dot dot-green"></span>Applied to all visual_svg fields before HTML insertion</div>
+    </div>
+
+    <div class="sec-item">
+      <div class="sec-head">
+        <div class="sec-title">Content Security Policy</div>
+        <span class="severity sev-pass">Secured</span>
+      </div>
+      <div class="sec-desc">A CSP meta tag on every generated page uses <code>default-src 'none'</code>. The only permitted outbound connection is <code>connect-src [WORKER_URL]</code> — the single Cloudflare Worker endpoint baked in at build time. All other external resources, frames, objects, and form submissions are blocked. Provides defence-in-depth against sanitisation bypasses.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">Even if a malicious script somehow got past the sanitiser, the browser's CSP would block it from loading external resources or phoning home. The only thing the page can connect to is the Worker — and only the Worker. It's a second lock on the door.</div>
+      </div>
+      <div class="sec-status"><span class="dot dot-green"></span>default-src 'none' · connect-src = Worker URL only (baked at build time)</div>
+    </div>
+
+    <div class="sec-item">
+      <div class="sec-head">
+        <div class="sec-title">Card Maker Rate Limiting</div>
+        <span class="severity sev-pass">Secured</span>
+      </div>
+      <div class="sec-desc">Card generation is capped at 10 per week via a server-side counter in Cloudflare KV. The check happens in the Worker before any API call — it cannot be bypassed from the browser. Returns HTTP 429 with a reset date when the limit is reached. Keys expire after 14 days for automatic cleanup.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">The rate limit lives on Cloudflare's servers, not in the browser — so there's no way for a visitor to modify the counter. If someone tried to call the Worker directly (bypassing the page), the limit would still apply because it's enforced before the API key is ever used.</div>
+      </div>
+      <div class="sec-status"><span class="dot dot-green"></span>10 cards/week · KV binding RATE_LIMIT · resets Monday</div>
+    </div>
+
+    <div class="sec-item">
+      <div class="sec-head">
+        <div class="sec-title">Prompt Injection Mitigation</div>
+        <span class="severity sev-pass">Secured</span>
+      </div>
+      <div class="sec-desc">Feed titles and source names are sanitised with <code>_single_line()</code> which strips newlines, tabs, and carriage returns before they reach Claude's prompt. Feed links are validated to <code>http/https</code> only.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">A malicious RSS feed could try to inject fake instructions into the prompt — like embedding "\n\nIgnore all previous instructions and..." in an article title. Stripping newlines prevents this escape technique from working.</div>
+      </div>
+      <div class="sec-status"><span class="dot dot-green"></span>_single_line() applied to title and source fields</div>
+    </div>
+
+    <div class="sec-item">
+      <div class="sec-head">
+        <div class="sec-title">Gmail OAuth2 Scope</div>
+        <span class="severity sev-pass">Secured</span>
+      </div>
+      <div class="sec-desc">The app requests only the <code>gmail.send</code> scope — it cannot read, search, modify, or delete email. The consent screen is in Production mode, so refresh tokens do not expire after 7 days.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">Scope is a way of limiting what a permission token can do. Even if someone stole the token, the worst they could do is send email as you — they couldn't read your inbox, access your calendar, or impersonate you to Google services.</div>
+      </div>
+      <div class="sec-status"><span class="dot dot-green"></span>Production mode — long-lived refresh tokens</div>
+    </div>
+
+    <div class="sec-item">
+      <div class="sec-head">
+        <div class="sec-title">Secrets Management</div>
+        <span class="severity sev-pass">Secured</span>
+      </div>
+      <div class="sec-desc">All six GitHub secrets (Anthropic API key, four Gmail OAuth values, Worker URL) are stored in GitHub Actions Secrets. Injected as environment variables — never written to disk, never printed in logs. The Cloudflare Worker holds a separate copy of <code>ANTHROPIC_API_KEY</code> set via <code>wrangler secret put</code>. <code>client_secrets.json</code> deleted from local disk after setup.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">GitHub Secrets are encrypted at rest and masked in any log output — if a secret value ever appears in a log line, GitHub replaces it with ***. The <code>client_secrets.json</code> file that was used during initial setup has been deleted since the values are now safely in the vault.</div>
+      </div>
+      <div class="sec-status"><span class="dot dot-green"></span>client_secrets.json deleted · .gitignore excludes credential files</div>
+    </div>
+
+    <div class="sec-item">
+      <div class="sec-head">
+        <div class="sec-title">Actions SHA Pinning</div>
+        <span class="severity sev-pass">Secured</span>
+      </div>
+      <div class="sec-desc">All three GitHub Actions are pinned to full commit SHAs — not floating version tags. Prevents supply-chain attacks where a compromised action repo pushes malicious code under an existing tag (e.g. the tj-actions/changed-files incident, 2025).</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">A version tag like <code>@v4</code> can be moved by the action's author at any time. A commit SHA like <code>@11bd71901b...</code> is immutable — it points to exactly one snapshot of code that can never change. Pinning to SHAs is the equivalent of checking a package's checksum before installing it.</div>
+      </div>
+      <div class="sec-status"><span class="dot dot-green"></span>checkout, setup-python, actions-gh-pages all SHA-pinned</div>
+    </div>
+
+    <div class="sec-item">
+      <div class="sec-head">
+        <div class="sec-title">Feed Timeout</div>
+        <span class="severity sev-pass">Secured</span>
+      </div>
+      <div class="sec-desc">A 15-second <code>socket.setdefaulttimeout()</code> is applied before any feed is fetched and restored afterward. Prevents a slow or unresponsive feed from hanging the entire workflow.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">Without a timeout, if one news site stops responding, the script waits indefinitely. Setting a 15-second limit means the worst case is a 15-second delay per broken feed — the rest of the pipeline still runs normally.</div>
+      </div>
+      <div class="sec-status"><span class="dot dot-green"></span>socket.setdefaulttimeout(15) in fetch_articles()</div>
+    </div>
+
+    <div class="sec-item">
+      <div class="sec-head">
+        <div class="sec-title">External Link Safety</div>
+        <span class="severity sev-pass">Secured</span>
+      </div>
+      <div class="sec-desc">All external links in the generated HTML include <code>rel="noopener noreferrer"</code>. This prevents tab-napping (the linked page cannot access <code>window.opener</code>) and stops the referrer header from leaking the digest URL.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">When you open a link in a new tab without these attributes, the new page can technically control the tab you came from via JavaScript. <code>noopener</code> severs that connection. <code>noreferrer</code> also hides where you came from, so the news site doesn't see your digest URL in its analytics.</div>
+      </div>
+      <div class="sec-status"><span class="dot dot-green"></span>Applied to all target="_blank" links in template</div>
+    </div>
+
+    <div class="sec-item">
+      <div class="sec-head">
+        <div class="sec-title">Dependency Pinning</div>
+        <span class="severity sev-low">Low</span>
+      </div>
+      <div class="sec-desc">All five packages are pinned to exact versions in <code>requirements.txt</code> (good). However, <code>pip install</code> does not use <code>--require-hashes</code>, meaning artifact integrity is not verified — only version identity.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">Pinning the version number stops unexpected upgrades but doesn't verify the download is exactly what you expect. Hash verification would confirm the bytes you downloaded match a known fingerprint — catching a tampered package even if the version number is correct. Low risk for a personal project.</div>
+      </div>
+      <div class="sec-status"><span class="dot dot-yellow"></span>Versions pinned · hash verification not yet enabled</div>
+    </div>
+
+    <div class="sec-item">
+      <div class="sec-head">
+        <div class="sec-title">Secret Rotation</div>
+        <span class="severity sev-low">Low</span>
+      </div>
+      <div class="sec-desc">No documented rotation schedule for the Anthropic API key or Gmail OAuth credentials. Long-lived credentials widen the exposure window if they are ever leaked.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">Rotating credentials means generating new keys and revoking old ones on a schedule — even if there is no known leak. It limits how long any stolen credential remains useful. Annual rotation is a reasonable baseline for a low-risk personal project.</div>
+      </div>
+      <div class="sec-status"><span class="dot dot-yellow"></span>Recommended: annual rotation reminder</div>
+    </div>
+
+    <div class="sec-item">
+      <div class="sec-head">
+        <div class="sec-title">Previous Credential Leak</div>
+        <span class="severity sev-pass">Remediated</span>
+      </div>
+      <div class="sec-desc">An earlier set of OAuth credentials was inadvertently shared in a chat session. The compromised OAuth client was deleted in Google Cloud Console and entirely new credentials were generated and stored.</div>
+      <div class="explainer">
+        <button class="toggle-btn" onclick="toggle(this)"><span class="arrow">▶</span> Explain simply</button>
+        <div class="explain-body">The correct response to a credential leak is to revoke first, rotate second. Deleting the entire OAuth client (not just the secret) ensures the old credentials are permanently useless — there is no race condition where an attacker can use them between revocation and rotation.</div>
+      </div>
+      <div class="sec-status"><span class="dot dot-green"></span>Old client deleted · new credentials generated and stored</div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <span>Daily Digest — App Report · Generated 2026-04-11</span>
+  <span>dizchrisctrl/daily-digest</span>
+</footer>
+
+<script>
+  function toggle(btn) {
+    const body = btn.nextElementSibling;
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    btn.classList.toggle('open', !isOpen);
+    btn.querySelector('.arrow').textContent = isOpen ? '▶' : '▼';
+  }
+</script>
+
+</body>
+</html>

@@ -8,7 +8,7 @@ compatibility_date = "2024-09-23"
 # Then paste the returned `id` value below and run `wrangler deploy`.
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
-id      = "PASTE_YOUR_KV_NAMESPACE_ID_HERE"
+id      = "57f33f7fe7e8459a842ce3794bfa554e"
 
 # ── Secrets (set via wrangler, not stored here) ──────────────────────────────
 #   wrangler secret put ANTHROPIC_API_KEY

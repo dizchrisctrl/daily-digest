@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Daily Rundown — How It All Works</title>
+<style>
+  :root {
+    --bg: #0b0d16; --surface: #12152a; --surface2: #1a1d32;
+    --text: #eaedf5; --muted: #7a849a; --muted2: #5a6275;
+    --ai: #818cf8; --cyber: #34d399; --amber: #fbbf24; --red: #f87171;
+    --border: #252840; --border2: #333660;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; }
+
+  .page { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* Header */
+  .hero { text-align: center; padding: 48px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+  .hero h1 { font-size: 2.2rem; font-weight: 900; letter-spacing: -1px;
+    background: linear-gradient(130deg, var(--ai), #a78bfa, var(--cyber));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero p { color: var(--muted); margin-top: 10px; font-size: 0.95rem; }
+
+  /* Section */
+  .section { margin-bottom: 56px; }
+  .section-title {
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 3px;
+    margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  h2 { font-size: 1.35rem; font-weight: 800; margin-bottom: 12px; }
+  p { color: #c8cfe0; margin-bottom: 14px; }
+  p:last-child { margin-bottom: 0; }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 16px; }
+  .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+  .card p { font-size: 0.92rem; }
+
+  /* Flow diagram */
+  .flow { display: flex; flex-wrap: wrap; gap: 0; margin: 24px 0; align-items: center; }
+  .flow-step {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 18px; flex: 1; min-width: 130px; text-align: center;
+  }
+  .flow-step .icon { font-size: 1.6rem; display: block; margin-bottom: 6px; }
+  .flow-step .label { font-size: 0.78rem; font-weight: 700; color: var(--text); }
+  .flow-step .sub { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+  .flow-arrow { color: var(--muted2); font-size: 1.2rem; padding: 0 6px; flex-shrink: 0; }
+
+  /* Two col */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } .flow-arrow { transform: rotate(90deg); } }
+
+  /* Tag */
+  .tag { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; padding: 2px 10px; border-radius: 20px; margin-right: 6px; margin-bottom: 4px; }
+  .tag-ai    { background: rgba(129,140,248,0.15); color: var(--ai); }
+  .tag-cyber { background: rgba(52,211,153,0.15);  color: var(--cyber); }
+  .tag-amber { background: rgba(251,191,36,0.12);  color: var(--amber); }
+  .tag-red   { background: rgba(248,113,113,0.15); color: var(--red); }
+
+  /* Code block */
+  .code { background: #060912; border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 18px; font-family: 'Courier New', monospace; font-size: 0.82rem;
+    color: var(--cyber); margin: 12px 0; overflow-x: auto; }
+  .code .comment { color: var(--muted2); }
+  .code .key { color: var(--ai); }
+  .code .val { color: var(--amber); }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 16px 0; }
+  th { text-align: left; padding: 10px 14px; background: var(--surface2); color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; }
+  td { padding: 10px 14px; border-top: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* Severity */
+  .sev { font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+  .sev-pass  { background: rgba(52,211,153,0.15); color: var(--cyber); }
+  .sev-low   { background: rgba(251,191,36,0.12); color: var(--amber); }
+  .sev-med   { background: rgba(251,146,60,0.15); color: #fb923c; }
+  .sev-info  { background: rgba(129,140,248,0.12); color: var(--ai); }
+
+  /* Callout */
+  .callout { border-left: 3px solid; border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 16px 0; font-size: 0.92rem; }
+  .callout-ai    { border-color: var(--ai);    background: rgba(129,140,248,0.06); }
+  .callout-cyber { border-color: var(--cyber); background: rgba(52,211,153,0.06); }
+  .callout-amber { border-color: var(--amber); background: rgba(251,191,36,0.06); }
+  .callout strong { color: var(--text); }
+
+  /* Relationship diagram */
+  .rel { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: center; margin: 24px 0; }
+  .rel-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .rel-box h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 10px; }
+  .rel-box ul { list-style: none; font-size: 0.82rem; color: var(--muted); }
+  .rel-box ul li { padding: 3px 0; }
+  .rel-box ul li::before { content: '• '; color: var(--ai); }
+  .rel-mid { text-align: center; padding: 0 16px; }
+  .rel-mid .arrows { font-size: 1.5rem; color: var(--muted2); display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .rel-mid .lbl { font-size: 0.68rem; color: var(--muted2); text-align: center; white-space: nowrap; }
+
+  /* Checklist */
+  .checklist { list-style: none; }
+  .checklist li { padding: 6px 0; font-size: 0.92rem; display: flex; gap: 10px; align-items: flex-start; border-bottom: 1px solid var(--border); }
+  .checklist li:last-child { border-bottom: none; }
+  .check { color: var(--cyber); font-weight: 700; flex-shrink: 0; }
+  .warn  { color: var(--amber); font-weight: 700; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <h1>The Daily Rundown</h1>
+    <p>How it works, how it's secured, and how all the pieces connect.</p>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title" style="color: var(--ai)">01 &nbsp; How the page works</div>
+    <h2>The Big Picture</h2>
+    <p>Every morning, an automated process wakes up, reads the latest tech and security news from across the internet, hands it to an AI, and produces a clean interactive digest — then emails it to you and publishes it as a website. You never have to touch it.</p>
+
+    <div class="flow">
+      <div class="flow-step">
+        <span class="icon">📡</span>
+        <div class="label">RSS Feeds</div>
+        <div class="sub">31 sources</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <span class="icon">🐍</span>
+        <div class="label">Python Script</div>
+        <div class="sub">Fetches & cleans</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <span class="icon">🤖</span>
+        <div class="label">Claude AI</div>
+        <div class="sub">Summarizes</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <span class="icon">📄</span>
+        <div class="label">HTML Page</div>
+        <div class="sub">Built & saved</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <span class="icon">🌐</span>
+        <div class="label">Live Website</div>
+        <div class="sub">+ Email sent</div>
+      </div>
+    </div>
+
+    <div class="callout callout-ai" style="margin-top: 16px; margin-bottom: 0;">
+      <strong>Card Maker (interactive):</strong> The page also includes a Card Maker tab where you can paste any article URL and generate a story card on the spot — same format as the daily digest. It works through a Cloudflare Worker proxy, so no API keys are needed on your side. Limited to <strong>10 cards per week</strong>.
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>📡 The News Sources</h3>
+        <p><span class="tag tag-ai">AI</span> TechCrunch, VentureBeat, MIT Tech Review, Ars Technica, The Verge AI, Wired AI, ZDNet, Google Blog, OpenAI Blog, Anthropic Blog</p>
+        <p><span class="tag tag-cyber">Cyber</span> Krebs, Hacker News, BleepingComputer, SANS ISC, Dark Reading, SecurityWeek, Sophos, Schneier, Graham Cluley, CISA, CSO Online</p>
+        <p><span class="tag tag-amber">Notable</span> The Verge, Wired, Reuters, Hacker News, IEEE Spectrum, Fast Company, WSJ Tech, NYT Tech, TechCrunch, MIT Tech Review</p>
+        <p style="font-size:0.82rem; color:#7a849a; margin-top:6px;">31 feeds total · only articles from the last 48 hours are considered</p>
+      </div>
+      <div class="card">
+        <h3>🤖 What Claude Does</h3>
+        <p>For each article, Claude writes a headline, TL;DR, full concept explanation, SVG diagram, Devil's Advocate counter-take, three Insights (scientific, historical, societal lenses), public opinion breakdown, and a personal impact + outlook section.</p>
+      </div>
+      <div class="card">
+        <h3>📄 What Gets Built</h3>
+        <p><strong>index.html</strong> — the interactive website with tabs, expandable cards, dark/light mode, and keyboard navigation.</p>
+        <p><strong>digest.json</strong> — the raw data, used to rebuild HTML without re-calling Claude.</p>
+        <p><strong>guide.html</strong> — the reader guide (this page).</p>
+        <p><strong>/s/story-*.html</strong> — per-story redirect pages for shareable deep-links.</p>
+      </div>
+      <div class="card">
+        <h3>📬 The Email</h3>
+        <p>After the page is built, a summary email is sent to your Gmail via the Gmail API. It contains headlines, TL;DRs, and a link to the full digest.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-ai">
+      <strong>When does it run?</strong> Automatically every day at noon UTC (8 AM EDT / 7 AM EST). You can also trigger it manually from GitHub at any time.
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title" style="color: var(--cyber)">02 &nbsp; Authentication</div>
+    <h2>How Credentials Work</h2>
+    <p>The app needs to talk to two external services — Claude AI (Anthropic) and Gmail. Both require secret keys that prove the app has permission. Here's how each one works.</p>
+
+    <div class="card" style="margin-bottom:16px">
+      <h3>🔑 Anthropic API Key</h3>
+      <p><strong>What it is:</strong> A long string of characters that gives the app permission to use Claude AI. Think of it like a password for the AI service.</p>
+      <p><strong>Where it lives:</strong> Stored as a GitHub Secret named <code>ANTHROPIC_API_KEY</code>. Never written in the code.</p>
+      <p><strong>How it's used:</strong> The workflow injects it as an environment variable when the script runs. The script reads it with <code>os.environ["ANTHROPIC_API_KEY"]</code>.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <h3>📧 Gmail OAuth2 — How It Works</h3>
+      <p>Gmail doesn't let apps use your password directly. Instead it uses OAuth2 — a system where you grant specific, limited permissions. Your app was granted <strong>send-only</strong> access, meaning it can send email but can never read, search, or touch your inbox.</p>
+
+      <div class="code">
+        <span class="comment"># The four Gmail secrets stored in GitHub:</span><br>
+        <span class="key">GMAIL_ADDRESS</span>       = <span class="val">your Gmail address</span><br>
+        <span class="key">GMAIL_CLIENT_ID</span>     = <span class="val">identifies your Google Cloud app</span><br>
+        <span class="key">GMAIL_CLIENT_SECRET</span> = <span class="val">proves you own that app</span><br>
+        <span class="key">GMAIL_REFRESH_TOKEN</span> = <span class="val">long-lived token that gets new access tokens</span>
+      </div>
+
+      <p><strong>How tokens work:</strong> OAuth2 gives out two types of tokens. An <em>access token</em> is short-lived (1 hour) and lets the app act. A <em>refresh token</em> is long-lived and gets new access tokens automatically. You stored the refresh token — so the app refreshes itself every time it runs without needing you to log in again.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <h3>☁️ Cloudflare Worker (Card Maker)</h3>
+      <p><strong>What it is:</strong> A small serverless function deployed to Cloudflare's edge network at <code>daily-digest-proxy.dizchrisctrl.workers.dev</code>. It acts as a secure proxy between the Card Maker in your browser and the Anthropic API — your API key never leaves the server.</p>
+      <p><strong>Secrets involved:</strong> The Worker holds its own copy of <code>ANTHROPIC_API_KEY</code> (set via <code>wrangler secret put</code>). The GitHub repo holds a <code>WORKER_URL</code> secret (the Worker's URL) which gets baked into the generated page at build time.</p>
+      <p><strong>Rate limiting:</strong> The Worker tracks how many cards have been generated this week using Cloudflare KV (a key-value store). Limit is 10 cards per week — resets every Monday. Returns a 429 error with a friendly message when the limit is reached.</p>
+    </div>
+
+    <div class="callout callout-cyber">
+      <strong>Setup was a one-time thing.</strong> You ran <code>setup_gmail_oauth.py</code> locally once — it opened a browser, you clicked Allow, and it printed the four values to your terminal. You pasted those into GitHub Secrets. The Worker was deployed once with <code>wrangler deploy</code> from the <code>cloudflare-worker/</code> folder. Neither needs to be done again unless you re-authorize or re-deploy.
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title" style="color: var(--amber)">03 &nbsp; GitHub — The Basics</div>
+    <h2>What GitHub Is and How It Relates to Your Page</h2>
+    <p>GitHub is a platform that does three things for your project: stores your code safely in the cloud, runs automated tasks, and hosts your website for free.</p>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>📁 Repository</h3>
+        <p>A repository (repo) is your project's folder in the cloud. Everything — code, workflow, history — lives at <strong>github.com/dizchrisctrl/daily-digest</strong>.</p>
+      </div>
+      <div class="card">
+        <h3>💾 Commit</h3>
+        <p>A commit is a saved snapshot of your code at a point in time. Every time you <code>git commit</code>, you create a permanent record of what changed and why.</p>
+      </div>
+      <div class="card">
+        <h3>🌿 Branch</h3>
+        <p>A branch is a separate version of your code. You have two: <strong>master</strong> (your source code) and <strong>gh-pages</strong> (the built website files).</p>
+      </div>
+      <div class="card">
+        <h3>⬆️ Push / ⬇️ Pull</h3>
+        <p><strong>Push</strong> sends your local commits up to GitHub. <strong>Pull</strong> brings changes from GitHub down to your machine. These keep the two in sync.</p>
+      </div>
+      <div class="card">
+        <h3>⚙️ GitHub Actions</h3>
+        <p>Automated workflows defined in <code>.github/workflows/daily.yml</code>. They run on a schedule or on demand — this is what generates the digest every morning.</p>
+      </div>
+      <div class="card">
+        <h3>🌐 GitHub Pages</h3>
+        <p>Free website hosting built into GitHub. It serves files from your <strong>gh-pages</strong> branch as a public website at <code>dizchrisctrl.github.io/daily-digest</code>.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 32px; margin-bottom: 12px;">Your Two Branches Explained</h2>
+
+    <div class="card" style="margin-bottom: 12px;">
+      <h3>🌿 master — your source code</h3>
+      <p>This is where all the actual code lives: <code>generate_digest.py</code>, <code>requirements.txt</code>, and the workflow file. When you edit code and push, it goes here. The workflow reads from this branch when it runs.</p>
+    </div>
+    <div class="card">
+      <h3>🌿 gh-pages — your live website</h3>
+      <p>This branch only contains the built output: <code>index.html</code> and <code>digest.json</code>. You never edit this directly — the workflow pushes here automatically after each run. GitHub Pages serves this branch as your public website.</p>
+    </div>
+
+    <h2 style="margin-top: 32px; margin-bottom: 12px;">How the Workflow Runs</h2>
+    <div class="code">
+      <span class="comment"># What happens every morning automatically:</span><br><br>
+      1. GitHub Actions checks out your <span class="val">master</span> branch<br>
+      2. Installs Python dependencies from <span class="val">requirements.txt</span><br>
+      3. Injects secrets as environment variables (including <span class="val">WORKER_URL</span>)<br>
+      4. Runs <span class="val">generate_digest.py</span> → fetches news → calls Claude → builds HTML<br>
+         &nbsp;&nbsp;&nbsp;The <span class="val">WORKER_URL</span> is baked into the page so Card Maker knows where to call<br>
+      5. Pushes <span class="val">index.html</span>, <span class="val">digest.json</span>, <span class="val">guide.html</span>, and <span class="val">/s/</span> redirect pages to <span class="val">gh-pages</span><br>
+      6. GitHub Pages detects the new push and rebuilds your live site<br>
+      7. Email is sent to your inbox
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title" style="color: var(--ai)">04 &nbsp; Local vs GitHub</div>
+    <h2>What Lives Where and How They Relate</h2>
+    <p>Think of your local machine as your <strong>workshop</strong> and GitHub as your <strong>published archive</strong>. You do all your work locally, then push it to GitHub to save it and deploy it.</p>
+
+    <div class="rel">
+      <div class="rel-box">
+        <h4 style="color: var(--ai)">💻 Your Local Machine</h4>
+        <ul>
+          <li>generate_digest.py</li>
+          <li>setup_gmail_oauth.py</li>
+          <li>requirements.txt / requirements.in</li>
+          <li>.github/workflows/daily.yml</li>
+          <li>cloudflare-worker/index.js</li>
+          <li>cloudflare-worker/wrangler.toml</li>
+          <li>.gitignore</li>
+          <li>SECURITY_REPORT.md</li>
+          <li>app-report.html</li>
+        </ul>
+        <p style="font-size:0.78rem; color: var(--muted); margin-top:12px;">Your working copy. Edit files here. Changes only exist here until you push.</p>
+      </div>
+
+      <div class="rel-mid">
+        <div class="arrows">
+          <div>
+            <div style="color:var(--cyber); font-weight:700; font-size:0.9rem;">⬆ push</div>
+            <div class="lbl">send changes up</div>
+          </div>
+          <div style="margin-top:16px">
+            <div style="color:var(--ai); font-weight:700; font-size:0.9rem;">⬇ pull</div>
+            <div class="lbl">get changes down</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rel-box">
+        <h4 style="color: var(--cyber)">☁️ GitHub (master branch)</h4>
+        <ul>
+          <li>generate_digest.py</li>
+          <li>setup_gmail_oauth.py</li>
+          <li>requirements.txt / requirements.in</li>
+          <li>.github/workflows/daily.yml</li>
+          <li>cloudflare-worker/index.js</li>
+          <li>cloudflare-worker/wrangler.toml</li>
+          <li>.gitignore</li>
+        </ul>
+        <p style="font-size:0.78rem; color: var(--muted); margin-top:12px;">Your cloud backup and source of truth. The workflow runs from here. Secrets live here (not in code).</p>
+      </div>
+    </div>
+
+    <div class="callout callout-amber" style="margin-top: 8px;">
+      <strong>Important:</strong> Files on your local machine are NOT automatically on GitHub. You must <code>git add</code> → <code>git commit</code> → <code>git push</code> to send them up. Similarly, if the workflow makes a change (like pushing to gh-pages), it doesn't appear on your local machine until you <code>git pull</code>.
+    </div>
+
+    <h2 style="margin-top: 32px; margin-bottom: 12px;">The Three Git Commands You Use</h2>
+    <div class="code">
+      <span class="comment"># Stage files you want to save</span><br>
+      <span class="key">git add</span> <span class="val">generate_digest.py</span><br><br>
+      <span class="comment"># Create a snapshot with a description</span><br>
+      <span class="key">git commit</span> -m <span class="val">"what you changed and why"</span><br><br>
+      <span class="comment"># Send it to GitHub</span><br>
+      <span class="key">git push</span>
+    </div>
+
+    <h2 style="margin-top: 32px; margin-bottom: 12px;">Files That Stay Local Only</h2>
+    <p>These files exist on your machine but are listed in <code>.gitignore</code> — meaning Git intentionally never sends them to GitHub:</p>
+    <table>
+      <tr><th>File</th><th>Why it stays local</th></tr>
+      <tr><td><code>client_secrets.json</code></td><td>Contains raw OAuth credentials — dangerous if public</td></tr>
+      <tr><td><code>SECURITY_REPORT.md</code></td><td>Internal assessment — no need to publish</td></tr>
+      <tr><td><code>app-report.html</code></td><td>Local generated report</td></tr>
+      <tr><td><code>daily-rundown-explainer.html</code></td><td>Reader guide — local reference copy</td></tr>
+      <tr><td><code>.claude/</code></td><td>Claude Code session files — local tooling only</td></tr>
+    </table>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title" style="color: var(--red)">05 &nbsp; Security Assessment</div>
+    <h2>How Your Page Is Secured</h2>
+    <p>Here's a plain-English breakdown of the security controls in place and the current status of each.</p>
+
+    <table style="margin-bottom: 24px;">
+      <tr><th>Area</th><th>Control</th><th>Status</th></tr>
+      <tr>
+        <td><span class="tag tag-cyber">XSS</span></td>
+        <td>Every user-facing value is passed through <code>esc()</code> before being written into HTML — prevents injected code from running</td>
+        <td><span class="sev sev-pass">✓ PASS</span></td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-cyber">CSP</span></td>
+        <td>Content Security Policy restricts <code>default-src 'none'</code>. The only allowed outbound connection is to the Cloudflare Worker URL (for Card Maker). Every other external resource, frame, form, and object is blocked.</td>
+        <td><span class="sev sev-pass">✓ PASS</span></td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-cyber">SVG</span></td>
+        <td>Diagrams from Claude are sanitized — scripts, event handlers, and external links are stripped before being embedded in the page</td>
+        <td><span class="sev sev-pass">✓ PASS</span></td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-ai">Secrets</span></td>
+        <td>No API keys or tokens in the code. All stored in GitHub Secrets and injected at runtime as environment variables</td>
+        <td><span class="sev sev-pass">✓ PASS</span></td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-ai">Gmail scope</span></td>
+        <td>App only has <code>gmail.send</code> permission — it cannot read, search, or modify your inbox under any circumstances</td>
+        <td><span class="sev sev-pass">✓ PASS</span></td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-ai">Dependencies</span></td>
+        <td>All packages locked to exact versions with SHA-256 hashes. Any tampered package will fail to install</td>
+        <td><span class="sev sev-pass">✓ PASS</span></td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-ai">Actions</span></td>
+        <td>GitHub Actions workflows use pinned commit SHAs instead of version tags — prevents supply chain attacks where a tag is moved to malicious code</td>
+        <td><span class="sev sev-pass">✓ PASS</span></td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-ai">Feeds</span></td>
+        <td>RSS feed content is sanitized and capped. URLs are validated to http/https only. Connection timeout prevents hung feeds from stalling the run</td>
+        <td><span class="sev sev-pass">✓ PASS</span></td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-ai">Card Maker rate limit</span></td>
+        <td>Card generation is capped at 10 per week via Cloudflare KV (server-side counter). Cannot be bypassed from the browser. Resets every Monday. Returns a clear message when the limit is reached.</td>
+        <td><span class="sev sev-pass">✓ PASS</span></td>
+      </tr>
+      <tr>
+        <td><span class="tag tag-amber">OAuth consent</span></td>
+        <td>Google Cloud app is in "Testing" mode which causes the refresh token to expire every 7 days. Should be set to Production in Google Cloud Console</td>
+        <td><span class="sev sev-low">⚠ LOW</span></td>
+      </tr>
+    </table>
+
+    <div class="callout callout-cyber">
+      <strong>Overall verdict: PASS WITH NOTES.</strong> The app has strong security for a personal project. The one outstanding item is the OAuth consent screen — switching it from Testing to Production in Google Cloud Console prevents the refresh token from expiring every 7 days.
+    </div>
+
+    <h2 style="margin-top: 32px; margin-bottom: 12px;">One Remaining Action Item</h2>
+    <div class="card">
+      <h3 style="color: var(--amber)">⚠️ Publish the OAuth Consent Screen</h3>
+      <p><strong>What it is:</strong> When you set up Gmail OAuth, Google puts new apps in "Testing" mode by default. In testing mode, refresh tokens expire every 7 days — meaning the email sending will silently fail after a week.</p>
+      <p><strong>How to fix it:</strong></p>
+      <ol style="padding-left: 20px; font-size: 0.92rem; color: #c8cfe0; margin-top: 8px; line-height: 2;">
+        <li>Go to <strong>console.cloud.google.com</strong></li>
+        <li>Select your project → <strong>APIs &amp; Services → OAuth consent screen</strong></li>
+        <li>Click <strong>"Publish App"</strong> → Confirm</li>
+      </ol>
+      <p style="margin-top: 10px;">This makes the refresh token permanent so you never need to re-authorize.</p>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title" style="color: var(--muted)">06 &nbsp; Quick Reference</div>
+    <h2>Cheat Sheet</h2>
+
+    <table>
+      <tr><th>Task</th><th>Command / Where</th></tr>
+      <tr><td>Edit the code</td><td>Open files in <code>C:\Users\Chris\.local\bin\daily-digest\</code></td></tr>
+      <tr><td>Save changes to GitHub</td><td><code>git add [file]</code> → <code>git commit -m "..."</code> → <code>git push</code></td></tr>
+      <tr><td>Run the digest manually</td><td>GitHub → Actions → "The Daily Rundown" → Run workflow</td></tr>
+      <tr><td>View the live site</td><td>dizchrisctrl.github.io/daily-digest</td></tr>
+      <tr><td>View workflow runs</td><td>github.com/dizchrisctrl/daily-digest/actions</td></tr>
+      <tr><td>Manage secrets</td><td>github.com/dizchrisctrl/daily-digest/settings/secrets/actions</td></tr>
+      <tr><td>Rebuild HTML only (no Claude calls)</td><td>Run workflow → check "Rebuild HTML from existing data"</td></tr>
+      <tr><td>Add/update a Python package</td><td>Edit <code>requirements.in</code> → run <code>pip-compile --generate-hashes requirements.in -o requirements.txt</code> → push</td></tr>
+      <tr><td>Use Card Maker</td><td>Go to the digest page → click "Card Maker" tab → paste any article URL → Generate</td></tr>
+      <tr><td>Check Card Maker weekly usage</td><td>After generating a card, the page shows how many of your 10 weekly cards remain</td></tr>
+      <tr><td>Re-deploy the Cloudflare Worker</td><td><code>cd cloudflare-worker</code> → <code>wrangler deploy</code> (run from the <code>cloudflare-worker/</code> folder)</td></tr>
+      <tr><td>Update the Worker's API key</td><td><code>wrangler secret put ANTHROPIC_API_KEY</code> (from <code>cloudflare-worker/</code> folder)</td></tr>
+      <tr><td>Check Worker rate limit counter</td><td><code>wrangler kv key list --binding=RATE_LIMIT</code> or view in Cloudflare dashboard → Workers KV</td></tr>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>
