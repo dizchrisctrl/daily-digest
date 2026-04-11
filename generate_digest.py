@@ -670,6 +670,12 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .expand-all:hover { color: var(--text); border-color: var(--border2); }
 
 /* ── Story Card ── */
+@keyframes storyHighlight {
+  0%   { box-shadow: 0 0 0 0 var(--accent,#818cf8), 0 8px 32px rgba(0,0,0,0.35); }
+  18%  { box-shadow: 0 0 0 4px var(--accent,#818cf8), 0 0 40px color-mix(in srgb, var(--accent,#818cf8) 30%, transparent), 0 8px 32px rgba(0,0,0,0.35); }
+  55%  { box-shadow: 0 0 0 3px var(--accent,#818cf8), 0 0 24px color-mix(in srgb, var(--accent,#818cf8) 18%, transparent), 0 8px 32px rgba(0,0,0,0.35); }
+  100% { box-shadow: 0 0 0 0 transparent, 0 8px 32px rgba(0,0,0,0.35); }
+}
 .story-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -677,10 +683,12 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
   margin-bottom: 12px;
   overflow: hidden;
   transition: border-color 0.25s, box-shadow 0.25s;
+  scroll-margin-top: 80px;
 }
 .story-card:hover { border-color: var(--border2); box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
 .story-card.open { border-color: var(--border2); box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
 .story-card.kbd-focus { border-color: var(--ai) !important; box-shadow: 0 0 0 2px rgba(129,140,248,0.25) !important; }
+.story-card.story-highlight { animation: storyHighlight 2.4s cubic-bezier(0.4,0,0.2,1) forwards; }
 
 /* Summary row */
 .story-summary {
@@ -1078,9 +1086,9 @@ kbd {
 
 <div class="tabs-wrap">
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('ai',this)">&#x1F916; AI &amp; Technology</button>
-    <button class="tab-btn" onclick="switchTab('cyber',this)">&#x1F510; Cybersecurity</button>
-    <button class="tab-btn" onclick="switchTab('notables',this)">&#x1F4F0; Notables</button>
+    <button class="tab-btn active" id="tab-ai" onclick="switchTab('ai',this)">&#x1F916; AI &amp; Technology</button>
+    <button class="tab-btn" id="tab-cyber" onclick="switchTab('cyber',this)">&#x1F510; Cybersecurity</button>
+    <button class="tab-btn" id="tab-notables" onclick="switchTab('notables',this)">&#x1F4F0; Notables</button>
     <div class="tab-indicator" id="indicator"></div>
   </div>
 </div>
@@ -1154,25 +1162,33 @@ window.addEventListener('load', () => {
   const active = document.querySelector('.tab-btn.active');
   if (active) positionIndicator(active);
 
-  // ── Deep-link: open the story matching the URL hash ──
+  // ── Deep-link: open and highlight the story matching the URL hash ──
   const hash = window.location.hash.slice(1); // e.g. "story-ai-1"
   if (!hash) return;
   const card = document.getElementById(hash);
   if (!card) return;
 
-  // Switch to the correct tab
-  if (hash.startsWith('story-ai-')) {
-    const btn = document.querySelector('[onclick*="\'ai\'"]');
-    if (btn) switchTab('ai', btn);
-  } else if (hash.startsWith('story-cyber-')) {
-    const btn = document.querySelector('[onclick*="\'cyber\'"]');
-    if (btn) switchTab('cyber', btn);
+  // Switch to the correct tab using stable IDs
+  let tabId = null;
+  if (hash.startsWith('story-ai-'))    tabId = 'ai';
+  else if (hash.startsWith('story-cyber-')) tabId = 'cyber';
+  if (tabId) {
+    const btn = document.getElementById('tab-' + tabId);
+    if (btn) switchTab(tabId, btn);
   }
 
-  // Expand the card and scroll to it after a brief paint delay
+  // Expand card immediately, then after two paint frames (ensuring display:block
+  // has been fully laid out) scroll to it and fire the highlight animation.
+  card.classList.add('open');
   requestAnimationFrame(() => {
-    card.classList.add('open');
-    setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+    requestAnimationFrame(() => {
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Small extra delay so the scroll starts before the glow draws attention
+      setTimeout(() => {
+        card.classList.add('story-highlight');
+        card.addEventListener('animationend', () => card.classList.remove('story-highlight'), { once: true });
+      }, 300);
+    });
   });
 });
 
@@ -1570,7 +1586,7 @@ def build_story_html(story, color, num, story_id=""):
     }
 
     return f"""
-<article class="story-card" id="{anchor}" data-tts="{tts_text}" data-share-title="{share_title}" data-share-text="{share_text}" data-share-url="{share_url}">
+<article class="story-card" id="{anchor}" style="--accent:{color}" data-tts="{tts_text}" data-share-title="{share_title}" data-share-text="{share_text}" data-share-url="{share_url}">
   <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
     <div class="s-left">
       <div class="s-meta">
