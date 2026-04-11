@@ -1514,10 +1514,12 @@ function cmStatus(type, html) {
 }
 function cmHideStatus() { document.getElementById('cm-status').className = 'cm-status'; }
 
-// ── SVG sanitiser (strip scripts / event handlers only) ──
+// ── SVG sanitiser (matches Python sanitize_svg — deny dangerous elements/attrs) ──
 function cmSanitizeSvg(s) {
   return s
     .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<foreignObject[\s\S]*?<\/foreignObject>/gi, '')
+    .replace(/<image[^>]*>/gi, '')
     .replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, '')
     .replace(/href\s*=\s*["']javascript:[^"']*["']/gi, '')
     .replace(/xlink:href\s*=\s*["']javascript:[^"']*["']/gi, '');
