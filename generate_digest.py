@@ -764,6 +764,7 @@ details.opinion-entry summary {
 details.opinion-entry summary::-webkit-details-marker { display: none; }
 .opinion-chevron { font-size: 0.65rem; color: var(--muted2); transition: transform 0.2s; flex-shrink: 0; }
 details.opinion-entry[open] .opinion-chevron { transform: rotate(90deg); }
+details.opinion-entry[open] .opinion-preview { display: none; }
 .opinion-source { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--cyber); flex-shrink: 0; }
 .opinion-preview { font-size: 0.82rem; color: var(--muted2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .opinion-full { padding: 0 14px 11px 14px; font-size: 0.91rem; color: var(--muted); line-height: 1.6; }
@@ -819,8 +820,8 @@ details.opinion-entry[open] .opinion-chevron { transform: rotate(90deg); }
 .collapsible-chevron { font-size: 0.65rem; color: var(--muted2); flex-shrink: 0; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); line-height: 1; }
 .collapsible-head:hover .collapsible-chevron { color: var(--accent, #818cf8); }
 .collapsible.open .collapsible-chevron { transform: rotate(90deg); }
-.collapsible-body { overflow: hidden; max-height: 0; opacity: 0; margin-top: 0; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease, margin-top 0.25s ease; }
-.collapsible.open .collapsible-body { max-height: 1600px; opacity: 1; margin-top: 11px; }
+.collapsible-body { overflow: hidden; max-height: 0; opacity: 0; margin-top: 0; transition: max-height 0.38s cubic-bezier(0.4,0,0.2,1), opacity 0.28s ease, margin-top 0.22s ease; }
+.collapsible.open .collapsible-body { opacity: 1; margin-top: 11px; /* max-height set by JS to exact scrollHeight */ }
 
 /* Audio player */
 .audio-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
@@ -1293,7 +1294,25 @@ function closeTagModal(e) {
 // ── Story card toggle ──
 function toggleStory(card) { card.classList.toggle('open'); }
 function toggleCard(card) { card.classList.toggle('open'); }
-function toggleCollapse(head) { head.closest('.collapsible').classList.toggle('open'); }
+function toggleCollapse(head) {
+  const wrap = head.closest('.collapsible');
+  const body = wrap.querySelector('.collapsible-body');
+  if (wrap.classList.contains('open')) {
+    // Closing: pin current height first so the browser has a start point, then animate to 0
+    body.style.maxHeight = body.scrollHeight + 'px';
+    body.offsetHeight; // force reflow
+    requestAnimationFrame(() => { body.style.maxHeight = '0'; });
+    wrap.classList.remove('open');
+  } else {
+    // Opening: animate to exact content height, then release so content can reflow freely
+    wrap.classList.add('open');
+    body.style.maxHeight = body.scrollHeight + 'px';
+    body.addEventListener('transitionend', e => {
+      if (e.propertyName === 'max-height' && wrap.classList.contains('open'))
+        body.style.maxHeight = 'none';
+    }, { once: true });
+  }
+}
 function toggleNotable(card) { card.classList.toggle('open'); }
 
 // ── Expand all ──
