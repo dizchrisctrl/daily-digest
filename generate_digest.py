@@ -1149,6 +1149,27 @@ function switchTab(id, btn) {
 window.addEventListener('load', () => {
   const active = document.querySelector('.tab-btn.active');
   if (active) positionIndicator(active);
+
+  // ── Deep-link: open the story matching the URL hash ──
+  const hash = window.location.hash.slice(1); // e.g. "story-ai-1"
+  if (!hash) return;
+  const card = document.getElementById(hash);
+  if (!card) return;
+
+  // Switch to the correct tab
+  if (hash.startsWith('story-ai-')) {
+    const btn = document.querySelector('[onclick*="\'ai\'"]');
+    if (btn) switchTab('ai', btn);
+  } else if (hash.startsWith('story-cyber-')) {
+    const btn = document.querySelector('[onclick*="\'cyber\'"]');
+    if (btn) switchTab('cyber', btn);
+  }
+
+  // Expand the card and scroll to it after a brief paint delay
+  requestAnimationFrame(() => {
+    card.classList.add('open');
+    setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+  });
 });
 
 // ── Tag modal ──
