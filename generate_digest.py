@@ -813,13 +813,13 @@ details.opinion-entry[open] .opinion-chevron { transform: rotate(90deg); }
 .collapsible-head .devil-intro,
 .collapsible-head .deepdive-impact-label,
 .collapsible-head .deepdive-outlook-label { margin-bottom: 0; pointer-events: none; flex-shrink: 0; }
-.collapsible-preview { font-size: 0.8rem; color: var(--muted2); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-style: italic; min-width: 0; }
-.collapsible-chevron { font-size: 0.65rem; color: var(--muted2); flex-shrink: 0; transition: transform 0.2s; line-height: 1; }
+.collapsible-preview { font-size: 0.8rem; color: var(--muted2); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-style: italic; min-width: 0; transition: opacity 0.15s ease, visibility 0.15s ease; }
+.collapsible.open .collapsible-preview { opacity: 0; visibility: hidden; pointer-events: none; }
+.collapsible-chevron { font-size: 0.65rem; color: var(--muted2); flex-shrink: 0; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); line-height: 1; }
 .collapsible-head:hover .collapsible-chevron { color: var(--accent, #818cf8); }
-.collapsible-body { display: none; margin-top: 11px; }
-.collapsible.open .collapsible-body { display: block; }
 .collapsible.open .collapsible-chevron { transform: rotate(90deg); }
-.collapsible.open .collapsible-preview { display: none; }
+.collapsible-body { overflow: hidden; max-height: 0; opacity: 0; margin-top: 0; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease, margin-top 0.25s ease; }
+.collapsible.open .collapsible-body { max-height: 1600px; opacity: 1; margin-top: 11px; }
 
 /* Audio player */
 .audio-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }

@@ -8,7 +8,7 @@
   :root {
     --bg: #0b0d16; --surface: #12152a; --surface2: #1a1d32;
     --text: #eaedf5; --muted: #7a849a; --muted2: #5a6275;
-    --ai: #818cf8; --cyber: #34d399; --amber: #fbbf24; --red: #f87171;
+    --ai: #818cf8; --cyber: #34d399; --amber: #fbbf24; --red: #f87171; --pink: #f472b6;
     --border: #252840; --border2: #333660;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -62,6 +62,12 @@
   .tag-cyber { background: rgba(52,211,153,0.15);  color: var(--cyber); }
   .tag-amber { background: rgba(251,191,36,0.12);  color: var(--amber); }
   .tag-red   { background: rgba(248,113,113,0.15); color: var(--red); }
+  .tag-pink  { background: rgba(244,114,182,0.15); color: var(--pink); }
+
+  /* Steps */
+  .steps { list-style: none; margin: 16px 0; display: flex; flex-direction: column; gap: 10px; }
+  .steps li { display: flex; gap: 14px; align-items: flex-start; font-size: 0.92rem; color: #c8cfe0; }
+  .step-num { width: 24px; height: 24px; border-radius: 50%; background: rgba(244,114,182,0.15); color: var(--pink); font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
 
   /* Code block */
   .code { background: #060912; border: 1px solid var(--border); border-radius: 8px;
@@ -194,7 +200,59 @@
 
   <!-- ══════════════════════════════════════════════════════ -->
   <div class="section">
-    <div class="section-title" style="color: var(--cyber)">02 &nbsp; Authentication</div>
+    <div class="section-title" style="color: var(--pink)">02 &nbsp; Card Maker</div>
+    <h2>Generate a Story Card for Any Article</h2>
+    <p>The Card Maker is a fourth tab on the digest page that lets you turn any article on the internet into a full story card — same format as the daily digest — on the spot. No account, no API key required.</p>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>&#x2728; What you get</h3>
+        <p>The exact same card format as the daily stories: headline, TL;DR, concept explainer, SVG diagram, public opinion breakdown, Devil's Advocate counter-take, three Insight cards, and a Deep Dive with impact and outlook.</p>
+      </div>
+      <div class="card">
+        <h3>&#x1F4B0; Does it cost anything?</h3>
+        <p>Nothing. The AI calls go through a private proxy. You're limited to <strong>10 cards per week</strong> (resets every Monday) to keep costs in check — but within that limit it's completely free to use.</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 28px; margin-bottom: 14px;">How to Use It</h2>
+    <ol class="steps">
+      <li><span class="step-num">1</span><span>Click the <strong style="color:var(--pink)">Card Maker</strong> tab at the top of the digest page (the pink one).</span></li>
+      <li><span class="step-num">2</span><span><strong>Paste an article URL</strong> into the URL field — any news article, blog post, or public page works. Or skip the URL and paste the article text directly into the text box below it.</span></li>
+      <li><span class="step-num">3</span><span>Click <strong>Generate Card</strong> and wait about 20 seconds. Claude reads the article and writes the full card.</span></li>
+      <li><span class="step-num">4</span><span>The card appears on the page with all the same sections as a daily story — scroll down to read it, expand sections, or listen with the TTS button.</span></li>
+      <li><span class="step-num">5</span><span>Use <strong>Copy HTML</strong> to grab the card's source code, or <strong>✕ Clear</strong> to start fresh with a new article.</span></li>
+    </ol>
+
+    <div class="callout callout-amber" style="margin-top: 20px;">
+      <strong>URL fetch failing?</strong> Some sites block automated fetches. If you see a "failed to fetch" error, copy and paste the article text directly into the text box instead — that path always works.
+    </div>
+
+    <h2 style="margin-top: 28px; margin-bottom: 14px;">The Weekly Limit</h2>
+    <div class="card">
+      <h3>&#x23F3; 10 cards per week</h3>
+      <p>Each card generation uses one call to Claude Opus, which costs a small amount. The limit caps usage at 10 cards per week to keep the costs predictable. After generating a card the page shows how many you have left.</p>
+      <p style="margin-top: 8px;">The counter resets every <strong>Monday</strong>. If you hit the limit early you'll see a message telling you the exact reset date.</p>
+      <p style="margin-top: 8px;">The limit is enforced server-side — it applies regardless of which browser or device you use.</p>
+    </div>
+
+    <h2 style="margin-top: 28px; margin-bottom: 14px;">Best Articles to Use It On</h2>
+    <div class="two-col">
+      <div class="card">
+        <h3><span class="tag tag-cyber">Works great</span></h3>
+        <p>Tech news, security advisories, AI research announcements, product launches, policy changes — anything with a clear subject and enough substance for Claude to explain.</p>
+      </div>
+      <div class="card">
+        <h3><span class="tag tag-amber">Works less well</span></h3>
+        <p>Paywalled articles (the fetch will fail or return a login wall), opinion pieces with no factual core, very short items, or pages that are mostly video/image with little text.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title" style="color: var(--cyber)">03 &nbsp; Authentication</div>
     <h2>How Credentials Work</h2>
     <p>The app needs to talk to two external services — Claude AI (Anthropic) and Gmail. Both require secret keys that prove the app has permission. Here's how each one works.</p>
 
@@ -235,7 +293,7 @@
 
   <!-- ══════════════════════════════════════════════════════ -->
   <div class="section">
-    <div class="section-title" style="color: var(--amber)">03 &nbsp; GitHub — The Basics</div>
+    <div class="section-title" style="color: var(--amber)">04 &nbsp; GitHub — The Basics</div>
     <h2>What GitHub Is and How It Relates to Your Page</h2>
     <p>GitHub is a platform that does three things for your project: stores your code safely in the cloud, runs automated tasks, and hosts your website for free.</p>
 
@@ -294,7 +352,7 @@
 
   <!-- ══════════════════════════════════════════════════════ -->
   <div class="section">
-    <div class="section-title" style="color: var(--ai)">04 &nbsp; Local vs GitHub</div>
+    <div class="section-title" style="color: var(--ai)">05 &nbsp; Local vs GitHub</div>
     <h2>What Lives Where and How They Relate</h2>
     <p>Think of your local machine as your <strong>workshop</strong> and GitHub as your <strong>published archive</strong>. You do all your work locally, then push it to GitHub to save it and deploy it.</p>
 
@@ -372,7 +430,7 @@
 
   <!-- ══════════════════════════════════════════════════════ -->
   <div class="section">
-    <div class="section-title" style="color: var(--red)">05 &nbsp; Security Assessment</div>
+    <div class="section-title" style="color: var(--red)">06 &nbsp; Security Assessment</div>
     <h2>How Your Page Is Secured</h2>
     <p>Here's a plain-English breakdown of the security controls in place and the current status of each.</p>
 
@@ -451,7 +509,7 @@
 
   <!-- ══════════════════════════════════════════════════════ -->
   <div class="section">
-    <div class="section-title" style="color: var(--muted)">06 &nbsp; Quick Reference</div>
+    <div class="section-title" style="color: var(--muted)">07 &nbsp; Quick Reference</div>
     <h2>Cheat Sheet</h2>
 
     <table>
