@@ -6,6 +6,7 @@ import re
 import json
 import base64
 import socket
+import urllib.parse
 import feedparser
 from datetime import datetime, timezone, timedelta
 from email.mime.multipart import MIMEMultipart
@@ -431,6 +432,14 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
 <title>The Daily Rundown -- __DATE__</title>
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="The Daily Rundown">
+<meta property="og:title"       content="__OG_TITLE__">
+<meta property="og:description" content="__OG_DESC__">
+<meta property="og:url"         content="__OG_URL__">
+<meta name="twitter:card"        content="summary">
+<meta name="twitter:title"       content="__OG_TITLE__">
+<meta name="twitter:description" content="__OG_DESC__">
 <style>
 :root {
   --bg: #0b0d16; --surface: #12152a; --surface2: #1a1d32; --surface3: #20233c;
@@ -740,6 +749,48 @@ details.opinion-entry[open] .opinion-chevron { transform: rotate(90deg); }
 .audio-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyber); flex-shrink: 0; }
 .au-playing .audio-dot { animation: au-pulse 1.1s ease-in-out infinite; }
 @keyframes au-pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.3; transform:scale(0.7); } }
+
+/* Share */
+.share-wrap { position: relative; display: inline-block; }
+.share-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: transparent; border: 1px solid var(--border2); color: var(--muted);
+  border-radius: 20px; padding: 4px 13px; font-size: 0.73rem; font-family: inherit;
+  cursor: pointer; transition: border-color 0.2s, color 0.2s; user-select: none;
+}
+.share-btn:hover { border-color: var(--purple); color: var(--purple); }
+.share-btn.share-active { border-color: var(--purple); color: var(--purple); }
+.share-popover {
+  display: none; position: absolute; bottom: calc(100% + 10px); left: 0;
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 14px; padding: 12px; min-width: 220px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45); z-index: 200;
+}
+.share-popover.open { display: block; }
+.share-popover-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--muted2); margin-bottom: 10px; }
+.share-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.share-option {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface3); border: 1px solid var(--border); border-radius: 9px;
+  padding: 8px 11px; cursor: pointer; text-decoration: none;
+  font-size: 0.78rem; font-weight: 600; color: var(--muted);
+  transition: border-color 0.18s, color 0.18s, background 0.18s;
+  font-family: inherit; white-space: nowrap;
+}
+.share-option:hover { background: var(--surface); }
+.share-option.so-x:hover       { border-color: #e7e7e7; color: #e7e7e7; }
+.share-option.so-whatsapp:hover { border-color: #25d366; color: #25d366; }
+.share-option.so-telegram:hover { border-color: #2aabee; color: #2aabee; }
+.share-option.so-linkedin:hover { border-color: #0a66c2; color: #0a66c2; }
+.share-option.so-copy:hover     { border-color: var(--cyber); color: var(--cyber); }
+.share-option.so-copy.copied   { border-color: var(--cyber); color: var(--cyber); }
+.share-option-icon { font-size: 1rem; flex-shrink: 0; }
+.share-copy-full {
+  grid-column: 1 / -1; justify-content: center;
+  border-color: var(--border2); color: var(--muted2);
+}
+.share-divider { grid-column: 1 / -1; height: 1px; background: var(--border); margin: 2px 0; }
 
 /* Story footer */
 .story-footer { padding: 11px 22px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; background: rgba(255,255,255,0.015); }
@@ -1099,6 +1150,74 @@ function toggleTheme() {
   applyTheme(preferLight);
 })();
 
+// ── Share ──
+(function() {
+  let _openPopover = null;
+
+  function _closeAll() {
+    if (_openPopover) {
+      _openPopover.classList.remove('open');
+      _openPopover.closest('.share-wrap').querySelector('.share-btn').classList.remove('share-active');
+      _openPopover = null;
+    }
+  }
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.share-wrap')) _closeAll();
+  });
+
+  window.toggleShare = function(e, btn) {
+    e.stopPropagation();
+    const wrap = btn.closest('.share-wrap');
+    const pop  = wrap.querySelector('.share-popover');
+    if (pop === _openPopover) { _closeAll(); return; }
+    _closeAll();
+    pop.classList.add('open');
+    btn.classList.add('share-active');
+    _openPopover = pop;
+  };
+
+  window.shareNative = function(e, btn) {
+    e.stopPropagation();
+    const card  = btn.closest('.story-card');
+    const title = card.dataset.shareTitle || '';
+    const text  = card.dataset.shareText  || '';
+    const url   = card.dataset.shareUrl   || window.location.href;
+    if (navigator.share) {
+      navigator.share({ title, text, url }).catch(() => {});
+    } else {
+      const wrap = btn.closest('.share-wrap');
+      const pop  = wrap.querySelector('.share-popover');
+      if (pop === _openPopover) { _closeAll(); return; }
+      _closeAll();
+      pop.classList.add('open');
+      btn.classList.add('share-active');
+      _openPopover = pop;
+    }
+  };
+
+  window.copyShareLink = function(e, btn) {
+    e.stopPropagation();
+    const card = btn.closest('.story-card');
+    const url  = card.dataset.shareUrl || window.location.href;
+    const text = card.dataset.shareTitle ? card.dataset.shareTitle + ' — ' + url : url;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.classList.add('copied');
+      const label = btn.querySelector('.share-copy-label');
+      if (label) { label.textContent = 'Copied!'; setTimeout(() => { label.textContent = 'Copy link'; btn.classList.remove('copied'); }, 2000); }
+    }).catch(() => {
+      // fallback for browsers without clipboard API
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      const label = btn.querySelector('.share-copy-label');
+      if (label) { label.textContent = 'Copied!'; setTimeout(() => { label.textContent = 'Copy link'; }, 2000); }
+    });
+  };
+})();
+
 // ── Audio / Text-to-Speech ──
 (function() {
   if (!window.speechSynthesis) {
@@ -1293,7 +1412,7 @@ def _build_visual(story):
     return ''
 
 
-def build_story_html(story, color, num):
+def build_story_html(story, color, num, story_id=""):
     LENS_ICONS = {"Scientific": "&#x1F52C;", "Historical": "&#x1F4DC;", "Societal": "&#x1F30D;"}
     quiz_html = ""
     for i, q in enumerate(story.get("quiz", []), 1):
@@ -1318,14 +1437,42 @@ def build_story_html(story, color, num):
         if p.strip()
     )
 
-    num_str      = f"{num:02d}"
-    tags_html    = build_tags_html(story.get("tech_tags", []))
+    num_str       = f"{num:02d}"
+    tags_html     = build_tags_html(story.get("tech_tags", []))
     affected_html = build_affected_html(story.get("affected_systems", []))
 
-    tts_text = esc(_build_tts_text(story))
+    tts_text    = esc(_build_tts_text(story))
+    anchor      = story_id if story_id else f"story-{num}"
+    headline    = story.get('headline', '')
+    tldr        = story.get('tldr', '')
+    # Per-story redirect page carries story-specific OG tags for rich social previews
+    story_page  = f"{PAGES_URL}/s/{anchor}.html"
+    share_title = esc(headline)
+    share_text  = esc(tldr)
+    share_url   = esc(story_page)
+
+    # Twitter: 280 char limit; URL ~23 chars; keep body ≤ 230
+    _tw_tldr = tldr if len(tldr) <= 180 else tldr[:177] + "\u2026"
+    _tw_text = f"\U0001f4f0 {headline}\n\n{_tw_tldr}"[:230]
+    # WhatsApp: supports *bold*, full TL;DR
+    _wa_text = f"\U0001f4f0 *{headline}*\n\n{tldr}\n\n\U0001f517 {story_page}"
+    # Telegram: clean headline + summary, link preview handles the rest
+    _tg_text = f"\U0001f4f0 {headline}\n\n{tldr}"
+
+    _eu  = urllib.parse.quote(story_page)
+    _etw = urllib.parse.quote(_tw_text)
+    _ewa = urllib.parse.quote(_wa_text)
+    _etg = urllib.parse.quote(_tg_text)
+
+    share_links = {
+        "x":        f"https://twitter.com/intent/tweet?text={_etw}&url={_eu}",
+        "whatsapp": f"https://wa.me/?text={_ewa}",
+        "telegram": f"https://t.me/share/url?url={_eu}&text={_etg}",
+        "linkedin": f"https://www.linkedin.com/sharing/share-offsite/?url={_eu}",
+    }
 
     return f"""
-<article class="story-card" data-tts="{tts_text}">
+<article class="story-card" id="{anchor}" data-tts="{tts_text}" data-share-title="{share_title}" data-share-text="{share_text}" data-share-url="{share_url}">
   <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
     <div class="s-left">
       <div class="s-meta">
@@ -1340,6 +1487,20 @@ def build_story_html(story, color, num):
         <button class="audio-btn" onclick="toggleAudio(this.closest('.story-card'))" aria-label="Listen to this story">&#x1F50A; Listen</button>
         <button class="audio-stop" onclick="stopAudio(event,this.closest('.story-card'))" aria-label="Stop narration">&#x25A0; Stop</button>
         <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
+        <div class="share-wrap">
+          <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
+          <div class="share-popover" onclick="event.stopPropagation()">
+            <div class="share-popover-title">Share this story</div>
+            <div class="share-grid">
+              <a class="share-option so-x" href="{esc(share_links['x'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
+              <a class="share-option so-whatsapp" href="{esc(share_links['whatsapp'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
+              <a class="share-option so-telegram" href="{esc(share_links['telegram'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
+              <a class="share-option so-linkedin" href="{esc(share_links['linkedin'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
+              <div class="share-divider"></div>
+              <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="chevron">&#9660;</div>
@@ -1446,14 +1607,24 @@ def generate_html(data):
     # esc() applied to today: in --rebuild mode it comes from disk (digest.json),
     # not strftime, so it must be treated as untrusted input.
     today    = esc(data.get("date", ""))
-    ai_html  = "\n".join(build_story_html(s, "#818cf8", i+1) for i, s in enumerate(data.get("ai_stories", [])))
-    cy_html  = "\n".join(build_story_html(s, "#34d399", i+1) for i, s in enumerate(data.get("cyber_stories", [])))
+    ai_html  = "\n".join(build_story_html(s, "#818cf8", i+1, f"story-ai-{i+1}")   for i, s in enumerate(data.get("ai_stories", [])))
+    cy_html  = "\n".join(build_story_html(s, "#34d399", i+1, f"story-cyber-{i+1}") for i, s in enumerate(data.get("cyber_stories", [])))
     not_html = "\n".join(build_notable_html(item, i+1) for i, item in enumerate(data.get("notables", [])))
+
+    # OG tags: use the first AI story headline/tldr as the page preview
+    first_ai   = data.get("ai_stories", [{}])[0]
+    og_title   = esc(f"The Daily Rundown — {today}")
+    og_desc    = esc(first_ai.get("tldr", "AI, cybersecurity, and the stories that actually matter — digested daily by Claude."))
+    og_url     = esc(PAGES_URL)
+
     return (HTML_TEMPLATE
-            .replace("__DATE__", today)
-            .replace("__AI_STORIES__", ai_html)
+            .replace("__DATE__",     today)
+            .replace("__OG_TITLE__", og_title)
+            .replace("__OG_DESC__",  og_desc)
+            .replace("__OG_URL__",   og_url)
+            .replace("__AI_STORIES__",    ai_html)
             .replace("__CYBER_STORIES__", cy_html)
-            .replace("__NOTABLES__", not_html))
+            .replace("__NOTABLES__",      not_html))
 
 
 def send_email(data):
@@ -1771,6 +1942,56 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 </html>"""
 
 
+def _story_redirect_html(story, story_id):
+    """Thin page with story-specific OG tags that redirects to the main digest anchor."""
+    headline = story.get('headline', 'The Daily Rundown')
+    tldr     = story.get('tldr', '')
+    source   = story.get('source', '')
+    dest_url = f"{PAGES_URL}#{story_id}"
+    page_url = f"{PAGES_URL}/s/{story_id}.html"
+
+    def _attr(s):
+        return s.replace('&', '&amp;').replace('"', '&quot;').replace('<', '&lt;').replace('>', '&gt;')
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{_attr(headline)} — The Daily Rundown</title>
+<meta property="og:type"        content="article">
+<meta property="og:site_name"   content="The Daily Rundown">
+<meta property="og:title"       content="{_attr(headline)}">
+<meta property="og:description" content="{_attr(tldr)}">
+<meta property="og:url"         content="{_attr(page_url)}">
+<meta name="twitter:card"        content="summary">
+<meta name="twitter:title"       content="{_attr(headline)}">
+<meta name="twitter:description" content="{_attr(tldr)}">
+{f'<meta name="author" content="{_attr(source)}">' if source else ''}
+<meta http-equiv="refresh" content="0; url={_attr(dest_url)}">
+<script>window.location.replace("{dest_url.replace('"', '\\"')}");</script>
+</head>
+<body></body>
+</html>"""
+
+
+def _write_story_pages(data):
+    """Write per-story redirect pages with story-specific OG tags to output/s/."""
+    os.makedirs("output/s", exist_ok=True)
+    count = 0
+    for i, story in enumerate(data.get("ai_stories", []), 1):
+        story_id = f"story-ai-{i}"
+        with open(f"output/s/{story_id}.html", "w", encoding="utf-8") as f:
+            f.write(_story_redirect_html(story, story_id))
+        count += 1
+    for i, story in enumerate(data.get("cyber_stories", []), 1):
+        story_id = f"story-cyber-{i}"
+        with open(f"output/s/{story_id}.html", "w", encoding="utf-8") as f:
+            f.write(_story_redirect_html(story, story_id))
+        count += 1
+    return count
+
+
 def save_output(html, data):
     os.makedirs("output", exist_ok=True)
     with open("output/index.html", "w", encoding="utf-8") as f:
@@ -1779,7 +2000,8 @@ def save_output(html, data):
         json.dump(data, f, indent=2, ensure_ascii=False)
     with open("output/guide.html", "w", encoding="utf-8") as f:
         f.write(GUIDE_HTML)
-    print("  Saved: output/index.html + output/digest.json + output/guide.html")
+    n = _write_story_pages(data)
+    print(f"  Saved: output/index.html + output/digest.json + output/guide.html + {n} story pages")
 
 
 if __name__ == "__main__":
@@ -1800,7 +2022,8 @@ if __name__ == "__main__":
             f.write(html)
         with open("output/guide.html", "w", encoding="utf-8") as f:
             f.write(GUIDE_HTML)
-        print("  Saved: output/index.html + output/guide.html")
+        n = _write_story_pages(data)
+        print(f"  Saved: output/index.html + output/guide.html + {n} story pages")
         print("\nDone (rebuild only -- no email sent)!")
     else:
         print("\n-> Fetching news...")
