@@ -699,9 +699,10 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 }
 .story-summary:hover { background: rgba(255,255,255,0.025); }
 .s-left { flex: 1; min-width: 0; }
-.s-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+.s-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
 .src-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 2px 9px; border-radius: 20px; }
-.story-num { font-size: 0.68rem; font-weight: 700; color: var(--muted2); font-variant-numeric: tabular-nums; }
+.story-num { font-size: 0.68rem; font-weight: 700; color: var(--muted2); font-variant-numeric: tabular-nums; margin-left: auto; }
+.read-time { font-size: 0.68rem; color: var(--muted2); display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
 .pub-date { font-size: 0.72rem; color: var(--muted2); margin: 4px 0 8px; }
 .story-summary h2 { font-size: 1.08rem; font-weight: 700; line-height: 1.4; margin-bottom: 9px; }
 .tldr { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
@@ -1551,6 +1552,18 @@ function cmPreview(s, n) {
   s = (s || '').trim();
   return s.length > n ? s.slice(0, n) + '\u2026' : s;
 }
+// ── Estimated read time at 200 wpm (technical content) ──
+function cmReadTime(story) {
+  const parts = [
+    story.tldr, story.why_it_matters, story.concept_explained,
+    story.opinion_assessment, story.devils_advocate,
+    story.deep_dive, story.deep_dive_impact, story.deep_dive_outlook,
+  ];
+  (story.public_opinion||[]).forEach(o => parts.push(o.sentiment||''));
+  (story.quiz||[]).forEach(q => { parts.push(q.q||'', q.a||'', q.explain||''); });
+  const words = parts.filter(Boolean).join(' ').trim().split(/\s+/).length;
+  return Math.max(1, Math.round(words / 200)) + ' min read';
+}
 
 // ── Tags HTML ──
 function cmTagsHtml(tags) {
@@ -1637,6 +1650,7 @@ function cmRenderCard(story, color) {
     <div class="s-left">
       <div class="s-meta">
         <span class="src-badge" style="background:${color}1a;color:${color}">${h(source)}</span>
+        <span class="read-time">&#x23F1; ${h(cmReadTime(story))}</span>
         <span class="story-num"><span class="cm-maker-badge">Card Maker</span></span>
       </div>
       <h2>${h(headline)}</h2>
@@ -1940,6 +1954,27 @@ def _preview(text, n=90):
     return (t[:n] + "\u2026") if len(t) > n else t
 
 
+def _read_time(story, wpm=200):
+    """Estimate read time in minutes at 200 wpm (technical content)."""
+    parts = [
+        story.get('tldr', ''),
+        story.get('why_it_matters', ''),
+        story.get('concept_explained', ''),
+        story.get('opinion_assessment', ''),
+        story.get('devils_advocate', ''),
+        story.get('deep_dive', ''),
+        story.get('deep_dive_impact', ''),
+        story.get('deep_dive_outlook', ''),
+    ]
+    for o in (story.get('public_opinion') or []):
+        parts.append(o.get('sentiment', ''))
+    for q in (story.get('quiz') or []):
+        parts.extend([q.get('q', ''), q.get('a', ''), q.get('explain', '')])
+    words = sum(len(p.split()) for p in parts if p)
+    mins = max(1, round(words / wpm))
+    return f"{mins} min read"
+
+
 def safe_url(url):
     u = str(url).strip()
     if u.lower().startswith(("http://", "https://")):
@@ -2099,6 +2134,7 @@ def build_story_html(story, color, num, story_id=""):
     <div class="s-left">
       <div class="s-meta">
         <span class="src-badge" style="background:{color}1a;color:{color}">{esc(story.get('source',''))}</span>
+        <span class="read-time">&#x23F1; {esc(_read_time(story))}</span>
         <span class="story-num">{num_str}</span>
       </div>
       <h2>{esc(story.get('headline',''))}</h2>
