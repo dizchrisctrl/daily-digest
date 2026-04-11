@@ -170,9 +170,9 @@ STORY_SCHEMA = {
             "items": {
                 "type": "object",
                 "properties": {
-                    "q":       {"type": "string"},
-                    "a":       {"type": "string"},
-                    "explain": {"type": "string"},
+                    "q":       {"type": "string", "description": "A thought-provoking hook or framing question that draws the reader into a deeper concept — not a trivia question"},
+                    "a":       {"type": "string", "description": "The key insight or takeaway: a crisp, memorable answer that reframes or deepens understanding"},
+                    "explain": {"type": "string", "description": "2-3 sentences connecting this insight to broader trends, historical context, or implications beyond the story"},
                 },
                 "required": ["q", "a", "explain"],
             },
@@ -238,7 +238,7 @@ Guidelines:
   Use accent color {accent_color}. Dark background #060912. Node fill #12152a.
   Include arrowheads via <defs><marker>. 8-15 elements. Short precise labels.
   Show actual relationships and flow — not floating boxes with buzzwords.
-- quiz: 3 questions testing real conceptual understanding, not trivia.
+- quiz: 3 insight cards that add conceptual depth. Each card has a thought-provoking hook (q) that draws the reader into a concept, a crisp key insight or takeaway (a), and a brief explanation (explain) connecting it to broader trends or implications. Avoid trivia — these should feel like "aha" moments that make the story richer.
 - pub_date: copy the pub_date field exactly from the article JSON — do not modify it.
 - public_opinion: one entry per community (HN, Reddit r/technology, r/netsec, security Twitter/X) — each with a source name and 1-2 sentence sentiment summary.
 - deep_dive: a Socratic question forcing critical thinking about assumptions or bigger trends.
@@ -647,11 +647,22 @@ pre.ascii {
 
 /* Opinion block */
 .opinion-block { background: var(--opinion-bg); }
-.opinion-q { color: var(--muted); padding: 10px 14px; border-left: 3px solid rgba(52,211,153,0.4); margin-bottom: 10px; font-size: 0.91rem; line-height: 1.6; border-radius: 0 6px 6px 0; background: rgba(52,211,153,0.04); }
-.opinion-source { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--cyber); margin-bottom: 4px; font-style: normal; }
+details.opinion-entry { margin-bottom: 8px; border-left: 3px solid rgba(52,211,153,0.4); border-radius: 0 6px 6px 0; background: rgba(52,211,153,0.04); }
+details.opinion-entry:last-of-type { margin-bottom: 0; }
+details.opinion-entry summary {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px; cursor: pointer; list-style: none;
+  user-select: none;
+}
+details.opinion-entry summary::-webkit-details-marker { display: none; }
+.opinion-chevron { font-size: 0.65rem; color: var(--muted2); transition: transform 0.2s; flex-shrink: 0; }
+details.opinion-entry[open] .opinion-chevron { transform: rotate(90deg); }
+.opinion-source { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--cyber); flex-shrink: 0; }
+.opinion-preview { font-size: 0.82rem; color: var(--muted2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.opinion-full { padding: 0 14px 11px 14px; font-size: 0.91rem; color: var(--muted); line-height: 1.6; }
 
-/* Quiz */
-.quiz-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+/* Insights */
+.insights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
 .qcard {
   background: var(--surface2); border: 1px solid var(--border);
   border-radius: 10px; padding: 14px; cursor: pointer;
@@ -851,7 +862,7 @@ kbd {
   .story-summary h2 { font-size: 0.97rem; }
   .block { padding: 16px; }
   pre.ascii { font-size: 0.6rem; padding: 10px; }
-  .quiz-grid { grid-template-columns: 1fr; }
+  .insights-grid { grid-template-columns: 1fr; }
   .notable-grid { grid-template-columns: 1fr; }
   .tab-btn { font-size: 0.78rem; padding: 13px 8px; gap: 5px; }
   #kbd-hint { display: none; }
@@ -1147,14 +1158,14 @@ def build_story_html(story, color, num):
     for i, q in enumerate(story.get("quiz", []), 1):
         quiz_html += f"""
       <div class="qcard" onclick="toggleCard(this)">
-        <div class="q-num">Q{i} of 3</div>
+        <div class="q-num">&#x1F4A1; Insight {i}</div>
         <div class="q-text">{esc(q.get('q',''))}</div>
         <div class="q-answer">
           <div class="q-divider"></div>
           <div class="q-ans">{esc(q.get('a',''))}</div>
           <div class="q-exp">{esc(q.get('explain',''))}</div>
         </div>
-        <div class="q-hint">&#9660; tap to reveal</div>
+        <div class="q-hint">&#9656; go deeper</div>
       </div>"""
 
     concept_paras = "".join(
@@ -1210,14 +1221,14 @@ def build_story_html(story, color, num):
 
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
-        {"".join(f'<div class="opinion-q"><span class="opinion-source">{esc(o.get("source",""))}</span>{esc(o.get("sentiment",""))}</div>' for o in (story.get("public_opinion") or []))}
-        <div class="blabel">&#x1F50D; Assessment</div>
+        {"".join(f'<details class="opinion-entry"><summary><span class="opinion-chevron">&#9656;</span><span class="opinion-source">{esc(o.get("source",""))}</span><span class="opinion-preview">{esc(o.get("sentiment",""))}</span></summary><div class="opinion-full">{esc(o.get("sentiment",""))}</div></details>' for o in (story.get("public_opinion") or []))}
+        <div class="blabel" style="margin-top:14px">&#x1F50D; Assessment</div>
         <p>{esc(story.get('opinion_assessment',''))}</p>
       </div>
 
       <div class="block">
-        <div class="blabel">&#x2753; Quiz Yourself</div>
-        <div class="quiz-grid">{quiz_html}</div>
+        <div class="blabel">&#x1F4A1; Insights</div>
+        <div class="insights-grid">{quiz_html}</div>
       </div>
 
       <div class="block deepdive-block">
@@ -1313,7 +1324,7 @@ def send_email(data):
     <ul style="padding-left:18px;margin:0;line-height:2.2;font-size:0.93rem">{notables_items}</ul>
   </div>
   <div style="text-align:center;padding:28px;background:#1a1d2e;border-radius:12px">
-    <p style="color:#94a3b8;margin:0 0 20px;font-size:0.93rem">Get concepts, diagrams, quizzes &amp; deep dives in the full interactive digest</p>
+    <p style="color:#94a3b8;margin:0 0 20px;font-size:0.93rem">Get concepts, diagrams, insights &amp; deep dives in the full interactive digest</p>
     <a href="{PAGES_URL}" style="display:inline-block;background:linear-gradient(135deg,#4f46e5,#059669);color:#fff;text-decoration:none;padding:14px 36px;border-radius:10px;font-weight:700;font-size:1rem">Read Full Digest &#x2192;</a>
   </div>
   <p style="text-align:center;color:#475569;font-size:0.78rem;margin-top:24px">
