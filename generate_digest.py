@@ -19,6 +19,7 @@ from googleapiclient.discovery import build
 RECIPIENT_EMAIL = "Diazz.christian@gmail.com"
 SENDER_EMAIL    = os.environ["GMAIL_ADDRESS"]
 PAGES_URL       = "https://dizchrisctrl.github.io/daily-digest"
+WORKER_URL      = os.environ.get("WORKER_URL", "")   # Cloudflare Worker proxy URL
 
 GMAIL_CLIENT_ID     = os.environ["GMAIL_CLIENT_ID"]
 GMAIL_CLIENT_SECRET = os.environ["GMAIL_CLIENT_SECRET"]
@@ -1163,11 +1164,7 @@ kbd {
         <h2 class="cm-title">&#x270F;&#xFE0F; Rundown Card Maker</h2>
         <p class="cm-subtitle">Paste any news article URL and Claude will analyze it in real time and generate a full story card &mdash; same format, same depth as the daily digest.</p>
       </div>
-      <div class="cm-form">
-        <div class="cm-field">
-          <label class="cm-label" for="cm-apikey">Anthropic API Key <span class="cm-note">saved in your browser only &mdash; never sent anywhere except Anthropic</span></label>
-          <input class="cm-input" id="cm-apikey" type="password" placeholder="sk-ant-..." autocomplete="off" oninput="cmSaveKey(this.value)">
-        </div>
+      <div class="cm-form" id="cm-form">
         <div class="cm-field">
           <label class="cm-label" for="cm-url">Article URL</label>
           <input class="cm-input" id="cm-url" type="url" placeholder="https://...">
@@ -1178,7 +1175,6 @@ kbd {
           <textarea class="cm-textarea" id="cm-text" rows="5" placeholder="Paste the article headline and body text here..."></textarea>
         </div>
         <button class="cm-btn" id="cm-btn" onclick="cmGenerate()">&#x2728;&nbsp; Generate Card</button>
-        <p class="cm-key-hint">Your key is stored in <code>localStorage</code> and only used to call the Anthropic API directly from your browser. <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer">Get a key &rarr;</a></p>
       </div>
       <div class="cm-status" id="cm-status"></div>
       <div id="cm-output"></div>
@@ -1490,13 +1486,23 @@ document.addEventListener('keydown', e => {
 // ── Card Maker ──────────────────────────────────────────────────────────────
 (function() {
 
-// Restore saved API key
-window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('cm_apikey');
-  if (saved) { const el = document.getElementById('cm-apikey'); if (el) el.value = saved; }
-});
+const CM_WORKER_URL = '__WORKER_URL__';
 
-window.cmSaveKey = v => { if (v && v.length > 10) localStorage.setItem('cm_apikey', v); };
+// Disable form + show notice if the Worker URL hasn't been configured yet
+window.addEventListener('DOMContentLoaded', () => {
+  if (!CM_WORKER_URL) {
+    const btn = document.getElementById('cm-btn');
+    if (btn) btn.disabled = true;
+    const form = document.getElementById('cm-form');
+    if (form) {
+      const notice = document.createElement('p');
+      notice.className = 'cm-key-hint';
+      notice.style.cssText = 'color:#fca5a5;margin-top:12px;text-align:center';
+      notice.textContent = 'Card Maker is not yet configured — deploy the Cloudflare Worker and add WORKER_URL to your repo secrets.';
+      form.appendChild(notice);
+    }
+  }
+});
 
 // ── Status helpers ──
 function cmStatus(type, html) {
@@ -1756,8 +1762,8 @@ function cmExtractText(html, url) {
   return `Title: ${title}\nURL: ${url}\n\n${body}`;
 }
 
-// ── Call Anthropic API ──
-async function cmCallClaude(apiKey, articleText, sourceUrl) {
+// ── Call Anthropic via Worker proxy ──
+async function cmCallClaude(articleText, sourceUrl) {
   const today = new Date().toISOString().slice(0,10);
   const prompt = `Today is ${today}. Write ONE digest story about the article below for someone moderately technical.
 
@@ -1779,13 +1785,9 @@ Guidelines:
 
 Call the publish_story tool.`;
 
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  const res = await fetch(CM_WORKER_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'claude-opus-4-6',
       max_tokens: 8000,
@@ -1811,12 +1813,11 @@ Call the publish_story tool.`;
 
 // ── Main generate handler ──
 window.cmGenerate = async function() {
-  const apiKey = (document.getElementById('cm-apikey')?.value || '').trim();
-  const url    = (document.getElementById('cm-url')?.value    || '').trim();
-  const text   = (document.getElementById('cm-text')?.value   || '').trim();
+  const url  = (document.getElementById('cm-url')?.value  || '').trim();
+  const text = (document.getElementById('cm-text')?.value || '').trim();
 
-  if (!apiKey)      { cmStatus('error', '&#x26A0; Enter your Anthropic API key to continue.'); return; }
-  if (!url && !text){ cmStatus('error', '&#x26A0; Paste an article URL or the article text.'); return; }
+  if (!CM_WORKER_URL) { cmStatus('error', '&#x26A0; Card Maker is not configured yet.'); return; }
+  if (!url && !text)  { cmStatus('error', '&#x26A0; Paste an article URL or the article text.'); return; }
 
   const btn = document.getElementById('cm-btn');
   btn.disabled = true;
@@ -1828,7 +1829,7 @@ window.cmGenerate = async function() {
       articleContent = await cmFetchArticle(url);
     }
     cmStatus('loading', 'Analyzing with Claude Opus&hellip; (this takes ~20s)');
-    const story = await cmCallClaude(apiKey, articleContent, url);
+    const story = await cmCallClaude(articleContent, url);
 
     cmStatus('success', '&#x2713; Card generated &mdash; scroll down to view it.');
     setTimeout(cmHideStatus, 4000);
@@ -2201,10 +2202,11 @@ def generate_html(data):
     og_url     = esc(PAGES_URL)
 
     return (HTML_TEMPLATE
-            .replace("__DATE__",     today)
-            .replace("__OG_TITLE__", og_title)
-            .replace("__OG_DESC__",  og_desc)
-            .replace("__OG_URL__",   og_url)
+            .replace("__DATE__",       today)
+            .replace("__OG_TITLE__",   og_title)
+            .replace("__OG_DESC__",    og_desc)
+            .replace("__OG_URL__",     og_url)
+            .replace("__WORKER_URL__", WORKER_URL)
             .replace("__AI_STORIES__",    ai_html)
             .replace("__CYBER_STORIES__", cy_html)
             .replace("__NOTABLES__",      not_html))
