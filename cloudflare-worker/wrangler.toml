@@ -2,8 +2,13 @@ name            = "daily-digest-proxy"
 main            = "index.js"
 compatibility_date = "2024-09-23"
 
-# After deploying, set your Anthropic key as a secret (not in this file):
+# ── KV namespace for rate limiting ──────────────────────────────────────────
+# Run this once to create the namespace:
+#   wrangler kv namespace create RATE_LIMIT
+# Then paste the returned `id` value below and run `wrangler deploy`.
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id      = "PASTE_YOUR_KV_NAMESPACE_ID_HERE"
+
+# ── Secrets (set via wrangler, not stored here) ──────────────────────────────
 #   wrangler secret put ANTHROPIC_API_KEY
-#
-# Then copy the deployed URL (e.g. https://daily-digest-proxy.<you>.workers.dev)
-# into your GitHub repo as a secret named WORKER_URL.

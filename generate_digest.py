@@ -1796,7 +1796,7 @@ Call the publish_story tool.`;
     let msg = `API error ${res.status}`;
     try { const e = await res.json(); msg = e.error?.message || msg; } catch(_) {}
     if (res.status === 401) throw new Error('Invalid API key. Check your key at console.anthropic.com.');
-    if (res.status === 429) throw new Error('Rate limit reached. Wait a moment and try again.');
+    if (res.status === 429) throw new Error(msg);  // use Worker's weekly-limit message verbatim
     throw new Error(msg);
   }
 
