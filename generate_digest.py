@@ -1046,6 +1046,45 @@ kbd {
 .site-footer { text-align: center; padding: 40px 20px; color: var(--muted2); font-size: 0.8rem; border-top: 1px solid var(--border); }
 .site-footer a { color: var(--ai); text-decoration: none; }
 
+/* ── Card Maker ── */
+.cm-wrap { padding: 32px 0; }
+.cm-header { margin-bottom: 24px; }
+.cm-title { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.5px; color: var(--text); margin: 0 0 8px; }
+.cm-subtitle { color: var(--muted); font-size: 0.88rem; line-height: 1.65; margin: 0; }
+.cm-form { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px; margin-bottom: 18px; }
+.cm-field { margin-bottom: 14px; }
+.cm-field:last-of-type { margin-bottom: 0; }
+.cm-label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
+.cm-note { font-size: 0.68rem; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--muted2); margin-left: 8px; }
+.cm-input { width: 100%; padding: 10px 13px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.88rem; font-family: inherit; box-sizing: border-box; transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
+.cm-input:focus { border-color: #f472b6; box-shadow: 0 0 0 3px rgba(244,114,182,0.12); }
+.cm-or { text-align: center; color: var(--muted2); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; margin: 10px 0; position: relative; }
+.cm-or::before, .cm-or::after { content: ''; position: absolute; top: 50%; width: 44%; height: 1px; background: var(--border); }
+.cm-or::before { left: 0; } .cm-or::after { right: 0; }
+.cm-textarea { width: 100%; padding: 10px 13px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.85rem; font-family: inherit; resize: vertical; box-sizing: border-box; min-height: 90px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+.cm-textarea:focus { border-color: #f472b6; box-shadow: 0 0 0 3px rgba(244,114,182,0.12); }
+.cm-btn { width: 100%; padding: 13px; background: linear-gradient(135deg, #f472b6 0%, #e879f9 100%); color: #fff; font-weight: 700; font-size: 0.93rem; border: none; border-radius: 10px; cursor: pointer; margin-top: 16px; transition: opacity 0.2s, transform 0.1s; letter-spacing: 0.3px; }
+.cm-btn:hover:not(:disabled) { opacity: 0.88; }
+.cm-btn:active:not(:disabled) { transform: scale(0.985); }
+.cm-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.cm-status { margin: 14px 0 4px; padding: 11px 15px; border-radius: 9px; font-size: 0.84rem; display: none; }
+.cm-status.show { display: block; }
+.cm-status.loading { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.25); color: #fbbf24; }
+.cm-status.error   { background: rgba(239,68,68,0.08);  border: 1px solid rgba(239,68,68,0.2);  color: #fca5a5; }
+.cm-status.success { background: rgba(52,211,153,0.07); border: 1px solid rgba(52,211,153,0.2); color: #34d399; }
+.cm-progress { display: flex; align-items: center; gap: 10px; }
+.cm-spinner { width: 14px; height: 14px; border: 2px solid rgba(251,191,36,0.25); border-top-color: #fbbf24; border-radius: 50%; animation: spin 0.75s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.cm-output-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.cm-output-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted2); }
+.cm-actions { display: flex; gap: 7px; }
+.cm-action-btn { font-size: 0.75rem; font-weight: 600; padding: 5px 13px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); cursor: pointer; transition: border-color 0.18s, color 0.18s; }
+.cm-action-btn:hover { border-color: #f472b6; color: #f472b6; }
+.cm-maker-badge { font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 2px 7px; border-radius: 10px; background: rgba(244,114,182,0.15); color: #f472b6; border: 1px solid rgba(244,114,182,0.3); vertical-align: middle; margin-left: 5px; }
+.cm-key-hint { font-size: 0.73rem; color: var(--muted2); margin-top: 8px; text-align: center; }
+.cm-key-hint a { color: #f472b6; text-decoration: none; }
+.cm-key-hint a:hover { text-decoration: underline; }
+
 /* Mobile */
 @media (max-width: 640px) {
   .site-header h1 { font-size: 2rem; letter-spacing: -1px; }
@@ -1089,6 +1128,7 @@ kbd {
     <button class="tab-btn active" id="tab-ai" onclick="switchTab('ai',this)">&#x1F916; AI &amp; Technology</button>
     <button class="tab-btn" id="tab-cyber" onclick="switchTab('cyber',this)">&#x1F510; Cybersecurity</button>
     <button class="tab-btn" id="tab-notables" onclick="switchTab('notables',this)">&#x1F4F0; Notables</button>
+    <button class="tab-btn" id="tab-cardmaker" onclick="switchTab('cardmaker',this)">&#x270F;&#xFE0F; Card Maker</button>
     <div class="tab-indicator" id="indicator"></div>
   </div>
 </div>
@@ -1116,6 +1156,34 @@ kbd {
       __NOTABLES__
     </div>
   </section>
+
+  <section id="cardmaker" class="section">
+    <div class="cm-wrap">
+      <div class="cm-header">
+        <h2 class="cm-title">&#x270F;&#xFE0F; Rundown Card Maker</h2>
+        <p class="cm-subtitle">Paste any news article URL and Claude will analyze it in real time and generate a full story card &mdash; same format, same depth as the daily digest.</p>
+      </div>
+      <div class="cm-form">
+        <div class="cm-field">
+          <label class="cm-label" for="cm-apikey">Anthropic API Key <span class="cm-note">saved in your browser only &mdash; never sent anywhere except Anthropic</span></label>
+          <input class="cm-input" id="cm-apikey" type="password" placeholder="sk-ant-..." autocomplete="off" oninput="cmSaveKey(this.value)">
+        </div>
+        <div class="cm-field">
+          <label class="cm-label" for="cm-url">Article URL</label>
+          <input class="cm-input" id="cm-url" type="url" placeholder="https://...">
+        </div>
+        <div class="cm-or">or</div>
+        <div class="cm-field">
+          <label class="cm-label" for="cm-text">Paste Article Text <span class="cm-note">include the headline</span></label>
+          <textarea class="cm-textarea" id="cm-text" rows="5" placeholder="Paste the article headline and body text here..."></textarea>
+        </div>
+        <button class="cm-btn" id="cm-btn" onclick="cmGenerate()">&#x2728;&nbsp; Generate Card</button>
+        <p class="cm-key-hint">Your key is stored in <code>localStorage</code> and only used to call the Anthropic API directly from your browser. <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer">Get a key &rarr;</a></p>
+      </div>
+      <div class="cm-status" id="cm-status"></div>
+      <div id="cm-output"></div>
+    </div>
+  </section>
 </main>
 
 <footer class="site-footer">
@@ -1129,7 +1197,7 @@ kbd {
 
 <script>
 const indicator = document.getElementById('indicator');
-const tabColors = { ai: '#818cf8', cyber: '#34d399', notables: '#fbbf24' };
+const tabColors = { ai: '#818cf8', cyber: '#34d399', notables: '#fbbf24', cardmaker: '#f472b6' };
 let currentIndex = -1;
 let kbdTimeout;
 
@@ -1418,6 +1486,408 @@ document.addEventListener('keydown', e => {
     showKbdHint();
   }
 });
+
+// ── Card Maker ──────────────────────────────────────────────────────────────
+(function() {
+
+// Restore saved API key
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('cm_apikey');
+  if (saved) { const el = document.getElementById('cm-apikey'); if (el) el.value = saved; }
+});
+
+window.cmSaveKey = v => { if (v && v.length > 10) localStorage.setItem('cm_apikey', v); };
+
+// ── Status helpers ──
+function cmStatus(type, html) {
+  const el = document.getElementById('cm-status');
+  el.className = 'cm-status show ' + type;
+  el.innerHTML = type === 'loading'
+    ? `<div class="cm-progress"><div class="cm-spinner"></div><span>${html}</span></div>`
+    : html;
+}
+function cmHideStatus() { document.getElementById('cm-status').className = 'cm-status'; }
+
+// ── SVG sanitiser (strip scripts / event handlers only) ──
+function cmSanitizeSvg(s) {
+  return s
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, '')
+    .replace(/href\s*=\s*["']javascript:[^"']*["']/gi, '')
+    .replace(/xlink:href\s*=\s*["']javascript:[^"']*["']/gi, '');
+}
+
+// ── HTML escaper ──
+function h(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ── Tags HTML ──
+function cmTagsHtml(tags) {
+  if (!tags||!tags.length) return '';
+  return '<div class="tags">' + tags.map(t =>
+    `<button class="tag" onclick="openTagModal(event,this)" data-name="${h(t.name)}" data-desc="${h(t.description)}" data-relevance="${h(t.relevance)}">${h(t.name)}</button>`
+  ).join('') + '</div>';
+}
+
+// ── Affected systems HTML ──
+function cmAffectedHtml(sys) {
+  if (!sys||!sys.length) return '';
+  return '<div class="affected-block">' + sys.map(s =>
+    `<div class="affected-row"><span class="affected-name">${h(s.name)}</span><span class="affected-ver">${h(s.versions)}</span></div>`
+  ).join('') + '</div>';
+}
+
+// ── Render a full story card from Claude's structured output ──
+const LENS_ICO = { Scientific:'&#x1F52C;', Historical:'&#x1F4DC;', Societal:'&#x1F30D;' };
+
+function cmRenderCard(story, color) {
+  color = color || '#f472b6';
+  const headline   = story.headline   || '';
+  const tldr       = story.tldr       || '';
+  const source     = story.source     || 'Card Maker';
+  const sourceUrl  = story.source_url || '#';
+  const pubDate    = story.pub_date    || '';
+  const anchor     = 'cm-card-' + Date.now();
+
+  // Concept paragraphs
+  const cParas = (story.concept_explained||'').split(/\n\n+/).filter(p=>p.trim())
+    .map(p=>`<p>${h(p.trim())}</p>`).join('');
+
+  // Insights
+  const quizHtml = (story.quiz||[]).map((q,i) => {
+    const lens = q.lens||'';
+    const ico  = LENS_ICO[lens]||'&#x1F4A1;';
+    const cls  = lens ? `q-lens-${lens.toLowerCase()}` : '';
+    return `<div class="qcard" onclick="toggleCard(this)">
+      <div class="q-num">${ico} Insight ${i+1}${lens?` <span class="q-lens ${cls}">${h(lens)}</span>`:''}</div>
+      <div class="q-text">${h(q.q||'')}</div>
+      <div class="q-answer"><div class="q-divider"></div><div class="q-ans">${h(q.a||'')}</div><div class="q-exp">${h(q.explain||'')}</div></div>
+      <div class="q-hint">&#9656; go deeper</div>
+    </div>`;
+  }).join('');
+
+  // Public opinion entries
+  const opinionHtml = (story.public_opinion||[]).map(o =>
+    `<details class="opinion-entry"><summary><span class="opinion-chevron">&#9656;</span><span class="opinion-source">${h(o.source||'')}</span><span class="opinion-preview">${h(o.sentiment||'')}</span></summary><div class="opinion-full">${h(o.sentiment||'')}</div></details>`
+  ).join('');
+
+  // SVG diagram
+  const svgHtml = story.visual_svg
+    ? `<div class="block"><div class="blabel">&#x1F4CA; Visual Diagram</div><div class="diagram-wrap"><div class="diagram-bar"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span><span class="diagram-title">${h(story.concept_title||'diagram')}</span></div><div class="diagram-svg">${cmSanitizeSvg(story.visual_svg)}</div></div></div>`
+    : '';
+
+  // TTS text (mirrors _build_tts_text logic)
+  const ttsParts = [
+    headline, 'Summary.', tldr,
+    'Why it matters.', story.why_it_matters||'',
+    'Concept:', story.concept_title||'', story.concept_explained||'',
+    ...(story.public_opinion||[]).map(o=>`${o.source}: ${o.sentiment}`),
+    'Sentiment summary.', story.opinion_assessment||'',
+    "Devil's Advocate.", story.devils_advocate||'',
+    ...(story.quiz||[]).map((q,i)=>`Insight ${i+1}, ${q.lens} perspective. ${q.q} ${q.a} ${q.explain}`),
+    'Deep dive.', story.deep_dive||'',
+    'How this affects you.', story.deep_dive_impact||'',
+    'Outlook.', story.deep_dive_outlook||''
+  ].filter(Boolean).join(' ');
+
+  // Share URLs use current page (no per-card redirect page for maker cards)
+  const shareUrl   = h(window.location.href);
+  const shareTitle = h(headline);
+  const shareText  = h(tldr);
+  const twText = encodeURIComponent(('\uD83D\uDCF0 ' + headline + '\n\n' + tldr).slice(0,230));
+  const waText = encodeURIComponent('\uD83D\uDCF0 *' + headline + '*\n\n' + tldr);
+  const tgText = encodeURIComponent('\uD83D\uDCF0 ' + headline + '\n\n' + tldr);
+  const eu     = encodeURIComponent(window.location.href);
+
+  return `
+<article class="story-card open" id="${anchor}" style="--accent:${color}" data-tts="${h(ttsParts)}" data-share-title="${shareTitle}" data-share-text="${shareText}" data-share-url="${shareUrl}">
+  <div class="story-summary" onclick="toggleStory(this.closest(\'.story-card\'))">
+    <div class="s-left">
+      <div class="s-meta">
+        <span class="src-badge" style="background:${color}1a;color:${color}">${h(source)}</span>
+        <span class="story-num"><span class="cm-maker-badge">Card Maker</span></span>
+      </div>
+      <h2>${h(headline)}</h2>
+      ${pubDate?`<div class="pub-date">&#x1F551; ${h(pubDate)}</div>`:''}
+      <div class="tldr"><span class="tldr-tag">TL;DR</span>${h(tldr)}</div>
+      ${cmTagsHtml(story.tech_tags||[])}
+      <div class="audio-row" onclick="event.stopPropagation()">
+        <button class="audio-btn" onclick="toggleAudio(this.closest(\'.story-card\'))" aria-label="Listen">&#x1F50A; Listen</button>
+        <button class="audio-stop" onclick="stopAudio(event,this.closest(\'.story-card\'))" aria-label="Stop">&#x25A0; Stop</button>
+        <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
+      </div>
+    </div>
+    <div class="chevron">&#9660;</div>
+  </div>
+  <div class="story-body"><div class="body-inner">
+    ${cmAffectedHtml(story.affected_systems||[])}
+    <div class="block"><div class="blabel">&#x1F4CC; Why It Matters</div><p>${h(story.why_it_matters||'')}</p></div>
+    <div class="block concept-block">
+      <div class="blabel">&#x1F9E0; Concept</div>
+      <div class="concept-title" style="color:${color}">${h(story.concept_title||'')}</div>
+      <div class="concept-text">${cParas}</div>
+    </div>
+    ${svgHtml}
+    <div class="block opinion-block">
+      <div class="blabel">&#x1F465; Public Opinion</div>
+      ${opinionHtml}
+      <div class="blabel" style="margin-top:14px">&#x1F4CA; Sentiment Summary</div>
+      <p>${h(story.opinion_assessment||'')}</p>
+      <div class="block devil-block" style="margin-top:14px;padding:14px 16px;border-radius:8px">
+        <div class="devil-intro">&#x1F608; Devil&#x2019;s Advocate</div>
+        <p class="devil-text">${h(story.devils_advocate||'')}</p>
+      </div>
+    </div>
+    <div class="block"><div class="blabel">&#x1F4A1; Insights</div><div class="insights-grid">${quizHtml}</div></div>
+    <div class="block deepdive-block">
+      <div class="blabel">&#x1F4AD; Deep Dive</div>
+      <p class="deepdive-text">${h(story.deep_dive||'')}</p>
+      ${story.deep_dive_impact?`<div class="deepdive-impact"><div class="deepdive-impact-label">&#x1F3AF; How This Affects You</div><p class="deepdive-impact-text">${h(story.deep_dive_impact)}</p></div>`:''}
+      ${story.deep_dive_outlook?`<div class="deepdive-outlook"><div class="deepdive-outlook-label">&#x1F52D; Outlook</div><p class="deepdive-outlook-text">${h(story.deep_dive_outlook)}</p></div>`:''}
+    </div>
+    <div class="story-footer">
+      <a class="src-link" href="${h(sourceUrl)}" target="_blank" rel="noopener noreferrer">Read original <span>&#x2192;</span></a>
+      <div class="share-wrap" onclick="event.stopPropagation()">
+        <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share">&#x1F517; Share</button>
+        <div class="share-popover share-popover-up" onclick="event.stopPropagation()">
+          <div class="share-popover-title">Share this story</div>
+          <div class="share-grid">
+            <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=${twText}&url=${eu}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
+            <a class="share-option so-whatsapp" href="https://wa.me/?text=${waText}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
+            <a class="share-option so-telegram" href="https://t.me/share/url?url=${eu}&text=${tgText}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
+            <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=${eu}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
+            <div class="share-divider"></div>
+            <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest(\'.story-card\'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</article>`;
+}
+
+// ── Tool schema passed to Claude ──
+const CM_TOOL = {
+  name: 'publish_story',
+  description: 'Publish one fully formatted digest story',
+  input_schema: {
+    type: 'object',
+    required: ['headline','pub_date','tldr','why_it_matters','concept_title','concept_explained',
+               'visual_svg','public_opinion','opinion_assessment','devils_advocate','quiz',
+               'deep_dive','deep_dive_impact','deep_dive_outlook','source_url','source',
+               'tech_tags','affected_systems'],
+    properties: {
+      headline:          { type:'string' },
+      pub_date:          { type:'string' },
+      tldr:              { type:'string' },
+      why_it_matters:    { type:'string' },
+      concept_title:     { type:'string' },
+      concept_explained: { type:'string', description:'4 paragraphs separated by blank lines. P1: simple analogy. P2: technical mechanics. P3: tie to this story. P4: broader implications.' },
+      visual_svg: {
+        type:'string',
+        description:'A complete <svg> element viewBox="0 0 700 340". No scripts or event handlers. Dark bg #060912, node fill #12152a, accent #f472b6. Show directional flow with arrowheads. 8-15 elements. Short precise labels.'
+      },
+      public_opinion: {
+        type:'array',
+        items: { type:'object', required:['source','sentiment'], properties:{ source:{type:'string'}, sentiment:{type:'string'} } }
+      },
+      opinion_assessment: { type:'string' },
+      devils_advocate:    { type:'string' },
+      quiz: {
+        type:'array', minItems:3, maxItems:3,
+        items: {
+          type:'object', required:['lens','q','a','explain'],
+          properties: {
+            lens:    { type:'string', enum:['Scientific','Historical','Societal'] },
+            q:       { type:'string' },
+            a:       { type:'string' },
+            explain: { type:'string' }
+          }
+        }
+      },
+      deep_dive:         { type:'string' },
+      deep_dive_impact:  { type:'string' },
+      deep_dive_outlook: { type:'string' },
+      source_url:        { type:'string' },
+      source:            { type:'string' },
+      tech_tags: {
+        type:'array', maxItems:3,
+        items: { type:'object', required:['name','description','relevance'], properties:{ name:{type:'string'}, description:{type:'string'}, relevance:{type:'string'} } }
+      },
+      affected_systems: {
+        type:'array',
+        items: { type:'object', required:['name','versions'], properties:{ name:{type:'string'}, versions:{type:'string'} } }
+      }
+    }
+  }
+};
+
+// ── Fetch article via CORS proxy ──
+async function cmFetchArticle(url) {
+  const proxies = [
+    `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
+  ];
+  let lastErr = null;
+  for (const proxy of proxies) {
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 12000);
+      const res = await fetch(proxy, { signal: controller.signal });
+      clearTimeout(timer);
+      if (!res.ok) continue;
+      const html = await res.text();
+      return cmExtractText(html, url);
+    } catch(e) { lastErr = e; }
+  }
+  throw new Error('Could not fetch article automatically. Please paste the article text instead.');
+}
+
+function cmExtractText(html, url) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  doc.querySelectorAll('script,style,nav,footer,header,aside,noscript,[class*="sidebar"],[class*="related"],[class*="newsletter"],[class*="cookie"],[class*="banner"],[id*="cookie"]')
+    .forEach(el => el.remove());
+  const title = doc.querySelector('h1')?.textContent?.trim() || doc.title || '';
+  const main  = doc.querySelector('article,[role="main"],main,[class*="article-body"],[class*="post-content"],[class*="story-body"]') || doc.body;
+  const raw   = (main.textContent || '').replace(/[ \t]{2,}/g,' ').replace(/\n{3,}/g,'\n\n').trim();
+  const body  = raw.length > 8000 ? raw.slice(0, 8000) + '…' : raw;
+  return `Title: ${title}\nURL: ${url}\n\n${body}`;
+}
+
+// ── Call Anthropic API ──
+async function cmCallClaude(apiKey, articleText, sourceUrl) {
+  const today = new Date().toISOString().slice(0,10);
+  const prompt = `Today is ${today}. Write ONE digest story about the article below for someone moderately technical.
+
+ARTICLE:
+${articleText}
+
+Guidelines:
+- concept_explained: 4 paragraphs (blank line between each). P1: simple real-world analogy. P2: how it technically works. P3: how it connects to this exact story. P4: broader implications.
+- visual_svg: SVG diagram viewBox="0 0 700 340". Background #060912. Node fill #12152a. Accent color #f472b6. Include arrowheads via <defs><marker>. 8-15 elements. Short precise labels. Show actual directional flow — not floating boxes.
+- quiz: 3 insight cards — card 1 Scientific lens, card 2 Historical lens, card 3 Societal lens. Each: thought-provoking hook (q), crisp key insight (a), 2-3 sentence explanation (explain).
+- public_opinion: one entry each for Hacker News, Reddit, and Security Twitter/X.
+- devils_advocate: sharp counter-perspective that challenges the dominant sentiment — an overlooked irony or reframe.
+- source_url: "${sourceUrl||''}"
+- deep_dive: 3-4 sentence narrative that draws the reader in like the opening of great longform journalism.
+- deep_dive_impact: 2-3 sentences directly addressing how this affects the reader's work or security posture.
+- deep_dive_outlook: 2-3 sentences on what to watch for in coming weeks or months.
+- tech_tags: 0-3 tags max, only specific products/CVEs. Empty array is fine.
+- affected_systems: for vulnerability stories only. Empty array otherwise.
+
+Call the publish_story tool.`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: 'claude-opus-4-6',
+      max_tokens: 8000,
+      tools: [CM_TOOL],
+      tool_choice: { type: 'tool', name: 'publish_story' },
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  if (!res.ok) {
+    let msg = `API error ${res.status}`;
+    try { const e = await res.json(); msg = e.error?.message || msg; } catch(_) {}
+    if (res.status === 401) throw new Error('Invalid API key. Check your key at console.anthropic.com.');
+    if (res.status === 429) throw new Error('Rate limit reached. Wait a moment and try again.');
+    throw new Error(msg);
+  }
+
+  const data = await res.json();
+  const block = data.content?.find(b => b.type === 'tool_use');
+  if (!block?.input) throw new Error('Claude did not return story data. Please try again.');
+  return block.input;
+}
+
+// ── Main generate handler ──
+window.cmGenerate = async function() {
+  const apiKey = (document.getElementById('cm-apikey')?.value || '').trim();
+  const url    = (document.getElementById('cm-url')?.value    || '').trim();
+  const text   = (document.getElementById('cm-text')?.value   || '').trim();
+
+  if (!apiKey)      { cmStatus('error', '&#x26A0; Enter your Anthropic API key to continue.'); return; }
+  if (!url && !text){ cmStatus('error', '&#x26A0; Paste an article URL or the article text.'); return; }
+
+  const btn = document.getElementById('cm-btn');
+  btn.disabled = true;
+
+  try {
+    let articleContent = text;
+    if (url && !text) {
+      cmStatus('loading', 'Fetching article&hellip;');
+      articleContent = await cmFetchArticle(url);
+    }
+    cmStatus('loading', 'Analyzing with Claude Opus&hellip; (this takes ~20s)');
+    const story = await cmCallClaude(apiKey, articleContent, url);
+
+    cmStatus('success', '&#x2713; Card generated &mdash; scroll down to view it.');
+    setTimeout(cmHideStatus, 4000);
+
+    const cardHtml = cmRenderCard(story, '#f472b6');
+    const out = document.getElementById('cm-output');
+    out.innerHTML = `
+      <div class="cm-output-header">
+        <span class="cm-output-label">Generated Card</span>
+        <div class="cm-actions">
+          <button class="cm-action-btn" onclick="cmCopyHtml(event)">Copy HTML</button>
+          <button class="cm-action-btn" onclick="cmClear()">&#x2715; Clear</button>
+        </div>
+      </div>
+      <div id="cm-card-wrap">${cardHtml}</div>`;
+
+    // Scroll to card, then fire highlight animation
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const card = out.querySelector('.story-card');
+      if (!card) return;
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        card.classList.add('story-highlight');
+        card.addEventListener('animationend', () => card.classList.remove('story-highlight'), { once: true });
+      }, 350);
+    }));
+
+  } catch(err) {
+    cmStatus('error', '&#x26A0; ' + h(err.message || 'Something went wrong. Try again.'));
+  } finally {
+    btn.disabled = false;
+  }
+};
+
+window.cmCopyHtml = function(e) {
+  const wrap = document.getElementById('cm-card-wrap');
+  if (!wrap) return;
+  const html = wrap.innerHTML;
+  navigator.clipboard.writeText(html).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = html; ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+  const btn = e.target;
+  const orig = btn.textContent;
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = orig, 2000);
+};
+
+window.cmClear = function() {
+  document.getElementById('cm-output').innerHTML = '';
+  document.getElementById('cm-url').value = '';
+  document.getElementById('cm-text').value = '';
+  cmHideStatus();
+};
+
+})(); // end Card Maker
+
 </script>
 </body>
 </html>"""
