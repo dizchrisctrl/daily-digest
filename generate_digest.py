@@ -504,7 +504,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src __CONNECT_SRC__; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
 <title>The Daily Rundown -- __DATE__</title>
 <meta property="og:type"        content="website">
 <meta property="og:site_name"   content="The Daily Rundown">
@@ -1730,25 +1730,20 @@ const CM_TOOL = {
   }
 };
 
-// ── Fetch article via CORS proxy ──
+// ── Fetch article via Worker (server-side fetch avoids CORS/CSP issues) ──
 async function cmFetchArticle(url) {
-  const proxies = [
-    `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
-  ];
-  let lastErr = null;
-  for (const proxy of proxies) {
-    try {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 12000);
-      const res = await fetch(proxy, { signal: controller.signal });
-      clearTimeout(timer);
-      if (!res.ok) continue;
-      const html = await res.text();
-      return cmExtractText(html, url);
-    } catch(e) { lastErr = e; }
+  const res = await fetch(CM_WORKER_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fetch_url: url }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `Could not fetch article (HTTP ${res.status}). Try pasting the text instead.`);
   }
-  throw new Error('Could not fetch article automatically. Please paste the article text instead.');
+  const data = await res.json();
+  if (data.error) throw new Error(data.error + ' — try pasting the article text instead.');
+  return cmExtractText(data.html, url);
 }
 
 function cmExtractText(html, url) {
@@ -2207,6 +2202,7 @@ def generate_html(data):
             .replace("__OG_DESC__",    og_desc)
             .replace("__OG_URL__",     og_url)
             .replace("__WORKER_URL__", WORKER_URL)
+            .replace("__CONNECT_SRC__", WORKER_URL if WORKER_URL else "'none'")
             .replace("__AI_STORIES__",    ai_html)
             .replace("__CYBER_STORIES__", cy_html)
             .replace("__NOTABLES__",      not_html))
