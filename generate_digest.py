@@ -171,11 +171,12 @@ STORY_SCHEMA = {
             "items": {
                 "type": "object",
                 "properties": {
-                    "q":       {"type": "string", "description": "A thought-provoking hook or framing question that draws the reader into a deeper concept — not a trivia question"},
+                    "lens":    {"type": "string", "enum": ["Scientific", "Historical", "Societal"], "description": "The perspective lens for this insight card — assigned in order: card 1 = Scientific, card 2 = Historical, card 3 = Societal"},
+                    "q":       {"type": "string", "description": "A thought-provoking hook or framing question through the assigned lens — not a trivia question"},
                     "a":       {"type": "string", "description": "The key insight or takeaway: a crisp, memorable answer that reframes or deepens understanding"},
-                    "explain": {"type": "string", "description": "2-3 sentences connecting this insight to broader trends, historical context, or implications beyond the story"},
+                    "explain": {"type": "string", "description": "2-3 sentences connecting this insight to broader trends, historical context, or implications beyond the story — stay within the assigned lens"},
                 },
-                "required": ["q", "a", "explain"],
+                "required": ["lens", "q", "a", "explain"],
             },
             "minItems": 3,
             "maxItems": 3,
@@ -240,7 +241,7 @@ Guidelines:
   Use accent color {accent_color}. Dark background #060912. Node fill #12152a.
   Include arrowheads via <defs><marker>. 8-15 elements. Short precise labels.
   Show actual relationships and flow — not floating boxes with buzzwords.
-- quiz: 3 insight cards that add conceptual depth. Each card has a thought-provoking hook (q) that draws the reader into a concept, a crisp key insight or takeaway (a), and a brief explanation (explain) connecting it to broader trends or implications. Avoid trivia — these should feel like "aha" moments that make the story richer.
+- quiz: 3 insight cards, each written through a distinct lens — card 1: Scientific (how it works, engineering tradeoffs, what it advances or breaks), card 2: Historical (what precedent this echoes, what the pattern tells us, what we've seen before), card 3: Societal (how it affects people beyond the technical community — policy, economics, behavior, power). Each card has a hook (q) framed through its lens, a crisp key insight (a), and an explanation (explain) that stays within the lens. Avoid trivia — these should feel like genuine "aha" moments.
 - pub_date: copy the pub_date field exactly from the article JSON — do not modify it.
 - public_opinion: one entry per community (HN, Reddit r/technology, r/netsec, security Twitter/X) — each with a source name and 1-2 sentence sentiment summary.
 - opinion_assessment: 2-3 sentences capturing the dominant collective mood across all communities. What is everyone feeling, and why?
@@ -676,7 +677,11 @@ details.opinion-entry[open] .opinion-chevron { transform: rotate(90deg); }
 }
 .qcard:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); border-color: var(--border2); }
 .qcard.open { border-color: var(--cyber); }
-.q-num { font-size: 0.63rem; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px; }
+.q-num { font-size: 0.63rem; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px; display: flex; align-items: center; gap: 6px; }
+.q-lens { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 6px; border-radius: 4px; }
+.q-lens-scientific { background: rgba(129,140,248,0.15); color: #818cf8; }
+.q-lens-historical  { background: rgba(251,191,36,0.15);  color: #fbbf24; }
+.q-lens-societal    { background: rgba(52,211,153,0.15);  color: #34d399; }
 .q-text { font-weight: 600; font-size: 0.87rem; line-height: 1.5; color: var(--text); }
 .q-answer { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.35s ease, opacity 0.3s ease; }
 .qcard.open .q-answer { max-height: 400px; opacity: 1; }
@@ -1167,11 +1172,15 @@ def _build_visual(story):
 
 
 def build_story_html(story, color, num):
+    LENS_ICONS = {"Scientific": "&#x1F52C;", "Historical": "&#x1F4DC;", "Societal": "&#x1F30D;"}
     quiz_html = ""
     for i, q in enumerate(story.get("quiz", []), 1):
+        lens = q.get("lens", "")
+        lens_cls = f"q-lens-{lens.lower()}" if lens else ""
+        lens_icon = LENS_ICONS.get(lens, "&#x1F4A1;")
         quiz_html += f"""
       <div class="qcard" onclick="toggleCard(this)">
-        <div class="q-num">&#x1F4A1; Insight {i}</div>
+        <div class="q-num">{lens_icon} Insight {i}{f' <span class="q-lens {lens_cls}">{esc(lens)}</span>' if lens else ''}</div>
         <div class="q-text">{esc(q.get('q',''))}</div>
         <div class="q-answer">
           <div class="q-divider"></div>
