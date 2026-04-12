@@ -24,7 +24,8 @@ const ALLOWED_ORIGINS = [
 ];
 
 function corsHeaders(origin) {
-  const allowed = ALLOWED_ORIGINS.find(o => origin.startsWith(o)) ?? ALLOWED_ORIGINS[0];
+  // Exact match only — startsWith() allows subdomain spoofing attacks
+  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
     'Access-Control-Allow-Origin':  allowed,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
@@ -145,8 +146,23 @@ export default {
 
     // ── Mode 1: fetch an article URL server-side ──
     if (body.fetch_url) {
+      // SSRF guard: only allow public HTTPS URLs
+      let fetchUrl;
       try {
-        const res = await fetch(body.fetch_url, {
+        fetchUrl = new URL(body.fetch_url);
+      } catch {
+        return jsonResponse({ error: 'Invalid fetch_url.' }, 400, origin);
+      }
+      if (fetchUrl.protocol !== 'https:') {
+        return jsonResponse({ error: 'fetch_url must use https.' }, 400, origin);
+      }
+      const hostname = fetchUrl.hostname.toLowerCase();
+      const BLOCKED = /^(localhost|.*\.local|.*\.internal|.*\.corp)$|^(127\.|10\.|192\.168\.|169\.254\.|::1$|fc00:|fe80:)/;
+      if (BLOCKED.test(hostname)) {
+        return jsonResponse({ error: 'fetch_url targets a private address.' }, 400, origin);
+      }
+      try {
+        const res = await fetch(fetchUrl.toString(), {
           headers: {
             'User-Agent': 'Mozilla/5.0 (compatible; DailyDigestBot/1.0)',
             'Accept':     'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -158,7 +174,7 @@ export default {
           return jsonResponse({ error: `HTTP ${res.status} fetching article` }, 400, origin);
         }
         const html = await res.text();
-        return jsonResponse({ html, url: body.fetch_url }, 200, origin);
+        return jsonResponse({ html, url: fetchUrl.toString() }, 200, origin);
       } catch (e) {
         return jsonResponse({ error: e.message }, 500, origin);
       }

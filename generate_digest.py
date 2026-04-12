@@ -20,7 +20,11 @@ from googleapiclient.discovery import build
 RECIPIENT_EMAIL = "Diazz.christian@gmail.com"
 SENDER_EMAIL    = os.environ["GMAIL_ADDRESS"]
 PAGES_URL       = "https://dizchrisctrl.github.io/daily-digest"
-WORKER_URL      = os.environ.get("WORKER_URL", "")   # Cloudflare Worker proxy URL
+_raw_worker_url = os.environ.get("WORKER_URL", "")
+_parsed_worker  = urllib.parse.urlparse(_raw_worker_url)
+if _raw_worker_url and not (_parsed_worker.scheme == "https" and _parsed_worker.netloc):
+    raise ValueError(f"WORKER_URL must be an https:// URL, got: {_raw_worker_url!r}")
+WORKER_URL = _raw_worker_url
 
 GMAIL_CLIENT_ID     = os.environ["GMAIL_CLIENT_ID"]
 GMAIL_CLIENT_SECRET = os.environ["GMAIL_CLIENT_SECRET"]
@@ -3054,7 +3058,7 @@ def _story_redirect_html(story, story_id):
     page_url = f"{PAGES_URL}/s/{story_id}.html"
 
     def _attr(s):
-        return s.replace('&', '&amp;').replace('"', '&quot;').replace('<', '&lt;').replace('>', '&gt;')
+        return s.replace('&', '&amp;').replace('"', '&quot;').replace("'", '&#39;').replace('<', '&lt;').replace('>', '&gt;')
 
     return f"""<!DOCTYPE html>
 <html lang="en">

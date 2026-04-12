@@ -70,13 +70,29 @@ print("""
 
 Go to: https://github.com/dizchrisctrl/daily-digest/settings/secrets/actions
 """)
+import os as _os
+
+_secrets_file = "github_secrets.txt"
+with open(_secrets_file, "w") as _f:
+    _f.write(f"GMAIL_ADDRESS=<your Gmail address>\n")
+    _f.write(f"GMAIL_CLIENT_ID={creds.client_id}\n")
+    _f.write(f"GMAIL_CLIENT_SECRET={creds.client_secret}\n")
+    _f.write(f"GMAIL_REFRESH_TOKEN={creds.refresh_token}\n")
+
+# Restrict file permissions so only the current user can read it
+try:
+    _os.chmod(_secrets_file, 0o600)
+except Exception:
+    pass
+
 print(f"Secret name: GMAIL_ADDRESS")
 print(f"Secret value: (your Gmail address)\n")
 print(f"Secret name: GMAIL_CLIENT_ID")
-print(f"Secret value: {creds.client_id}\n")
+print(f"Secret value: {creds.client_id[:6]}... (see {_secrets_file})\n")
 print(f"Secret name: GMAIL_CLIENT_SECRET")
-print(f"Secret value: {creds.client_secret}\n")
+print(f"Secret value: *** (see {_secrets_file})\n")
 print(f"Secret name: GMAIL_REFRESH_TOKEN")
-print(f"Secret value: {creds.refresh_token}\n")
-print("After adding secrets, you can delete client_secrets.json")
-print("You can also revoke the old App Password at myaccount.google.com/apppasswords")
+print(f"Secret value: *** (see {_secrets_file})\n")
+print(f"Full values written to {_secrets_file} (chmod 600).")
+print("Delete that file once you have added the secrets to GitHub.")
+print("After adding secrets, you can also delete client_secrets.json")
