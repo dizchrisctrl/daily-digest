@@ -127,12 +127,13 @@ def _pub_to_utc(pub):
         return None
 
 
-def fetch_articles(feeds, max_per_feed=2, total_limit=8, max_age_hours=48):
+def fetch_articles(feeds, max_per_feed=2, total_limit=8, max_age_hours=48, exclude_titles=None):
     """Fetch articles from RSS feeds, keeping only those published within max_age_hours.
-    Falls back to 96 hours if fewer than half of total_limit articles are found."""
+    Falls back to 96 hours if fewer than half of total_limit articles are found.
+    exclude_titles: set of normalised title keys to skip (for cross-day deduplication)."""
 
     def _collect(cutoff):
-        seen_titles = set()
+        seen_titles = set(exclude_titles or ())
         results = []
         old_timeout = socket.getdefaulttimeout()
         socket.setdefaulttimeout(15)
@@ -486,7 +487,9 @@ def call_claude_for_notables(client, today, articles):
 
 def generate_digest_json(ai_articles, cyber_articles, notables_articles):
     client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-    today  = datetime.now(timezone.utc).strftime("%B %d, %Y")
+    now    = datetime.now(timezone.utc)
+    today  = now.strftime("%B %d, %Y")
+    today_iso = now.strftime("%Y-%m-%d")
 
     print("  -> Generating AI stories...")
     ai_stories = call_claude_for_section(client, today, ai_articles, accent_color="#818cf8")
@@ -495,7 +498,7 @@ def generate_digest_json(ai_articles, cyber_articles, notables_articles):
     print("  -> Generating Notables...")
     notables = call_claude_for_notables(client, today, notables_articles)
 
-    return {"date": today, "ai_stories": ai_stories, "cyber_stories": cyber_stories, "notables": notables}
+    return {"date": today, "date_iso": today_iso, "ai_stories": ai_stories, "cyber_stories": cyber_stories, "notables": notables}
 
 
 # ── HTML Template ──────────────────────────────────────────────────────────────
@@ -3029,6 +3032,24 @@ def _write_archive(html, date_str):
     import re as _re
     os.makedirs("output/archive", exist_ok=True)
 
+    # Migrate any legacy "Month DD, YYYY.html" files to YYYY-MM-DD.html format
+    legacy_pattern = _re.compile(r'^([A-Za-z]+ \d{1,2}, \d{4})\.html$')
+    for fn in os.listdir("output/archive"):
+        m = legacy_pattern.match(fn)
+        if m:
+            try:
+                from datetime import datetime as _dt
+                iso = _dt.strptime(m.group(1), "%B %d, %Y").strftime("%Y-%m-%d")
+                old_path = f"output/archive/{fn}"
+                new_path = f"output/archive/{iso}.html"
+                if not os.path.exists(new_path):
+                    os.rename(old_path, new_path)
+                    print(f"  Migrated archive: {fn} -> {iso}.html")
+                else:
+                    os.remove(old_path)
+            except Exception:
+                pass
+
     # Fix relative links for the one-level-deeper archive path
     archive_html = html.replace('href="guide.html"', 'href="../guide.html"') \
                        .replace('href="archive/index.html"', 'href="index.html"')
@@ -3049,6 +3070,34 @@ def _write_archive(html, date_str):
     return len(dates)
 
 
+def _get_date_iso(data):
+    """Return YYYY-MM-DD string from data dict, handling both old and new formats."""
+    iso = data.get("date_iso", "")
+    if iso:
+        return iso
+    try:
+        return datetime.strptime(data.get("date", ""), "%B %d, %Y").strftime("%Y-%m-%d")
+    except Exception:
+        return ""
+
+
+def _prev_seen_titles():
+    """Return a set of normalised title keys from the last saved digest.json, for cross-day dedup."""
+    seen = set()
+    try:
+        with open("output/digest.json", encoding="utf-8") as f:
+            prev = json.load(f)
+        for section in ("ai_stories", "cyber_stories", "notables"):
+            for story in prev.get(section, []):
+                title = story.get("headline", "") or story.get("title", "")
+                if title:
+                    key = re.sub(r'\W+', '', title.lower())[:60]
+                    seen.add(key)
+    except Exception:
+        pass
+    return seen
+
+
 def save_output(html, data):
     os.makedirs("output", exist_ok=True)
     with open("output/index.html", "w", encoding="utf-8") as f:
@@ -3058,7 +3107,7 @@ def save_output(html, data):
     with open("output/guide.html", "w", encoding="utf-8") as f:
         f.write(GUIDE_HTML)
     n = _write_story_pages(data)
-    date_str = data.get("date", "")
+    date_str = _get_date_iso(data)
     arc = _write_archive(html, date_str) if date_str else 0
     print(f"  Saved: output/index.html + output/digest.json + output/guide.html + {n} story pages + {arc} archive entries")
 
@@ -3082,15 +3131,19 @@ if __name__ == "__main__":
         with open("output/guide.html", "w", encoding="utf-8") as f:
             f.write(GUIDE_HTML)
         n = _write_story_pages(data)
-        date_str = data.get("date", "")
+        date_str = _get_date_iso(data)
         arc = _write_archive(html, date_str) if date_str else 0
         print(f"  Saved: output/index.html + output/guide.html + {n} story pages + {arc} archive entries")
         print("\nDone (rebuild only -- no email sent)!")
     else:
+        print("\n-> Loading previous digest for deduplication...")
+        prev_seen = _prev_seen_titles()
+        print(f"  Excluding {len(prev_seen)} previously seen titles")
+
         print("\n-> Fetching news...")
-        ai_articles       = fetch_articles(AI_FEEDS,       max_per_feed=2, total_limit=10)
-        cyber_articles    = fetch_articles(CYBER_FEEDS,    max_per_feed=2, total_limit=12)
-        notables_articles = fetch_articles(NOTABLES_FEEDS, max_per_feed=2, total_limit=14)
+        ai_articles       = fetch_articles(AI_FEEDS,       max_per_feed=2, total_limit=10, exclude_titles=prev_seen)
+        cyber_articles    = fetch_articles(CYBER_FEEDS,    max_per_feed=2, total_limit=12, exclude_titles=prev_seen)
+        notables_articles = fetch_articles(NOTABLES_FEEDS, max_per_feed=2, total_limit=14, exclude_titles=prev_seen)
         print(f"  AI: {len(ai_articles)} | Cyber: {len(cyber_articles)} | Notables pool: {len(notables_articles)}")
 
         print("\n-> Generating with Claude Opus...")
