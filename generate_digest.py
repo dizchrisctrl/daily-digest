@@ -1833,28 +1833,40 @@ function cmRenderCard(story, color) {
       </div>
     </div>
     ${svgHtml}
-    <div class="block opinion-block">
-      <div class="blabel">&#x1F465; Public Opinion</div>
-      ${opinionHtml}
-      <div class="blabel" style="margin-top:14px">&#x1F4CA; Sentiment Summary</div>
-      <p>${h(story.opinion_assessment||'')}</p>
-      <div class="block devil-block collapsible" style="margin-top:14px;padding:14px 16px;border-radius:8px">
-        <div class="collapsible-head" onclick="toggleCollapse(this)">
-          <div class="devil-intro">&#x1F608; Devil&#x2019;s Advocate</div>
-          <span class="collapsible-preview">${h(cmPreview(story.devils_advocate||''))}</span>
-          <span class="collapsible-chevron">&#9656;</span>
-        </div>
-        <div class="collapsible-body">
-          <p class="devil-text">${h(story.devils_advocate||'')}</p>
+    <div class="block opinion-block collapsible">
+      <div class="collapsible-head" onclick="toggleCollapse(this)">
+        <div class="blabel">&#x1F465; Public Opinion</div>
+        <span class="collapsible-preview">${h(cmPreview((story.public_opinion||[{sentiment:''}])[0].sentiment||''))}</span>
+        <span class="collapsible-chevron">&#9656;</span>
+      </div>
+      <div class="collapsible-body">
+        ${opinionHtml}
+        <div class="blabel" style="margin-top:14px">&#x1F4CA; Sentiment Summary</div>
+        <p>${h(story.opinion_assessment||'')}</p>
+        <div class="block devil-block collapsible" style="margin-top:14px;padding:14px 16px;border-radius:8px">
+          <div class="collapsible-head" onclick="toggleCollapse(this)">
+            <div class="devil-intro">&#x1F608; Devil&#x2019;s Advocate</div>
+            <span class="collapsible-preview">${h(cmPreview(story.devils_advocate||''))}</span>
+            <span class="collapsible-chevron">&#9656;</span>
+          </div>
+          <div class="collapsible-body">
+            <p class="devil-text">${h(story.devils_advocate||'')}</p>
+          </div>
         </div>
       </div>
     </div>
     <div class="block"><div class="blabel">&#x1F4A1; Insights</div><div class="insights-grid">${quizHtml}</div></div>
-    <div class="block deepdive-block">
-      <div class="blabel">&#x1F4AD; Deep Dive</div>
-      <p class="deepdive-text">${h(story.deep_dive||'')}</p>
-      ${story.deep_dive_impact?`<div class="deepdive-impact collapsible"><div class="collapsible-head" onclick="toggleCollapse(this)"><div class="deepdive-impact-label">&#x1F3AF; How This Affects You</div><span class="collapsible-preview">${h(cmPreview(story.deep_dive_impact))}</span><span class="collapsible-chevron">&#9656;</span></div><div class="collapsible-body"><p class="deepdive-impact-text">${h(story.deep_dive_impact)}</p></div></div>`:''}
-      ${story.deep_dive_outlook?`<div class="deepdive-outlook collapsible"><div class="collapsible-head" onclick="toggleCollapse(this)"><div class="deepdive-outlook-label">&#x1F52D; Outlook</div><span class="collapsible-preview">${h(cmPreview(story.deep_dive_outlook))}</span><span class="collapsible-chevron">&#9656;</span></div><div class="collapsible-body"><p class="deepdive-outlook-text">${h(story.deep_dive_outlook)}</p></div></div>`:''}
+    <div class="block deepdive-block collapsible">
+      <div class="collapsible-head" onclick="toggleCollapse(this)">
+        <div class="blabel">&#x1F4AD; Deep Dive</div>
+        <span class="collapsible-preview">${h(cmPreview(story.deep_dive||''))}</span>
+        <span class="collapsible-chevron">&#9656;</span>
+      </div>
+      <div class="collapsible-body">
+        <p class="deepdive-text">${h(story.deep_dive||'')}</p>
+        ${story.deep_dive_impact?`<div class="deepdive-impact collapsible"><div class="collapsible-head" onclick="toggleCollapse(this)"><div class="deepdive-impact-label">&#x1F3AF; How This Affects You</div><span class="collapsible-preview">${h(cmPreview(story.deep_dive_impact))}</span><span class="collapsible-chevron">&#9656;</span></div><div class="collapsible-body"><p class="deepdive-impact-text">${h(story.deep_dive_impact)}</p></div></div>`:''}
+        ${story.deep_dive_outlook?`<div class="deepdive-outlook collapsible"><div class="collapsible-head" onclick="toggleCollapse(this)"><div class="deepdive-outlook-label">&#x1F52D; Outlook</div><span class="collapsible-preview">${h(cmPreview(story.deep_dive_outlook))}</span><span class="collapsible-chevron">&#9656;</span></div><div class="collapsible-body"><p class="deepdive-outlook-text">${h(story.deep_dive_outlook)}</p></div></div>`:''}
+      </div>
     </div>
     <div class="story-footer">
       <a class="src-link" href="${h(sourceUrl)}" target="_blank" rel="noopener noreferrer">Read original <span>&#x2192;</span></a>
