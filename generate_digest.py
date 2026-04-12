@@ -699,6 +699,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 }
 .story-summary:hover { background: rgba(255,255,255,0.025); }
 .s-left { flex: 1; min-width: 0; }
+.s-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
 .s-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
 .src-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 2px 9px; border-radius: 20px; }
 .story-num { font-size: 0.68rem; font-weight: 700; color: var(--muted2); font-variant-numeric: tabular-nums; margin-left: auto; }
@@ -1682,7 +1683,23 @@ function cmRenderCard(story, color) {
         <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
       </div>
     </div>
-    <div class="chevron">&#9660;</div>
+    <div class="s-right">
+      <div class="share-wrap" onclick="event.stopPropagation()">
+        <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share">&#x1F517; Share</button>
+        <div class="share-popover" onclick="event.stopPropagation()">
+          <div class="share-popover-title">Share this story</div>
+          <div class="share-grid">
+            <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=${twText}&url=${eu}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
+            <a class="share-option so-whatsapp" href="https://wa.me/?text=${waText}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
+            <a class="share-option so-telegram" href="https://t.me/share/url?url=${eu}&text=${tgText}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
+            <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=${eu}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
+            <div class="share-divider"></div>
+            <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest(\'.story-card\'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="chevron">&#9660;</div>
+    </div>
   </div>
   <div class="story-body"><div class="body-inner">
     ${cmAffectedHtml(story.affected_systems||[])}
@@ -1724,20 +1741,6 @@ function cmRenderCard(story, color) {
     </div>
     <div class="story-footer">
       <a class="src-link" href="${h(sourceUrl)}" target="_blank" rel="noopener noreferrer">Read original <span>&#x2192;</span></a>
-      <div class="share-wrap" onclick="event.stopPropagation()">
-        <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share">&#x1F517; Share</button>
-        <div class="share-popover share-popover-up" onclick="event.stopPropagation()">
-          <div class="share-popover-title">Share this story</div>
-          <div class="share-grid">
-            <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=${twText}&url=${eu}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
-            <a class="share-option so-whatsapp" href="https://wa.me/?text=${waText}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
-            <a class="share-option so-telegram" href="https://t.me/share/url?url=${eu}&text=${tgText}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
-            <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=${eu}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
-            <div class="share-divider"></div>
-            <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest(\'.story-card\'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
-          </div>
-        </div>
-      </div>
     </div>
   </div></div>
 </article>`;
@@ -2166,7 +2169,23 @@ def build_story_html(story, color, num, story_id=""):
         <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
       </div>
     </div>
-    <div class="chevron">&#9660;</div>
+    <div class="s-right">
+      <div class="share-wrap" onclick="event.stopPropagation()">
+        <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
+        <div class="share-popover" onclick="event.stopPropagation()">
+          <div class="share-popover-title">Share this story</div>
+          <div class="share-grid">
+            <a class="share-option so-x" href="{esc(share_links['x'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
+            <a class="share-option so-whatsapp" href="{esc(share_links['whatsapp'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
+            <a class="share-option so-telegram" href="{esc(share_links['telegram'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
+            <a class="share-option so-linkedin" href="{esc(share_links['linkedin'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
+            <div class="share-divider"></div>
+            <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="chevron">&#9660;</div>
+    </div>
   </div>
 
   <div class="story-body">
@@ -2239,20 +2258,6 @@ def build_story_html(story, color, num, story_id=""):
         <a class="src-link" href="{safe_url(story.get('source_url','#'))}" target="_blank" rel="noopener noreferrer">
           Read original <span>&#x2192;</span>
         </a>
-        <div class="share-wrap" onclick="event.stopPropagation()">
-          <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
-          <div class="share-popover share-popover-up" onclick="event.stopPropagation()">
-            <div class="share-popover-title">Share this story</div>
-            <div class="share-grid">
-              <a class="share-option so-x" href="{esc(share_links['x'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
-              <a class="share-option so-whatsapp" href="{esc(share_links['whatsapp'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
-              <a class="share-option so-telegram" href="{esc(share_links['telegram'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
-              <a class="share-option so-linkedin" href="{esc(share_links['linkedin'])}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
-              <div class="share-divider"></div>
-              <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
-            </div>
-          </div>
-        </div>
       </div>
 
     </div>
