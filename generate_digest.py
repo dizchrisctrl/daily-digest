@@ -899,6 +899,25 @@ details.opinion-entry[open] .opinion-preview { display: none; }
 .story-footer { padding: 11px 22px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; background: rgba(255,255,255,0.015); }
 .src-link { color: var(--ai); text-decoration: none; font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 5px; transition: color 0.15s; }
 .src-link:hover { color: var(--purple); }
+
+/* Reactions */
+.reactions { display: flex; gap: 6px; align-items: center; }
+.rxn-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: transparent; border: 1px solid var(--border2); border-radius: 20px;
+  padding: 4px 11px; font-size: 0.8rem; font-family: inherit; cursor: pointer;
+  color: var(--muted); transition: border-color 0.18s, background 0.18s, transform 0.15s;
+  user-select: none;
+}
+.rxn-btn:hover:not(.rxn-active):not(.rxn-used) { background: var(--surface3); transform: scale(1.1); }
+.rxn-btn.rxn-active {
+  border-color: var(--accent, var(--ai));
+  background: color-mix(in srgb, var(--accent, var(--ai)) 12%, transparent);
+  color: var(--text); transform: scale(1.08);
+}
+.rxn-btn.rxn-used { cursor: default; opacity: 0.6; }
+.rxn-count { font-size: 0.7rem; color: var(--muted2); min-width: 6px; }
+.rxn-btn.rxn-active .rxn-count { color: var(--accent, var(--ai)); font-weight: 700; }
 .src-name { color: var(--muted2); font-size: 0.76rem; }
 
 /* ── Notables Grid ── */
@@ -1445,6 +1464,84 @@ function toggleTheme() {
       if (label) { label.textContent = 'Copied!'; setTimeout(() => { label.textContent = 'Copy link'; }, 2000); }
     });
   };
+})();
+
+// ── Reactions ──
+(function() {
+  const WORKER = '__WORKER_URL__';
+  const LS_KEY = 'tdr-rxn'; // { "<rxn-id>": "👍" }
+
+  function getSaved() {
+    try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}'); } catch { return {}; }
+  }
+
+  function applyToEl(rxnEl, counts, userEmoji) {
+    rxnEl.querySelectorAll('.rxn-btn').forEach(btn => {
+      const emoji = btn.dataset.emoji;
+      const n = counts[emoji] || 0;
+      btn.querySelector('.rxn-count').textContent = n > 0 ? n : '';
+      btn.classList.toggle('rxn-active', emoji === userEmoji);
+      btn.classList.toggle('rxn-used',   !!userEmoji && emoji !== userEmoji);
+    });
+  }
+
+  // Load counts for all reaction bars visible on the page
+  async function loadReactions() {
+    if (!WORKER) return;
+    const els = [...document.querySelectorAll('.reactions[data-rxn-id]')];
+    if (!els.length) return;
+    const ids = els.map(el => el.dataset.rxnId);
+    const saved = getSaved();
+    try {
+      const res = await fetch(WORKER, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ get_reactions: true, ids }),
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      els.forEach(el => {
+        const id = el.dataset.rxnId;
+        applyToEl(el, data[id] || {}, saved[id]);
+      });
+    } catch { /* silent — reactions are non-critical */ }
+  }
+
+  window.addReaction = async function(e, btn) {
+    e.stopPropagation();
+    if (!WORKER) return;
+    const rxnEl = btn.closest('.reactions');
+    const id    = rxnEl?.dataset.rxnId;
+    const emoji = btn.dataset.emoji;
+    if (!id || !emoji) return;
+
+    const saved = getSaved();
+    if (saved[id]) return; // already reacted — one per story
+
+    // Optimistic update
+    saved[id] = emoji;
+    localStorage.setItem(LS_KEY, JSON.stringify(saved));
+    const countEl = btn.querySelector('.rxn-count');
+    countEl.textContent = (parseInt(countEl.textContent || '0') + 1) || 1;
+    applyToEl(rxnEl, Object.fromEntries(
+      [...rxnEl.querySelectorAll('.rxn-btn')].map(b => [b.dataset.emoji, parseInt(b.querySelector('.rxn-count').textContent || '0')])
+    ), emoji);
+
+    // Persist to Worker and sync confirmed counts
+    try {
+      const res = await fetch(WORKER, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ add_reaction: true, id, emoji }),
+      });
+      if (res.ok) {
+        const counts = await res.json();
+        applyToEl(rxnEl, counts, emoji);
+      }
+    } catch { /* keep optimistic */ }
+  };
+
+  document.addEventListener('DOMContentLoaded', loadReactions);
 })();
 
 // ── Audio / Text-to-Speech ──
@@ -2164,7 +2261,7 @@ def _build_visual(story):
     return ''
 
 
-def build_story_html(story, color, num, story_id=""):
+def build_story_html(story, color, num, story_id="", date=""):
     LENS_ICONS = {"Scientific": "&#x1F52C;", "Historical": "&#x1F4DC;", "Societal": "&#x1F30D;"}
     quiz_html = ""
     for i, q in enumerate(story.get("quiz", []), 1):
@@ -2195,6 +2292,7 @@ def build_story_html(story, color, num, story_id=""):
 
     tts_text    = esc(_build_tts_text(story))
     anchor      = story_id if story_id else f"story-{num}"
+    rxn_id      = esc(f"{date}-{anchor}") if date else esc(anchor)
     headline    = story.get('headline', '')
     tldr        = story.get('tldr', '')
     # Per-story redirect page carries story-specific OG tags for rich social previews
@@ -2224,7 +2322,7 @@ def build_story_html(story, color, num, story_id=""):
     }
 
     return f"""
-<article class="story-card" id="{anchor}" style="--accent:{color}" data-tts="{tts_text}" data-share-title="{share_title}" data-share-text="{share_text}" data-share-url="{share_url}">
+<article class="story-card" id="{anchor}" style="--accent:{color}" data-tts="{tts_text}" data-share-title="{share_title}" data-share-text="{share_text}" data-share-url="{share_url}" data-rxn-id="{rxn_id}">
   <div class="story-summary" onclick="toggleStory(this.closest('.story-card'))">
     <div class="s-left">
       <div class="s-meta">
@@ -2329,6 +2427,11 @@ def build_story_html(story, color, num, story_id=""):
         <a class="src-link" href="{safe_url(story.get('source_url','#'))}" target="_blank" rel="noopener noreferrer">
           Read original <span>&#x2192;</span>
         </a>
+        <div class="reactions" data-rxn-id="{rxn_id}">
+          <button class="rxn-btn" data-emoji="&#x1F44D;" onclick="addReaction(event,this)">&#x1F44D; <span class="rxn-count"></span></button>
+          <button class="rxn-btn" data-emoji="&#x1F914;" onclick="addReaction(event,this)">&#x1F914; <span class="rxn-count"></span></button>
+          <button class="rxn-btn" data-emoji="&#x1F525;" onclick="addReaction(event,this)">&#x1F525; <span class="rxn-count"></span></button>
+        </div>
       </div>
 
     </div>
@@ -2377,8 +2480,9 @@ def generate_html(data):
     # esc() applied to today: in --rebuild mode it comes from disk (digest.json),
     # not strftime, so it must be treated as untrusted input.
     today    = esc(data.get("date", ""))
-    ai_html  = "\n".join(build_story_html(s, "#818cf8", i+1, f"story-ai-{i+1}")   for i, s in enumerate(data.get("ai_stories", [])))
-    cy_html  = "\n".join(build_story_html(s, "#34d399", i+1, f"story-cyber-{i+1}") for i, s in enumerate(data.get("cyber_stories", [])))
+    raw_date = data.get("date", "")
+    ai_html  = "\n".join(build_story_html(s, "#818cf8", i+1, f"story-ai-{i+1}",   raw_date) for i, s in enumerate(data.get("ai_stories", [])))
+    cy_html  = "\n".join(build_story_html(s, "#34d399", i+1, f"story-cyber-{i+1}", raw_date) for i, s in enumerate(data.get("cyber_stories", [])))
     not_html = "\n".join(build_notable_html(item, i+1) for i, item in enumerate(data.get("notables", [])))
 
     # OG tags: use the first AI story headline/tldr as the page preview

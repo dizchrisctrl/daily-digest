@@ -108,6 +108,32 @@ export default {
       return jsonResponse({ error: { message: 'Invalid JSON body.' } }, 400, origin);
     }
 
+    // ── Mode: get reaction counts for a batch of story IDs ──
+    if (body.get_reactions) {
+      const ids = Array.isArray(body.ids) ? body.ids.slice(0, 20) : [];
+      const result = {};
+      await Promise.all(ids.map(async id => {
+        const raw = await env.RATE_LIMIT?.get('rxn:' + id);
+        result[id] = raw ? JSON.parse(raw) : {};
+      }));
+      return jsonResponse(result, 200, origin);
+    }
+
+    // ── Mode: add a reaction to a story ──
+    if (body.add_reaction) {
+      const { id, emoji } = body;
+      const ALLOWED_EMOJIS = ['\uD83D\uDC4D', '\uD83E\uDD14', '\uD83D\uDD25']; // 👍 🤔 🔥
+      if (!id || !emoji || !ALLOWED_EMOJIS.includes(emoji)) {
+        return jsonResponse({ error: 'Invalid reaction.' }, 400, origin);
+      }
+      const key = 'rxn:' + id;
+      const raw  = await env.RATE_LIMIT?.get(key);
+      const counts = raw ? JSON.parse(raw) : {};
+      counts[emoji] = (counts[emoji] || 0) + 1;
+      await env.RATE_LIMIT?.put(key, JSON.stringify(counts));
+      return jsonResponse(counts, 200, origin);
+    }
+
     // ── Mode 0: save a generated card to KV ──
     if (body.save_card) {
       if (!env.RATE_LIMIT) return jsonResponse({ error: 'KV not configured.' }, 500, origin);
