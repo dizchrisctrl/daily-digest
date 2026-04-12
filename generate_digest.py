@@ -699,7 +699,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 }
 .story-summary:hover { background: rgba(255,255,255,0.025); }
 .s-left { flex: 1; min-width: 0; }
-.summary-share { display: flex; justify-content: flex-end; margin-top: 12px; }
+.summary-share { margin-left: auto; }
 .s-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
 .src-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 2px 9px; border-radius: 20px; }
 .story-num { font-size: 0.68rem; font-weight: 700; color: var(--muted2); font-variant-numeric: tabular-nums; margin-left: auto; }
@@ -1681,9 +1681,7 @@ function cmRenderCard(story, color) {
         <button class="audio-btn" onclick="toggleAudio(this.closest(\'.story-card\'))" aria-label="Listen">&#x1F50A; Listen</button>
         <button class="audio-stop" onclick="stopAudio(event,this.closest(\'.story-card\'))" aria-label="Stop">&#x25A0; Stop</button>
         <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
-      </div>
-      <div class="summary-share" onclick="event.stopPropagation()">
-        <div class="share-wrap">
+        <div class="summary-share share-wrap" onclick="event.stopPropagation()">
           <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share">&#x1F517; Share</button>
           <div class="share-popover share-popover-up" onclick="event.stopPropagation()">
             <div class="share-popover-title">Share this story</div>
@@ -2167,9 +2165,7 @@ def build_story_html(story, color, num, story_id=""):
         <button class="audio-btn" onclick="toggleAudio(this.closest('.story-card'))" aria-label="Listen to this story">&#x1F50A; Listen</button>
         <button class="audio-stop" onclick="stopAudio(event,this.closest('.story-card'))" aria-label="Stop narration">&#x25A0; Stop</button>
         <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
-      </div>
-      <div class="summary-share" onclick="event.stopPropagation()">
-        <div class="share-wrap">
+        <div class="summary-share share-wrap" onclick="event.stopPropagation()">
           <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
           <div class="share-popover share-popover-up" onclick="event.stopPropagation()">
             <div class="share-popover-title">Share this story</div>
