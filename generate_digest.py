@@ -2009,12 +2009,20 @@ async function cmSaveCard(story, color, articleEl) {
           </div>
         </div>
         <div id="cm-card-wrap">${cardHtml}</div>`;
+      // Collapse the card before the first paint so it starts closed
+      const card = out.querySelector('.story-card');
+      if (card) card.classList.remove('open');
       cmHideStatus();
-      // Restore the canonical share URL on the rendered card
-      requestAnimationFrame(() => {
-        const card = out.querySelector('.story-card');
-        if (card) card.dataset.shareUrl = window.location.href;
-      });
+      // After layout settles: scroll to card, then pulse the highlight
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        if (!card) return;
+        card.dataset.shareUrl = window.location.href;
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => {
+          card.classList.add('story-highlight');
+          card.addEventListener('animationend', () => card.classList.remove('story-highlight'), { once: true });
+        }, 700); // let the scroll land before the glow fires
+      }));
     })
     .catch(() => cmStatus('error', '&#x26A0; Could not load shared card — it may have expired (cards are kept for 30 days).'));
 })();
