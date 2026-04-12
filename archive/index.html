@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archive — The Daily Rundown</title>
+<style>
+:root {
+  --bg:#0b0d16; --surface:#12152a; --surface2:#1a1d32; --surface3:#20233c;
+  --text:#eaedf5; --muted:#7a849a; --muted2:#5a6275;
+  --ai:#818cf8; --cyber:#34d399; --amber:#fbbf24; --purple:#a78bfa;
+  --border:#252840; --border2:#333660;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; line-height:1.7; }
+.page { max-width:640px; margin:0 auto; padding:40px 20px 100px; }
+.hero { text-align:center; padding:48px 0 36px; border-bottom:1px solid var(--border); margin-bottom:40px; }
+.hero-eyebrow { font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:4px; color:var(--muted2); margin-bottom:14px; }
+.hero h1 { font-size:2rem; font-weight:900; letter-spacing:-1.5px;
+  background:linear-gradient(130deg,var(--ai),var(--purple),var(--cyber));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:10px; }
+.hero-sub { color:var(--muted); font-size:0.88rem; }
+.back-link { display:inline-flex; align-items:center; gap:6px; color:var(--muted2); font-size:0.82rem; text-decoration:none;
+  border:1px solid var(--border); border-radius:20px; padding:5px 16px; margin-top:18px; transition:color 0.2s,border-color 0.2s; }
+.back-link:hover { color:var(--ai); border-color:var(--ai); }
+.arc-list { display:flex; flex-direction:column; gap:10px; }
+.arc-card { display:flex; align-items:center; justify-content:space-between;
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  padding:16px 20px; text-decoration:none; color:var(--text);
+  transition:border-color 0.2s,background 0.2s; }
+.arc-card:hover { border-color:var(--border2); background:var(--surface2); }
+.arc-date { font-size:0.92rem; font-weight:600; display:flex; align-items:center; gap:10px; }
+.arc-badge { font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.8px;
+  background:rgba(129,140,248,0.15); color:var(--ai); border:1px solid var(--ai);
+  border-radius:20px; padding:2px 8px; }
+.arc-arrow { color:var(--muted2); font-size:0.82rem; white-space:nowrap; }
+.arc-card:hover .arc-arrow { color:var(--ai); }
+.arc-count { text-align:center; color:var(--muted2); font-size:0.78rem; margin-bottom:20px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="hero">
+    <div class="hero-eyebrow">The Daily Rundown</div>
+    <h1>Past Digests</h1>
+    <p class="hero-sub">Every morning's briefing, preserved.</p>
+    <a href="../index.html" class="back-link">&#x2190; Back to today's digest</a>
+  </div>
+  <p class="arc-count">0 digests archived</p>
+  <div class="arc-list">
+  </div>
+</div>
+</body>
+</html>
