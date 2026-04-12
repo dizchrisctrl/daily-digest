@@ -7,6 +7,7 @@ import json
 import base64
 import socket
 import urllib.parse
+import urllib.request
 import feedparser
 from datetime import datetime, timezone, timedelta
 from email.mime.multipart import MIMEMultipart
@@ -198,6 +199,103 @@ def fetch_articles(feeds, max_per_feed=2, total_limit=8, max_age_hours=48, exclu
     return articles[:total_limit]
 
 
+def fetch_forum_opinions(source_url, headline, timeout=8):
+    """Search HN and Reddit for real discussions of this article.
+
+    Returns a dict mapping source label -> list of comment strings.
+    An empty list means the source was searched but no thread was found.
+    """
+    results = {}
+    headers = {"User-Agent": "DailyDigest/1.0 (public digest reader)"}
+
+    def _get_json(url):
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+
+    def _strip_html(text):
+        return re.sub(r'<[^>]+>', ' ', text or '').strip()
+
+    # ── Hacker News via Algolia (no auth required) ──────────────────────────────
+    try:
+        hn_story = None
+        # Try URL match first (most precise)
+        if source_url:
+            data = _get_json(
+                "https://hn.algolia.com/api/v1/search?"
+                + urllib.parse.urlencode({"query": source_url, "tags": "story", "hitsPerPage": "5"})
+            )
+            hn_story = next((h for h in data.get("hits", []) if h.get("url") and source_url in h["url"]), None)
+        # Fall back to headline search
+        if not hn_story:
+            data = _get_json(
+                "https://hn.algolia.com/api/v1/search?"
+                + urllib.parse.urlencode({"query": headline[:120], "tags": "story", "hitsPerPage": "5"})
+            )
+            hn_story = data["hits"][0] if data.get("hits") else None
+
+        if hn_story:
+            story_id = hn_story.get("objectID", "")
+            num_comments = hn_story.get("num_comments", 0)
+            if story_id and num_comments:
+                cdata = _get_json(
+                    "https://hn.algolia.com/api/v1/search?"
+                    + urllib.parse.urlencode({
+                        "tags": f"comment,story_{story_id}",
+                        "hitsPerPage": "10",
+                    })
+                )
+                comments = [
+                    _strip_html(h.get("comment_text", ""))[:400]
+                    for h in cdata.get("hits", [])
+                    if h.get("comment_text") and len(h.get("comment_text", "")) > 30
+                ][:6]
+                if comments:
+                    results["Hacker News"] = comments
+    except Exception as e:
+        print(f"  HN scrape skipped: {e}")
+
+    # ── Reddit (old JSON API, no auth required) ──────────────────────────────────
+    try:
+        reddit_posts = []
+        # Search by URL first
+        if source_url:
+            data = _get_json(
+                "https://www.reddit.com/search.json?"
+                + urllib.parse.urlencode({"q": f"url:{source_url}", "sort": "relevance", "t": "month", "limit": "5"})
+            )
+            reddit_posts = data.get("data", {}).get("children", [])
+        # Fall back to title search
+        if not reddit_posts:
+            data = _get_json(
+                "https://www.reddit.com/search.json?"
+                + urllib.parse.urlencode({"q": headline[:120], "sort": "relevance", "t": "month", "limit": "5"})
+            )
+            reddit_posts = data.get("data", {}).get("children", [])
+
+        if reddit_posts:
+            top = reddit_posts[0]["data"]
+            subreddit = top.get("subreddit", "")
+            post_id   = top.get("id", "")
+            if subreddit and post_id:
+                cdata = _get_json(
+                    f"https://www.reddit.com/r/{subreddit}/comments/{post_id}.json?limit=10&sort=top"
+                )
+                if isinstance(cdata, list) and len(cdata) > 1:
+                    children = cdata[1].get("data", {}).get("children", [])
+                    comments = [
+                        c["data"]["body"][:400]
+                        for c in children
+                        if c.get("data", {}).get("body") not in ("", "[deleted]", "[removed]")
+                    ][:6]
+                    if comments:
+                        results[f"Reddit r/{subreddit}"] = comments
+    except Exception as e:
+        print(f"  Reddit scrape skipped: {e}")
+
+    return results
+
+
 # ── Story schema (AI + Cyber deep-dive cards) ──────────────────────────────────
 STORY_SCHEMA = {
     "type": "object",
@@ -236,8 +334,9 @@ STORY_SCHEMA = {
                 "properties": {
                     "source":    {"type": "string", "description": "Community name, e.g. 'Hacker News', 'Reddit r/netsec', 'Security Twitter'"},
                     "sentiment": {"type": "string", "description": "1-2 sentence summary of what that community is saying"},
+                    "simulated": {"type": "boolean", "description": "true if no real comments were found and this is a predicted reaction; false if based on real scraped comments provided in the prompt"},
                 },
-                "required": ["source", "sentiment"],
+                "required": ["source", "sentiment", "simulated"],
             },
         },
         "opinion_assessment":{"type": "string", "description": "2-3 sentences summarizing the overall collective sentiment across all communities — what is the dominant mood, the shared concern or excitement, and the key theme running through all the reactions"},
@@ -320,7 +419,7 @@ Guidelines:
   Show actual relationships and flow — not floating boxes with buzzwords.
 - quiz: 3 insight cards, each written through a distinct lens — card 1: Scientific (how it works, engineering tradeoffs, what it advances or breaks), card 2: Historical (what precedent this echoes, what the pattern tells us, what we've seen before), card 3: Societal (how it affects people beyond the technical community — policy, economics, behavior, power). Each card has a hook (q) framed through its lens, a crisp key insight (a), and an explanation (explain) that stays within the lens. Avoid trivia — these should feel like genuine "aha" moments.
 - pub_date: copy the pub_date field exactly from the article JSON — do not modify it.
-- public_opinion: one entry per community (HN, Reddit r/technology, r/netsec, security Twitter/X) — each with a source name and 1-2 sentence sentiment summary.
+- public_opinion: one entry per community listed in COMMUNITY REACTIONS below. For communities marked REAL: summarize the actual sentiment from those comments (set simulated=false). For communities marked SIMULATED: write what that community would likely say (set simulated=true).
 - opinion_assessment: 2-3 sentences capturing the dominant collective mood across all communities. What is everyone feeling, and why?
 - devils_advocate: challenge the dominant sentiment with a sharp counter-perspective — an overlooked irony, an inconvenient truth, or a reframe that makes the reader reconsider the story. Make it feel like a genuine twist, not a mild qualification.
 - deep_dive: 3-4 sentences that synthesize the full story — concept, event, stakes, and tensions — into a compelling narrative thread. Write like the opening of great longform journalism: draw the reader in, raise the tension, leave them wanting more.
@@ -328,6 +427,9 @@ Guidelines:
 - deep_dive_outlook: 2-3 sentences on what happens next — what this story likely accelerates or disrupts, what to watch in the coming weeks or months. Grounded and specific, not vague.
 - tech_tags: 0-3 tags max. Only include when you have specific, meaningful context to share. Skip entirely for vulnerabilities if no specific version or tool is confirmed. Never use generic terms (AI, cloud, encryption). Each tag needs a clear description and a relevance sentence tied to this exact story.
 - affected_systems: for vulnerability stories, list each affected system with its version range. Empty array otherwise.
+
+COMMUNITY REACTIONS:
+{forum_data}
 
 Call the publish_story tool with your story."""
 
@@ -442,11 +544,31 @@ Reply with only a JSON array of 3 indices, e.g.: [0, 2, 5]"""
         chosen = top_articles[:3]  # fallback: just take first 3
 
     for story_num, article in enumerate(chosen, start=1):
+        # Scrape real forum opinions before generating
+        source_url = article.get("link", "")
+        headline   = article.get("title", "")
+        print(f"  -> Fetching forum opinions for story {story_num}...")
+        forum_opinions = fetch_forum_opinions(source_url, headline)
+
+        # Build the COMMUNITY REACTIONS block for the prompt
+        SIMULATED_SOURCES = ["Hacker News", "Reddit r/technology", "Reddit r/netsec", "Security Twitter/X"]
+        forum_lines = []
+        for src, comments in forum_opinions.items():
+            forum_lines.append(f"{src} (REAL — {len(comments)} comments scraped):")
+            for c in comments:
+                forum_lines.append(f"  - {c}")
+        for src in SIMULATED_SOURCES:
+            # Only add as simulated if no real data was found for this source
+            if not any(src.lower() in k.lower() for k in forum_opinions):
+                forum_lines.append(f"{src} (SIMULATED — no thread found, write a predicted reaction, set simulated=true)")
+        forum_data = "\n".join(forum_lines) if forum_lines else "No real data found — write simulated reactions for all communities (set simulated=true for each)."
+
         prompt = SECTION_PROMPT.format(
             today=today,
             article=json.dumps(article, indent=2),
             accent_color=accent_color,
             story_num=story_num,
+            forum_data=forum_data,
         )
         for attempt in range(1, 3):
             response = client.messages.create(
@@ -773,6 +895,7 @@ details.opinion-entry[open] .opinion-preview { display: none; }
 .opinion-source { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--cyber); flex-shrink: 0; }
 .opinion-preview { font-size: 0.82rem; color: var(--muted2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .opinion-full { padding: 0 14px 11px 14px; font-size: 0.91rem; color: var(--muted); line-height: 1.6; }
+.opinion-sim-badge { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted2); border: 1px solid var(--border2); border-radius: 20px; padding: 1px 7px; flex-shrink: 0; }
 
 /* Insights */
 .insights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
@@ -1751,9 +1874,10 @@ function cmRenderCard(story, color) {
   }).join('');
 
   // Public opinion entries
-  const opinionHtml = (story.public_opinion||[]).map(o =>
-    `<details class="opinion-entry"><summary><span class="opinion-chevron">&#9656;</span><span class="opinion-source">${h(o.source||'')}</span><span class="opinion-preview">${h(o.sentiment||'')}</span></summary><div class="opinion-full">${h(o.sentiment||'')}</div></details>`
-  ).join('');
+  const opinionHtml = (story.public_opinion||[]).map(o => {
+    const simBadge = o.simulated ? `<span class="opinion-sim-badge">AI simulated</span>` : '';
+    return `<details class="opinion-entry"><summary><span class="opinion-chevron">&#9656;</span><span class="opinion-source">${h(o.source||'')}</span>${simBadge}<span class="opinion-preview">${h(o.sentiment||'')}</span></summary><div class="opinion-full">${h(o.sentiment||'')}</div></details>`;
+  }).join('');
 
   // SVG diagram
   const svgHtml = story.visual_svg
@@ -2415,7 +2539,7 @@ def build_story_html(story, color, num, story_id="", date=""):
 
       <div class="block opinion-block">
         <div class="blabel">&#x1F465; Public Opinion</div>
-        {"".join(f'<details class="opinion-entry"><summary><span class="opinion-chevron">&#9656;</span><span class="opinion-source">{esc(o.get("source",""))}</span><span class="opinion-preview">{esc(o.get("sentiment",""))}</span></summary><div class="opinion-full">{esc(o.get("sentiment",""))}</div></details>' for o in (story.get("public_opinion") or []))}
+        {"".join(f'<details class="opinion-entry"><summary><span class="opinion-chevron">&#9656;</span><span class="opinion-source">{esc(o.get("source",""))}</span>{"<span class=\'opinion-sim-badge\'>AI simulated</span>" if o.get("simulated") else ""}<span class="opinion-preview">{esc(o.get("sentiment",""))}</span></summary><div class="opinion-full">{esc(o.get("sentiment",""))}</div></details>' for o in (story.get("public_opinion") or []))}
         <div class="blabel" style="margin-top:14px">&#x1F4CA; Sentiment Summary</div>
         <p>{esc(story.get('opinion_assessment',''))}</p>
         <div class="block devil-block collapsible" style="margin-top:14px;padding:14px 16px;border-radius:8px">
