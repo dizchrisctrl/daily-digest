@@ -1397,10 +1397,25 @@ function toggleTheme() {
     const title = card.dataset.shareTitle || '';
     const text  = card.dataset.shareText  || '';
     const url   = card.dataset.shareUrl   || window.location.href;
+    // Rebuild popover links from the current share URL (may have been updated after save)
+    const wrap = btn.closest('.share-wrap');
+    const eu = encodeURIComponent(url);
+    const twText = encodeURIComponent(('\uD83D\uDCF0 ' + title + '\n\n' + text).slice(0, 230));
+    const waText = encodeURIComponent('\uD83D\uDCF0 *' + title + '*\n\n' + text);
+    const tgText = encodeURIComponent('\uD83D\uDCF0 ' + title + '\n\n' + text);
+    const linkMap = {
+      'so-x':        'https://twitter.com/intent/tweet?text=' + twText + '&url=' + eu,
+      'so-whatsapp': 'https://wa.me/?text=' + waText,
+      'so-telegram': 'https://t.me/share/url?url=' + eu + '&text=' + tgText,
+      'so-linkedin': 'https://www.linkedin.com/sharing/share-offsite/?url=' + eu,
+    };
+    Object.entries(linkMap).forEach(([cls, href]) => {
+      const el = wrap.querySelector('.' + cls);
+      if (el) el.href = href;
+    });
     if (navigator.share) {
       navigator.share({ title, text, url }).catch(() => {});
     } else {
-      const wrap = btn.closest('.share-wrap');
       const pop  = wrap.querySelector('.share-popover');
       if (pop === _openPopover) { _closeAll(); return; }
       _closeAll();
@@ -1920,6 +1935,8 @@ window.cmGenerate = async function() {
         card.classList.add('story-highlight');
         card.addEventListener('animationend', () => card.classList.remove('story-highlight'), { once: true });
       }, 350);
+      // Save to KV in background so the share link points to this specific card
+      cmSaveCard(story, '#f472b6', card);
     }));
 
   } catch(err) {
@@ -1951,6 +1968,56 @@ window.cmClear = function() {
   document.getElementById('cm-text').value = '';
   cmHideStatus();
 };
+
+// ── Save card to KV and update share URL ──
+async function cmSaveCard(story, color, articleEl) {
+  if (!CM_WORKER_URL) return;
+  try {
+    const res = await fetch(CM_WORKER_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ save_card: true, card: story, color }),
+    });
+    if (!res.ok) return;
+    const { id } = await res.json();
+    if (!id) return;
+    const shareUrl = window.location.origin + window.location.pathname + '?card=' + id;
+    if (articleEl) articleEl.dataset.shareUrl = shareUrl;
+  } catch { /* silent — share still works with the generic URL */ }
+}
+
+// ── On load: if ?card=<id> is in the URL, fetch and render that card ──
+(function() {
+  const cardId = new URLSearchParams(window.location.search).get('card');
+  if (!cardId || !CM_WORKER_URL) return;
+
+  // Switch to Card Maker tab and show loading state
+  const tabBtn = document.getElementById('tab-cardmaker');
+  if (tabBtn) switchTab('cardmaker', tabBtn);
+  cmStatus('loading', 'Loading shared card&hellip;');
+
+  fetch(CM_WORKER_URL + '/card/' + cardId)
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(({ story, color }) => {
+      const cardHtml = cmRenderCard(story, color || '#f472b6');
+      const out = document.getElementById('cm-output');
+      out.innerHTML = `
+        <div class="cm-output-header">
+          <span class="cm-output-label">Shared Card</span>
+          <div class="cm-actions">
+            <button class="cm-action-btn" onclick="cmClear()">&#x2715; Clear</button>
+          </div>
+        </div>
+        <div id="cm-card-wrap">${cardHtml}</div>`;
+      cmHideStatus();
+      // Restore the canonical share URL on the rendered card
+      requestAnimationFrame(() => {
+        const card = out.querySelector('.story-card');
+        if (card) card.dataset.shareUrl = window.location.href;
+      });
+    })
+    .catch(() => cmStatus('error', '&#x26A0; Could not load shared card — it may have expired (cards are kept for 30 days).'));
+})();
 
 })(); // end Card Maker
 

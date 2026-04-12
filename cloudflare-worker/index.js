@@ -27,7 +27,7 @@ function corsHeaders(origin) {
   const allowed = ALLOWED_ORIGINS.find(o => origin.startsWith(o)) ?? ALLOWED_ORIGINS[0];
   return {
     'Access-Control-Allow-Origin':  allowed,
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Max-Age':       '86400',
   };
@@ -71,12 +71,30 @@ async function checkAndIncrement(kv) {
   return { allowed: true, used: used + 1, remaining: WEEKLY_LIMIT - used - 1 };
 }
 
+/** Generates a short random ID like "cm-a3f9b2c1" */
+function makeCardId() {
+  return 'cm-' + crypto.randomUUID().replace(/-/g, '').slice(0, 8);
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin') ?? '';
+    const url    = new URL(request.url);
 
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
+    }
+
+    // ── GET /card/<id> — retrieve a saved Card Maker card ──
+    if (request.method === 'GET') {
+      const match = url.pathname.match(/^\/card\/([a-z0-9-]+)$/i);
+      if (!match) return new Response('Not Found', { status: 404 });
+      const stored = await env.RATE_LIMIT?.get('card:' + match[1]);
+      if (!stored) return jsonResponse({ error: 'Card not found or expired.' }, 404, origin);
+      return new Response(stored, {
+        status:  200,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) },
+      });
     }
 
     if (request.method !== 'POST') {
@@ -88,6 +106,15 @@ export default {
       body = await request.json();
     } catch {
       return jsonResponse({ error: { message: 'Invalid JSON body.' } }, 400, origin);
+    }
+
+    // ── Mode 0: save a generated card to KV ──
+    if (body.save_card) {
+      if (!env.RATE_LIMIT) return jsonResponse({ error: 'KV not configured.' }, 500, origin);
+      const id      = makeCardId();
+      const payload = JSON.stringify({ story: body.card, color: body.color || '#f472b6', savedAt: Date.now() });
+      await env.RATE_LIMIT.put('card:' + id, payload, { expirationTtl: 30 * 24 * 60 * 60 }); // 30 days
+      return jsonResponse({ id }, 200, origin);
     }
 
     // ── Mode 1: fetch an article URL server-side ──
