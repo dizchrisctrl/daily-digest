@@ -198,6 +198,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 }
 .story-summary:hover { background: rgba(255,255,255,0.025); }
 .s-left { flex: 1; min-width: 0; }
+.s-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
 .s-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
 .src-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; padding: 2px 9px; border-radius: 20px; }
 .story-num { font-size: 0.68rem; font-weight: 700; color: var(--muted2); font-variant-numeric: tabular-nums; margin-left: auto; }
@@ -674,7 +675,23 @@ kbd {
         <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
       </div>
     </div>
-    <div class="chevron">&#9660;</div>
+    <div class="s-right">
+      <div class="share-wrap" onclick="event.stopPropagation()">
+        <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
+        <div class="share-popover" onclick="event.stopPropagation()">
+          <div class="share-popover-title">Share this story</div>
+          <div class="share-grid">
+            <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=%F0%9F%93%B0%20Sam%20Altman%20Responds%20to%20New%20Yorker%20Profile%20and%20Physical%20Attack%20on%20His%20Home%0A%0AOpenAI%20CEO%20Sam%20Altman%20published%20a%20blog%20post%20addressing%20both%20a%20physical%20attack%20on%20his%20residence%20and%20a%20New%20Yorker%20profile%20questioning%20his%20trustworthiness%2C%20&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-1.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
+            <a class="share-option so-whatsapp" href="https://wa.me/?text=%F0%9F%93%B0%20%2ASam%20Altman%20Responds%20to%20New%20Yorker%20Profile%20and%20Physical%20Attack%20on%20His%20Home%2A%0A%0AOpenAI%20CEO%20Sam%20Altman%20published%20a%20blog%20post%20addressing%20both%20a%20physical%20attack%20on%20his%20residence%20and%20a%20New%20Yorker%20profile%20questioning%20his%20trustworthiness%2C%20reigniting%20debate%20over%20AI%20leadership%20accountability%20and%20the%20personal%20risks%20facing%20tech%20executives.%0A%0A%F0%9F%94%97%20https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-1.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
+            <a class="share-option so-telegram" href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-1.html&amp;text=%F0%9F%93%B0%20Sam%20Altman%20Responds%20to%20New%20Yorker%20Profile%20and%20Physical%20Attack%20on%20His%20Home%0A%0AOpenAI%20CEO%20Sam%20Altman%20published%20a%20blog%20post%20addressing%20both%20a%20physical%20attack%20on%20his%20residence%20and%20a%20New%20Yorker%20profile%20questioning%20his%20trustworthiness%2C%20reigniting%20debate%20over%20AI%20leadership%20accountability%20and%20the%20personal%20risks%20facing%20tech%20executives." target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
+            <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-1.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
+            <div class="share-divider"></div>
+            <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="chevron">&#9660;</div>
+    </div>
   </div>
 
   <div class="story-body">
@@ -839,20 +856,6 @@ kbd {
         <a class="src-link" href="https://techcrunch.com/2026/04/11/sam-altman-responds-to-incendiary-new-yorker-article-after-attack-on-his-home/" target="_blank" rel="noopener noreferrer">
           Read original <span>&#x2192;</span>
         </a>
-        <div class="share-wrap" onclick="event.stopPropagation()">
-          <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
-          <div class="share-popover share-popover-up" onclick="event.stopPropagation()">
-            <div class="share-popover-title">Share this story</div>
-            <div class="share-grid">
-              <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=%F0%9F%93%B0%20Sam%20Altman%20Responds%20to%20New%20Yorker%20Profile%20and%20Physical%20Attack%20on%20His%20Home%0A%0AOpenAI%20CEO%20Sam%20Altman%20published%20a%20blog%20post%20addressing%20both%20a%20physical%20attack%20on%20his%20residence%20and%20a%20New%20Yorker%20profile%20questioning%20his%20trustworthiness%2C%20&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-1.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
-              <a class="share-option so-whatsapp" href="https://wa.me/?text=%F0%9F%93%B0%20%2ASam%20Altman%20Responds%20to%20New%20Yorker%20Profile%20and%20Physical%20Attack%20on%20His%20Home%2A%0A%0AOpenAI%20CEO%20Sam%20Altman%20published%20a%20blog%20post%20addressing%20both%20a%20physical%20attack%20on%20his%20residence%20and%20a%20New%20Yorker%20profile%20questioning%20his%20trustworthiness%2C%20reigniting%20debate%20over%20AI%20leadership%20accountability%20and%20the%20personal%20risks%20facing%20tech%20executives.%0A%0A%F0%9F%94%97%20https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-1.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
-              <a class="share-option so-telegram" href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-1.html&amp;text=%F0%9F%93%B0%20Sam%20Altman%20Responds%20to%20New%20Yorker%20Profile%20and%20Physical%20Attack%20on%20His%20Home%0A%0AOpenAI%20CEO%20Sam%20Altman%20published%20a%20blog%20post%20addressing%20both%20a%20physical%20attack%20on%20his%20residence%20and%20a%20New%20Yorker%20profile%20questioning%20his%20trustworthiness%2C%20reigniting%20debate%20over%20AI%20leadership%20accountability%20and%20the%20personal%20risks%20facing%20tech%20executives." target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
-              <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-1.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
-              <div class="share-divider"></div>
-              <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
-            </div>
-          </div>
-        </div>
       </div>
 
     </div>
@@ -877,7 +880,23 @@ kbd {
         <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
       </div>
     </div>
-    <div class="chevron">&#9660;</div>
+    <div class="s-right">
+      <div class="share-wrap" onclick="event.stopPropagation()">
+        <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
+        <div class="share-popover" onclick="event.stopPropagation()">
+          <div class="share-popover-title">Share this story</div>
+          <div class="share-grid">
+            <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=%F0%9F%93%B0%20Anthropic%20Temporarily%20Bans%20OpenClaw%20Creator%20from%20Claude%20Access%20After%20Pricing%20Dispute%0A%0AAnthropic%20temporarily%20blocked%20OpenClaw%27s%20creator%20from%20accessing%20Claude%20after%20a%20pricing%20change%20affected%20OpenClaw%20users%2C%20raising%20questions%20about&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-2.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
+            <a class="share-option so-whatsapp" href="https://wa.me/?text=%F0%9F%93%B0%20%2AAnthropic%20Temporarily%20Bans%20OpenClaw%20Creator%20from%20Claude%20Access%20After%20Pricing%20Dispute%2A%0A%0AAnthropic%20temporarily%20blocked%20OpenClaw%27s%20creator%20from%20accessing%20Claude%20after%20a%20pricing%20change%20affected%20OpenClaw%20users%2C%20raising%20questions%20about%20AI%20platform%20power%20over%20downstream%20developers.%0A%0A%F0%9F%94%97%20https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-2.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
+            <a class="share-option so-telegram" href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-2.html&amp;text=%F0%9F%93%B0%20Anthropic%20Temporarily%20Bans%20OpenClaw%20Creator%20from%20Claude%20Access%20After%20Pricing%20Dispute%0A%0AAnthropic%20temporarily%20blocked%20OpenClaw%27s%20creator%20from%20accessing%20Claude%20after%20a%20pricing%20change%20affected%20OpenClaw%20users%2C%20raising%20questions%20about%20AI%20platform%20power%20over%20downstream%20developers." target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
+            <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-2.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
+            <div class="share-divider"></div>
+            <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="chevron">&#9660;</div>
+    </div>
   </div>
 
   <div class="story-body">
@@ -1036,20 +1055,6 @@ kbd {
         <a class="src-link" href="https://techcrunch.com/2026/04/10/anthropic-temporarily-banned-openclaws-creator-from-accessing-claude/" target="_blank" rel="noopener noreferrer">
           Read original <span>&#x2192;</span>
         </a>
-        <div class="share-wrap" onclick="event.stopPropagation()">
-          <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
-          <div class="share-popover share-popover-up" onclick="event.stopPropagation()">
-            <div class="share-popover-title">Share this story</div>
-            <div class="share-grid">
-              <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=%F0%9F%93%B0%20Anthropic%20Temporarily%20Bans%20OpenClaw%20Creator%20from%20Claude%20Access%20After%20Pricing%20Dispute%0A%0AAnthropic%20temporarily%20blocked%20OpenClaw%27s%20creator%20from%20accessing%20Claude%20after%20a%20pricing%20change%20affected%20OpenClaw%20users%2C%20raising%20questions%20about&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-2.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
-              <a class="share-option so-whatsapp" href="https://wa.me/?text=%F0%9F%93%B0%20%2AAnthropic%20Temporarily%20Bans%20OpenClaw%20Creator%20from%20Claude%20Access%20After%20Pricing%20Dispute%2A%0A%0AAnthropic%20temporarily%20blocked%20OpenClaw%27s%20creator%20from%20accessing%20Claude%20after%20a%20pricing%20change%20affected%20OpenClaw%20users%2C%20raising%20questions%20about%20AI%20platform%20power%20over%20downstream%20developers.%0A%0A%F0%9F%94%97%20https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-2.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
-              <a class="share-option so-telegram" href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-2.html&amp;text=%F0%9F%93%B0%20Anthropic%20Temporarily%20Bans%20OpenClaw%20Creator%20from%20Claude%20Access%20After%20Pricing%20Dispute%0A%0AAnthropic%20temporarily%20blocked%20OpenClaw%27s%20creator%20from%20accessing%20Claude%20after%20a%20pricing%20change%20affected%20OpenClaw%20users%2C%20raising%20questions%20about%20AI%20platform%20power%20over%20downstream%20developers." target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
-              <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-2.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
-              <div class="share-divider"></div>
-              <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
-            </div>
-          </div>
-        </div>
       </div>
 
     </div>
@@ -1074,7 +1079,23 @@ kbd {
         <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
       </div>
     </div>
-    <div class="chevron">&#9660;</div>
+    <div class="s-right">
+      <div class="share-wrap" onclick="event.stopPropagation()">
+        <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
+        <div class="share-popover" onclick="event.stopPropagation()">
+          <div class="share-popover-title">Share this story</div>
+          <div class="share-grid">
+            <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=%F0%9F%93%B0%20AI%20Labs%20Grapple%20With%20Models%20%22Too%20Dangerous%20to%20Release%22%0A%0AMIT%20Technology%20Review%20highlights%20a%20growing%20trend%20of%20AI%20labs%20developing%20models%20with%20capabilities%20deemed%20too%20risky%20for%20public%20release%2C%20reigniting%20the%20debate%20over%20responsible%20&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-3.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
+            <a class="share-option so-whatsapp" href="https://wa.me/?text=%F0%9F%93%B0%20%2AAI%20Labs%20Grapple%20With%20Models%20%22Too%20Dangerous%20to%20Release%22%2A%0A%0AMIT%20Technology%20Review%20highlights%20a%20growing%20trend%20of%20AI%20labs%20developing%20models%20with%20capabilities%20deemed%20too%20risky%20for%20public%20release%2C%20reigniting%20the%20debate%20over%20responsible%20disclosure%20in%20artificial%20intelligence.%0A%0A%F0%9F%94%97%20https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-3.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
+            <a class="share-option so-telegram" href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-3.html&amp;text=%F0%9F%93%B0%20AI%20Labs%20Grapple%20With%20Models%20%22Too%20Dangerous%20to%20Release%22%0A%0AMIT%20Technology%20Review%20highlights%20a%20growing%20trend%20of%20AI%20labs%20developing%20models%20with%20capabilities%20deemed%20too%20risky%20for%20public%20release%2C%20reigniting%20the%20debate%20over%20responsible%20disclosure%20in%20artificial%20intelligence." target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
+            <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-3.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
+            <div class="share-divider"></div>
+            <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="chevron">&#9660;</div>
+    </div>
   </div>
 
   <div class="story-body">
@@ -1243,20 +1264,6 @@ kbd {
         <a class="src-link" href="https://www.technologyreview.com/2026/04/10/1135618/the-download-jeff-vandermeer-short-story-and-ai-models-too-danger-to-release/" target="_blank" rel="noopener noreferrer">
           Read original <span>&#x2192;</span>
         </a>
-        <div class="share-wrap" onclick="event.stopPropagation()">
-          <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
-          <div class="share-popover share-popover-up" onclick="event.stopPropagation()">
-            <div class="share-popover-title">Share this story</div>
-            <div class="share-grid">
-              <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=%F0%9F%93%B0%20AI%20Labs%20Grapple%20With%20Models%20%22Too%20Dangerous%20to%20Release%22%0A%0AMIT%20Technology%20Review%20highlights%20a%20growing%20trend%20of%20AI%20labs%20developing%20models%20with%20capabilities%20deemed%20too%20risky%20for%20public%20release%2C%20reigniting%20the%20debate%20over%20responsible%20&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-3.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
-              <a class="share-option so-whatsapp" href="https://wa.me/?text=%F0%9F%93%B0%20%2AAI%20Labs%20Grapple%20With%20Models%20%22Too%20Dangerous%20to%20Release%22%2A%0A%0AMIT%20Technology%20Review%20highlights%20a%20growing%20trend%20of%20AI%20labs%20developing%20models%20with%20capabilities%20deemed%20too%20risky%20for%20public%20release%2C%20reigniting%20the%20debate%20over%20responsible%20disclosure%20in%20artificial%20intelligence.%0A%0A%F0%9F%94%97%20https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-3.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
-              <a class="share-option so-telegram" href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-3.html&amp;text=%F0%9F%93%B0%20AI%20Labs%20Grapple%20With%20Models%20%22Too%20Dangerous%20to%20Release%22%0A%0AMIT%20Technology%20Review%20highlights%20a%20growing%20trend%20of%20AI%20labs%20developing%20models%20with%20capabilities%20deemed%20too%20risky%20for%20public%20release%2C%20reigniting%20the%20debate%20over%20responsible%20disclosure%20in%20artificial%20intelligence." target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
-              <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-ai-3.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
-              <div class="share-divider"></div>
-              <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
-            </div>
-          </div>
-        </div>
       </div>
 
     </div>
@@ -1287,7 +1294,23 @@ kbd {
         <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
       </div>
     </div>
-    <div class="chevron">&#9660;</div>
+    <div class="s-right">
+      <div class="share-wrap" onclick="event.stopPropagation()">
+        <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
+        <div class="share-popover" onclick="event.stopPropagation()">
+          <div class="share-popover-title">Share this story</div>
+          <div class="share-grid">
+            <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=%F0%9F%93%B0%20Webloc%3A%20How%20Ad-Tech%20Data%20Let%20Governments%20Track%20500%20Million%20Devices%20Worldwide%0A%0ACitizen%20Lab%20reveals%20that%20Hungarian%20intelligence%2C%20Salvadoran%20police%2C%20and%20U.S.%20law%20enforcement%20agencies%20used%20an%20Israeli-built%20tool%20called%20Webloc%20to%20cond&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-1.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
+            <a class="share-option so-whatsapp" href="https://wa.me/?text=%F0%9F%93%B0%20%2AWebloc%3A%20How%20Ad-Tech%20Data%20Let%20Governments%20Track%20500%20Million%20Devices%20Worldwide%2A%0A%0ACitizen%20Lab%20reveals%20that%20Hungarian%20intelligence%2C%20Salvadoran%20police%2C%20and%20U.S.%20law%20enforcement%20agencies%20used%20an%20Israeli-built%20tool%20called%20Webloc%20to%20conduct%20mass%20geolocation%20surveillance%20on%20500%20million%20devices%20by%20exploiting%20the%20commercial%20advertising%20data%20ecosystem.%0A%0A%F0%9F%94%97%20https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-1.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
+            <a class="share-option so-telegram" href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-1.html&amp;text=%F0%9F%93%B0%20Webloc%3A%20How%20Ad-Tech%20Data%20Let%20Governments%20Track%20500%20Million%20Devices%20Worldwide%0A%0ACitizen%20Lab%20reveals%20that%20Hungarian%20intelligence%2C%20Salvadoran%20police%2C%20and%20U.S.%20law%20enforcement%20agencies%20used%20an%20Israeli-built%20tool%20called%20Webloc%20to%20conduct%20mass%20geolocation%20surveillance%20on%20500%20million%20devices%20by%20exploiting%20the%20commercial%20advertising%20data%20ecosystem." target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
+            <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-1.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
+            <div class="share-divider"></div>
+            <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="chevron">&#9660;</div>
+    </div>
   </div>
 
   <div class="story-body">
@@ -1465,20 +1488,6 @@ kbd {
         <a class="src-link" href="https://thehackernews.com/2026/04/citizen-lab-law-enforcement-used-webloc.html" target="_blank" rel="noopener noreferrer">
           Read original <span>&#x2192;</span>
         </a>
-        <div class="share-wrap" onclick="event.stopPropagation()">
-          <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
-          <div class="share-popover share-popover-up" onclick="event.stopPropagation()">
-            <div class="share-popover-title">Share this story</div>
-            <div class="share-grid">
-              <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=%F0%9F%93%B0%20Webloc%3A%20How%20Ad-Tech%20Data%20Let%20Governments%20Track%20500%20Million%20Devices%20Worldwide%0A%0ACitizen%20Lab%20reveals%20that%20Hungarian%20intelligence%2C%20Salvadoran%20police%2C%20and%20U.S.%20law%20enforcement%20agencies%20used%20an%20Israeli-built%20tool%20called%20Webloc%20to%20cond&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-1.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
-              <a class="share-option so-whatsapp" href="https://wa.me/?text=%F0%9F%93%B0%20%2AWebloc%3A%20How%20Ad-Tech%20Data%20Let%20Governments%20Track%20500%20Million%20Devices%20Worldwide%2A%0A%0ACitizen%20Lab%20reveals%20that%20Hungarian%20intelligence%2C%20Salvadoran%20police%2C%20and%20U.S.%20law%20enforcement%20agencies%20used%20an%20Israeli-built%20tool%20called%20Webloc%20to%20conduct%20mass%20geolocation%20surveillance%20on%20500%20million%20devices%20by%20exploiting%20the%20commercial%20advertising%20data%20ecosystem.%0A%0A%F0%9F%94%97%20https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-1.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
-              <a class="share-option so-telegram" href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-1.html&amp;text=%F0%9F%93%B0%20Webloc%3A%20How%20Ad-Tech%20Data%20Let%20Governments%20Track%20500%20Million%20Devices%20Worldwide%0A%0ACitizen%20Lab%20reveals%20that%20Hungarian%20intelligence%2C%20Salvadoran%20police%2C%20and%20U.S.%20law%20enforcement%20agencies%20used%20an%20Israeli-built%20tool%20called%20Webloc%20to%20conduct%20mass%20geolocation%20surveillance%20on%20500%20million%20devices%20by%20exploiting%20the%20commercial%20advertising%20data%20ecosystem." target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
-              <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-1.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
-              <div class="share-divider"></div>
-              <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
-            </div>
-          </div>
-        </div>
       </div>
 
     </div>
@@ -1503,7 +1512,23 @@ kbd {
         <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
       </div>
     </div>
-    <div class="chevron">&#9660;</div>
+    <div class="s-right">
+      <div class="share-wrap" onclick="event.stopPropagation()">
+        <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
+        <div class="share-popover" onclick="event.stopPropagation()">
+          <div class="share-popover-title">Share this story</div>
+          <div class="share-grid">
+            <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=%F0%9F%93%B0%20Google%20Extends%20End-to-End%20Gmail%20Encryption%20to%20Mobile%20for%20Enterprise%20Users%0A%0AGoogle%20now%20supports%20client-side%20encryption%20for%20Gmail%20on%20Android%20and%20iOS%2C%20letting%20enterprises%20manage%20their%20own%20keys%20so%20that%20even%20Google%20cannot%20read%20encryp&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-2.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
+            <a class="share-option so-whatsapp" href="https://wa.me/?text=%F0%9F%93%B0%20%2AGoogle%20Extends%20End-to-End%20Gmail%20Encryption%20to%20Mobile%20for%20Enterprise%20Users%2A%0A%0AGoogle%20now%20supports%20client-side%20encryption%20for%20Gmail%20on%20Android%20and%20iOS%2C%20letting%20enterprises%20manage%20their%20own%20keys%20so%20that%20even%20Google%20cannot%20read%20encrypted%20email%20content.%0A%0A%F0%9F%94%97%20https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-2.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
+            <a class="share-option so-telegram" href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-2.html&amp;text=%F0%9F%93%B0%20Google%20Extends%20End-to-End%20Gmail%20Encryption%20to%20Mobile%20for%20Enterprise%20Users%0A%0AGoogle%20now%20supports%20client-side%20encryption%20for%20Gmail%20on%20Android%20and%20iOS%2C%20letting%20enterprises%20manage%20their%20own%20keys%20so%20that%20even%20Google%20cannot%20read%20encrypted%20email%20content." target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
+            <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-2.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
+            <div class="share-divider"></div>
+            <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="chevron">&#9660;</div>
+    </div>
   </div>
 
   <div class="story-body">
@@ -1654,20 +1679,6 @@ kbd {
         <a class="src-link" href="https://www.csoonline.com/article/4157458/google-adds-end-to-end-gmail-encryption-to-android-ios-devices-for-enterprises-3.html" target="_blank" rel="noopener noreferrer">
           Read original <span>&#x2192;</span>
         </a>
-        <div class="share-wrap" onclick="event.stopPropagation()">
-          <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
-          <div class="share-popover share-popover-up" onclick="event.stopPropagation()">
-            <div class="share-popover-title">Share this story</div>
-            <div class="share-grid">
-              <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=%F0%9F%93%B0%20Google%20Extends%20End-to-End%20Gmail%20Encryption%20to%20Mobile%20for%20Enterprise%20Users%0A%0AGoogle%20now%20supports%20client-side%20encryption%20for%20Gmail%20on%20Android%20and%20iOS%2C%20letting%20enterprises%20manage%20their%20own%20keys%20so%20that%20even%20Google%20cannot%20read%20encryp&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-2.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
-              <a class="share-option so-whatsapp" href="https://wa.me/?text=%F0%9F%93%B0%20%2AGoogle%20Extends%20End-to-End%20Gmail%20Encryption%20to%20Mobile%20for%20Enterprise%20Users%2A%0A%0AGoogle%20now%20supports%20client-side%20encryption%20for%20Gmail%20on%20Android%20and%20iOS%2C%20letting%20enterprises%20manage%20their%20own%20keys%20so%20that%20even%20Google%20cannot%20read%20encrypted%20email%20content.%0A%0A%F0%9F%94%97%20https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-2.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
-              <a class="share-option so-telegram" href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-2.html&amp;text=%F0%9F%93%B0%20Google%20Extends%20End-to-End%20Gmail%20Encryption%20to%20Mobile%20for%20Enterprise%20Users%0A%0AGoogle%20now%20supports%20client-side%20encryption%20for%20Gmail%20on%20Android%20and%20iOS%2C%20letting%20enterprises%20manage%20their%20own%20keys%20so%20that%20even%20Google%20cannot%20read%20encrypted%20email%20content." target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
-              <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-2.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
-              <div class="share-divider"></div>
-              <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
-            </div>
-          </div>
-        </div>
       </div>
 
     </div>
@@ -1692,7 +1703,23 @@ kbd {
         <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
       </div>
     </div>
-    <div class="chevron">&#9660;</div>
+    <div class="s-right">
+      <div class="share-wrap" onclick="event.stopPropagation()">
+        <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
+        <div class="share-popover" onclick="event.stopPropagation()">
+          <div class="share-popover-title">Share this story</div>
+          <div class="share-grid">
+            <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=%F0%9F%93%B0%20Docker%20Authorization%20Bypass%20Returns%20%E2%80%94%20Same%20Root%20Cause%2C%20Third%20Time%20Since%202016%0A%0AA%20new%20high-severity%20Docker%20Engine%20vulnerability%20%28CVE-2026-34040%29%20lets%20attackers%20bypass%20authorization%20plugins%20for%20root-level%20host%20access%20%E2%80%94%20and%20it%20stems&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-3.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
+            <a class="share-option so-whatsapp" href="https://wa.me/?text=%F0%9F%93%B0%20%2ADocker%20Authorization%20Bypass%20Returns%20%E2%80%94%20Same%20Root%20Cause%2C%20Third%20Time%20Since%202016%2A%0A%0AA%20new%20high-severity%20Docker%20Engine%20vulnerability%20%28CVE-2026-34040%29%20lets%20attackers%20bypass%20authorization%20plugins%20for%20root-level%20host%20access%20%E2%80%94%20and%20it%20stems%20from%20the%20same%20flaw%20supposedly%20patched%20in%202024%2C%20originally%20known%20since%202016.%0A%0A%F0%9F%94%97%20https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-3.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
+            <a class="share-option so-telegram" href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-3.html&amp;text=%F0%9F%93%B0%20Docker%20Authorization%20Bypass%20Returns%20%E2%80%94%20Same%20Root%20Cause%2C%20Third%20Time%20Since%202016%0A%0AA%20new%20high-severity%20Docker%20Engine%20vulnerability%20%28CVE-2026-34040%29%20lets%20attackers%20bypass%20authorization%20plugins%20for%20root-level%20host%20access%20%E2%80%94%20and%20it%20stems%20from%20the%20same%20flaw%20supposedly%20patched%20in%202024%2C%20originally%20known%20since%202016." target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
+            <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-3.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
+            <div class="share-divider"></div>
+            <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="chevron">&#9660;</div>
+    </div>
   </div>
 
   <div class="story-body">
@@ -1871,20 +1898,6 @@ kbd {
         <a class="src-link" href="https://www.csoonline.com/article/4157405/old-docker-authorization-bypass-pops-up-despite-previous-patch.html" target="_blank" rel="noopener noreferrer">
           Read original <span>&#x2192;</span>
         </a>
-        <div class="share-wrap" onclick="event.stopPropagation()">
-          <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share this story">&#x1F517; Share</button>
-          <div class="share-popover share-popover-up" onclick="event.stopPropagation()">
-            <div class="share-popover-title">Share this story</div>
-            <div class="share-grid">
-              <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=%F0%9F%93%B0%20Docker%20Authorization%20Bypass%20Returns%20%E2%80%94%20Same%20Root%20Cause%2C%20Third%20Time%20Since%202016%0A%0AA%20new%20high-severity%20Docker%20Engine%20vulnerability%20%28CVE-2026-34040%29%20lets%20attackers%20bypass%20authorization%20plugins%20for%20root-level%20host%20access%20%E2%80%94%20and%20it%20stems&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-3.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
-              <a class="share-option so-whatsapp" href="https://wa.me/?text=%F0%9F%93%B0%20%2ADocker%20Authorization%20Bypass%20Returns%20%E2%80%94%20Same%20Root%20Cause%2C%20Third%20Time%20Since%202016%2A%0A%0AA%20new%20high-severity%20Docker%20Engine%20vulnerability%20%28CVE-2026-34040%29%20lets%20attackers%20bypass%20authorization%20plugins%20for%20root-level%20host%20access%20%E2%80%94%20and%20it%20stems%20from%20the%20same%20flaw%20supposedly%20patched%20in%202024%2C%20originally%20known%20since%202016.%0A%0A%F0%9F%94%97%20https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-3.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
-              <a class="share-option so-telegram" href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-3.html&amp;text=%F0%9F%93%B0%20Docker%20Authorization%20Bypass%20Returns%20%E2%80%94%20Same%20Root%20Cause%2C%20Third%20Time%20Since%202016%0A%0AA%20new%20high-severity%20Docker%20Engine%20vulnerability%20%28CVE-2026-34040%29%20lets%20attackers%20bypass%20authorization%20plugins%20for%20root-level%20host%20access%20%E2%80%94%20and%20it%20stems%20from%20the%20same%20flaw%20supposedly%20patched%20in%202024%2C%20originally%20known%20since%202016." target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
-              <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-3.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
-              <div class="share-divider"></div>
-              <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest('.story-card'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
-            </div>
-          </div>
-        </div>
       </div>
 
     </div>
@@ -2517,7 +2530,23 @@ function cmRenderCard(story, color) {
         <span class="audio-status"><span class="audio-dot"></span>Listening&hellip;</span>
       </div>
     </div>
-    <div class="chevron">&#9660;</div>
+    <div class="s-right">
+      <div class="share-wrap" onclick="event.stopPropagation()">
+        <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share">&#x1F517; Share</button>
+        <div class="share-popover" onclick="event.stopPropagation()">
+          <div class="share-popover-title">Share this story</div>
+          <div class="share-grid">
+            <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=${twText}&url=${eu}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
+            <a class="share-option so-whatsapp" href="https://wa.me/?text=${waText}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
+            <a class="share-option so-telegram" href="https://t.me/share/url?url=${eu}&text=${tgText}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
+            <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=${eu}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
+            <div class="share-divider"></div>
+            <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest(\'.story-card\'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="chevron">&#9660;</div>
+    </div>
   </div>
   <div class="story-body"><div class="body-inner">
     ${cmAffectedHtml(story.affected_systems||[])}
@@ -2559,20 +2588,6 @@ function cmRenderCard(story, color) {
     </div>
     <div class="story-footer">
       <a class="src-link" href="${h(sourceUrl)}" target="_blank" rel="noopener noreferrer">Read original <span>&#x2192;</span></a>
-      <div class="share-wrap" onclick="event.stopPropagation()">
-        <button class="share-btn" onclick="shareNative(event,this)" aria-label="Share">&#x1F517; Share</button>
-        <div class="share-popover share-popover-up" onclick="event.stopPropagation()">
-          <div class="share-popover-title">Share this story</div>
-          <div class="share-grid">
-            <a class="share-option so-x" href="https://twitter.com/intent/tweet?text=${twText}&url=${eu}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1D54F;</span>X / Twitter</a>
-            <a class="share-option so-whatsapp" href="https://wa.me/?text=${waText}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4AC;</span>WhatsApp</a>
-            <a class="share-option so-telegram" href="https://t.me/share/url?url=${eu}&text=${tgText}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x2708;</span>Telegram</a>
-            <a class="share-option so-linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=${eu}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()"><span class="share-option-icon">&#x1F4BC;</span>LinkedIn</a>
-            <div class="share-divider"></div>
-            <button class="share-option so-copy share-copy-full" onclick="copyShareLink(event,this.closest(\'.story-card\'))"><span class="share-option-icon">&#x1F517;</span><span class="share-copy-label">Copy link</span></button>
-          </div>
-        </div>
-      </div>
     </div>
   </div></div>
 </article>`;
