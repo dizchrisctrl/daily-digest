@@ -2429,8 +2429,10 @@ def build_story_html(story, color, num, story_id="", date=""):
         </a>
         <div class="reactions" data-rxn-id="{rxn_id}">
           <button class="rxn-btn" data-emoji="&#x1F44D;" onclick="addReaction(event,this)">&#x1F44D; <span class="rxn-count"></span></button>
+          <button class="rxn-btn" data-emoji="&#x1F44E;" onclick="addReaction(event,this)">&#x1F44E; <span class="rxn-count"></span></button>
           <button class="rxn-btn" data-emoji="&#x1F914;" onclick="addReaction(event,this)">&#x1F914; <span class="rxn-count"></span></button>
           <button class="rxn-btn" data-emoji="&#x1F525;" onclick="addReaction(event,this)">&#x1F525; <span class="rxn-count"></span></button>
+          <button class="rxn-btn" data-emoji="&#x1F632;" onclick="addReaction(event,this)">&#x1F632; <span class="rxn-count"></span></button>
         </div>
       </div>
 

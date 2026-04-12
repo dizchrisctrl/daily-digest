@@ -122,7 +122,7 @@ export default {
     // ── Mode: add a reaction to a story ──
     if (body.add_reaction) {
       const { id, emoji } = body;
-      const ALLOWED_EMOJIS = ['\uD83D\uDC4D', '\uD83E\uDD14', '\uD83D\uDD25']; // 👍 🤔 🔥
+      const ALLOWED_EMOJIS = ['\uD83D\uDC4D', '\uD83D\uDC4E', '\uD83E\uDD14', '\uD83D\uDD25', '\uD83D\uDE32']; // 👍 👎 🤔 🔥 😲
       if (!id || !emoji || !ALLOWED_EMOJIS.includes(emoji)) {
         return jsonResponse({ error: 'Invalid reaction.' }, 400, origin);
       }
