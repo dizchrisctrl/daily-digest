@@ -605,8 +605,9 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
   border: 1px solid var(--border2); border-radius: 20px;
   background: var(--surface2);
 }
+.header-links { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
 .guide-link {
-  display: inline-block; margin-top: 14px;
+  display: inline-block; margin-top: 0;
   font-size: 0.78rem; color: var(--muted2); text-decoration: none;
   border: 1px solid var(--border); border-radius: 20px; padding: 4px 14px;
   transition: color 0.2s, border-color 0.2s;
@@ -1157,7 +1158,10 @@ kbd {
   <h1>The Daily Rundown</h1>
   <div class="date-badge"><span class="date-dot"></span>__DATE__</div>
   <p class="header-tagline">AI, cybersecurity, and the stories that actually matter — digested by Claude so you don't have to doom-scroll for them.</p>
-  <a href="guide.html" class="guide-link">&#x1F5FA; How to read this digest &#x2192;</a>
+  <div class="header-links">
+    <a href="guide.html" class="guide-link">&#x1F5FA; How to read this digest &#x2192;</a>
+    <a href="archive/index.html" class="guide-link">&#x1F4DA; Past digests &#x2192;</a>
+  </div>
 </header>
 
 <div class="tabs-wrap">
@@ -2952,6 +2956,99 @@ def _write_story_pages(data):
     return count
 
 
+def _archive_index_html(dates):
+    from datetime import datetime
+    items = ""
+    for i, d in enumerate(dates):
+        try:
+            dt  = datetime.strptime(d, "%Y-%m-%d")
+            lbl = dt.strftime(f"%A, %B {dt.day}, %Y")
+        except Exception:
+            lbl = d
+        badge = ' <span class="arc-badge">Latest</span>' if i == 0 else ""
+        items += f'\n    <a class="arc-card" href="./{d}.html"><span class="arc-date">{lbl}{badge}</span><span class="arc-arrow">Read digest &#x2192;</span></a>'
+    count_line = f"{len(dates)} digest{'s' if len(dates) != 1 else ''} archived"
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archive — The Daily Rundown</title>
+<style>
+:root {{
+  --bg:#0b0d16; --surface:#12152a; --surface2:#1a1d32; --surface3:#20233c;
+  --text:#eaedf5; --muted:#7a849a; --muted2:#5a6275;
+  --ai:#818cf8; --cyber:#34d399; --amber:#fbbf24; --purple:#a78bfa;
+  --border:#252840; --border2:#333660;
+}}
+* {{ box-sizing:border-box; margin:0; padding:0; }}
+body {{ background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; line-height:1.7; }}
+.page {{ max-width:640px; margin:0 auto; padding:40px 20px 100px; }}
+.hero {{ text-align:center; padding:48px 0 36px; border-bottom:1px solid var(--border); margin-bottom:40px; }}
+.hero-eyebrow {{ font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:4px; color:var(--muted2); margin-bottom:14px; }}
+.hero h1 {{ font-size:2rem; font-weight:900; letter-spacing:-1.5px;
+  background:linear-gradient(130deg,var(--ai),var(--purple),var(--cyber));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:10px; }}
+.hero-sub {{ color:var(--muted); font-size:0.88rem; }}
+.back-link {{ display:inline-flex; align-items:center; gap:6px; color:var(--muted2); font-size:0.82rem; text-decoration:none;
+  border:1px solid var(--border); border-radius:20px; padding:5px 16px; margin-top:18px; transition:color 0.2s,border-color 0.2s; }}
+.back-link:hover {{ color:var(--ai); border-color:var(--ai); }}
+.arc-list {{ display:flex; flex-direction:column; gap:10px; }}
+.arc-card {{ display:flex; align-items:center; justify-content:space-between;
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  padding:16px 20px; text-decoration:none; color:var(--text);
+  transition:border-color 0.2s,background 0.2s; }}
+.arc-card:hover {{ border-color:var(--border2); background:var(--surface2); }}
+.arc-date {{ font-size:0.92rem; font-weight:600; display:flex; align-items:center; gap:10px; }}
+.arc-badge {{ font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.8px;
+  background:rgba(129,140,248,0.15); color:var(--ai); border:1px solid var(--ai);
+  border-radius:20px; padding:2px 8px; }}
+.arc-arrow {{ color:var(--muted2); font-size:0.82rem; white-space:nowrap; }}
+.arc-card:hover .arc-arrow {{ color:var(--ai); }}
+.arc-count {{ text-align:center; color:var(--muted2); font-size:0.78rem; margin-bottom:20px; }}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="hero">
+    <div class="hero-eyebrow">The Daily Rundown</div>
+    <h1>Past Digests</h1>
+    <p class="hero-sub">Every morning's briefing, preserved.</p>
+    <a href="../index.html" class="back-link">&#x2190; Back to today's digest</a>
+  </div>
+  <p class="arc-count">{count_line}</p>
+  <div class="arc-list">{items}
+  </div>
+</div>
+</body>
+</html>"""
+
+
+def _write_archive(html, date_str):
+    """Write today's digest to output/archive/ and regenerate the archive index."""
+    import re as _re
+    os.makedirs("output/archive", exist_ok=True)
+
+    # Fix relative links for the one-level-deeper archive path
+    archive_html = html.replace('href="guide.html"', 'href="../guide.html"') \
+                       .replace('href="archive/index.html"', 'href="index.html"')
+
+    archive_path = f"output/archive/{date_str}.html"
+    with open(archive_path, "w", encoding="utf-8") as f:
+        f.write(archive_html)
+
+    # Discover all archived dates and regenerate the index
+    pattern = _re.compile(r'^(\d{4}-\d{2}-\d{2})\.html$')
+    dates = sorted(
+        (m.group(1) for fn in os.listdir("output/archive") if (m := pattern.match(fn))),
+        reverse=True
+    )
+    with open("output/archive/index.html", "w", encoding="utf-8") as f:
+        f.write(_archive_index_html(dates))
+
+    return len(dates)
+
+
 def save_output(html, data):
     os.makedirs("output", exist_ok=True)
     with open("output/index.html", "w", encoding="utf-8") as f:
@@ -2961,7 +3058,9 @@ def save_output(html, data):
     with open("output/guide.html", "w", encoding="utf-8") as f:
         f.write(GUIDE_HTML)
     n = _write_story_pages(data)
-    print(f"  Saved: output/index.html + output/digest.json + output/guide.html + {n} story pages")
+    date_str = data.get("date", "")
+    arc = _write_archive(html, date_str) if date_str else 0
+    print(f"  Saved: output/index.html + output/digest.json + output/guide.html + {n} story pages + {arc} archive entries")
 
 
 if __name__ == "__main__":
@@ -2983,7 +3082,9 @@ if __name__ == "__main__":
         with open("output/guide.html", "w", encoding="utf-8") as f:
             f.write(GUIDE_HTML)
         n = _write_story_pages(data)
-        print(f"  Saved: output/index.html + output/guide.html + {n} story pages")
+        date_str = data.get("date", "")
+        arc = _write_archive(html, date_str) if date_str else 0
+        print(f"  Saved: output/index.html + output/guide.html + {n} story pages + {arc} archive entries")
         print("\nDone (rebuild only -- no email sent)!")
     else:
         print("\n-> Fetching news...")
