@@ -1136,8 +1136,8 @@ kbd {
   <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">☀️ Light</button>
   <div class="eyebrow">Your daily briefing</div>
   <h1>The Daily Rundown</h1>
-  <p class="header-tagline">AI, cybersecurity, and the stories that actually matter — digested by Claude so you don't have to doom-scroll for them.</p>
   <div class="date-badge"><span class="date-dot"></span>__DATE__</div>
+  <p class="header-tagline">AI, cybersecurity, and the stories that actually matter — digested by Claude so you don't have to doom-scroll for them.</p>
   <a href="guide.html" class="guide-link">&#x1F5FA; How to read this digest &#x2192;</a>
 </header>
 
