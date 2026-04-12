@@ -8,7 +8,7 @@
 :root {
   --bg: #0b0d16; --surface: #12152a; --surface2: #1a1d32; --surface3: #20233c;
   --text: #eaedf5; --muted: #7a849a; --muted2: #5a6275;
-  --ai: #818cf8; --cyber: #34d399; --amber: #fbbf24; --purple: #a78bfa; --red: #f87171;
+  --ai: #818cf8; --cyber: #34d399; --amber: #fbbf24; --purple: #a78bfa; --red: #f87171; --pink: #f472b6;
   --border: #252840; --border2: #333660;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,6 +39,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .tab-ai    { background: rgba(129,140,248,0.1); color: var(--ai);    border-color: var(--ai); }
 .tab-cyber { background: rgba(52,211,153,0.1);  color: var(--cyber); border-color: var(--cyber); }
 .tab-not   { background: rgba(251,191,36,0.1);  color: var(--amber); border-color: var(--amber); }
+.tab-cm    { background: rgba(244,114,182,0.1); color: var(--pink);  border-color: var(--pink); }
 
 /* Story card mock */
 .card-mock { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin: 20px 0; }
@@ -62,6 +63,7 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .accent-purple { border-color: var(--purple); }
 .accent-red    { border-color: var(--red); }
 .accent-green  { border-color: var(--cyber); }
+.accent-pink   { border-color: var(--pink); }
 .accent-muted  { border-color: var(--border2); }
 
 /* Sub-section indent */
@@ -84,6 +86,18 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
 .flow-lbl  { font-size: 0.75rem; font-weight: 700; color: var(--text); }
 .flow-sub  { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
 .flow-arr  { color: var(--muted2); font-size: 1.1rem; padding: 0 4px; flex-shrink: 0; }
+
+/* Numbered steps */
+.steps { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+.step  { display: flex; align-items: flex-start; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; }
+.step-num { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: rgba(244,114,182,0.15); color: var(--pink); font-size: 0.8rem; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+.step-body { flex: 1; }
+.step-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 3px; }
+.step-desc  { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+
+/* Callout box */
+.callout { background: var(--surface2); border: 1px solid var(--border2); border-left: 3px solid var(--pink); border-radius: 10px; padding: 14px 18px; margin: 16px 0; font-size: 0.87rem; color: var(--muted); line-height: 1.6; }
+.callout strong { color: var(--text); }
 
 @media (max-width: 600px) {
   .hero h1 { font-size: 1.8rem; }
@@ -248,6 +262,74 @@ body { background: var(--bg); color: var(--text); font-family: -apple-system, Bl
     <div class="gcard gcard-accent accent-amber">
       <div class="gcard-header"><div class="gcard-icon">💡</div><div><div class="gcard-name">Why This Applies to You</div></div></div>
       <div class="gcard-desc">How this story could matter to someone in tech or security — career implications, tools to watch, policy awareness, or market shifts.</div>
+    </div>
+  </div>
+
+  <!-- CARD MAKER -->
+  <div class="sec-head">
+    <div class="sec-label">05 &nbsp; Card Maker</div>
+    <div class="sec-title">Turn any article into a story card</div>
+    <div class="sec-desc">Card Maker lets you generate a full deep-dive card — concept, diagram, public opinion, insights, and deep dive — from any article URL or pasted text. It uses the same AI pipeline as the daily digest, on demand.</div>
+  </div>
+
+  <div class="tabs-demo">
+    <div class="tab-pill tab-cm">✨ Card Maker</div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Open Card Maker</div>
+        <div class="step-desc">Click the <strong>Card Maker</strong> button in the digest header. It slides open as a panel below the navigation tabs.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Paste a URL or article text</div>
+        <div class="step-desc">Drop in any article URL — Card Maker will fetch the page content via a secure proxy. If the site blocks fetching, paste the article text directly into the text box instead.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Choose a category and hit Generate</div>
+        <div class="step-desc">Select <strong>AI &amp; Technology</strong>, <strong>Cybersecurity</strong>, or <strong>Notable</strong> to match the article's domain. Then click <strong>Generate Card</strong> — Claude analyzes the content and builds a complete story card.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Read your card</div>
+        <div class="step-desc">A fully formatted card appears — identical structure to the daily digest cards. Expand the collapsible sections (Concept, Visual Diagram, Devil's Advocate, How This Affects You, Outlook) to explore the full analysis.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Generate more cards</div>
+        <div class="step-desc">Cards are added to the session view so you can compare multiple articles side by side. Use the reset button to clear the panel and start fresh.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Weekly limit:</strong> Card Maker is rate-limited to <strong>10 cards per week</strong> to keep the API costs manageable. The limit resets every Sunday. If you hit the limit, the button will show how many days remain.
+  </div>
+
+  <div class="callout">
+    <strong>URL not loading?</strong> Some sites block automated fetching. If the URL fails, copy the article text from your browser and paste it directly into the text box — the card will generate from the pasted content instead.
+  </div>
+
+  <div class="glossary">
+    <div class="gcard gcard-accent accent-pink">
+      <div class="gcard-header"><div class="gcard-icon">✅</div><div><div class="gcard-name">Works great for</div></div></div>
+      <div class="gcard-desc">Long-form tech or security articles, research papers, in-depth blog posts, and news stories with enough substance for meaningful analysis. The more context in the article, the richer the card.</div>
+    </div>
+    <div class="gcard gcard-accent accent-muted">
+      <div class="gcard-header"><div class="gcard-icon">⚠️</div><div><div class="gcard-name">Less effective for</div></div></div>
+      <div class="gcard-desc">Very short news briefs, paywalled articles (where only the preview loads), social media posts, or press releases with minimal technical detail. Pasting full text directly usually helps in these cases.</div>
     </div>
   </div>
 
