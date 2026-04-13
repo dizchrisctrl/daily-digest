@@ -2079,6 +2079,85 @@ function cmAffectedHtml(sys) {
   ).join('') + '</div>';
 }
 
+// ── Security advisory badge for card maker cards ──
+const CM_ADV_META = {
+  vulnerability: { cls:'', icon:'&#x26A0;', lbl:'Vuln Advisory' },
+  breach:        { cls:' breach', icon:'&#x25B2;', lbl:'Breach Report' },
+  threat_actor:  { cls:' threat-actor', icon:'&#x25C6;', lbl:'Threat Actor' },
+};
+// Each card maker card stores its security_detail in a window-level map keyed by anchor id
+const CM_ADV_DATA = {};
+function cmAdvisoryBadge(story, anchor) {
+  const secType = story.security_type;
+  const meta = CM_ADV_META[secType];
+  if (!meta || !story.security_detail) return '';
+  CM_ADV_DATA[anchor] = { sd: story.security_detail, secType, headline: story.headline||'' };
+  return `<div class="sec-advisory-row" onclick="event.stopPropagation()"><a class="sec-advisory-link${meta.cls}" href="#" onclick="event.stopPropagation();event.preventDefault();cmOpenAdvisory(CM_ADV_DATA['${anchor}'].sd,CM_ADV_DATA['${anchor}'].secType,CM_ADV_DATA['${anchor}'].headline)">${meta.icon} ${meta.lbl} &rarr;</a></div>`;
+}
+
+// ── Inline advisory modal for card maker cards ──
+function cmOpenAdvisory(sd, secType, headline) {
+  if (!sd) return;
+  const h2 = function(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
+  const sev = sd.severity||'';
+  const sevCls = {Critical:'sev-critical',High:'sev-high',Medium:'sev-medium',Low:'sev-low'}[sev]||'sev-low';
+  const patchCls = {'Patch Available':'patch-available','Mitigation Only':'patch-mitigation'}[sd.patch_status||'']||'patch-none';
+  const cvss = sd.cvss_score!=null ? `<span class="cvss-score-num" style="font-size:1rem;font-family:monospace;font-weight:900">${h2(sd.cvss_score)}</span>` : '';
+
+  // MITRE map (inline waterfall)
+  const tacGroups = {};
+  (sd.mitre_techniques||[]).forEach(t => {
+    const tac = t.tactic||'Unknown';
+    if (!tacGroups[tac]) tacGroups[tac] = [];
+    tacGroups[tac].push(t);
+  });
+  const mitreHtml = Object.entries(tacGroups).map(([tac,techs]) => {
+    const cells = techs.map(t => {
+      const url = 'https://attack.mitre.org/techniques/' + h2((t.id||'').replace('.','/')) + '/';
+      return `<details class="mitre-tech-detail"><summary><span class="mitre-tech-id">${h2(t.id||'')}</span><span class="mitre-tech-name">${h2(t.name||'')}</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">${h2(t.relevance||'')}</p><a href="${h2(url)}" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details>`;
+    }).join('');
+    return `<div class="mitre-col"><div class="mitre-tactic-hdr" style="cursor:default"><span class="mitre-tactic-lbl">${h2(tac)}</span><span class="mitre-tactic-cnt">${techs.length} technique${techs.length!==1?'s':''}</span></div><div class="mitre-techs">${cells}</div></div>`;
+  }).join('');
+
+  // IOC rows
+  function iocGroup(lbl, items) {
+    if (!items||!items.length) return '';
+    return `<div style="margin-bottom:10px"><div style="font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7a849a;margin-bottom:4px">${h2(lbl)}</div>${items.map(v=>`<div style="font-family:monospace;font-size:0.78rem;padding:4px 8px;background:#12152a;border-radius:4px;margin-bottom:3px">${h2(v)}</div>`).join('')}</div>`;
+  }
+  const iocs = sd.iocs||{};
+  const iocHtml = [
+    iocGroup('IPs', iocs.ips),
+    iocGroup('Domains', iocs.domains),
+    iocGroup('File Hashes', iocs.hashes),
+    iocGroup('URI Patterns', iocs.uri_patterns),
+  ].join('');
+
+  // Threat actor tag
+  const ta = sd.threat_actor;
+  const taTag = (ta&&ta.name) ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.63rem;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.28)">&#9670; ${h2(ta.name)}</span>` : '';
+
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto';
+  modal.innerHTML = `
+    <div style="background:#12152a;border:1px solid #333660;border-radius:16px;padding:24px;max-width:680px;width:100%;max-height:88vh;overflow-y:auto;position:relative">
+      <button onclick="this.closest('[style]').remove()" style="position:absolute;top:14px;right:14px;background:#1a1d32;border:1px solid #252840;color:#7a849a;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.78rem">&#10005;</button>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:14px">
+        <span style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:3px 10px;border-radius:4px;background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.25)">${h2(secType||'Security').replace('_',' ')}</span>
+        ${cvss} ${sev ? `<span class="severity-pill ${sevCls}">${h2(sev)}</span>` : ''}
+        ${sd.patch_status ? `<span class="patch-pill ${patchCls}">${h2(sd.patch_status)}</span>` : ''}
+        ${taTag}
+      </div>
+      <h2 style="font-size:1.3rem;font-weight:900;margin-bottom:10px;line-height:1.25">${h2(sd.title||headline||'')}</h2>
+      <p style="font-size:0.93rem;color:#c0c8d8;line-height:1.75;margin-bottom:20px">${h2(sd.description||'')}</p>
+      ${mitreHtml ? `<div style="margin-bottom:20px"><div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#7a849a;margin-bottom:10px">&#9741; MITRE ATT&amp;CK Map</div><div class="mitre-map">${mitreHtml}</div></div>` : ''}
+      ${(sd.fix_immediate_steps||[]).length ? `<div style="margin-bottom:16px"><div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#7a849a;margin-bottom:8px">&#9888; Immediate Steps</div><ol style="padding-left:20px;font-size:0.88rem;color:#c0c8d8;line-height:1.65">${(sd.fix_immediate_steps||[]).map(s=>`<li style="margin-bottom:4px">${h2(s)}</li>`).join('')}</ol></div>` : ''}
+      ${iocHtml ? `<div style="margin-bottom:16px"><div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#7a849a;margin-bottom:8px">&#9762; Indicators of Compromise</div>${iocHtml}</div>` : ''}
+    </div>`;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  document.addEventListener('keydown', function esc(e) { if (e.key==='Escape') { modal.remove(); document.removeEventListener('keydown', esc); } });
+}
+
 // ── Render a full story card from Claude's structured output ──
 const LENS_ICO = { Scientific:'&#x1F52C;', Historical:'&#x1F4DC;', Societal:'&#x1F30D;' };
 
@@ -2156,6 +2235,7 @@ function cmRenderCard(story, color) {
       ${pubDate?`<div class="pub-date">&#x1F551; ${h(pubDate)}</div>`:''}
       <div class="tldr"><span class="tldr-tag">TL;DR</span>${h(tldr)}</div>
       ${cmTagsHtml(story.tech_tags||[])}
+      ${cmAdvisoryBadge(story, anchor)}
       <div class="audio-row" onclick="event.stopPropagation()">
         <button class="audio-btn" onclick="toggleAudio(this.closest(\'.story-card\'))" aria-label="Listen">&#x1F50A; Listen</button>
         <button class="audio-stop" onclick="stopAudio(event,this.closest(\'.story-card\'))" aria-label="Stop">&#x25A0; Stop</button>
@@ -2244,7 +2324,7 @@ const CM_TOOL = {
     required: ['headline','pub_date','tldr','why_it_matters','concept_title','concept_explained',
                'visual_svg','public_opinion','opinion_assessment','devils_advocate','quiz',
                'deep_dive','deep_dive_impact','deep_dive_outlook','source_url','source',
-               'tech_tags','affected_systems'],
+               'tech_tags','affected_systems','security_type'],
     properties: {
       headline:          { type:'string' },
       pub_date:          { type:'string' },
@@ -2286,6 +2366,112 @@ const CM_TOOL = {
       affected_systems: {
         type:'array',
         items: { type:'object', required:['name','versions'], properties:{ name:{type:'string'}, versions:{type:'string'} } }
+      },
+      security_type: {
+        type:'string',
+        enum:['vulnerability','breach','threat_actor','none'],
+        description:'Classify the story: "vulnerability" for CVEs/security flaws, "breach" for data breaches/intrusions, "threat_actor" for APT/threat group stories, "none" for everything else.'
+      }
+    }
+  }
+};
+
+// ── Security detail tool for second-pass advisory generation ──
+const CM_SECURITY_TOOL = {
+  name: 'publish_security_detail',
+  description: 'Generate a full security advisory detail object for a vulnerability, breach, or threat actor story',
+  input_schema: {
+    type:'object',
+    required:['title','description','severity','patch_status','mitre_techniques',
+              'fix_immediate_steps','fix_strategic_steps','concept_tags',
+              'threat_hunting_signals','iocs','applicability_checklist'],
+    properties:{
+      title:            { type:'string' },
+      description:      { type:'string' },
+      cve_id:           { type:'string' },
+      cvss_score:       { type:'number', minimum:0, maximum:10 },
+      cvss_vector:      { type:'string' },
+      severity:         { type:'string', enum:['Critical','High','Medium','Low'] },
+      patch_status:     { type:'string', enum:['Patch Available','Mitigation Only','No Fix Yet','Under Investigation'] },
+      attack_vector_summary: { type:'string' },
+      patch_timeline: {
+        type:'object',
+        properties:{
+          disclosed:        { type:'string' },
+          exploited_in_wild:{ type:'string' },
+          patch_released:   { type:'string' }
+        }
+      },
+      mitre_techniques: {
+        type:'array', maxItems:8,
+        items:{
+          type:'object', required:['id','name','tactic','relevance'],
+          properties:{
+            id:        { type:'string' },
+            name:      { type:'string' },
+            tactic:    { type:'string' },
+            relevance: { type:'string', description:'2-3 sentences explaining how this specific technique was used in this story.' }
+          }
+        }
+      },
+      affected_products: {
+        type:'array',
+        items:{
+          type:'object', required:['vendor','product','versions_affected'],
+          properties:{ vendor:{type:'string'}, product:{type:'string'}, versions_affected:{type:'string'}, fixed_in:{type:'string'} }
+        }
+      },
+      applicability_checklist: {
+        type:'array', maxItems:6,
+        items:{
+          type:'object', required:['condition','at_risk'],
+          properties:{ condition:{type:'string'}, at_risk:{type:'boolean'} }
+        }
+      },
+      fix_immediate_steps:  { type:'array', maxItems:5, items:{ type:'string' } },
+      fix_strategic_steps:  { type:'array', maxItems:5, items:{ type:'string' } },
+      concept_tags: {
+        type:'array', maxItems:6,
+        items:{
+          type:'object', required:['tag','definition','relevance'],
+          properties:{ tag:{type:'string'}, definition:{type:'string'}, relevance:{type:'string'} }
+        }
+      },
+      threat_hunting_signals: {
+        type:'array', maxItems:5,
+        items:{
+          type:'object', required:['signal','priority','description'],
+          properties:{
+            signal:      { type:'string' },
+            priority:    { type:'string', enum:['High','Medium','Low'] },
+            description: { type:'string' },
+            log_sources: { type:'array', items:{ type:'string' } }
+          }
+        }
+      },
+      iocs: {
+        type:'object',
+        properties:{
+          hashes:       { type:'array', items:{ type:'string' } },
+          ips:          { type:'array', items:{ type:'string' } },
+          domains:      { type:'array', items:{ type:'string' } },
+          file_paths:   { type:'array', items:{ type:'string' } },
+          uri_patterns: { type:'array', items:{ type:'string' } },
+          note:         { type:'string' }
+        }
+      },
+      threat_actor: {
+        type:'object',
+        properties:{
+          name:                   { type:'string' },
+          aliases:                { type:'array', items:{ type:'string' } },
+          origin:                 { type:'string' },
+          motivation:             { type:'string' },
+          description:            { type:'string' },
+          known_ttps:             { type:'array', items:{ type:'string' } },
+          attribution_confidence: { type:'string', enum:['High','Medium','Low','Unattributed'] },
+          story_relevance:        { type:'string' }
+        }
       }
     }
   }
@@ -2338,6 +2524,7 @@ Guidelines:
 - deep_dive_outlook: 2-3 sentences on what to watch for in coming weeks or months.
 - tech_tags: 0-3 tags max, only specific products/CVEs. Empty array is fine.
 - affected_systems: for vulnerability stories only. Empty array otherwise.
+- security_type: classify as "vulnerability" (CVE/security flaw), "breach" (data breach/intrusion), "threat_actor" (APT/group), or "none".
 
 Call the publish_story tool.`;
 
@@ -2367,6 +2554,46 @@ Call the publish_story tool.`;
   return block.input;
 }
 
+// ── Second-pass: generate security advisory detail ──
+async function cmCallSecurityDetail(story, articleText) {
+  const secType = story.security_type || 'none';
+  if (!['vulnerability','breach','threat_actor'].includes(secType)) return null;
+  const today = new Date().toISOString().slice(0,10);
+  const typeDesc = secType === 'vulnerability' ? 'vulnerability/CVE' : secType === 'breach' ? 'data breach/intrusion' : 'threat actor/APT group';
+  const prompt = `Today is ${today}. Generate a full security advisory detail object for the ${typeDesc} story below.
+
+STORY HEADLINE: ${story.headline || ''}
+STORY TL;DR: ${story.tldr || ''}
+
+ARTICLE:
+${(articleText||'').slice(0, 5000)}
+
+Guidelines:
+- mitre_techniques: map real MITRE ATT&CK techniques (use correct IDs like T1190, T1059.004). For each: write 2-3 sentences of relevance explaining exactly how this technique was used in this specific story.
+- iocs: ONLY include IOC values explicitly mentioned in the source article. Do NOT generate or infer IOC values.
+- threat_actor: only populate if a named threat actor is attributed in the story.
+- applicability_checklist: 4-6 conditions that put an org at risk.
+- fix_immediate_steps/fix_strategic_steps: 3-5 concrete, actionable items each.
+
+Call the publish_security_detail tool.`;
+
+  const res = await fetch(CM_WORKER_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-opus-4-6',
+      max_tokens: 6000,
+      tools: [CM_SECURITY_TOOL],
+      tool_choice: { type: 'tool', name: 'publish_security_detail' },
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  const block = data.content?.find(b => b.type === 'tool_use');
+  return block?.input || null;
+}
+
 // ── Main generate handler ──
 window.cmGenerate = async function() {
   const url  = (document.getElementById('cm-url')?.value  || '').trim();
@@ -2386,6 +2613,15 @@ window.cmGenerate = async function() {
     }
     cmStatus('loading', 'Analyzing with Claude Opus&hellip; (this takes ~20s)');
     const story = await cmCallClaude(articleContent, url);
+
+    // Second pass: fetch security advisory detail if this is a security story
+    let secDetail = null;
+    const isSecStory = ['vulnerability','breach','threat_actor'].includes(story.security_type);
+    if (isSecStory) {
+      cmStatus('loading', '&#x1F6E1; Security story detected &mdash; generating advisory detail&hellip; (this takes ~15s)');
+      secDetail = await cmCallSecurityDetail(story, articleContent).catch(() => null);
+      if (secDetail) story.security_detail = secDetail;
+    }
 
     cmStatus('success', '&#x2713; Card generated &mdash; scroll down to view it.');
     setTimeout(cmHideStatus, 4000);
@@ -2674,8 +2910,11 @@ def build_story_html(story, color, num, story_id="", date=""):
     rxn_id      = esc(f"{date}-{anchor}") if date else esc(anchor)
     headline    = story.get('headline', '')
     tldr        = story.get('tldr', '')
-    # Per-story page carries story-specific OG tags; may be full advisory or redirect
+    # Per-story redirect page (OG tags → main digest anchor); used for story share links
     story_page  = f"{PAGES_URL}/s/{anchor}.html"
+    # Advisory page uses a date-stamped URL so it persists across daily regenerations
+    _adv_id     = f"{date}-{anchor}" if date else anchor
+    advisory_page = f"{PAGES_URL}/s/{_adv_id}.html"
 
     _sec_type = story.get("security_type")
     _badge_meta = {
@@ -2688,7 +2927,7 @@ def build_story_html(story, color, num, story_id="", date=""):
         _cls, _icon, _lbl = _badge_meta[_sec_type]
         advisory_badge_html = (
             f'<div class="sec-advisory-row" onclick="event.stopPropagation()">'
-            f'<a class="sec-advisory-link{_cls}" href="{esc(story_page)}" '
+            f'<a class="sec-advisory-link{_cls}" href="{esc(advisory_page)}" '
             f'onclick="event.stopPropagation()">{_icon} {_lbl} &rarr;</a></div>'
         )
     share_title = esc(headline)
@@ -3330,15 +3569,19 @@ def _story_redirect_html(story, story_id):
 </html>"""
 
 
-def _build_security_detail_page(story, story_id, date=""):
-    """Generate a full security advisory HTML page for a story with security_detail data."""
-    sd       = story.get("security_detail", {})
-    sec_type = story.get("security_type", "vulnerability")
-    headline = story.get("headline", "")
-    page_url = f"{PAGES_URL}/s/{story_id}.html"
-    index_url = f"{PAGES_URL}"
-    if date:
-        index_url = f"{PAGES_URL}/{date}.html"
+def _build_security_detail_page(story, story_id, date="", advisory_id=None):
+    """Generate a full security advisory HTML page for a story with security_detail data.
+
+    advisory_id: the file stem used for this page's URL (e.g. '2026-04-13-story-cyber-1').
+                 Falls back to story_id when not provided.
+    """
+    sd        = story.get("security_detail", {})
+    sec_type  = story.get("security_type", "vulnerability")
+    headline  = story.get("headline", "")
+    _aid      = advisory_id or story_id
+    page_url  = f"{PAGES_URL}/s/{_aid}.html"
+    # Back button always returns to the main digest index (advisory pages persist indefinitely)
+    index_url = PAGES_URL
 
     def _a(s):
         return str(s or "").replace("&", "&amp;").replace('"', "&quot;").replace("'", "&#39;").replace("<", "&lt;").replace(">", "&gt;")
@@ -3411,10 +3654,18 @@ def _build_security_detail_page(story, story_id, date=""):
             _td   = json.dumps({"type": "technique", "id": _tid, "name": _tnam,
                                 "tactic": _tac_name, "relevance": _rel, "url": _aurl})
             _tech_cells += (
-                f'<button class="mitre-tech-cell" data-mitre="{_a(_td)}"'
-                f' onclick="openMitrePopover(event,this)">'
+                f'<details class="mitre-tech-detail">'
+                f'<summary>'
                 f'<span class="mitre-tech-id">{_a(_tid)}</span>'
-                f'<span class="mitre-tech-name">{_a(_tnam)}</span></button>'
+                f'<span class="mitre-tech-name">{_a(_tnam)}</span>'
+                f'<span class="mitre-tech-chevron">&#9656;</span>'
+                f'</summary>'
+                f'<div class="mitre-tech-body">'
+                f'<p class="mitre-tech-rel">{_a(_rel)}</p>'
+                f'<a href="{_a(_aurl)}" class="mitre-tech-link" target="_blank" rel="noopener">'
+                f'View on ATT&amp;CK &#8599;</a>'
+                f'</div>'
+                f'</details>'
             )
         _cnt = len(_techs)
         _mitre_cols += (
@@ -3423,6 +3674,7 @@ def _build_security_detail_page(story, story_id, date=""):
             f' onclick="openMitrePopover(event,this)">'
             f'<span class="mitre-tactic-lbl">{_a(_tac_name)}</span>'
             f'<span class="mitre-tactic-cnt">{_cnt} technique{"s" if _cnt != 1 else ""}</span>'
+            f'<span class="mitre-tactic-hint">Click for description &#8599;</span>'
             f'</button>'
             f'<div class="mitre-techs">{_tech_cells}</div></div>'
         )
@@ -3681,17 +3933,29 @@ body{{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacS
 .tl-label{{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted2);text-align:center;margin-bottom:4px;}}
 .tl-date{{font-size:0.8rem;font-weight:700;color:var(--text);text-align:center;font-family:'Courier New',monospace;}}
 .tl-date.na{{color:var(--muted2);font-style:italic;font-size:0.72rem;}}
-.mitre-map{{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;padding-bottom:4px;}}
-.mitre-col{{display:flex;flex-direction:column;gap:5px;min-width:130px;flex:1;}}
-.mitre-tactic-hdr{{background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(239,68,68,0.06));border:1px solid rgba(239,68,68,0.3);border-radius:7px;padding:9px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:3px;transition:border-color 0.15s,background 0.15s;width:100%;text-align:left;font-family:inherit;}}
-.mitre-tactic-hdr:hover{{border-color:var(--sec-soft);background:rgba(239,68,68,0.16);}}
-.mitre-tactic-lbl{{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sec-soft);line-height:1.3;}}
-.mitre-tactic-cnt{{font-size:0.58rem;color:var(--muted2);}}
+.mitre-map{{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;padding-bottom:6px;}}
+.mitre-col{{display:flex;flex-direction:column;gap:5px;min-width:150px;flex:1;}}
+.mitre-tactic-hdr{{background:linear-gradient(135deg,rgba(239,68,68,0.13),rgba(239,68,68,0.05));border:1px solid rgba(239,68,68,0.35);border-radius:8px;padding:10px 11px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:3px;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;width:100%;text-align:left;font-family:inherit;}}
+.mitre-tactic-hdr:hover{{border-color:var(--sec-soft);background:rgba(239,68,68,0.18);box-shadow:0 2px 12px rgba(239,68,68,0.12);}}
+.mitre-tactic-lbl{{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:0.9px;color:var(--sec-soft);line-height:1.3;}}
+.mitre-tactic-cnt{{font-size:0.58rem;color:var(--muted2);display:flex;align-items:center;gap:4px;}}
+.mitre-tactic-cnt::before{{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:rgba(239,68,68,0.5);}}
+.mitre-tactic-hint{{font-size:0.53rem;color:var(--muted2);opacity:0.7;margin-top:2px;}}
 .mitre-techs{{display:flex;flex-direction:column;gap:4px;}}
-.mitre-tech-cell{{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 10px;cursor:pointer;display:flex;flex-direction:column;gap:3px;transition:border-color 0.15s,background 0.15s;width:100%;text-align:left;font-family:inherit;}}
-.mitre-tech-cell:hover{{border-color:var(--border2);background:var(--surface3);}}
-.mitre-tech-id{{font-size:0.63rem;font-weight:800;font-family:'Courier New',monospace;color:var(--amber);}}
-.mitre-tech-name{{font-size:0.72rem;color:var(--body-text);line-height:1.35;}}
+details.mitre-tech-detail{{border:1px solid var(--border);border-radius:7px;overflow:hidden;transition:border-color 0.15s,box-shadow 0.15s;}}
+details.mitre-tech-detail[open]{{border-color:var(--border2);box-shadow:0 2px 10px rgba(0,0,0,0.18);}}
+details.mitre-tech-detail summary{{display:flex;align-items:flex-start;gap:7px;padding:8px 10px;cursor:pointer;list-style:none;background:var(--surface2);transition:background 0.15s;user-select:none;}}
+details.mitre-tech-detail summary:hover{{background:var(--surface3);}}
+details.mitre-tech-detail summary::-webkit-details-marker{{display:none;}}
+details.mitre-tech-detail[open] summary{{background:var(--surface3);border-bottom:1px solid var(--border);}}
+.mitre-tech-id{{font-size:0.6rem;font-weight:800;font-family:'Courier New',monospace;color:var(--amber);background:rgba(251,191,36,0.08);padding:1px 5px;border-radius:3px;border:1px solid rgba(251,191,36,0.18);flex-shrink:0;margin-top:1px;}}
+.mitre-tech-name{{font-size:0.72rem;color:var(--body-text);line-height:1.35;flex:1;}}
+.mitre-tech-chevron{{font-size:0.5rem;color:var(--muted2);transition:transform 0.2s;flex-shrink:0;margin-top:3px;margin-left:auto;}}
+details.mitre-tech-detail[open] .mitre-tech-chevron{{transform:rotate(90deg);color:var(--amber);}}
+.mitre-tech-body{{padding:10px 10px 11px;background:var(--surface);}}
+.mitre-tech-rel{{font-size:0.8rem;color:var(--body-text);line-height:1.6;margin-bottom:8px;padding-left:8px;border-left:2px solid rgba(251,191,36,0.3);}}
+.mitre-tech-link{{display:inline-flex;align-items:center;gap:4px;font-size:0.7rem;font-weight:600;color:var(--sec-soft);text-decoration:none;transition:color 0.15s;padding:3px 8px;border:1px solid var(--sec-border);border-radius:5px;}}
+.mitre-tech-link:hover{{color:var(--sec);border-color:var(--sec);}}
 .affected-table{{width:100%;border-collapse:collapse;}}
 .affected-table th{{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2);}}
 .affected-table td{{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}}
@@ -3806,7 +4070,7 @@ details.hunt-entry[open] .hunt-chevron{{transform:rotate(90deg);}}
   .fix-grid{{grid-template-columns:1fr;}}
   .share-footer{{flex-direction:column;}}
   .affected-table th,.affected-table td{{padding:8px;}}
-  .mitre-col{{min-width:110px;}}
+  .mitre-col{{min-width:130px;}}
   .popover-grid{{grid-template-columns:1fr;}}
   .popover-box{{padding:18px 16px 16px;}}
 }}
@@ -3980,30 +4244,39 @@ function closeOverlay(e){{
   document.body.style.overflow='';
 }}
 document.addEventListener('keydown',function(e){{if(e.key==='Escape')closeOverlay();}});
+var MITRE_TACTIC_DESC={{
+  'Reconnaissance':'The adversary is gathering information to plan future operations — identifying targets, mapping infrastructure, or probing defenses before striking.',
+  'Resource Development':'The adversary is acquiring or building capabilities: purchasing domains, setting up infrastructure, obtaining tools, or developing malware.',
+  'Initial Access':'The adversary is trying to get a foothold. Common methods include phishing, exploiting public-facing applications, and leveraging valid credentials.',
+  'Execution':'The adversary is running malicious code on a local or remote system to carry out their objectives — via scripts, native APIs, or exploited applications.',
+  'Persistence':'The adversary is maintaining their foothold so they survive reboots, credential changes, and re-imaging. They want to stay in, not just get in.',
+  'Privilege Escalation':'The adversary is gaining higher-level permissions — moving from user to admin or from standard process to SYSTEM — to unlock restricted resources.',
+  'Defense Evasion':'The adversary is avoiding detection. Techniques include disabling security tools, obfuscating code, masquerading as legitimate processes, and clearing logs.',
+  'Credential Access':'The adversary is stealing passwords, tokens, and keys — through keylogging, dumping memory, or exploiting authentication weaknesses.',
+  'Discovery':'The adversary is learning about the environment: what systems exist, who has access, how the network is laid out, and where the valuable data lives.',
+  'Lateral Movement':'The adversary is spreading through the network — pivoting from an initial beachhead to reach high-value targets using stolen credentials and trust relationships.',
+  'Collection':'The adversary is gathering data relevant to their goal: emails, files, clipboard contents, screenshots, credentials, or sensitive records.',
+  'Command and Control':'The adversary is communicating with compromised systems — issuing commands, receiving data, and maintaining covert channels to control the operation.',
+  'Exfiltration':'The adversary is stealing your data — compressing, encrypting, and transferring it to attacker-controlled infrastructure, often over legitimate channels.',
+  'Impact':'The adversary is disrupting, destroying, or manipulating your systems — through ransomware, data deletion, manipulation, or denial of service.',
+}};
 function openMitrePopover(e,btn){{
   e.stopPropagation();
   var raw=btn.getAttribute('data-mitre');
   if(!raw)return;
   var d;try{{d=JSON.parse(raw);}}catch(err){{return;}}
   var html='';
-  if(d.type==='technique'){{
-    html='<span class="popover-type-tag technique">Technique</span>'+
-      '<div class="popover-title">'+escHtml(d.name)+'</div>'+
-      '<div class="popover-subtitle">'+escHtml(d.id)+' &middot; '+escHtml(d.tactic)+'</div>'+
-      '<div class="popover-section-label">How This Relates to the Story</div>'+
-      '<div class="popover-relevance">'+escHtml(d.relevance||'')+'</div>'+
-      '<a href="'+escHtml(d.url)+'" class="popover-att-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a>';
-  }}else if(d.type==='tactic'){{
+  if(d.type==='tactic'){{
+    var tacDesc=MITRE_TACTIC_DESC[d.name]||'A phase in the ATT&amp;CK lifecycle describing how adversaries achieve a goal within a broader attack chain.';
     var techs=(d.techniques||[]).map(function(t){{
-      return '<span class="popover-tag purple">'+escHtml(t.id?t.id+' ':'')+escHtml(t.name||'')+'</span>';
+      return '<span class="popover-tag purple">'+escHtml((t.id?t.id+'\u2002':'')+escHtml(t.name||''))+'</span>';
     }}).join('');
-    var tacSlug=d.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-    var tacUrl='https://attack.mitre.org/tactics/';
-    html='<span class="popover-type-tag tactic">Tactic</span>'+
+    html='<span class="popover-type-tag tactic">ATT&amp;CK Tactic</span>'+
       '<div class="popover-title">'+escHtml(d.name)+'</div>'+
-      '<div class="popover-section-label">Relevant Techniques in This Story</div>'+
-      '<div class="popover-tags-row">'+techs+'</div>'+
-      '<a href="'+tacUrl+'" class="popover-att-link" target="_blank" rel="noopener">Browse Tactics on ATT&amp;CK &#8599;</a>';
+      '<div class="popover-section-label">What This Means</div>'+
+      '<div class="popover-body-text">'+tacDesc+'</div>'+
+      (techs?'<div class="popover-section-label">Techniques Relevant to This Story</div><div class="popover-tags-row">'+techs+'</div>':'')+
+      '<a href="https://attack.mitre.org/tactics/" class="popover-att-link" target="_blank" rel="noopener">Browse ATT&amp;CK Tactics &#8599;</a>';
   }}
   _showOverlay(html);
 }}
@@ -4050,12 +4323,22 @@ def _write_story_pages(data):
             f.write(_story_redirect_html(story, story_id))
         count += 1
     for i, story in enumerate(data.get("cyber_stories", []), 1):
-        story_id = f"story-cyber-{i}"
-        with open(f"output/s/{story_id}.html", "w", encoding="utf-8") as f:
-            if story.get("security_detail"):
-                f.write(_build_security_detail_page(story, story_id, date))
-                print(f"  Wrote security advisory page: {story_id}.html")
-            else:
+        story_id  = f"story-cyber-{i}"
+        adv_id    = f"{date}-{story_id}" if date else story_id  # date-stamped, survives daily rebuilds
+        if story.get("security_detail"):
+            # Write the full advisory page under the dated filename (permanent URL)
+            with open(f"output/s/{adv_id}.html", "w", encoding="utf-8") as f:
+                f.write(_build_security_detail_page(story, story_id, date, advisory_id=adv_id))
+            print(f"  Wrote security advisory page: {adv_id}.html")
+            # Keep the plain story_id.html as a lightweight redirect to the dated advisory
+            def _adv_redirect(url):
+                return (f'<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'
+                        f'<meta http-equiv="refresh" content="0; url={url}">'
+                        f'<script>window.location.replace("{url}");</script></head><body></body></html>')
+            with open(f"output/s/{story_id}.html", "w", encoding="utf-8") as f:
+                f.write(_adv_redirect(f"{PAGES_URL}/s/{adv_id}.html"))
+        else:
+            with open(f"output/s/{story_id}.html", "w", encoding="utf-8") as f:
                 f.write(_story_redirect_html(story, story_id))
         count += 1
     return count
