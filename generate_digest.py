@@ -3116,7 +3116,7 @@ def generate_html(data):
     # esc() applied to today: in --rebuild mode it comes from disk (digest.json),
     # not strftime, so it must be treated as untrusted input.
     today    = esc(data.get("date", ""))
-    raw_date = data.get("date", "")
+    raw_date = data.get("date_iso", "")   # ISO format (e.g. "2026-04-13") — used for advisory page URLs and reaction IDs
     ai_html  = "\n".join(build_story_html(s, "#818cf8", i+1, f"story-ai-{i+1}",   raw_date) for i, s in enumerate(data.get("ai_stories", [])))
     cy_html  = "\n".join(build_story_html(s, "#34d399", i+1, f"story-cyber-{i+1}", raw_date) for i, s in enumerate(data.get("cyber_stories", [])))
     not_html = "\n".join(build_notable_html(item, i+1) for i, item in enumerate(data.get("notables", [])))
