@@ -2681,7 +2681,7 @@ window.cmClear = function() {
   cmHideStatus();
 };
 
-// ── Save card to KV and update share URL ──
+// ── Save card to KV and update share URL + advisory badge href ──
 async function cmSaveCard(story, color, articleEl) {
   if (!CM_WORKER_URL) return;
   try {
@@ -2693,47 +2693,79 @@ async function cmSaveCard(story, color, articleEl) {
     if (!res.ok) return;
     const { id } = await res.json();
     if (!id) return;
-    const shareUrl = window.location.origin + window.location.pathname + '?card=' + id;
-    if (articleEl) articleEl.dataset.shareUrl = shareUrl;
+    const base     = window.location.origin + window.location.pathname;
+    const shareUrl = base + '?card=' + id;
+    if (articleEl) {
+      articleEl.dataset.shareUrl = shareUrl;
+      // Wire up the advisory badge to its persistent KV-backed URL
+      const advLink = articleEl.querySelector('.sec-advisory-link');
+      if (advLink) {
+        const advUrl = base + '?card=' + id + '&advisory=1';
+        advLink.href = advUrl;
+        // Replace onclick with a real navigation so Copy Link captures the right URL
+        advLink.onclick = function(e) { e.stopPropagation(); };
+      }
+    }
   } catch { /* silent — share still works with the generic URL */ }
 }
 
 // ── On load: if ?card=<id> is in the URL, fetch and render that card ──
 (function() {
-  const cardId = new URLSearchParams(window.location.search).get('card');
+  const params    = new URLSearchParams(window.location.search);
+  const cardId    = params.get('card');
+  const openAdv   = params.get('advisory') === '1';
   if (!cardId || !CM_WORKER_URL) return;
 
   // Switch to Card Maker tab and show loading state
   const tabBtn = document.getElementById('tab-cardmaker');
   if (tabBtn) switchTab('cardmaker', tabBtn);
-  cmStatus('loading', 'Loading shared card&hellip;');
+  cmStatus('loading', openAdv ? 'Loading advisory&hellip;' : 'Loading shared card&hellip;');
 
   fetch(CM_WORKER_URL + '/card/' + cardId)
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(({ story, color }) => {
       const cardHtml = cmRenderCard(story, color || '#f472b6');
       const out = document.getElementById('cm-output');
+      const label = openAdv ? 'Advisory' : 'Shared Card';
       out.innerHTML = `
         <div class="cm-output-header">
-          <span class="cm-output-label">Shared Card</span>
+          <span class="cm-output-label">${label}</span>
           <div class="cm-actions">
             <button class="cm-action-btn" onclick="cmClear()">&#x2715; Clear</button>
           </div>
         </div>
         <div id="cm-card-wrap">${cardHtml}</div>`;
-      // Collapse the card before the first paint so it starts closed
       const card = out.querySelector('.story-card');
       if (card) card.classList.remove('open');
       cmHideStatus();
-      // After layout settles: scroll to card, then pulse the highlight
+
+      // Wire up the advisory badge href to the persistent URL for this card
+      if (card) {
+        const advLink = card.querySelector('.sec-advisory-link');
+        if (advLink) {
+          const base   = window.location.origin + window.location.pathname;
+          const advUrl = base + '?card=' + cardId + '&advisory=1';
+          advLink.href = advUrl;
+          advLink.onclick = function(e) { e.stopPropagation(); };
+        }
+        card.dataset.shareUrl = window.location.origin + window.location.pathname + '?card=' + cardId;
+      }
+
       requestAnimationFrame(() => requestAnimationFrame(() => {
         if (!card) return;
-        card.dataset.shareUrl = window.location.href;
         card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        setTimeout(() => {
-          card.classList.add('story-highlight');
-          card.addEventListener('animationend', () => card.classList.remove('story-highlight'), { once: true });
-        }, 700); // let the scroll land before the glow fires
+
+        // If ?advisory=1: open the advisory modal right after the scroll lands
+        if (openAdv && story.security_detail) {
+          setTimeout(() => {
+            cmOpenAdvisory(story.security_detail, story.security_type, story.headline);
+          }, 600);
+        } else {
+          setTimeout(() => {
+            card.classList.add('story-highlight');
+            card.addEventListener('animationend', () => card.classList.remove('story-highlight'), { once: true });
+          }, 700);
+        }
       }));
     })
     .catch(() => cmStatus('error', '&#x26A0; Could not load shared card — it may have expired (cards are kept for 30 days).'));
