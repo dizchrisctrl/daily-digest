@@ -3386,28 +3386,51 @@ def _build_security_detail_page(story, story_id, date=""):
     tl_exploited = _tl_step("Exploited in Wild", tl.get("exploited_in_wild"), "red" if tl.get("exploited_in_wild") else "empty")
     tl_patched   = _tl_step("Patch Released", tl.get("patch_released"), "green" if tl.get("patch_released") else ("amber" if patch_status == "Mitigation Only" else "empty"))
 
-    # ── MITRE techniques ──────────────────────────────────────────────────────
-    mitre_html = ""
-    for i, t in enumerate(sd.get("mitre_techniques", [])):
-        tid    = _a(t.get("id", ""))
-        tname  = _a(t.get("name", ""))
-        tactic = _a(t.get("tactic", ""))
-        rel    = _a(t.get("relevance", ""))
-        att_url = f"https://attack.mitre.org/techniques/{tid.replace('.', '/')}/"
-        open_attr = " open" if i == 0 else ""
-        mitre_html += f"""
-        <details class="mitre-entry"{open_attr}>
-          <summary>
-            <span class="mitre-id">{tid}</span>
-            <span class="mitre-tactic">{tactic}</span>
-            <span class="mitre-name">{tname}</span>
-            <span class="mitre-chevron">&#9658;</span>
-          </summary>
-          <div class="mitre-body">
-            <div class="mitre-relevance">{rel}</div>
-            <a href="{_a(att_url)}" class="mitre-att-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a>
-          </div>
-        </details>"""
+    # ── MITRE ATT&CK map (navigator-style) ───────────────────────────────────
+    import collections as _coll
+    _mitre_techs = sd.get("mitre_techniques", [])
+    _tac_groups: dict = _coll.OrderedDict()
+    for _mt in _mitre_techs:
+        _tac_key = _mt.get("tactic", "Unknown")
+        if _tac_key not in _tac_groups:
+            _tac_groups[_tac_key] = []
+        _tac_groups[_tac_key].append(_mt)
+
+    _mitre_cols = ""
+    for _tac_name, _techs in _tac_groups.items():
+        _tac_data = json.dumps({
+            "type": "tactic", "name": _tac_name,
+            "techniques": [{"id": _t.get("id",""), "name": _t.get("name","")} for _t in _techs],
+        })
+        _tech_cells = ""
+        for _t in _techs:
+            _tid  = _t.get("id", "")
+            _tnam = _t.get("name", "")
+            _rel  = _t.get("relevance", "")
+            _aurl = f"https://attack.mitre.org/techniques/{_tid.replace('.','/')}/"
+            _td   = json.dumps({"type": "technique", "id": _tid, "name": _tnam,
+                                "tactic": _tac_name, "relevance": _rel, "url": _aurl})
+            _tech_cells += (
+                f'<button class="mitre-tech-cell" data-mitre="{_a(_td)}"'
+                f' onclick="openMitrePopover(event,this)">'
+                f'<span class="mitre-tech-id">{_a(_tid)}</span>'
+                f'<span class="mitre-tech-name">{_a(_tnam)}</span></button>'
+            )
+        _cnt = len(_techs)
+        _mitre_cols += (
+            f'<div class="mitre-col">'
+            f'<button class="mitre-tactic-hdr" data-mitre="{_a(_tac_data)}"'
+            f' onclick="openMitrePopover(event,this)">'
+            f'<span class="mitre-tactic-lbl">{_a(_tac_name)}</span>'
+            f'<span class="mitre-tactic-cnt">{_cnt} technique{"s" if _cnt != 1 else ""}</span>'
+            f'</button>'
+            f'<div class="mitre-techs">{_tech_cells}</div></div>'
+        )
+    mitre_html = (
+        f'<div class="mitre-map">{_mitre_cols}</div>'
+        if _mitre_cols else
+        '<p style="color:var(--muted2);font-size:0.88rem;padding:8px 0">No MITRE techniques mapped for this advisory.</p>'
+    )
 
     # ── Affected products ─────────────────────────────────────────────────────
     prod_rows = ""
@@ -3506,38 +3529,25 @@ def _build_security_detail_page(story, story_id, date=""):
     ioc_groups += _ioc_group("file-paths",    "File Paths / Artifacts",       iocs.get("file_paths", []))
     ioc_groups += _ioc_group("uri-patterns",  "Suspicious URI Patterns",      iocs.get("uri_patterns", []))
 
-    # ── Threat actor ──────────────────────────────────────────────────────────
+    # ── Threat actor (inline tag + popover) ───────────────────────────────────
     ta = sd.get("threat_actor")
-    ta_html = ""
+    ta_tag_html = ""
     if ta and isinstance(ta, dict) and ta.get("name"):
-        aliases = "".join(f'<span class="ta-alias">{_a(a)}</span>' for a in (ta.get("aliases") or []))
-        ttps    = "".join(f'<span class="ta-ttp">{_a(t)}</span>' for t in (ta.get("known_ttps") or []))
-        ta_html = f"""
-      <div class="sec-block">
-        <div class="sec-block-header">
-          <span class="sec-block-icon">&#9670;</span>
-          <span class="sec-block-title" style="color:var(--purple)">Attributed Threat Actor</span>
-          <span class="conf-badge">{_a(ta.get("attribution_confidence","Unknown"))} Confidence</span>
-        </div>
-        <div class="sec-block-body">
-          <div class="ta-card">
-            <div class="ta-header">
-              <div class="ta-avatar">&#9760;</div>
-              <div class="ta-name-wrap">
-                <div class="ta-name">{_a(ta.get("name",""))}</div>
-                <div class="ta-aliases">{aliases}</div>
-              </div>
-            </div>
-            <div class="ta-grid">
-              <div class="ta-cell"><div class="ta-cell-label">Origin</div><div class="ta-cell-value">{_a(ta.get("origin",""))}</div></div>
-              <div class="ta-cell"><div class="ta-cell-label">Motivation</div><div class="ta-cell-value purple">{_a(ta.get("motivation",""))}</div></div>
-            </div>
-            <div class="ta-desc">{_a(ta.get("description",""))}</div>
-            <div class="ta-ttps-label">Known TTPs</div>
-            <div class="ta-ttps">{ttps}</div>
-          </div>
-        </div>
-      </div>"""
+        _ta_data = json.dumps({
+            "name": ta.get("name", ""),
+            "aliases": ta.get("aliases") or [],
+            "origin": ta.get("origin", ""),
+            "motivation": ta.get("motivation", ""),
+            "description": ta.get("description", ""),
+            "known_ttps": ta.get("known_ttps") or [],
+            "attribution_confidence": ta.get("attribution_confidence", ""),
+            "story_relevance": ta.get("story_relevance", ""),
+        })
+        ta_tag_html = (
+            f'<button class="ta-inline-tag" data-ta="{_a(_ta_data)}"'
+            f' onclick="openTAPopover(event,this)">'
+            f'&#9670; {_a(ta.get("name",""))} &#8594;</button>'
+        )
 
     # ── Visual diagram ────────────────────────────────────────────────────────
     svg_raw = story.get("visual_svg", "").strip()
@@ -3559,9 +3569,12 @@ def _build_security_detail_page(story, story_id, date=""):
       </div>"""
 
     # ── Share links ───────────────────────────────────────────────────────────
-    _eu  = urllib.parse.quote(page_url)
-    _tw  = urllib.parse.quote(f"\U0001f6e1 {headline}\n\nCVSS {cvss_score or 'N/A'} · {severity} · {patch_status}")
+    _eu    = urllib.parse.quote(page_url)
+    _tw    = urllib.parse.quote(f"\U0001f6e1 {headline}\n\nCVSS {cvss_score or 'N/A'} · {severity} · {patch_status}")
+    _wa    = urllib.parse.quote(f"\U0001f6e1 {headline}\n{page_url}")
     x_url  = f"https://twitter.com/intent/tweet?text={_tw}&url={_eu}"
+    wa_url = f"https://wa.me/?text={_wa}"
+    tg_url = f"https://t.me/share/url?url={_eu}&text={urllib.parse.quote(headline)}"
     li_url = f"https://www.linkedin.com/sharing/share-offsite/?url={_eu}"
 
     # ── Full page ─────────────────────────────────────────────────────────────
@@ -3668,21 +3681,17 @@ body{{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacS
 .tl-label{{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted2);text-align:center;margin-bottom:4px;}}
 .tl-date{{font-size:0.8rem;font-weight:700;color:var(--text);text-align:center;font-family:'Courier New',monospace;}}
 .tl-date.na{{color:var(--muted2);font-style:italic;font-size:0.72rem;}}
-.mitre-list{{display:flex;flex-direction:column;gap:8px;}}
-details.mitre-entry{{border:1px solid var(--border);border-radius:9px;overflow:hidden;transition:border-color 0.2s;}}
-details.mitre-entry[open]{{border-color:var(--border2);}}
-details.mitre-entry summary{{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;background:var(--surface2);transition:background 0.15s;}}
-details.mitre-entry summary:hover{{background:var(--surface3);}}
-details.mitre-entry summary::-webkit-details-marker{{display:none;}}
-.mitre-id{{font-size:0.72rem;font-weight:800;font-family:'Courier New',monospace;background:rgba(239,68,68,0.12);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);border-radius:5px;padding:2px 8px;flex-shrink:0;}}
-.mitre-tactic{{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;flex-shrink:0;background:var(--surface3);color:var(--muted2);border:1px solid var(--border2);}}
-.mitre-name{{font-size:0.88rem;font-weight:600;color:var(--text);flex:1;min-width:0;}}
-.mitre-chevron{{font-size:0.6rem;color:var(--muted2);transition:transform 0.2s;flex-shrink:0;}}
-details.mitre-entry[open] .mitre-chevron{{transform:rotate(90deg);}}
-.mitre-body{{padding:12px 14px;border-top:1px solid var(--border);background:var(--surface);}}
-.mitre-relevance{{font-size:0.88rem;color:var(--muted);line-height:1.65;}}
-.mitre-att-link{{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:0.75rem;font-weight:600;color:var(--sec-soft);text-decoration:none;transition:color 0.15s;}}
-.mitre-att-link:hover{{color:var(--sec);}}
+.mitre-map{{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;padding-bottom:4px;}}
+.mitre-col{{display:flex;flex-direction:column;gap:5px;min-width:130px;flex:1;}}
+.mitre-tactic-hdr{{background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(239,68,68,0.06));border:1px solid rgba(239,68,68,0.3);border-radius:7px;padding:9px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:3px;transition:border-color 0.15s,background 0.15s;width:100%;text-align:left;font-family:inherit;}}
+.mitre-tactic-hdr:hover{{border-color:var(--sec-soft);background:rgba(239,68,68,0.16);}}
+.mitre-tactic-lbl{{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sec-soft);line-height:1.3;}}
+.mitre-tactic-cnt{{font-size:0.58rem;color:var(--muted2);}}
+.mitre-techs{{display:flex;flex-direction:column;gap:4px;}}
+.mitre-tech-cell{{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 10px;cursor:pointer;display:flex;flex-direction:column;gap:3px;transition:border-color 0.15s,background 0.15s;width:100%;text-align:left;font-family:inherit;}}
+.mitre-tech-cell:hover{{border-color:var(--border2);background:var(--surface3);}}
+.mitre-tech-id{{font-size:0.63rem;font-weight:800;font-family:'Courier New',monospace;color:var(--amber);}}
+.mitre-tech-name{{font-size:0.72rem;color:var(--body-text);line-height:1.35;}}
 .affected-table{{width:100%;border-collapse:collapse;}}
 .affected-table th{{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2);}}
 .affected-table td{{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}}
@@ -3745,28 +3754,45 @@ details.hunt-entry[open] .hunt-chevron{{transform:rotate(90deg);}}
 .ioc-copy-single{{flex-shrink:0;background:none;border:none;cursor:pointer;color:var(--muted2);font-size:0.72rem;padding:2px 6px;border-radius:4px;transition:color 0.15s;font-family:inherit;}}
 .ioc-copy-single:hover{{color:var(--cyber);}}
 .ioc-no-data{{padding:12px;font-size:0.83rem;color:var(--muted2);font-style:italic;text-align:center;}}
-.ta-card{{background:rgba(167,139,250,0.04);border:1px solid rgba(167,139,250,0.2);border-radius:12px;padding:18px 20px;}}
-.ta-header{{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}}
-.ta-avatar{{width:48px;height:48px;border-radius:10px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.25);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}}
-.ta-name{{font-size:1.05rem;font-weight:800;color:var(--purple);margin-bottom:4px;}}
-.ta-aliases{{display:flex;flex-wrap:wrap;gap:5px;}}
-.ta-alias{{font-size:0.63rem;font-weight:600;font-family:'Courier New',monospace;padding:2px 7px;border-radius:4px;background:var(--surface3);color:var(--muted2);border:1px solid var(--border2);}}
-.ta-grid{{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}}
-.ta-cell{{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 13px;}}
-.ta-cell-label{{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);margin-bottom:5px;}}
-.ta-cell-value{{font-size:0.88rem;font-weight:700;color:var(--text);}}
-.ta-cell-value.purple{{color:var(--purple);}}
-.ta-desc{{font-size:0.9rem;color:var(--body-text);line-height:1.7;margin-bottom:14px;}}
-.ta-ttps-label{{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:8px;}}
-.ta-ttps{{display:flex;flex-wrap:wrap;gap:6px;}}
-.ta-ttp{{font-size:0.72rem;font-weight:600;padding:4px 11px;border-radius:5px;background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.22);}}
+.ta-inline-tag{{display:inline-flex;align-items:center;gap:5px;font-size:0.63rem;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.28);cursor:pointer;transition:background 0.15s,border-color 0.15s;font-family:inherit;white-space:nowrap;}}
+.ta-inline-tag:hover{{background:rgba(167,139,250,0.18);border-color:rgba(167,139,250,0.45);}}
 .share-footer{{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}}
 .share-footer-text{{font-size:0.85rem;color:var(--muted);}}
 .share-footer-text strong{{color:var(--text);}}
 .share-footer-btns{{display:flex;flex-wrap:wrap;gap:7px;}}
 .share-opt{{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 13px;cursor:pointer;text-decoration:none;font-size:0.8rem;font-weight:600;color:var(--muted);transition:border-color 0.18s,color 0.18s;font-family:inherit;}}
 .share-opt:hover{{color:var(--text);border-color:var(--border2);}}
-.share-opt.x:hover{{border-color:#e7e7e7;color:#e7e7e7;}} .share-opt.linkedin:hover{{border-color:#0a66c2;color:#0a66c2;}} .share-opt.copy-link:hover{{border-color:var(--cyber);color:var(--cyber);}}
+.share-opt.x:hover{{border-color:#e7e7e7;color:#e7e7e7;}}
+.share-opt.whatsapp:hover{{border-color:#25d366;color:#25d366;}}
+.share-opt.telegram:hover{{border-color:#2aabee;color:#2aabee;}}
+.share-opt.linkedin:hover{{border-color:#0a66c2;color:#0a66c2;}}
+.share-opt.copy-link:hover{{border-color:var(--cyber);color:var(--cyber);}}
+.popover-overlay{{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.6);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;}}
+.popover-overlay.open{{opacity:1;pointer-events:all;}}
+.popover-box{{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:24px 24px 20px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto;transform:translateY(12px);transition:transform 0.2s;position:relative;}}
+.popover-overlay.open .popover-box{{transform:translateY(0);}}
+.popover-close{{position:absolute;top:14px;right:14px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.78rem;display:flex;align-items:center;justify-content:center;transition:color 0.15s;font-family:inherit;}}
+.popover-close:hover{{color:var(--text);}}
+.popover-type-tag{{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;padding:2px 9px;border-radius:4px;display:inline-block;margin-bottom:10px;}}
+.popover-type-tag.technique{{background:rgba(251,191,36,0.12);color:var(--amber);border:1px solid rgba(251,191,36,0.25);}}
+.popover-type-tag.tactic{{background:rgba(239,68,68,0.12);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}}
+.popover-type-tag.actor{{background:rgba(167,139,250,0.12);color:var(--purple);border:1px solid rgba(167,139,250,0.25);}}
+.popover-title{{font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:4px;line-height:1.3;}}
+.popover-subtitle{{font-size:0.75rem;font-weight:600;font-family:'Courier New',monospace;color:var(--muted2);margin-bottom:14px;}}
+.popover-section-label{{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:6px;margin-top:14px;}}
+.popover-body-text{{font-size:0.9rem;color:var(--body-text);line-height:1.7;}}
+.popover-relevance{{font-size:0.88rem;color:var(--muted);line-height:1.65;padding:10px 14px;background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.18);border-radius:8px;border-left:3px solid rgba(129,140,248,0.4);margin-top:6px;}}
+.popover-att-link{{display:inline-flex;align-items:center;gap:4px;margin-top:12px;font-size:0.75rem;font-weight:600;color:var(--sec-soft);text-decoration:none;transition:color 0.15s;}}
+.popover-att-link:hover{{color:var(--sec);}}
+.popover-tags-row{{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}}
+.popover-tag{{font-size:0.68rem;font-weight:600;padding:3px 9px;border-radius:5px;font-family:inherit;}}
+.popover-tag.purple{{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.22);}}
+.popover-tag.alias{{background:var(--surface3);color:var(--muted2);border:1px solid var(--border2);}}
+.popover-grid{{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}}
+.popover-cell{{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}}
+.popover-cell-label{{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);margin-bottom:4px;}}
+.popover-cell-value{{font-size:0.88rem;font-weight:700;color:var(--text);}}
+.popover-cell-value.purple{{color:var(--purple);}}
 .toast{{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface2);border:1px solid var(--cyber);color:var(--cyber);padding:8px 18px;border-radius:20px;font-size:0.78rem;font-weight:600;opacity:0;transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:9999;}}
 .toast.show{{opacity:1;transform:translateX(-50%) translateY(0);}}
 @media(max-width:640px){{
@@ -3778,9 +3804,11 @@ details.hunt-entry[open] .hunt-chevron{{transform:rotate(90deg);}}
   .sec-block-body{{padding:14px;}}
   .details-grid{{grid-template-columns:1fr 1fr;}}
   .fix-grid{{grid-template-columns:1fr;}}
-  .ta-grid{{grid-template-columns:1fr;}}
   .share-footer{{flex-direction:column;}}
   .affected-table th,.affected-table td{{padding:8px;}}
+  .mitre-col{{min-width:110px;}}
+  .popover-grid{{grid-template-columns:1fr;}}
+  .popover-box{{padding:18px 16px 16px;}}
 }}
 </style>
 </head>
@@ -3799,6 +3827,7 @@ details.hunt-entry[open] .hunt-chevron{{transform:rotate(90deg);}}
     <div class="hero-badges">
       <span class="type-badge">{type_icon} {_a(type_label)}</span>
       {live_badge}
+      {ta_tag_html}
     </div>
     <h1 class="hero-title">{_a(headline)}</h1>
     <div class="score-row">
@@ -3829,8 +3858,8 @@ details.hunt-entry[open] .hunt-chevron{{transform:rotate(90deg);}}
   </div>
 
   <div class="sec-block">
-    <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Techniques</span></div>
-    <div class="sec-block-body"><div class="mitre-list">{mitre_html}</div></div>
+    <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Map</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tactic or technique for details</span></div>
+    <div class="sec-block-body">{mitre_html}</div>
   </div>
 
   {products_html}
@@ -3874,20 +3903,30 @@ details.hunt-entry[open] .hunt-chevron{{transform:rotate(90deg);}}
     </div>
   </div>
 
-  {ta_html}
-
   <div class="share-footer">
     <div class="share-footer-text"><strong>Share this advisory</strong><br><span style="font-size:0.78rem;">Help your network patch faster.</span></div>
     <div class="share-footer-btns">
       <a href="{_a(x_url)}" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
+      <a href="{_a(wa_url)}" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
+      <a href="{_a(tg_url)}" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
       <a href="{_a(li_url)}" class="share-opt linkedin" target="_blank" rel="noopener">in Share</a>
       <button class="share-opt copy-link" onclick="copyPageLink(this)">&#128279; Copy Link</button>
     </div>
   </div>
 
 </main>
+
+<div class="popover-overlay" id="mitre-ta-overlay" onclick="closeOverlay(event)">
+  <div class="popover-box" id="mitre-ta-box" onclick="event.stopPropagation()">
+    <button class="popover-close" onclick="closeOverlay()">&#10005;</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <script>
+function escHtml(s){{
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}}
 function toggleConcept(btn,id){{
   var el=document.getElementById(id);
   if(!el)return;
@@ -3925,6 +3964,68 @@ function copyPageLink(btn){{
     setTimeout(function(){{btn.textContent=o;if(btn.classList)btn.classList.remove('copied');}},1800);
     showToast('Link copied');
   }});
+}}
+function _showOverlay(html){{
+  var ov=document.getElementById('mitre-ta-overlay');
+  var bx=document.getElementById('mitre-ta-box');
+  if(!ov||!bx)return;
+  bx.innerHTML='<button class="popover-close" onclick="closeOverlay()">&#10005;</button>'+html;
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+}}
+function closeOverlay(e){{
+  if(e&&e.target!==document.getElementById('mitre-ta-overlay'))return;
+  var ov=document.getElementById('mitre-ta-overlay');
+  if(ov)ov.classList.remove('open');
+  document.body.style.overflow='';
+}}
+document.addEventListener('keydown',function(e){{if(e.key==='Escape')closeOverlay();}});
+function openMitrePopover(e,btn){{
+  e.stopPropagation();
+  var raw=btn.getAttribute('data-mitre');
+  if(!raw)return;
+  var d;try{{d=JSON.parse(raw);}}catch(err){{return;}}
+  var html='';
+  if(d.type==='technique'){{
+    html='<span class="popover-type-tag technique">Technique</span>'+
+      '<div class="popover-title">'+escHtml(d.name)+'</div>'+
+      '<div class="popover-subtitle">'+escHtml(d.id)+' &middot; '+escHtml(d.tactic)+'</div>'+
+      '<div class="popover-section-label">How This Relates to the Story</div>'+
+      '<div class="popover-relevance">'+escHtml(d.relevance||'')+'</div>'+
+      '<a href="'+escHtml(d.url)+'" class="popover-att-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a>';
+  }}else if(d.type==='tactic'){{
+    var techs=(d.techniques||[]).map(function(t){{
+      return '<span class="popover-tag purple">'+escHtml(t.id?t.id+' ':'')+escHtml(t.name||'')+'</span>';
+    }}).join('');
+    var tacSlug=d.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    var tacUrl='https://attack.mitre.org/tactics/';
+    html='<span class="popover-type-tag tactic">Tactic</span>'+
+      '<div class="popover-title">'+escHtml(d.name)+'</div>'+
+      '<div class="popover-section-label">Relevant Techniques in This Story</div>'+
+      '<div class="popover-tags-row">'+techs+'</div>'+
+      '<a href="'+tacUrl+'" class="popover-att-link" target="_blank" rel="noopener">Browse Tactics on ATT&amp;CK &#8599;</a>';
+  }}
+  _showOverlay(html);
+}}
+function openTAPopover(e,btn){{
+  e.stopPropagation();
+  var raw=btn.getAttribute('data-ta');
+  if(!raw)return;
+  var d;try{{d=JSON.parse(raw);}}catch(err){{return;}}
+  var aliases=(d.aliases||[]).map(function(a){{return '<span class="popover-tag alias">'+escHtml(a)+'</span>';}}).join('');
+  var ttps=(d.known_ttps||[]).map(function(t){{return '<span class="popover-tag purple">'+escHtml(t)+'</span>';}}).join('');
+  var conf=d.attribution_confidence?'<span class="conf-badge" style="margin-left:8px">'+escHtml(d.attribution_confidence)+' Confidence</span>':'';
+  var html='<span class="popover-type-tag actor">Threat Actor</span>'+conf+
+    '<div class="popover-title" style="color:var(--purple)">'+escHtml(d.name)+'</div>'+
+    (aliases?'<div class="popover-tags-row" style="margin-bottom:10px">'+aliases+'</div>':'')+
+    '<div class="popover-grid">'+
+      '<div class="popover-cell"><div class="popover-cell-label">Origin</div><div class="popover-cell-value">'+escHtml(d.origin||'Unknown')+'</div></div>'+
+      '<div class="popover-cell"><div class="popover-cell-label">Motivation</div><div class="popover-cell-value purple">'+escHtml(d.motivation||'Unknown')+'</div></div>'+
+    '</div>'+
+    (d.description?'<div class="popover-section-label">Description</div><div class="popover-body-text">'+escHtml(d.description)+'</div>':'')+
+    (d.story_relevance?'<div class="popover-section-label">Story Relevance</div><div class="popover-relevance">'+escHtml(d.story_relevance)+'</div>':'')+
+    (ttps?'<div class="popover-section-label">Known TTPs</div><div class="popover-tags-row">'+ttps+'</div>':'');
+  _showOverlay(html);
 }}
 document.addEventListener('DOMContentLoaded',function(){{
   document.querySelectorAll('.cvss-bar-fill').forEach(function(bar){{
