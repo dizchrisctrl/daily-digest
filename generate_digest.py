@@ -391,10 +391,21 @@ STORY_SCHEMA = {
             },
             "description": "For vulnerability/CVE stories: list each affected system with its version range. Use an empty array for non-vulnerability stories.",
         },
+        "security_type": {
+            "type": ["string", "null"],
+            "enum": ["vulnerability", "breach", "threat_actor", None],
+            "description": (
+                "Classify this story's security content. Set 'vulnerability' when the story centers on a specific "
+                "exploitable flaw (CVE or otherwise). Set 'breach' for confirmed data breaches, ransomware incidents, "
+                "or intrusions. Set 'threat_actor' when the primary focus is attribution to a named group or actor. "
+                "Set null for general security news that does not have a specific vuln/breach/actor focus."
+            ),
+        },
     },
     "required": ["headline","pub_date","tldr","why_it_matters","concept_title","concept_explained",
                  "visual_svg","public_opinion","opinion_assessment","devils_advocate","quiz","deep_dive",
-                 "deep_dive_impact","deep_dive_outlook","source_url","source","tech_tags","affected_systems"],
+                 "deep_dive_impact","deep_dive_outlook","source_url","source","tech_tags","affected_systems",
+                 "security_type"],
 }
 
 SECTION_TOOL = {
@@ -431,6 +442,7 @@ Guidelines:
 - deep_dive_outlook: 2-3 sentences on what happens next — what this story likely accelerates or disrupts, what to watch in the coming weeks or months. Grounded and specific, not vague.
 - tech_tags: 0-3 tags max. Only include when you have specific, meaningful context to share. Skip entirely for vulnerabilities if no specific version or tool is confirmed. Never use generic terms (AI, cloud, encryption). Each tag needs a clear description and a relevance sentence tied to this exact story.
 - affected_systems: for vulnerability stories, list each affected system with its version range. Empty array otherwise.
+- security_type: classify this story's security content — 'vulnerability' (specific CVE or exploitable flaw), 'breach' (confirmed data breach, ransomware, intrusion), 'threat_actor' (story centers on attribution to a named group). Set null for general security news without a specific vuln/breach/actor focus. For AI section stories, set null unless the story is genuinely about a security incident.
 
 COMMUNITY REACTIONS:
 {forum_data}
@@ -611,6 +623,195 @@ def call_claude_for_notables(client, today, articles):
             print(f"  WARNING: attempt {attempt} failed ({exc}), retrying...")
 
 
+# ── Security Detail Schema ─────────────────────────────────────────────────────
+SECURITY_DETAIL_TOOL = {
+    "name": "publish_security_detail",
+    "description": "Publish a structured security advisory for a vulnerability, breach, or threat actor story",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "title": {"type": "string", "description": "Short canonical name. For vulns: CVE ID + product. For breaches: org + incident type. For actors: actor name."},
+            "description": {"type": "string", "description": "2-3 sentence plain-English summary of what this is and why it matters."},
+            "attack_vector_summary": {"type": "string", "description": "1-2 sentence description of the attack mechanism at a technical but accessible level."},
+            "cve_id": {"type": ["string", "null"], "description": "CVE identifier if applicable (e.g. 'CVE-2025-20188'). Null otherwise."},
+            "cvss_score": {"type": ["number", "null"], "description": "CVSS v3.1 base score (0.0-10.0). Null if not applicable or not yet assigned."},
+            "cvss_vector": {"type": ["string", "null"], "description": "CVSS v3.1 vector string. Null if unavailable."},
+            "severity": {"type": "string", "enum": ["Critical", "High", "Medium", "Low", "Informational"]},
+            "patch_status": {"type": "string", "enum": ["Patch Available", "Mitigation Only", "No Fix Yet", "Under Investigation"]},
+            "patch_timeline": {
+                "type": "object",
+                "properties": {
+                    "disclosed":         {"type": ["string", "null"], "description": "YYYY-MM-DD or null"},
+                    "exploited_in_wild": {"type": ["string", "null"], "description": "YYYY-MM-DD or null"},
+                    "patch_released":    {"type": ["string", "null"], "description": "YYYY-MM-DD or null"},
+                },
+                "required": ["disclosed", "exploited_in_wild", "patch_released"],
+            },
+            "mitre_techniques": {
+                "type": "array", "minItems": 1, "maxItems": 5,
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "id":        {"type": "string", "description": "ATT&CK ID e.g. 'T1190'"},
+                        "name":      {"type": "string"},
+                        "tactic":    {"type": "string", "description": "Parent tactic name e.g. 'Initial Access'"},
+                        "relevance": {"type": "string", "description": "1 sentence on how this applies to this story"},
+                    },
+                    "required": ["id", "name", "tactic", "relevance"],
+                },
+            },
+            "affected_products": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "vendor":            {"type": "string"},
+                        "product":           {"type": "string"},
+                        "versions_affected": {"type": "string"},
+                        "fixed_in":          {"type": "string", "description": "Fixed version, 'Mitigate: [action]', or 'No fix yet'"},
+                    },
+                    "required": ["vendor", "product", "versions_affected", "fixed_in"],
+                },
+            },
+            "applicability_checklist": {
+                "type": "array", "minItems": 2, "maxItems": 6,
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "condition": {"type": "string", "description": "Condition starting with 'You' or 'Your environment'"},
+                        "at_risk":   {"type": "boolean", "description": "True = this condition means the reader IS at risk"},
+                    },
+                    "required": ["condition", "at_risk"],
+                },
+            },
+            "fix_immediate_steps": {
+                "type": "array", "minItems": 2, "maxItems": 5,
+                "items": {"type": "string", "description": "Specific actionable step for 24-72 hours"},
+            },
+            "fix_strategic_steps": {
+                "type": "array", "minItems": 2, "maxItems": 5,
+                "items": {"type": "string", "description": "Longer-term remediation or hardening recommendation"},
+            },
+            "concept_tags": {
+                "type": "array", "minItems": 2, "maxItems": 5,
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "tag":        {"type": "string", "description": "Short concept name (2-4 words)"},
+                        "definition": {"type": "string", "description": "1-2 sentences defining the concept in plain English"},
+                        "relevance":  {"type": "string", "description": "1-2 sentences connecting this concept to the specific story"},
+                    },
+                    "required": ["tag", "definition", "relevance"],
+                },
+            },
+            "threat_hunting_signals": {
+                "type": "array", "minItems": 2, "maxItems": 5,
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "signal":      {"type": "string"},
+                        "description": {"type": "string", "description": "What to look for, where to find it, why it indicates compromise"},
+                        "log_sources": {"type": "array", "items": {"type": "string"}},
+                        "priority":    {"type": "string", "enum": ["High", "Medium", "Low"]},
+                    },
+                    "required": ["signal", "description", "log_sources", "priority"],
+                },
+            },
+            "iocs": {
+                "type": "object",
+                "properties": {
+                    "note":         {"type": "string", "description": "Source attribution and mandatory verification caveat"},
+                    "hashes":       {"type": "array", "items": {"type": "string"}},
+                    "ips":          {"type": "array", "items": {"type": "string"}},
+                    "domains":      {"type": "array", "items": {"type": "string"}},
+                    "file_paths":   {"type": "array", "items": {"type": "string"}},
+                    "uri_patterns": {"type": "array", "items": {"type": "string"}},
+                },
+                "required": ["note", "hashes", "ips", "domains", "file_paths", "uri_patterns"],
+            },
+            "threat_actor": {
+                "type": ["object", "null"],
+                "description": "Populate only when source article includes credible named attribution. Null otherwise.",
+                "properties": {
+                    "name":                   {"type": "string"},
+                    "aliases":                {"type": "array", "items": {"type": "string"}},
+                    "origin":                 {"type": "string"},
+                    "motivation":             {"type": "string", "enum": ["Espionage", "Financial", "Hacktivism", "Destructive", "Unknown"]},
+                    "description":            {"type": "string"},
+                    "known_ttps":             {"type": "array", "items": {"type": "string"}},
+                    "attribution_confidence": {"type": "string", "enum": ["High", "Medium", "Low", "Unattributed"]},
+                },
+                "required": ["name", "aliases", "origin", "motivation", "description", "known_ttps", "attribution_confidence"],
+            },
+        },
+        "required": [
+            "title", "description", "attack_vector_summary", "severity", "patch_status",
+            "patch_timeline", "mitre_techniques", "affected_products", "applicability_checklist",
+            "fix_immediate_steps", "fix_strategic_steps", "concept_tags",
+            "threat_hunting_signals", "iocs",
+        ],
+    },
+}
+
+SECURITY_DETAIL_PROMPT = """Today is {today}. Write a structured security advisory for the story below.
+
+STORY (already synthesized):
+{story_context}
+
+Security type: {security_type}
+
+Guidelines:
+- mitre_techniques: Use official ATT&CK IDs and names. 2-5 techniques ordered from initial access inward.
+- affected_products: Extract from the story. If specific versions are not confirmed, write "All versions — see vendor advisory".
+- applicability_checklist: 3-6 items, self-assessable, starting with 'You' or 'Your environment'. Include at least one "NOT at risk" condition.
+- fix_immediate_steps: Specific and ordered. Name exact commands or settings where possible.
+- fix_strategic_steps: Architectural and process improvements, not just patching.
+- concept_tags: 3-5 concepts a non-specialist needs to understand the full implications.
+- threat_hunting_signals: Name specific log sources. Describe the exact observable pattern.
+- iocs.note: Always include a verification caveat. CRITICAL: Only include IOCs explicitly mentioned in the story. If none are reported, set all arrays to [] and state that clearly in the note. Never generate or infer IOC values.
+- threat_actor: Set to null unless the story includes credible, named attribution.
+- All dates in YYYY-MM-DD format. Null for unknown dates.
+
+Call the publish_security_detail tool with your advisory."""
+
+
+def call_claude_for_security_detail(client, today, story):
+    """Second-pass call to generate security advisory detail for flagged stories."""
+    story_context = json.dumps({
+        "headline":        story.get("headline", ""),
+        "tldr":            story.get("tldr", ""),
+        "why_it_matters":  story.get("why_it_matters", ""),
+        "concept_title":   story.get("concept_title", ""),
+        "concept_explained": story.get("concept_explained", ""),
+        "deep_dive":       story.get("deep_dive", ""),
+        "source":          story.get("source", ""),
+        "source_url":      story.get("source_url", ""),
+        "pub_date":        story.get("pub_date", ""),
+        "affected_systems": story.get("affected_systems", []),
+        "tech_tags":       story.get("tech_tags", []),
+    }, indent=2)
+    prompt = SECURITY_DETAIL_PROMPT.format(
+        today=today,
+        story_context=story_context,
+        security_type=story.get("security_type", "vulnerability"),
+    )
+    for attempt in range(1, 3):
+        response = client.messages.create(
+            model="claude-opus-4-6",
+            max_tokens=6000,
+            tools=[SECURITY_DETAIL_TOOL],
+            tool_choice={"type": "tool", "name": "publish_security_detail"},
+            messages=[{"role": "user", "content": prompt}],
+        )
+        try:
+            return _extract_tool_input(response, None, "call_claude_for_security_detail")
+        except RuntimeError as exc:
+            if attempt == 2:
+                print(f"  WARNING: security detail generation failed ({exc}), skipping")
+                return None
+            print(f"  WARNING: security detail attempt {attempt} failed ({exc}), retrying...")
+
+
 def generate_digest_json(ai_articles, cyber_articles, notables_articles):
     client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
     now    = datetime.now(timezone.utc)
@@ -623,6 +824,15 @@ def generate_digest_json(ai_articles, cyber_articles, notables_articles):
     cyber_stories = call_claude_for_section(client, today, cyber_articles, accent_color="#34d399")
     print("  -> Generating Notables...")
     notables = call_claude_for_notables(client, today, notables_articles)
+
+    # ── Second-pass: security detail for flagged stories ──────────────────────
+    for story in ai_stories + cyber_stories:
+        if story.get("security_type") in ("vulnerability", "breach", "threat_actor"):
+            hl = story.get("headline", "")[:60]
+            print(f"  -> Generating security advisory for: {hl}...")
+            detail = call_claude_for_security_detail(client, today, story)
+            if detail:
+                story["security_detail"] = detail
 
     return {"date": today, "date_iso": today_iso, "ai_stories": ai_stories, "cyber_stories": cyber_stories, "notables": notables}
 
@@ -1134,6 +1344,28 @@ kbd {
 .tag:hover { color: var(--text); border-color: var(--muted2); background: var(--surface3); }
 .tag-cve { background: rgba(239,68,68,0.08); color: #f87171; border-color: rgba(239,68,68,0.25); }
 .tag-cve:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.5); }
+
+/* ── Security Advisory Badge ── */
+.sec-advisory-row { margin-top: 8px; }
+.sec-advisory-link {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.63rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px;
+  padding: 4px 10px; border-radius: 6px;
+  background: rgba(239,68,68,0.12); color: #f87171;
+  border: 1px solid rgba(239,68,68,0.28);
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  animation: sec-badge-pulse 3s ease-in-out 2.5s infinite;
+}
+.sec-advisory-link:hover { background: rgba(239,68,68,0.22); border-color: #ef4444; color: #fff; }
+.sec-advisory-link.breach { background: rgba(251,191,36,0.1); color: #fbbf24; border-color: rgba(251,191,36,0.28); }
+.sec-advisory-link.breach:hover { background: rgba(251,191,36,0.2); border-color: #fbbf24; color: #fff; }
+.sec-advisory-link.threat-actor { background: rgba(167,139,250,0.1); color: #a78bfa; border-color: rgba(167,139,250,0.28); }
+.sec-advisory-link.threat-actor:hover { background: rgba(167,139,250,0.2); border-color: #a78bfa; color: #fff; }
+@keyframes sec-badge-pulse {
+  0%,90%,100% { box-shadow: none; }
+  95% { box-shadow: 0 0 0 3px rgba(239,68,68,0.2); }
+}
 
 /* ── Tag Modal ── */
 .tag-modal-overlay {
@@ -2442,8 +2674,23 @@ def build_story_html(story, color, num, story_id="", date=""):
     rxn_id      = esc(f"{date}-{anchor}") if date else esc(anchor)
     headline    = story.get('headline', '')
     tldr        = story.get('tldr', '')
-    # Per-story redirect page carries story-specific OG tags for rich social previews
+    # Per-story page carries story-specific OG tags; may be full advisory or redirect
     story_page  = f"{PAGES_URL}/s/{anchor}.html"
+
+    _sec_type = story.get("security_type")
+    _badge_meta = {
+        "vulnerability": ("", "&#9888;", "Vuln Advisory"),
+        "breach":        (" breach", "&#9650;", "Breach Report"),
+        "threat_actor":  (" threat-actor", "&#9670;", "Threat Actor"),
+    }
+    advisory_badge_html = ""
+    if _sec_type in _badge_meta and story.get("security_detail"):
+        _cls, _icon, _lbl = _badge_meta[_sec_type]
+        advisory_badge_html = (
+            f'<div class="sec-advisory-row" onclick="event.stopPropagation()">'
+            f'<a class="sec-advisory-link{_cls}" href="{esc(story_page)}" '
+            f'onclick="event.stopPropagation()">{_icon} {_lbl} &rarr;</a></div>'
+        )
     share_title = esc(headline)
     share_text  = esc(tldr)
     share_url   = esc(story_page)
@@ -2481,6 +2728,7 @@ def build_story_html(story, color, num, story_id="", date=""):
       {f'<div class="pub-date">&#x1F551; {esc(story.get("pub_date",""))}</div>' if story.get('pub_date') else ''}
       <div class="tldr"><span class="tldr-tag">TL;DR</span>{esc(story.get('tldr',''))}</div>
       {tags_html}
+      {advisory_badge_html}
       <div class="audio-row" onclick="event.stopPropagation()">
         <button class="audio-btn" onclick="toggleAudio(this.closest('.story-card'))" aria-label="Listen to this story">&#x1F50A; Listen</button>
         <button class="audio-stop" onclick="stopAudio(event,this.closest('.story-card'))" aria-label="Stop narration">&#x25A0; Stop</button>
@@ -3082,10 +3330,619 @@ def _story_redirect_html(story, story_id):
 </html>"""
 
 
+def _build_security_detail_page(story, story_id, date=""):
+    """Generate a full security advisory HTML page for a story with security_detail data."""
+    sd       = story.get("security_detail", {})
+    sec_type = story.get("security_type", "vulnerability")
+    headline = story.get("headline", "")
+    page_url = f"{PAGES_URL}/s/{story_id}.html"
+    index_url = f"{PAGES_URL}"
+    if date:
+        index_url = f"{PAGES_URL}/{date}.html"
+
+    def _a(s):
+        return str(s or "").replace("&", "&amp;").replace('"', "&quot;").replace("'", "&#39;").replace("<", "&lt;").replace(">", "&gt;")
+
+    # ── Accent color per type ─────────────────────────────────────────────────
+    accents = {
+        "vulnerability": ("#ef4444", "#f87171", "rgba(239,68,68,0.15)", "rgba(239,68,68,0.22)", "rgba(239,68,68,0.04)"),
+        "breach":        ("#fbbf24", "#fde68a", "rgba(251,191,36,0.15)", "rgba(251,191,36,0.22)", "rgba(251,191,36,0.04)"),
+        "threat_actor":  ("#a78bfa", "#c4b5fd", "rgba(167,139,250,0.15)", "rgba(167,139,250,0.22)", "rgba(167,139,250,0.04)"),
+    }
+    acc, acc_soft, acc_glow, acc_glow2, acc_bg = accents.get(sec_type, accents["vulnerability"])
+    acc_border = acc_glow2
+
+    type_labels = {"vulnerability": "Vulnerability Advisory", "breach": "Breach Report", "threat_actor": "Threat Actor Profile"}
+    type_label  = type_labels.get(sec_type, "Security Advisory")
+    badge_icons = {"vulnerability": "&#9888;", "breach": "&#9650;", "threat_actor": "&#9670;"}
+    type_icon   = badge_icons.get(sec_type, "&#9888;")
+
+    # ── CVSS bar ──────────────────────────────────────────────────────────────
+    cvss_score = sd.get("cvss_score")
+    cvss_pct   = f"{min(float(cvss_score or 0) / 10 * 100, 100):.0f}%" if cvss_score is not None else "0%"
+
+    severity = sd.get("severity", "")
+    SEV_CLS  = {"Critical": "sev-critical", "High": "sev-high", "Medium": "sev-medium", "Low": "sev-low"}
+    sev_cls  = SEV_CLS.get(severity, "sev-low")
+
+    patch_status = sd.get("patch_status", "")
+    PATCH_CLS = {"Patch Available": "patch-available", "Mitigation Only": "patch-mitigation",
+                 "No Fix Yet": "patch-none", "Under Investigation": "patch-none"}
+    patch_cls = PATCH_CLS.get(patch_status, "patch-none")
+    patch_icon = "&#10003;" if patch_status == "Patch Available" else "&#9888;"
+
+    live_badge = ""
+    if sec_type == "vulnerability" and sd.get("patch_timeline", {}).get("exploited_in_wild"):
+        live_badge = '<span class="live-badge"><span class="live-dot"></span>Active Exploitation</span>'
+
+    # ── Patch timeline ────────────────────────────────────────────────────────
+    tl = sd.get("patch_timeline", {})
+    def _tl_step(label, date_val, dot_cls):
+        d = _a(date_val or "")
+        date_html = f'<div class="tl-date">{d}</div>' if d else '<div class="tl-date na">Unknown</div>'
+        return f'<div class="tl-step"><div class="tl-dot {dot_cls}"></div><div class="tl-label">{_a(label)}</div>{date_html}</div>'
+
+    tl_disclosed = _tl_step("Disclosed", tl.get("disclosed"), "red" if tl.get("disclosed") else "empty")
+    tl_exploited = _tl_step("Exploited in Wild", tl.get("exploited_in_wild"), "red" if tl.get("exploited_in_wild") else "empty")
+    tl_patched   = _tl_step("Patch Released", tl.get("patch_released"), "green" if tl.get("patch_released") else ("amber" if patch_status == "Mitigation Only" else "empty"))
+
+    # ── MITRE techniques ──────────────────────────────────────────────────────
+    mitre_html = ""
+    for i, t in enumerate(sd.get("mitre_techniques", [])):
+        tid    = _a(t.get("id", ""))
+        tname  = _a(t.get("name", ""))
+        tactic = _a(t.get("tactic", ""))
+        rel    = _a(t.get("relevance", ""))
+        att_url = f"https://attack.mitre.org/techniques/{tid.replace('.', '/')}/"
+        open_attr = " open" if i == 0 else ""
+        mitre_html += f"""
+        <details class="mitre-entry"{open_attr}>
+          <summary>
+            <span class="mitre-id">{tid}</span>
+            <span class="mitre-tactic">{tactic}</span>
+            <span class="mitre-name">{tname}</span>
+            <span class="mitre-chevron">&#9658;</span>
+          </summary>
+          <div class="mitre-body">
+            <div class="mitre-relevance">{rel}</div>
+            <a href="{_a(att_url)}" class="mitre-att-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a>
+          </div>
+        </details>"""
+
+    # ── Affected products ─────────────────────────────────────────────────────
+    prod_rows = ""
+    for p in sd.get("affected_products", []):
+        fv = _a(p.get("fixed_in", ""))
+        fix_cls = "prod-fix none" if fv.lower().startswith(("no fix", "mitigate")) else "prod-fix"
+        prod_rows += f"""<tr>
+          <td><span class="prod-vendor">{_a(p.get('vendor',''))}</span></td>
+          <td><span class="prod-name">{_a(p.get('product',''))}</span></td>
+          <td><span class="prod-ver">{_a(p.get('versions_affected',''))}</span></td>
+          <td><span class="{fix_cls}">{fv}</span></td>
+        </tr>"""
+    products_html = f"""
+      <div class="sec-block">
+        <div class="sec-block-header"><span class="sec-block-icon">&#9888;</span><span class="sec-block-title red">Affected Products</span></div>
+        <div class="sec-block-body" style="padding:0;overflow-x:auto;">
+          <table class="affected-table">
+            <thead><tr><th>Vendor</th><th>Product</th><th>Versions Affected</th><th>Fixed In</th></tr></thead>
+            <tbody>{prod_rows}</tbody>
+          </table>
+        </div>
+      </div>""" if prod_rows else ""
+
+    # ── Applicability checklist ───────────────────────────────────────────────
+    apply_items = ""
+    for item in sd.get("applicability_checklist", []):
+        at_risk = item.get("at_risk", True)
+        icon  = "&#9888;" if at_risk else "&#10003;"
+        style = "" if at_risk else ' style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"'
+        text_style = "" if at_risk else ' style="color:var(--muted);"'
+        icon_style = "" if at_risk else ' style="color:var(--cyber)"'
+        apply_items += f'<div class="apply-item"{style}><span class="apply-check"{icon_style}>{icon}</span><span class="apply-text"{text_style}>{_a(item.get("condition",""))}</span></div>'
+
+    # ── Fix steps ─────────────────────────────────────────────────────────────
+    def _fix_steps(steps, panel_cls, num_cls):
+        html = ""
+        for i, s in enumerate(steps or [], 1):
+            html += f'<li class="fix-step"><span class="fix-step-num {num_cls}">{i}</span><span>{_a(s)}</span></li>'
+        return html
+
+    imm_steps = _fix_steps(sd.get("fix_immediate_steps", []), "immediate", "")
+    str_steps = _fix_steps(sd.get("fix_strategic_steps", []), "strategic", "")
+
+    # ── Concept tags ──────────────────────────────────────────────────────────
+    concept_pills = ""
+    concept_expands = ""
+    for ct in sd.get("concept_tags", []):
+        tag_id = "ct-" + re.sub(r'\W+', '-', ct.get("tag", "").lower())[:30]
+        concept_pills  += f'<button class="concept-tag-pill" onclick="toggleConcept(this,\'{_a(tag_id)}\')">{_a(ct.get("tag",""))}</button>'
+        concept_expands += f"""<div class="concept-tag-expand" id="{_a(tag_id)}">
+          <div class="concept-tag-expand-name">{_a(ct.get("tag",""))}</div>
+          <div class="concept-def">{_a(ct.get("definition",""))}</div>
+          <div class="concept-rel">{_a(ct.get("relevance",""))}</div>
+        </div>"""
+
+    # ── Threat hunting ────────────────────────────────────────────────────────
+    hunt_html = ""
+    for i, sig in enumerate(sd.get("threat_hunting_signals", [])):
+        prio = sig.get("priority", "Medium")
+        log_tags = "".join(f'<span class="hunt-log-tag">{_a(ls)}</span>' for ls in (sig.get("log_sources") or []))
+        open_attr = " open" if i == 0 else ""
+        hunt_html += f"""
+        <details class="hunt-entry"{open_attr}>
+          <summary>
+            <span class="hunt-priority {prio.lower()}">{_a(prio)}</span>
+            <span class="hunt-signal">{_a(sig.get("signal",""))}</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">{_a(sig.get("description",""))}</div>
+            {log_tags}
+          </div>
+        </details>"""
+
+    # ── IOCs ──────────────────────────────────────────────────────────────────
+    iocs = sd.get("iocs", {})
+    def _ioc_group(group_id, label, items):
+        if not items:
+            return f'<div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">{_a(label)}</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div>'
+        rows = "".join(
+            f'<div class="ioc-item"><span>{_a(v)}</span>'
+            f'<button class="ioc-copy-single" onclick="copyText(this,\'{_a(v)}\')">&#10064;</button></div>'
+            for v in items
+        )
+        return f"""<div class="ioc-group">
+          <div class="ioc-group-header">
+            <span class="ioc-group-label">{_a(label)}</span>
+            <button class="ioc-copy-btn" onclick="copyIOCGroup('{_a(group_id)}')">&#10064; Copy</button>
+          </div>
+          <div class="ioc-list" id="ioc-{_a(group_id)}">{rows}</div>
+        </div>"""
+
+    ioc_groups  = _ioc_group("hashes",       "File Hashes (SHA-256)",        iocs.get("hashes", []))
+    ioc_groups += _ioc_group("ips",           "Command &amp; Control IPs",    iocs.get("ips", []))
+    ioc_groups += _ioc_group("domains",       "Malicious Domains",            iocs.get("domains", []))
+    ioc_groups += _ioc_group("file-paths",    "File Paths / Artifacts",       iocs.get("file_paths", []))
+    ioc_groups += _ioc_group("uri-patterns",  "Suspicious URI Patterns",      iocs.get("uri_patterns", []))
+
+    # ── Threat actor ──────────────────────────────────────────────────────────
+    ta = sd.get("threat_actor")
+    ta_html = ""
+    if ta and isinstance(ta, dict) and ta.get("name"):
+        aliases = "".join(f'<span class="ta-alias">{_a(a)}</span>' for a in (ta.get("aliases") or []))
+        ttps    = "".join(f'<span class="ta-ttp">{_a(t)}</span>' for t in (ta.get("known_ttps") or []))
+        ta_html = f"""
+      <div class="sec-block">
+        <div class="sec-block-header">
+          <span class="sec-block-icon">&#9670;</span>
+          <span class="sec-block-title" style="color:var(--purple)">Attributed Threat Actor</span>
+          <span class="conf-badge">{_a(ta.get("attribution_confidence","Unknown"))} Confidence</span>
+        </div>
+        <div class="sec-block-body">
+          <div class="ta-card">
+            <div class="ta-header">
+              <div class="ta-avatar">&#9760;</div>
+              <div class="ta-name-wrap">
+                <div class="ta-name">{_a(ta.get("name",""))}</div>
+                <div class="ta-aliases">{aliases}</div>
+              </div>
+            </div>
+            <div class="ta-grid">
+              <div class="ta-cell"><div class="ta-cell-label">Origin</div><div class="ta-cell-value">{_a(ta.get("origin",""))}</div></div>
+              <div class="ta-cell"><div class="ta-cell-label">Motivation</div><div class="ta-cell-value purple">{_a(ta.get("motivation",""))}</div></div>
+            </div>
+            <div class="ta-desc">{_a(ta.get("description",""))}</div>
+            <div class="ta-ttps-label">Known TTPs</div>
+            <div class="ta-ttps">{ttps}</div>
+          </div>
+        </div>
+      </div>"""
+
+    # ── Visual diagram ────────────────────────────────────────────────────────
+    svg_raw = story.get("visual_svg", "").strip()
+    diagram_html = ""
+    if svg_raw:
+        diagram_html = f"""
+      <div class="sec-block">
+        <div class="sec-block-header"><span class="sec-block-icon">&#9654;</span><span class="sec-block-title red">Attack Flow</span></div>
+        <div class="sec-block-body">
+          <div class="diagram-wrap">
+            <div class="diagram-bar">
+              <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+              <span class="diagram-title">{_a(sd.get("title", headline))}</span>
+            </div>
+            <div class="diagram-svg">{sanitize_svg(svg_raw)}</div>
+          </div>
+          <div class="attack-vector-text">{_a(sd.get("attack_vector_summary",""))}</div>
+        </div>
+      </div>"""
+
+    # ── Share links ───────────────────────────────────────────────────────────
+    _eu  = urllib.parse.quote(page_url)
+    _tw  = urllib.parse.quote(f"\U0001f6e1 {headline}\n\nCVSS {cvss_score or 'N/A'} · {severity} · {patch_status}")
+    x_url  = f"https://twitter.com/intent/tweet?text={_tw}&url={_eu}"
+    li_url = f"https://www.linkedin.com/sharing/share-offsite/?url={_eu}"
+
+    # ── Full page ─────────────────────────────────────────────────────────────
+    og_desc = _a(sd.get("description", story.get("tldr", "")))[:280]
+    cve_str = f" — {_a(sd.get('cve_id',''))}" if sd.get("cve_id") else ""
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
+<title>{_a(sd.get("title", headline))}{cve_str} | The Daily Rundown</title>
+<meta property="og:type"        content="article">
+<meta property="og:site_name"   content="The Daily Rundown">
+<meta property="og:title"       content="{_a(sd.get('title', headline))}">
+<meta property="og:description" content="{og_desc}">
+<meta property="og:url"         content="{_a(page_url)}">
+<meta name="twitter:card"        content="summary">
+<meta name="twitter:title"       content="{_a(sd.get('title', headline))}">
+<meta name="twitter:description" content="{og_desc}">
+<style>
+:root {{
+  --bg:#0b0d16; --surface:#12152a; --surface2:#1a1d32; --surface3:#20233c;
+  --text:#eaedf5; --muted:#7a849a; --muted2:#5a6275;
+  --cyber:#34d399; --cyber2:#10b981; --purple:#a78bfa; --amber:#fbbf24; --ai:#818cf8;
+  --border:#252840; --border2:#333660;
+  --body-text:#c0c8d8;
+  --sec:{acc}; --sec2:#dc2626; --sec-soft:{acc_soft};
+  --sec-glow:{acc_glow}; --sec-bg:{acc_bg}; --sec-border:{acc_border};
+}}
+html.light {{
+  --bg:#f4f6fb; --surface:#ffffff; --surface2:#eef0f7; --surface3:#e4e7f2;
+  --text:#1a1d2e; --muted:#4a5568; --muted2:#718096;
+  --border:#d4d8ec; --border2:#c0c5df; --body-text:#2d3748;
+  --sec-bg:rgba(239,68,68,0.03); --sec-border:rgba(239,68,68,0.15);
+}}
+*,*::before,*::after{{box-sizing:border-box;margin:0;padding:0;}}
+body{{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;min-height:100vh;}}
+.top-nav{{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);padding:0 20px;height:52px;display:flex;align-items:center;gap:12px;}}
+.back-btn{{display:flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:5px 12px;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;transition:color 0.2s,border-color 0.2s;white-space:nowrap;flex-shrink:0;}}
+.back-btn:hover{{color:var(--text);border-color:var(--border2);}}
+.nav-breadcrumb{{flex:1;min-width:0;font-size:0.75rem;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}}
+.nav-breadcrumb span{{color:var(--muted);}}
+.nav-actions{{display:flex;align-items:center;gap:8px;flex-shrink:0;}}
+.theme-toggle{{background:var(--surface2);border:1px solid var(--border2);color:var(--muted);border-radius:20px;padding:5px 11px;font-size:0.75rem;cursor:pointer;transition:background 0.2s,color 0.2s;}}
+.theme-toggle:hover{{color:var(--text);}}
+.share-btn-top{{display:flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--sec-border);color:var(--sec-soft);border-radius:20px;padding:5px 12px;font-size:0.78rem;font-weight:600;cursor:pointer;transition:background 0.2s;}}
+.share-btn-top:hover{{background:var(--sec-bg);}}
+.hero{{padding:32px 20px 28px;border-bottom:1px solid var(--sec-border);background:linear-gradient(180deg,var(--sec-glow) 0%,transparent 100%);position:relative;overflow:hidden;}}
+.hero::before{{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 0%,var(--sec-glow) 0%,transparent 70%);pointer-events:none;}}
+.hero-inner{{max-width:860px;margin:0 auto;position:relative;}}
+.hero-badges{{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:16px;}}
+.type-badge{{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:3px 10px;border-radius:4px;background:var(--sec-glow);color:var(--sec-soft);border:1px solid var(--sec-border);}}
+.live-badge{{display:flex;align-items:center;gap:5px;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 9px;border-radius:4px;background:rgba(239,68,68,0.1);color:var(--sec);border:1px solid rgba(239,68,68,0.3);animation:live-pulse 2s ease-in-out infinite;}}
+.live-dot{{width:6px;height:6px;border-radius:50%;background:var(--sec);flex-shrink:0;animation:live-pulse 1.2s ease-in-out infinite;}}
+@keyframes live-pulse{{0%,100%{{opacity:1}}50%{{opacity:0.4}}}}
+.hero-title{{font-size:1.85rem;font-weight:900;line-height:1.2;letter-spacing:-0.5px;margin-bottom:16px;color:var(--text);}}
+.score-row{{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;}}
+.cvss-wrap{{display:flex;align-items:center;gap:10px;}}
+.cvss-label{{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);white-space:nowrap;}}
+.cvss-bar-track{{width:140px;height:7px;border-radius:4px;background:var(--surface3);border:1px solid var(--border);overflow:hidden;}}
+.cvss-bar-fill{{height:100%;border-radius:4px;background:linear-gradient(90deg,#22c55e 0%,#f59e0b 40%,#ef4444 70%);transition:width 0.6s cubic-bezier(0.4,0,0.2,1);}}
+.cvss-score-num{{font-size:1.15rem;font-weight:900;font-variant-numeric:tabular-nums;color:var(--sec);font-family:'Courier New',monospace;line-height:1;}}
+.severity-pill,.patch-pill{{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;padding:3px 10px;border-radius:20px;}}
+.sev-critical{{background:rgba(239,68,68,0.18);color:#f87171;border:1px solid rgba(239,68,68,0.35);}}
+.sev-high{{background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.3);}}
+.sev-medium{{background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);}}
+.sev-low{{background:rgba(52,211,153,0.12);color:var(--cyber);border:1px solid rgba(52,211,153,0.25);}}
+.patch-available{{background:rgba(52,211,153,0.1);color:var(--cyber);border:1px solid rgba(52,211,153,0.25);}}
+.patch-mitigation{{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.22);}}
+.patch-none{{background:rgba(239,68,68,0.1);color:var(--sec);border:1px solid var(--sec-border);}}
+.hero-desc{{font-size:0.97rem;color:var(--body-text);line-height:1.75;margin-bottom:18px;max-width:740px;}}
+.hero-meta{{display:flex;align-items:center;flex-wrap:wrap;gap:10px;}}
+.hero-meta-item{{font-size:0.76rem;color:var(--muted2);display:flex;align-items:center;gap:5px;}}
+.hero-meta-sep{{color:var(--border2);font-size:0.7rem;}}
+.src-link-hero{{font-size:0.76rem;font-weight:600;color:var(--sec-soft);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color 0.15s;}}
+.src-link-hero:hover{{color:var(--sec);}}
+.page-body{{max-width:860px;margin:0 auto;padding:28px 16px 80px;}}
+.sec-block{{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden;}}
+.sec-block-header{{padding:16px 20px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}}
+.sec-block-icon{{font-size:1rem;flex-shrink:0;}}
+.sec-block-title{{font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted2);flex:1;}}
+.sec-block-title.red{{color:var(--sec-soft);}} .sec-block-title.green{{color:var(--cyber);}} .sec-block-title.amber{{color:var(--amber);}}
+.sec-block-body{{padding:20px;}}
+.conf-badge{{font-size:0.65rem;font-weight:700;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);color:var(--purple);}}
+.diagram-wrap{{border-radius:10px;overflow:hidden;border:1px solid #1e3055;background:#060912;}}
+.diagram-bar{{background:#0d1020;padding:9px 14px;display:flex;align-items:center;gap:7px;border-bottom:1px solid #1e3055;}}
+.dot{{width:11px;height:11px;border-radius:50%;flex-shrink:0;}} .dot-r{{background:#ff5f57;}} .dot-y{{background:#febc2e;}} .dot-g{{background:#28c840;}}
+.diagram-title{{flex:1;text-align:center;font-size:0.67rem;color:#3a4a60;font-family:monospace;}}
+.diagram-svg svg{{width:100%;height:auto;display:block;}}
+.attack-vector-text{{margin-top:14px;font-size:0.92rem;color:var(--body-text);line-height:1.72;padding:13px 16px;background:var(--sec-bg);border:1px solid var(--sec-border);border-radius:8px;border-left:3px solid var(--sec);}}
+.details-grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;}}
+.detail-cell{{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:13px 15px;}}
+.detail-label{{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:6px;}}
+.detail-value{{font-size:0.93rem;font-weight:700;color:var(--text);font-family:'Courier New',monospace;word-break:break-all;}}
+.detail-value.red{{color:var(--sec-soft);}} .detail-value.green{{color:var(--cyber);}} .detail-value.amber{{color:var(--amber);}} .detail-value.muted{{color:var(--muted);font-weight:400;font-size:0.78rem;font-family:inherit;}}
+.cvss-vector-cell{{grid-column:1/-1;}}
+.timeline-track{{display:flex;align-items:flex-start;position:relative;padding:8px 0 4px;}}
+.timeline-track::before{{content:'';position:absolute;top:24px;left:24px;right:24px;height:2px;background:linear-gradient(90deg,var(--sec) 0%,var(--amber) 50%,var(--cyber) 100%);z-index:0;}}
+.tl-step{{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;}}
+.tl-dot{{width:16px;height:16px;border-radius:50%;border:2px solid var(--surface2);margin-bottom:10px;flex-shrink:0;}}
+.tl-dot.red{{background:var(--sec);box-shadow:0 0 10px rgba(239,68,68,0.5);}} .tl-dot.amber{{background:var(--amber);box-shadow:0 0 10px rgba(251,191,36,0.4);}} .tl-dot.green{{background:var(--cyber);box-shadow:0 0 10px rgba(52,211,153,0.4);}} .tl-dot.empty{{background:var(--surface3);border-color:var(--border2);}}
+.tl-label{{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted2);text-align:center;margin-bottom:4px;}}
+.tl-date{{font-size:0.8rem;font-weight:700;color:var(--text);text-align:center;font-family:'Courier New',monospace;}}
+.tl-date.na{{color:var(--muted2);font-style:italic;font-size:0.72rem;}}
+.mitre-list{{display:flex;flex-direction:column;gap:8px;}}
+details.mitre-entry{{border:1px solid var(--border);border-radius:9px;overflow:hidden;transition:border-color 0.2s;}}
+details.mitre-entry[open]{{border-color:var(--border2);}}
+details.mitre-entry summary{{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;background:var(--surface2);transition:background 0.15s;}}
+details.mitre-entry summary:hover{{background:var(--surface3);}}
+details.mitre-entry summary::-webkit-details-marker{{display:none;}}
+.mitre-id{{font-size:0.72rem;font-weight:800;font-family:'Courier New',monospace;background:rgba(239,68,68,0.12);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);border-radius:5px;padding:2px 8px;flex-shrink:0;}}
+.mitre-tactic{{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;flex-shrink:0;background:var(--surface3);color:var(--muted2);border:1px solid var(--border2);}}
+.mitre-name{{font-size:0.88rem;font-weight:600;color:var(--text);flex:1;min-width:0;}}
+.mitre-chevron{{font-size:0.6rem;color:var(--muted2);transition:transform 0.2s;flex-shrink:0;}}
+details.mitre-entry[open] .mitre-chevron{{transform:rotate(90deg);}}
+.mitre-body{{padding:12px 14px;border-top:1px solid var(--border);background:var(--surface);}}
+.mitre-relevance{{font-size:0.88rem;color:var(--muted);line-height:1.65;}}
+.mitre-att-link{{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:0.75rem;font-weight:600;color:var(--sec-soft);text-decoration:none;transition:color 0.15s;}}
+.mitre-att-link:hover{{color:var(--sec);}}
+.affected-table{{width:100%;border-collapse:collapse;}}
+.affected-table th{{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2);}}
+.affected-table td{{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}}
+.affected-table tr:last-child td{{border-bottom:none;}}
+.affected-table tr:hover td{{background:rgba(255,255,255,0.02);}}
+.prod-vendor{{font-size:0.8rem;color:var(--muted);}} .prod-name{{font-size:0.9rem;font-weight:700;color:var(--text);}}
+.prod-ver{{font-family:'Courier New',monospace;font-size:0.78rem;color:#fca5a5;background:rgba(239,68,68,0.09);padding:3px 8px;border-radius:5px;border:1px solid rgba(239,68,68,0.18);white-space:nowrap;}}
+.prod-fix{{font-family:'Courier New',monospace;font-size:0.78rem;color:var(--cyber);background:rgba(52,211,153,0.08);padding:3px 8px;border-radius:5px;border:1px solid rgba(52,211,153,0.2);white-space:nowrap;}}
+.prod-fix.none{{color:var(--sec-soft);background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2);}}
+.apply-intro{{font-size:0.88rem;color:var(--muted);line-height:1.65;margin-bottom:14px;}}
+.apply-list{{display:flex;flex-direction:column;gap:8px;}}
+.apply-item{{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);}}
+.apply-check{{font-size:0.85rem;flex-shrink:0;margin-top:1px;}} .apply-text{{font-size:0.88rem;color:var(--body-text);line-height:1.55;}}
+.fix-grid{{display:grid;grid-template-columns:1fr 1fr;gap:12px;}}
+.fix-panel{{border-radius:10px;padding:16px 18px;}}
+.fix-panel.immediate{{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);}}
+.fix-panel.strategic{{background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.18);}}
+.fix-panel-label{{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}}
+.fix-panel.immediate .fix-panel-label{{color:var(--sec-soft);}} .fix-panel.strategic .fix-panel-label{{color:var(--cyber);}}
+.fix-steps{{list-style:none;display:flex;flex-direction:column;gap:8px;}}
+.fix-step{{display:flex;align-items:flex-start;gap:9px;font-size:0.87rem;color:var(--body-text);line-height:1.55;}}
+.fix-step-num{{flex-shrink:0;width:20px;height:20px;border-radius:50%;font-size:0.63rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px;}}
+.fix-panel.immediate .fix-step-num{{background:rgba(239,68,68,0.15);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}}
+.fix-panel.strategic .fix-step-num{{background:rgba(52,211,153,0.12);color:var(--cyber);border:1px solid rgba(52,211,153,0.22);}}
+.concept-tags-grid{{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}}
+.concept-tag-pill{{font-size:0.72rem;font-weight:700;font-family:'Courier New',monospace;padding:5px 12px;border-radius:6px;background:var(--surface2);color:var(--muted);border:1px solid var(--border2);cursor:pointer;transition:color 0.15s,border-color 0.15s,background 0.15s;}}
+.concept-tag-pill:hover,.concept-tag-pill.active{{color:var(--ai);border-color:rgba(129,140,248,0.4);background:rgba(129,140,248,0.08);}}
+.concept-tag-expand{{display:none;padding:14px 16px;border-radius:9px;background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.15);margin-top:4px;}}
+.concept-tag-expand.visible{{display:block;}}
+.concept-tag-expand-name{{font-size:0.85rem;font-weight:800;color:var(--ai);font-family:'Courier New',monospace;margin-bottom:8px;}}
+.concept-def{{font-size:0.88rem;color:var(--body-text);line-height:1.65;margin-bottom:9px;}}
+.concept-rel{{font-size:0.85rem;color:var(--muted);line-height:1.6;font-style:italic;padding-left:12px;border-left:2px solid rgba(129,140,248,0.35);}}
+.hunt-list{{display:flex;flex-direction:column;gap:8px;}}
+details.hunt-entry{{border-radius:9px;overflow:hidden;border:1px solid var(--border);transition:border-color 0.2s;}}
+details.hunt-entry[open]{{border-color:var(--border2);}}
+details.hunt-entry summary{{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;background:var(--surface2);transition:background 0.15s;}}
+details.hunt-entry summary:hover{{background:var(--surface3);}}
+details.hunt-entry summary::-webkit-details-marker{{display:none;}}
+.hunt-priority{{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;flex-shrink:0;}}
+.hunt-priority.high{{background:rgba(239,68,68,0.15);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}}
+.hunt-priority.medium{{background:rgba(251,191,36,0.12);color:var(--amber);border:1px solid rgba(251,191,36,0.22);}}
+.hunt-priority.low{{background:rgba(52,211,153,0.1);color:var(--cyber);border:1px solid rgba(52,211,153,0.2);}}
+.hunt-signal{{font-size:0.88rem;font-weight:700;color:var(--text);flex:1;}}
+.hunt-chevron{{font-size:0.6rem;color:var(--muted2);transition:transform 0.2s;flex-shrink:0;}}
+details.hunt-entry[open] .hunt-chevron{{transform:rotate(90deg);}}
+.hunt-body{{padding:12px 14px;border-top:1px solid var(--border);background:var(--surface);}}
+.hunt-desc{{font-size:0.88rem;color:var(--muted);line-height:1.65;}}
+.hunt-log-tag{{display:inline-block;margin-top:8px;margin-right:5px;font-size:0.68rem;font-weight:700;font-family:'Courier New',monospace;padding:2px 8px;border-radius:4px;background:rgba(129,140,248,0.1);color:var(--ai);border:1px solid rgba(129,140,248,0.2);}}
+.ioc-caveat{{padding:12px 15px;border-radius:8px;margin-bottom:16px;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.25);display:flex;align-items:flex-start;gap:10px;}}
+.ioc-caveat-icon{{font-size:1rem;flex-shrink:0;margin-top:1px;}} .ioc-caveat-text{{font-size:0.83rem;color:var(--body-text);line-height:1.6;}}
+.ioc-caveat-text strong{{color:var(--amber);font-weight:700;}}
+.ioc-group{{margin-bottom:16px;}} .ioc-group:last-child{{margin-bottom:0;}}
+.ioc-group-header{{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}}
+.ioc-group-label{{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);}}
+.ioc-copy-btn{{font-size:0.68rem;font-weight:600;padding:3px 10px;border-radius:20px;background:transparent;border:1px solid var(--border2);color:var(--muted2);cursor:pointer;transition:color 0.15s,border-color 0.15s;display:flex;align-items:center;gap:4px;}}
+.ioc-copy-btn:hover,.ioc-copy-btn.copied{{color:var(--cyber);border-color:rgba(52,211,153,0.4);}}
+.ioc-list{{background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden;}}
+.ioc-item{{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);font-family:'Courier New',monospace;font-size:0.8rem;color:var(--body-text);word-break:break-all;}}
+.ioc-item:last-child{{border-bottom:none;}} .ioc-item:hover{{background:rgba(255,255,255,0.02);}}
+.ioc-copy-single{{flex-shrink:0;background:none;border:none;cursor:pointer;color:var(--muted2);font-size:0.72rem;padding:2px 6px;border-radius:4px;transition:color 0.15s;font-family:inherit;}}
+.ioc-copy-single:hover{{color:var(--cyber);}}
+.ioc-no-data{{padding:12px;font-size:0.83rem;color:var(--muted2);font-style:italic;text-align:center;}}
+.ta-card{{background:rgba(167,139,250,0.04);border:1px solid rgba(167,139,250,0.2);border-radius:12px;padding:18px 20px;}}
+.ta-header{{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}}
+.ta-avatar{{width:48px;height:48px;border-radius:10px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.25);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}}
+.ta-name{{font-size:1.05rem;font-weight:800;color:var(--purple);margin-bottom:4px;}}
+.ta-aliases{{display:flex;flex-wrap:wrap;gap:5px;}}
+.ta-alias{{font-size:0.63rem;font-weight:600;font-family:'Courier New',monospace;padding:2px 7px;border-radius:4px;background:var(--surface3);color:var(--muted2);border:1px solid var(--border2);}}
+.ta-grid{{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}}
+.ta-cell{{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 13px;}}
+.ta-cell-label{{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);margin-bottom:5px;}}
+.ta-cell-value{{font-size:0.88rem;font-weight:700;color:var(--text);}}
+.ta-cell-value.purple{{color:var(--purple);}}
+.ta-desc{{font-size:0.9rem;color:var(--body-text);line-height:1.7;margin-bottom:14px;}}
+.ta-ttps-label{{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:8px;}}
+.ta-ttps{{display:flex;flex-wrap:wrap;gap:6px;}}
+.ta-ttp{{font-size:0.72rem;font-weight:600;padding:4px 11px;border-radius:5px;background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.22);}}
+.share-footer{{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}}
+.share-footer-text{{font-size:0.85rem;color:var(--muted);}}
+.share-footer-text strong{{color:var(--text);}}
+.share-footer-btns{{display:flex;flex-wrap:wrap;gap:7px;}}
+.share-opt{{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 13px;cursor:pointer;text-decoration:none;font-size:0.8rem;font-weight:600;color:var(--muted);transition:border-color 0.18s,color 0.18s;font-family:inherit;}}
+.share-opt:hover{{color:var(--text);border-color:var(--border2);}}
+.share-opt.x:hover{{border-color:#e7e7e7;color:#e7e7e7;}} .share-opt.linkedin:hover{{border-color:#0a66c2;color:#0a66c2;}} .share-opt.copy-link:hover{{border-color:var(--cyber);color:var(--cyber);}}
+.toast{{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface2);border:1px solid var(--cyber);color:var(--cyber);padding:8px 18px;border-radius:20px;font-size:0.78rem;font-weight:600;opacity:0;transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:9999;}}
+.toast.show{{opacity:1;transform:translateX(-50%) translateY(0);}}
+@media(max-width:640px){{
+  .hero-title{{font-size:1.35rem;}}
+  .top-nav .nav-breadcrumb{{display:none;}}
+  .score-row{{gap:8px;}}
+  .cvss-bar-track{{width:100px;}}
+  .page-body{{padding:16px 12px 60px;}}
+  .sec-block-body{{padding:14px;}}
+  .details-grid{{grid-template-columns:1fr 1fr;}}
+  .fix-grid{{grid-template-columns:1fr;}}
+  .ta-grid{{grid-template-columns:1fr;}}
+  .share-footer{{flex-direction:column;}}
+  .affected-table th,.affected-table td{{padding:8px;}}
+}}
+</style>
+</head>
+<body>
+<nav class="top-nav">
+  <a href="{_a(index_url)}" class="back-btn">&#8592; Back to Digest</a>
+  <span class="nav-breadcrumb">The Daily Rundown <span>/</span> {_a(date or "Today")} <span>/</span> {_a(type_label)}</span>
+  <div class="nav-actions">
+    <button class="theme-toggle" onclick="document.documentElement.classList.toggle('light')">&#9788; Theme</button>
+    <button class="share-btn-top" onclick="copyPageLink(this)">&#8679; Share</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-badges">
+      <span class="type-badge">{type_icon} {_a(type_label)}</span>
+      {live_badge}
+    </div>
+    <h1 class="hero-title">{_a(headline)}</h1>
+    <div class="score-row">
+      {'<div class="cvss-wrap"><span class="cvss-label">CVSS</span><div class="cvss-bar-track"><div class="cvss-bar-fill" style="width:' + cvss_pct + '"></div></div><span class="cvss-score-num">' + _a(str(cvss_score)) + '</span></div>' if cvss_score is not None else ''}
+      <span class="severity-pill {sev_cls}">{_a(severity)}</span>
+      <span class="patch-pill {patch_cls}">{patch_icon} {_a(patch_status)}</span>
+    </div>
+    <p class="hero-desc">{_a(sd.get("description",""))}</p>
+    <div class="hero-meta">
+      {'<span class="hero-meta-item">&#128197; ' + _a(story.get("pub_date","")) + '</span><span class="hero-meta-sep">|</span>' if story.get("pub_date") else ''}
+      <span class="hero-meta-item">Source: <a href="{_a(story.get('source_url','#'))}" class="src-link-hero" target="_blank" rel="noopener">{_a(story.get('source',''))} &#8599;</a></span>
+      {'<span class="hero-meta-sep">|</span><span class="hero-meta-item" style="font-family:monospace;color:var(--sec-soft);">' + _a(sd.get("cve_id","")) + '</span>' if sd.get("cve_id") else ''}
+    </div>
+  </div>
+</header>
+
+<main class="page-body">
+
+  {diagram_html}
+
+  {'<div class="sec-block"><div class="sec-block-header"><span class="sec-block-icon">&#9432;</span><span class="sec-block-title red">Vulnerability Details</span></div><div class="sec-block-body"><div class="details-grid"><div class="detail-cell"><div class="detail-label">CVE ID</div><div class="detail-value red">' + _a(sd.get("cve_id","N/A")) + '</div></div><div class="detail-cell"><div class="detail-label">CVSS v3.1 Score</div><div class="detail-value red">' + (_a(str(cvss_score)) + " / 10" if cvss_score is not None else "N/A") + '</div></div><div class="detail-cell"><div class="detail-label">Severity</div><div class="detail-value red">' + _a(severity) + '</div></div><div class="detail-cell"><div class="detail-label">Patch Status</div><div class="detail-value green">' + _a(patch_status) + '</div></div>' + ('<div class="detail-cell cvss-vector-cell"><div class="detail-label">CVSS Vector</div><div class="detail-value muted">' + _a(sd.get("cvss_vector","")) + '</div></div>' if sd.get("cvss_vector") else '') + '</div></div></div>' if sec_type == "vulnerability" else ''}
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128336;</span><span class="sec-block-title amber">Timeline</span></div>
+    <div class="sec-block-body">
+      <div class="timeline-track">{tl_disclosed}{tl_exploited}{tl_patched}</div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Techniques</span></div>
+    <div class="sec-block-body"><div class="mitre-list">{mitre_html}</div></div>
+  </div>
+
+  {products_html}
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#10067;</span><span class="sec-block-title amber">Am I Affected?</span></div>
+    <div class="sec-block-body">
+      <p class="apply-intro">You are likely at risk if <strong>any</strong> of the following apply:</p>
+      <div class="apply-list">{apply_items}</div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128736;</span><span class="sec-block-title green">Fix &amp; Recommendations</span></div>
+    <div class="sec-block-body">
+      <div class="fix-grid">
+        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps">{imm_steps}</ul></div>
+        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps">{str_steps}</ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128218;</span><span class="sec-block-title ai">Concept Briefing</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tag to expand</span></div>
+    <div class="sec-block-body">
+      <div class="concept-tags-grid">{concept_pills}</div>
+      {concept_expands}
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128269;</span><span class="sec-block-title amber">Threat Hunting Signals</span></div>
+    <div class="sec-block-body"><div class="hunt-list">{hunt_html}</div></div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#9762;</span><span class="sec-block-title amber">Indicators of Compromise</span><button class="ioc-copy-btn" style="margin-left:auto" onclick="copyAllIOCs()">&#10064; Copy All IOCs</button></div>
+    <div class="sec-block-body">
+      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> {_a(iocs.get("note","IOCs are extracted from public reporting. Verify against a current threat intel feed before use."))}</span></div>
+      {ioc_groups}
+    </div>
+  </div>
+
+  {ta_html}
+
+  <div class="share-footer">
+    <div class="share-footer-text"><strong>Share this advisory</strong><br><span style="font-size:0.78rem;">Help your network patch faster.</span></div>
+    <div class="share-footer-btns">
+      <a href="{_a(x_url)}" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
+      <a href="{_a(li_url)}" class="share-opt linkedin" target="_blank" rel="noopener">in Share</a>
+      <button class="share-opt copy-link" onclick="copyPageLink(this)">&#128279; Copy Link</button>
+    </div>
+  </div>
+
+</main>
+<div class="toast" id="toast"></div>
+<script>
+function toggleConcept(btn,id){{
+  var el=document.getElementById(id);
+  if(!el)return;
+  var open=el.classList.contains('visible');
+  document.querySelectorAll('.concept-tag-expand').forEach(function(e){{e.classList.remove('visible');}});
+  document.querySelectorAll('.concept-tag-pill').forEach(function(b){{b.classList.remove('active');}});
+  if(!open){{el.classList.add('visible');btn.classList.add('active');el.scrollIntoView({{behavior:'smooth',block:'nearest'}});}}
+}}
+function showToast(msg){{
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){{t.classList.remove('show');}},2200);
+}}
+function copyText(btn,text){{
+  navigator.clipboard.writeText(text).then(function(){{
+    var o=btn.textContent;btn.textContent='&#10003;';
+    setTimeout(function(){{btn.textContent=o;}},1400);
+    showToast('Copied');
+  }});
+}}
+function copyIOCGroup(gid){{
+  var el=document.getElementById('ioc-'+gid);
+  if(!el)return;
+  var items=Array.from(el.querySelectorAll('.ioc-item > span')).map(function(s){{return s.textContent.trim();}});
+  navigator.clipboard.writeText(items.join('\\n')).then(function(){{showToast(items.length+' IOC'+(items.length!==1?'s':'')+' copied');}});
+}}
+function copyAllIOCs(){{
+  var all=Array.from(document.querySelectorAll('.ioc-item > span')).map(function(s){{return s.textContent.trim();}});
+  navigator.clipboard.writeText(all.join('\\n')).then(function(){{showToast(all.length+' IOCs copied');}});
+}}
+function copyPageLink(btn){{
+  navigator.clipboard.writeText(window.location.href).then(function(){{
+    var o=btn.textContent;btn.textContent='&#10003; Copied!';
+    if(btn.classList)btn.classList.add('copied');
+    setTimeout(function(){{btn.textContent=o;if(btn.classList)btn.classList.remove('copied');}},1800);
+    showToast('Link copied');
+  }});
+}}
+document.addEventListener('DOMContentLoaded',function(){{
+  document.querySelectorAll('.cvss-bar-fill').forEach(function(bar){{
+    var w=bar.style.width;bar.style.width='0%';
+    requestAnimationFrame(function(){{requestAnimationFrame(function(){{bar.style.width=w;}});}});
+  }});
+}});
+</script>
+</body>
+</html>"""
+
+
 def _write_story_pages(data):
-    """Write per-story redirect pages with story-specific OG tags to output/s/."""
+    """Write per-story pages to output/s/.
+    Stories with security_detail get a full advisory page; others get an OG redirect."""
     os.makedirs("output/s", exist_ok=True)
-    count = 0
+    count   = 0
+    date    = data.get("date_iso", "")
     for i, story in enumerate(data.get("ai_stories", []), 1):
         story_id = f"story-ai-{i}"
         with open(f"output/s/{story_id}.html", "w", encoding="utf-8") as f:
@@ -3094,7 +3951,11 @@ def _write_story_pages(data):
     for i, story in enumerate(data.get("cyber_stories", []), 1):
         story_id = f"story-cyber-{i}"
         with open(f"output/s/{story_id}.html", "w", encoding="utf-8") as f:
-            f.write(_story_redirect_html(story, story_id))
+            if story.get("security_detail"):
+                f.write(_build_security_detail_page(story, story_id, date))
+                print(f"  Wrote security advisory page: {story_id}.html")
+            else:
+                f.write(_story_redirect_html(story, story_id))
         count += 1
     return count
 
