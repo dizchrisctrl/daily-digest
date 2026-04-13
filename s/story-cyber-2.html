@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
-<title>W3LL Phishing-as-a-Service Empire Takedown by FBI and Indonesian Police | The Daily Rundown</title>
+<title>Critical wolfSSL ECDSA Signature Verification Bypass — Certificate Forgery | The Daily Rundown</title>
 <meta property="og:type"        content="article">
 <meta property="og:site_name"   content="The Daily Rundown">
-<meta property="og:title"       content="W3LL Phishing-as-a-Service Empire Takedown by FBI and Indonesian Police">
-<meta property="og:description" content="A joint FBI and Indonesian police operation dismantled the W3LL phishing-as-a-service (PhaaS) infrastructure, arrested its alleged developer in Indonesia, and disrupted a criminal network responsible for compromising thousands of credentials and attempting over $20 million in fra">
+<meta property="og:title"       content="Critical wolfSSL ECDSA Signature Verification Bypass — Certificate Forgery">
+<meta property="og:description" content="A critical vulnerability in the wolfSSL lightweight TLS library allows attackers to forge ECDSA signatures on TLS certificates by exploiting improper hash algorithm and size verification during signature checking. Because wolfSSL is widely deployed in IoT devices, embedded system">
 <meta property="og:url"         content="https://dizchrisctrl.github.io/daily-digest/s/story-cyber-2.html">
 <meta name="twitter:card"        content="summary">
-<meta name="twitter:title"       content="W3LL Phishing-as-a-Service Empire Takedown by FBI and Indonesian Police">
-<meta name="twitter:description" content="A joint FBI and Indonesian police operation dismantled the W3LL phishing-as-a-service (PhaaS) infrastructure, arrested its alleged developer in Indonesia, and disrupted a criminal network responsible for compromising thousands of credentials and attempting over $20 million in fra">
+<meta name="twitter:title"       content="Critical wolfSSL ECDSA Signature Verification Bypass — Certificate Forgery">
+<meta name="twitter:description" content="A critical vulnerability in the wolfSSL lightweight TLS library allows attackers to forge ECDSA signatures on TLS certificates by exploiting improper hash algorithm and size verification during signature checking. Because wolfSSL is widely deployed in IoT devices, embedded system">
 <style>
 :root {
   --bg:#0b0d16; --surface:#12152a; --surface2:#1a1d32; --surface3:#20233c;
@@ -20,8 +20,8 @@
   --cyber:#34d399; --cyber2:#10b981; --purple:#a78bfa; --amber:#fbbf24; --ai:#818cf8;
   --border:#252840; --border2:#333660;
   --body-text:#c0c8d8;
-  --sec:#a78bfa; --sec2:#dc2626; --sec-soft:#c4b5fd;
-  --sec-glow:rgba(167,139,250,0.15); --sec-bg:rgba(167,139,250,0.04); --sec-border:rgba(167,139,250,0.22);
+  --sec:#ef4444; --sec2:#dc2626; --sec-soft:#f87171;
+  --sec-glow:rgba(239,68,68,0.15); --sec-bg:rgba(239,68,68,0.04); --sec-border:rgba(239,68,68,0.22);
 }
 html.light {
   --bg:#f4f6fb; --surface:#ffffff; --surface2:#eef0f7; --surface3:#e4e7f2;
@@ -98,21 +98,17 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .tl-label{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted2);text-align:center;margin-bottom:4px;}
 .tl-date{font-size:0.8rem;font-weight:700;color:var(--text);text-align:center;font-family:'Courier New',monospace;}
 .tl-date.na{color:var(--muted2);font-style:italic;font-size:0.72rem;}
-.mitre-list{display:flex;flex-direction:column;gap:8px;}
-details.mitre-entry{border:1px solid var(--border);border-radius:9px;overflow:hidden;transition:border-color 0.2s;}
-details.mitre-entry[open]{border-color:var(--border2);}
-details.mitre-entry summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;background:var(--surface2);transition:background 0.15s;}
-details.mitre-entry summary:hover{background:var(--surface3);}
-details.mitre-entry summary::-webkit-details-marker{display:none;}
-.mitre-id{font-size:0.72rem;font-weight:800;font-family:'Courier New',monospace;background:rgba(239,68,68,0.12);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);border-radius:5px;padding:2px 8px;flex-shrink:0;}
-.mitre-tactic{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;flex-shrink:0;background:var(--surface3);color:var(--muted2);border:1px solid var(--border2);}
-.mitre-name{font-size:0.88rem;font-weight:600;color:var(--text);flex:1;min-width:0;}
-.mitre-chevron{font-size:0.6rem;color:var(--muted2);transition:transform 0.2s;flex-shrink:0;}
-details.mitre-entry[open] .mitre-chevron{transform:rotate(90deg);}
-.mitre-body{padding:12px 14px;border-top:1px solid var(--border);background:var(--surface);}
-.mitre-relevance{font-size:0.88rem;color:var(--muted);line-height:1.65;}
-.mitre-att-link{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:0.75rem;font-weight:600;color:var(--sec-soft);text-decoration:none;transition:color 0.15s;}
-.mitre-att-link:hover{color:var(--sec);}
+.mitre-map{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;padding-bottom:4px;}
+.mitre-col{display:flex;flex-direction:column;gap:5px;min-width:130px;flex:1;}
+.mitre-tactic-hdr{background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(239,68,68,0.06));border:1px solid rgba(239,68,68,0.3);border-radius:7px;padding:9px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:3px;transition:border-color 0.15s,background 0.15s;width:100%;text-align:left;font-family:inherit;}
+.mitre-tactic-hdr:hover{border-color:var(--sec-soft);background:rgba(239,68,68,0.16);}
+.mitre-tactic-lbl{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sec-soft);line-height:1.3;}
+.mitre-tactic-cnt{font-size:0.58rem;color:var(--muted2);}
+.mitre-techs{display:flex;flex-direction:column;gap:4px;}
+.mitre-tech-cell{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:8px 10px;cursor:pointer;display:flex;flex-direction:column;gap:3px;transition:border-color 0.15s,background 0.15s;width:100%;text-align:left;font-family:inherit;}
+.mitre-tech-cell:hover{border-color:var(--border2);background:var(--surface3);}
+.mitre-tech-id{font-size:0.63rem;font-weight:800;font-family:'Courier New',monospace;color:var(--amber);}
+.mitre-tech-name{font-size:0.72rem;color:var(--body-text);line-height:1.35;}
 .affected-table{width:100%;border-collapse:collapse;}
 .affected-table th{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2);}
 .affected-table td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
@@ -175,28 +171,45 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
 .ioc-copy-single{flex-shrink:0;background:none;border:none;cursor:pointer;color:var(--muted2);font-size:0.72rem;padding:2px 6px;border-radius:4px;transition:color 0.15s;font-family:inherit;}
 .ioc-copy-single:hover{color:var(--cyber);}
 .ioc-no-data{padding:12px;font-size:0.83rem;color:var(--muted2);font-style:italic;text-align:center;}
-.ta-card{background:rgba(167,139,250,0.04);border:1px solid rgba(167,139,250,0.2);border-radius:12px;padding:18px 20px;}
-.ta-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}
-.ta-avatar{width:48px;height:48px;border-radius:10px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.25);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
-.ta-name{font-size:1.05rem;font-weight:800;color:var(--purple);margin-bottom:4px;}
-.ta-aliases{display:flex;flex-wrap:wrap;gap:5px;}
-.ta-alias{font-size:0.63rem;font-weight:600;font-family:'Courier New',monospace;padding:2px 7px;border-radius:4px;background:var(--surface3);color:var(--muted2);border:1px solid var(--border2);}
-.ta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.ta-cell{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:11px 13px;}
-.ta-cell-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);margin-bottom:5px;}
-.ta-cell-value{font-size:0.88rem;font-weight:700;color:var(--text);}
-.ta-cell-value.purple{color:var(--purple);}
-.ta-desc{font-size:0.9rem;color:var(--body-text);line-height:1.7;margin-bottom:14px;}
-.ta-ttps-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:8px;}
-.ta-ttps{display:flex;flex-wrap:wrap;gap:6px;}
-.ta-ttp{font-size:0.72rem;font-weight:600;padding:4px 11px;border-radius:5px;background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.22);}
+.ta-inline-tag{display:inline-flex;align-items:center;gap:5px;font-size:0.63rem;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.28);cursor:pointer;transition:background 0.15s,border-color 0.15s;font-family:inherit;white-space:nowrap;}
+.ta-inline-tag:hover{background:rgba(167,139,250,0.18);border-color:rgba(167,139,250,0.45);}
 .share-footer{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
 .share-footer-text{font-size:0.85rem;color:var(--muted);}
 .share-footer-text strong{color:var(--text);}
 .share-footer-btns{display:flex;flex-wrap:wrap;gap:7px;}
 .share-opt{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 13px;cursor:pointer;text-decoration:none;font-size:0.8rem;font-weight:600;color:var(--muted);transition:border-color 0.18s,color 0.18s;font-family:inherit;}
 .share-opt:hover{color:var(--text);border-color:var(--border2);}
-.share-opt.x:hover{border-color:#e7e7e7;color:#e7e7e7;} .share-opt.linkedin:hover{border-color:#0a66c2;color:#0a66c2;} .share-opt.copy-link:hover{border-color:var(--cyber);color:var(--cyber);}
+.share-opt.x:hover{border-color:#e7e7e7;color:#e7e7e7;}
+.share-opt.whatsapp:hover{border-color:#25d366;color:#25d366;}
+.share-opt.telegram:hover{border-color:#2aabee;color:#2aabee;}
+.share-opt.linkedin:hover{border-color:#0a66c2;color:#0a66c2;}
+.share-opt.copy-link:hover{border-color:var(--cyber);color:var(--cyber);}
+.popover-overlay{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.6);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.popover-overlay.open{opacity:1;pointer-events:all;}
+.popover-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:24px 24px 20px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto;transform:translateY(12px);transition:transform 0.2s;position:relative;}
+.popover-overlay.open .popover-box{transform:translateY(0);}
+.popover-close{position:absolute;top:14px;right:14px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.78rem;display:flex;align-items:center;justify-content:center;transition:color 0.15s;font-family:inherit;}
+.popover-close:hover{color:var(--text);}
+.popover-type-tag{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;padding:2px 9px;border-radius:4px;display:inline-block;margin-bottom:10px;}
+.popover-type-tag.technique{background:rgba(251,191,36,0.12);color:var(--amber);border:1px solid rgba(251,191,36,0.25);}
+.popover-type-tag.tactic{background:rgba(239,68,68,0.12);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}
+.popover-type-tag.actor{background:rgba(167,139,250,0.12);color:var(--purple);border:1px solid rgba(167,139,250,0.25);}
+.popover-title{font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:4px;line-height:1.3;}
+.popover-subtitle{font-size:0.75rem;font-weight:600;font-family:'Courier New',monospace;color:var(--muted2);margin-bottom:14px;}
+.popover-section-label{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:6px;margin-top:14px;}
+.popover-body-text{font-size:0.9rem;color:var(--body-text);line-height:1.7;}
+.popover-relevance{font-size:0.88rem;color:var(--muted);line-height:1.65;padding:10px 14px;background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.18);border-radius:8px;border-left:3px solid rgba(129,140,248,0.4);margin-top:6px;}
+.popover-att-link{display:inline-flex;align-items:center;gap:4px;margin-top:12px;font-size:0.75rem;font-weight:600;color:var(--sec-soft);text-decoration:none;transition:color 0.15s;}
+.popover-att-link:hover{color:var(--sec);}
+.popover-tags-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.popover-tag{font-size:0.68rem;font-weight:600;padding:3px 9px;border-radius:5px;font-family:inherit;}
+.popover-tag.purple{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.22);}
+.popover-tag.alias{background:var(--surface3);color:var(--muted2);border:1px solid var(--border2);}
+.popover-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.popover-cell{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.popover-cell-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);margin-bottom:4px;}
+.popover-cell-value{font-size:0.88rem;font-weight:700;color:var(--text);}
+.popover-cell-value.purple{color:var(--purple);}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface2);border:1px solid var(--cyber);color:var(--cyber);padding:8px 18px;border-radius:20px;font-size:0.78rem;font-weight:600;opacity:0;transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:9999;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 @media(max-width:640px){
@@ -208,16 +221,18 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   .sec-block-body{padding:14px;}
   .details-grid{grid-template-columns:1fr 1fr;}
   .fix-grid{grid-template-columns:1fr;}
-  .ta-grid{grid-template-columns:1fr;}
   .share-footer{flex-direction:column;}
   .affected-table th,.affected-table td{padding:8px;}
+  .mitre-col{min-width:110px;}
+  .popover-grid{grid-template-columns:1fr;}
+  .popover-box{padding:18px 16px 16px;}
 }
 </style>
 </head>
 <body>
 <nav class="top-nav">
   <a href="https://dizchrisctrl.github.io/daily-digest/2026-04-13.html" class="back-btn">&#8592; Back to Digest</a>
-  <span class="nav-breadcrumb">The Daily Rundown <span>/</span> 2026-04-13 <span>/</span> Threat Actor Profile</span>
+  <span class="nav-breadcrumb">The Daily Rundown <span>/</span> 2026-04-13 <span>/</span> Vulnerability Advisory</span>
   <div class="nav-actions">
     <button class="theme-toggle" onclick="document.documentElement.classList.toggle('light')">&#9788; Theme</button>
     <button class="share-btn-top" onclick="copyPageLink(this)">&#8679; Share</button>
@@ -227,19 +242,20 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-badges">
-      <span class="type-badge">&#9670; Threat Actor Profile</span>
+      <span class="type-badge">&#9888; Vulnerability Advisory</span>
+      
       
     </div>
-    <h1 class="hero-title">FBI and Indonesian Police Dismantle W3LL Phishing-as-a-Service Empire Behind $20M in Fraud</h1>
+    <h1 class="hero-title">Critical wolfSSL Flaw Lets Attackers Forge TLS Certificates via Broken ECDSA Verification</h1>
     <div class="score-row">
-      
-      <span class="severity-pill sev-high">High</span>
-      <span class="patch-pill patch-mitigation">&#9888; Mitigation Only</span>
+      <div class="cvss-wrap"><span class="cvss-label">CVSS</span><div class="cvss-bar-track"><div class="cvss-bar-fill" style="width:98%"></div></div><span class="cvss-score-num">9.8</span></div>
+      <span class="severity-pill sev-critical">Critical</span>
+      <span class="patch-pill patch-none">&#9888; No Fix Yet</span>
     </div>
-    <p class="hero-desc">A joint FBI and Indonesian police operation dismantled the W3LL phishing-as-a-service (PhaaS) infrastructure, arrested its alleged developer in Indonesia, and disrupted a criminal network responsible for compromising thousands of credentials and attempting over $20 million in fraud globally. W3LL was a polished, subscription-based phishing toolkit that lowered the barrier for cybercriminals to launch sophisticated credential-harvesting campaigns against Microsoft 365 and other platforms, complete with adversary-in-the-middle MFA bypass capabilities.</p>
+    <p class="hero-desc">A critical vulnerability in the wolfSSL lightweight TLS library allows attackers to forge ECDSA signatures on TLS certificates by exploiting improper hash algorithm and size verification during signature checking. Because wolfSSL is widely deployed in IoT devices, embedded systems, and resource-constrained environments, this flaw potentially affects millions of devices and enables man-in-the-middle attacks that completely undermine TLS trust. The embedded nature of affected deployments means patches will roll out slowly, leaving a prolonged vulnerability window.</p>
     <div class="hero-meta">
-      <span class="hero-meta-item">&#128197; Apr 13, 2026 10:46 AM EDT</span><span class="hero-meta-sep">|</span>
-      <span class="hero-meta-item">Source: <a href="https://thehackernews.com/2026/04/fbi-and-indonesian-police-dismantle.html" class="src-link-hero" target="_blank" rel="noopener">The Hacker News &#8599;</a></span>
+      <span class="hero-meta-item">&#128197; Apr 13, 2026 3:56 PM EDT</span><span class="hero-meta-sep">|</span>
+      <span class="hero-meta-item">Source: <a href="https://www.bleepingcomputer.com/news/security/critical-flaw-in-wolfssl-library-enables-forged-certificate-use/" class="src-link-hero" target="_blank" rel="noopener">BleepingComputer &#8599;</a></span>
       
     </div>
   </div>
@@ -254,153 +270,94 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
           <div class="diagram-wrap">
             <div class="diagram-bar">
               <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-              <span class="diagram-title">W3LL Phishing-as-a-Service Empire Takedown by FBI and Indonesian Police</span>
+              <span class="diagram-title">Critical wolfSSL ECDSA Signature Verification Bypass — Certificate Forgery</span>
             </div>
             <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-auto">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#34d399"/>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#34d399"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#f87171"/>
     </marker>
   </defs>
   <rect width="700" height="340" fill="#060912"/>
 
-  <!-- W3LL Developer -->
-  <rect x="20" y="35" width="120" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="80" y="58" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">W3LL</text>
-  <text x="80" y="74" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Developer</text>
+  <!-- Title -->
+  <text x="350" y="28" fill="#7a849a" font-size="12" font-family="monospace" text-anchor="middle">ECDSA Verification: Secure vs Vulnerable wolfSSL</text>
 
-  <!-- Arrow: Dev -> Toolkit -->
-  <line x1="140" y1="62" x2="185" y2="62" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <text x="163" y="52" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">builds</text>
+  <!-- SECURE PATH (top) -->
+  <text x="30" y="60" fill="#34d399" font-size="11" font-family="monospace" font-weight="bold">✓ CORRECT VERIFICATION</text>
 
-  <!-- W3LL Toolkit -->
-  <rect x="190" y="35" width="130" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="255" y="55" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">W3LL Toolkit</text>
-  <text x="255" y="72" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">PhaaS Platform</text>
+  <rect x="30" y="72" width="130" height="50" rx="6" fill="#12152a" stroke="#252840"/>
+  <text x="95" y="93" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Server sends</text>
+  <text x="95" y="108" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">certificate</text>
 
-  <!-- Arrow: Toolkit -> Operators -->
-  <line x1="320" y1="62" x2="370" y2="62" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <text x="345" y="52" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">sold to</text>
+  <line x1="160" y1="97" x2="195" y2="97" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-  <!-- Operators -->
-  <rect x="375" y="35" width="120" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="435" y="55" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Operators</text>
-  <text x="435" y="72" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Criminal Buyers</text>
+  <rect x="198" y="72" width="140" height="50" rx="6" fill="#12152a" stroke="#34d399"/>
+  <text x="268" y="93" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Check hash algo</text>
+  <text x="268" y="108" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">+ hash size</text>
 
-  <!-- Arrow: Operators -> Phishing Emails -->
-  <line x1="495" y1="62" x2="545" y2="62" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <text x="520" y="52" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">launch</text>
+  <line x1="338" y1="97" x2="373" y2="97" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-  <!-- Phishing Campaigns -->
-  <rect x="550" y="35" width="130" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="615" y="55" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Phishing</text>
-  <text x="615" y="72" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Campaigns</text>
+  <rect x="376" y="72" width="140" height="50" rx="6" fill="#12152a" stroke="#34d399"/>
+  <text x="446" y="93" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Verify ECDSA</text>
+  <text x="446" y="108" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">signature math</text>
 
-  <!-- Victims row -->
-  <!-- Arrow down from phishing to victims -->
-  <line x1="615" y1="90" x2="615" y2="130" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <text x="638" y="115" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="start">target</text>
+  <line x1="516" y1="97" x2="551" y2="97" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
 
-  <rect x="550" y="135" width="130" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="615" y="157" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Victims</text>
-  <text x="615" y="173" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">1000s of accounts</text>
+  <rect x="554" y="72" width="120" height="50" rx="6" fill="#12152a" stroke="#34d399"/>
+  <text x="614" y="93" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">Forgery</text>
+  <text x="614" y="108" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">REJECTED ✓</text>
 
-  <!-- Stolen creds flow back -->
-  <line x1="550" y1="160" x2="320" y2="160" stroke="#34d399" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
-  <text x="435" y="150" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">credentials exfiltrated</text>
+  <!-- VULNERABLE PATH (bottom) -->
+  <text x="30" y="185" fill="#f87171" font-size="11" font-family="monospace" font-weight="bold">✗ VULNERABLE wolfSSL</text>
 
-  <!-- Fraud -->
-  <rect x="190" y="135" width="130" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="255" y="157" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">$20M+ Fraud</text>
-  <text x="255" y="173" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">BEC, wire fraud</text>
+  <rect x="30" y="197" width="130" height="50" rx="6" fill="#12152a" stroke="#252840"/>
+  <text x="95" y="218" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Attacker sends</text>
+  <text x="95" y="233" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">forged cert</text>
 
-  <!-- LAW ENFORCEMENT action -->
-  <rect x="100" y="240" width="500" height="70" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2" stroke-dasharray="8,4"/>
-  <text x="350" y="265" fill="#34d399" font-size="14" font-family="monospace" text-anchor="middle" font-weight="bold">⚡ FBI + Indonesian Police Takedown ⚡</text>
-  <text x="350" y="285" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Infrastructure dismantled • Developer arrested • Operations disrupted</text>
-  <text x="350" y="300" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Targeting supply chain, not just individual operators</text>
+  <line x1="160" y1="222" x2="195" y2="222" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrow-red)"/>
 
-  <!-- Arrows from takedown to dev and toolkit -->
-  <line x1="240" y1="240" x2="130" y2="95" stroke="#34d399" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
-  <line x1="310" y1="240" x2="270" y2="95" stroke="#34d399" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <rect x="198" y="197" width="140" height="50" rx="6" fill="#12152a" stroke="#f87171" stroke-dasharray="5,3"/>
+  <text x="268" y="218" fill="#f87171" font-size="12" font-family="monospace" text-anchor="middle">Hash algo/size</text>
+  <text x="268" y="233" fill="#f87171" font-size="12" font-family="monospace" text-anchor="middle">NOT CHECKED</text>
+
+  <line x1="338" y1="222" x2="373" y2="222" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+
+  <rect x="376" y="197" width="140" height="50" rx="6" fill="#12152a" stroke="#252840"/>
+  <text x="446" y="218" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">ECDSA verify</text>
+  <text x="446" y="233" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">(wrong input)</text>
+
+  <line x1="516" y1="222" x2="551" y2="222" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+
+  <rect x="554" y="197" width="120" height="50" rx="6" fill="#12152a" stroke="#f87171"/>
+  <text x="614" y="218" fill="#f87171" font-size="12" font-family="monospace" text-anchor="middle">Forgery</text>
+  <text x="614" y="233" fill="#f87171" font-size="12" font-family="monospace" text-anchor="middle">ACCEPTED ✗</text>
+
+  <!-- Impact callout -->
+  <rect x="170" y="280" width="360" height="42" rx="6" fill="#34d399"/>
+  <text x="350" y="298" fill="#060912" font-size="12" font-family="monospace" text-anchor="middle" font-weight="bold">IMPACT: Full man-in-the-middle capability</text>
+  <text x="350" y="313" fill="#060912" font-size="11" font-family="monospace" text-anchor="middle">Attacker impersonates any TLS server</text>
 </svg></div>
           </div>
-          <div class="attack-vector-text">W3LL provided turnkey phishing page templates cloning legitimate login portals (primarily Microsoft 365), combined with real-time adversary-in-the-middle session relay to intercept multi-factor authentication tokens. Operators purchased subscriptions, configured target lists, sent lure emails, and harvested credentials and session cookies through centralized admin panels — requiring no custom development.</div>
+          <div class="attack-vector-text">The wolfSSL library fails to properly verify the hash algorithm and hash size during ECDSA signature validation on TLS certificates. An attacker can craft a certificate with a manipulated ECDSA signature that passes wolfSSL&#39;s flawed verification, allowing them to impersonate any server and perform man-in-the-middle attacks against clients using the vulnerable library.</div>
         </div>
       </div>
 
-  
+  <div class="sec-block"><div class="sec-block-header"><span class="sec-block-icon">&#9432;</span><span class="sec-block-title red">Vulnerability Details</span></div><div class="sec-block-body"><div class="details-grid"><div class="detail-cell"><div class="detail-label">CVE ID</div><div class="detail-value red"></div></div><div class="detail-cell"><div class="detail-label">CVSS v3.1 Score</div><div class="detail-value red">9.8 / 10</div></div><div class="detail-cell"><div class="detail-label">Severity</div><div class="detail-value red">Critical</div></div><div class="detail-cell"><div class="detail-label">Patch Status</div><div class="detail-value green">No Fix Yet</div></div><div class="detail-cell cvss-vector-cell"><div class="detail-label">CVSS Vector</div><div class="detail-value muted">CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</div></div></div></div></div>
 
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#128336;</span><span class="sec-block-title amber">Timeline</span></div>
     <div class="sec-block-body">
-      <div class="timeline-track"><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Disclosed</div><div class="tl-date">2026-04-13</div></div><div class="tl-step"><div class="tl-dot empty"></div><div class="tl-label">Exploited in Wild</div><div class="tl-date na">Unknown</div></div><div class="tl-step"><div class="tl-dot amber"></div><div class="tl-label">Patch Released</div><div class="tl-date na">Unknown</div></div></div>
+      <div class="timeline-track"><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Disclosed</div><div class="tl-date">2026-04-13</div></div><div class="tl-step"><div class="tl-dot empty"></div><div class="tl-label">Exploited in Wild</div><div class="tl-date na">Unknown</div></div><div class="tl-step"><div class="tl-dot empty"></div><div class="tl-label">Patch Released</div><div class="tl-date na">Unknown</div></div></div>
     </div>
   </div>
 
   <div class="sec-block">
-    <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Techniques</span></div>
-    <div class="sec-block-body"><div class="mitre-list">
-        <details class="mitre-entry" open>
-          <summary>
-            <span class="mitre-id">T1566.002</span>
-            <span class="mitre-tactic">Initial Access</span>
-            <span class="mitre-name">Phishing: Spearphishing Link</span>
-            <span class="mitre-chevron">&#9658;</span>
-          </summary>
-          <div class="mitre-body">
-            <div class="mitre-relevance">W3LL operators sent lure emails containing links to cloned login portals to harvest victim credentials.</div>
-            <a href="https://attack.mitre.org/techniques/T1566/002/" class="mitre-att-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a>
-          </div>
-        </details>
-        <details class="mitre-entry">
-          <summary>
-            <span class="mitre-id">T1557</span>
-            <span class="mitre-tactic">Credential Access</span>
-            <span class="mitre-name">Adversary-in-the-Middle</span>
-            <span class="mitre-chevron">&#9658;</span>
-          </summary>
-          <div class="mitre-body">
-            <div class="mitre-relevance">W3LL&#39;s toolkit included real-time session relay to intercept MFA tokens and hijack authenticated sessions.</div>
-            <a href="https://attack.mitre.org/techniques/T1557/" class="mitre-att-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a>
-          </div>
-        </details>
-        <details class="mitre-entry">
-          <summary>
-            <span class="mitre-id">T1078</span>
-            <span class="mitre-tactic">Persistence</span>
-            <span class="mitre-name">Valid Accounts</span>
-            <span class="mitre-chevron">&#9658;</span>
-          </summary>
-          <div class="mitre-body">
-            <div class="mitre-relevance">Stolen credentials and session tokens allowed attackers to access victim accounts as legitimate users.</div>
-            <a href="https://attack.mitre.org/techniques/T1078/" class="mitre-att-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a>
-          </div>
-        </details>
-        <details class="mitre-entry">
-          <summary>
-            <span class="mitre-id">T1539</span>
-            <span class="mitre-tactic">Credential Access</span>
-            <span class="mitre-name">Steal Web Session Cookie</span>
-            <span class="mitre-chevron">&#9658;</span>
-          </summary>
-          <div class="mitre-body">
-            <div class="mitre-relevance">W3LL&#39;s AiTM capability captured authenticated session cookies, bypassing MFA protections entirely.</div>
-            <a href="https://attack.mitre.org/techniques/T1539/" class="mitre-att-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a>
-          </div>
-        </details>
-        <details class="mitre-entry">
-          <summary>
-            <span class="mitre-id">T1583.003</span>
-            <span class="mitre-tactic">Resource Development</span>
-            <span class="mitre-name">Acquire Infrastructure: Virtual Private Server</span>
-            <span class="mitre-chevron">&#9658;</span>
-          </summary>
-          <div class="mitre-body">
-            <div class="mitre-relevance">W3LL utilized bulletproof hosting and obfuscated infrastructure to maintain phishing operations and resist takedowns.</div>
-            <a href="https://attack.mitre.org/techniques/T1583/003/" class="mitre-att-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a>
-          </div>
-        </details></div></div>
+    <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Map</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tactic or technique for details</span></div>
+    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Credential Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1557&quot;, &quot;name&quot;: &quot;Adversary-in-the-Middle&quot;}, {&quot;id&quot;: &quot;T1040&quot;, &quot;name&quot;: &quot;Network Sniffing&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Credential Access</span><span class="mitre-tactic-cnt">2 techniques</span></button><div class="mitre-techs"><button class="mitre-tech-cell" data-mitre="{&quot;type&quot;: &quot;technique&quot;, &quot;id&quot;: &quot;T1557&quot;, &quot;name&quot;: &quot;Adversary-in-the-Middle&quot;, &quot;tactic&quot;: &quot;Credential Access&quot;, &quot;relevance&quot;: &quot;By forging TLS certificates, an attacker can position themselves between a client and server to intercept, read, and modify all traffic.&quot;, &quot;url&quot;: &quot;https://attack.mitre.org/techniques/T1557/&quot;}" onclick="openMitrePopover(event,this)"><span class="mitre-tech-id">T1557</span><span class="mitre-tech-name">Adversary-in-the-Middle</span></button><button class="mitre-tech-cell" data-mitre="{&quot;type&quot;: &quot;technique&quot;, &quot;id&quot;: &quot;T1040&quot;, &quot;name&quot;: &quot;Network Sniffing&quot;, &quot;tactic&quot;: &quot;Credential Access&quot;, &quot;relevance&quot;: &quot;After a successful MITM via certificate forgery, the attacker can capture credentials and sensitive data flowing through the intercepted TLS session.&quot;, &quot;url&quot;: &quot;https://attack.mitre.org/techniques/T1040/&quot;}" onclick="openMitrePopover(event,this)"><span class="mitre-tech-id">T1040</span><span class="mitre-tech-name">Network Sniffing</span></button></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Resource Development&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1587.003&quot;, &quot;name&quot;: &quot;Develop Capabilities: Digital Certificates&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Resource Development</span><span class="mitre-tactic-cnt">1 technique</span></button><div class="mitre-techs"><button class="mitre-tech-cell" data-mitre="{&quot;type&quot;: &quot;technique&quot;, &quot;id&quot;: &quot;T1587.003&quot;, &quot;name&quot;: &quot;Develop Capabilities: Digital Certificates&quot;, &quot;tactic&quot;: &quot;Resource Development&quot;, &quot;relevance&quot;: &quot;Attackers can craft forged certificates with manipulated ECDSA signatures that exploit the wolfSSL verification flaw.&quot;, &quot;url&quot;: &quot;https://attack.mitre.org/techniques/T1587/003/&quot;}" onclick="openMitrePopover(event,this)"><span class="mitre-tech-id">T1587.003</span><span class="mitre-tech-name">Develop Capabilities: Digital Certificates</span></button></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Command and Control&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1573&quot;, &quot;name&quot;: &quot;Encrypted Channel&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Command and Control</span><span class="mitre-tactic-cnt">1 technique</span></button><div class="mitre-techs"><button class="mitre-tech-cell" data-mitre="{&quot;type&quot;: &quot;technique&quot;, &quot;id&quot;: &quot;T1573&quot;, &quot;name&quot;: &quot;Encrypted Channel&quot;, &quot;tactic&quot;: &quot;Command and Control&quot;, &quot;relevance&quot;: &quot;Once a forged certificate is accepted, the attacker establishes what appears to be a legitimate encrypted channel, masking malicious activity inside TLS.&quot;, &quot;url&quot;: &quot;https://attack.mitre.org/techniques/T1573/&quot;}" onclick="openMitrePopover(event,this)"><span class="mitre-tech-id">T1573</span><span class="mitre-tech-name">Encrypted Channel</span></button></div></div></div></div>
   </div>
 
   
@@ -410,15 +367,10 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
           <table class="affected-table">
             <thead><tr><th>Vendor</th><th>Product</th><th>Versions Affected</th><th>Fixed In</th></tr></thead>
             <tbody><tr>
-          <td><span class="prod-vendor">Microsoft</span></td>
-          <td><span class="prod-name">Microsoft 365</span></td>
-          <td><span class="prod-ver">All versions — users targeted by W3LL phishing campaigns</span></td>
-          <td><span class="prod-fix none">Mitigate: Deploy FIDO2/passkey authentication to prevent AiTM credential relay</span></td>
-        </tr><tr>
-          <td><span class="prod-vendor">Google</span></td>
-          <td><span class="prod-name">Google Workspace</span></td>
-          <td><span class="prod-ver">All versions — users targeted by W3LL phishing campaigns</span></td>
-          <td><span class="prod-fix none">Mitigate: Deploy FIDO2/passkey authentication to prevent AiTM credential relay</span></td>
+          <td><span class="prod-vendor">wolfSSL Inc.</span></td>
+          <td><span class="prod-name">wolfSSL</span></td>
+          <td><span class="prod-ver">All versions — see vendor advisory (specific version range pending)</span></td>
+          <td><span class="prod-fix none">No fix yet</span></td>
         </tr></tbody>
           </table>
         </div>
@@ -428,7 +380,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="sec-block-header"><span class="sec-block-icon">&#10067;</span><span class="sec-block-title amber">Am I Affected?</span></div>
     <div class="sec-block-body">
       <p class="apply-intro">You are likely at risk if <strong>any</strong> of the following apply:</p>
-      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your organization uses Microsoft 365 or Google Workspace with password-based or SMS/TOTP MFA authentication</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your users receive external email and may click links to login portals</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your organization lacks phishing-resistant MFA such as FIDO2 security keys or passkeys</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment does not monitor for anomalous sign-in locations, impossible travel, or session token anomalies</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your organization has fully deployed FIDO2/passkeys as the sole authentication method with no password fallback</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your environment blocks all external email or operates entirely air-gapped from the internet</span></div></div>
+      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your application or firmware uses the wolfSSL library for TLS connections</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment includes IoT devices, embedded systems, or industrial controllers that rely on wolfSSL for secure communications</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your devices use ECDSA-based certificates for TLS authentication (common default in wolfSSL deployments)</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your environment exclusively uses OpenSSL, BoringSSL, or another TLS library with no wolfSSL dependencies</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your wolfSSL-based devices operate on isolated networks with no exposure to untrusted network segments</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your environment uses RSA-only certificate chains with no ECDSA certificates and has disabled ECDSA in wolfSSL configuration</span></div></div>
     </div>
   </div>
 
@@ -436,8 +388,8 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="sec-block-header"><span class="sec-block-icon">&#128736;</span><span class="sec-block-title green">Fix &amp; Recommendations</span></div>
     <div class="sec-block-body">
       <div class="fix-grid">
-        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Review Azure AD / Entra ID and Google Workspace sign-in logs for the past 90 days for anomalous sign-ins: impossible travel, unfamiliar IP addresses, or new device registrations that preceded mailbox rule changes or data exfiltration.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Revoke active sessions and force password resets for any accounts showing suspicious sign-in patterns — in Entra ID use &#39;Revoke Sessions&#39; in the user blade; in Google Admin use &#39;Sign out user from all sessions&#39;.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Enable Conditional Access policies (Azure AD) or Context-Aware Access (Google) to block sign-ins from unmanaged devices, untrusted locations, and anonymous VPN/proxy IPs immediately.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Audit mailbox rules in Exchange Online (Get-InboxRule) and Gmail (Admin Console &gt; Email log search) for auto-forwarding rules or delete rules that attackers commonly create post-compromise.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Alert your user base about the W3LL takedown and the continued risk from copycat PhaaS platforms — remind them to verify login page URLs and report suspicious emails immediately.</span></li></ul></div>
-        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Adopt FIDO2 security keys or platform passkeys as the primary authentication method across all cloud identity providers; this is the single most effective countermeasure against AiTM phishing toolkits like W3LL, as cryptographic origin-binding prevents credential relay.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Implement token protection / token binding (Entra ID Conditional Access Token Protection, currently in preview) to bind session tokens to specific devices, rendering stolen session cookies unusable.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Deploy a phishing-resistant email security gateway with real-time URL sandboxing and brand impersonation detection to catch W3LL-style cloned login pages before they reach inboxes.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Establish continuous session monitoring and anomaly detection using UEBA (User and Entity Behavior Analytics) to flag session hijacking indicators such as sudden geo-shifts within an active session.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Conduct regular tabletop exercises and red team assessments specifically simulating AiTM phishing scenarios to validate detection and response capabilities.</span></li></ul></div>
+        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Inventory all applications, firmware, and devices in your environment that depend on the wolfSSL library — check linked libraries with `ldd`, firmware manifests, or SBOM records.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Where possible, restrict network access to wolfSSL-dependent devices by placing them behind trusted proxies or VPN gateways that perform independent TLS certificate validation using a non-affected library (e.g., OpenSSL).</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>If your wolfSSL build supports configuration flags, enforce certificate pinning for critical connections to prevent acceptance of forged certificates from unknown CAs.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Monitor wolfSSL&#39;s official security advisories (https://www.wolfssl.com/docs/security-vulnerabilities/) and subscribe for patch release notifications to apply the fix immediately when available.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Enable verbose TLS handshake logging on wolfSSL-based clients to detect anomalous certificate presentations, and alert on unexpected certificate chains or issuers.</span></li></ul></div>
+        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Implement Software Bill of Materials (SBOM) tracking across all products and deployments to enable rapid identification of wolfSSL usage when vulnerabilities are disclosed.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Establish an automated firmware/software update pipeline for IoT and embedded devices to reduce the patch deployment window from months to days.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Deploy network-level TLS inspection at trust boundaries that performs independent certificate validation, providing defense-in-depth regardless of endpoint library vulnerabilities.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Adopt certificate pinning or Certificate Transparency (CT) log monitoring for critical service connections to detect forged or unauthorized certificates.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Evaluate TLS library diversity in your architecture — avoid single-library dependency across all systems so that a flaw in one library does not compromise the entire environment.</span></li></ul></div>
       </div>
     </div>
   </div>
@@ -445,27 +397,27 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#128218;</span><span class="sec-block-title ai">Concept Briefing</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tag to expand</span></div>
     <div class="sec-block-body">
-      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-phishing-as-a-service')">Phishing-as-a-Service</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-adversary-in-the-middle-aitm-')">Adversary-in-the-Middle (AiTM)</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-fido2-passkeys')">FIDO2 / Passkeys</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-supply-side-disruption')">Supply-Side Disruption</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-credential-harvesting')">Credential Harvesting</button></div>
-      <div class="concept-tag-expand" id="ct-phishing-as-a-service">
-          <div class="concept-tag-expand-name">Phishing-as-a-Service</div>
-          <div class="concept-def">A criminal business model where a developer builds and sells turnkey phishing toolkits — including fake login pages, credential harvesting panels, and hosting — to other criminals on a subscription basis.</div>
-          <div class="concept-rel">W3LL was a fully realized PhaaS platform with customer support and update cycles, enabling thousands of credential thefts and over $20M in fraud by lowering the technical barrier for phishing attacks.</div>
-        </div><div class="concept-tag-expand" id="ct-adversary-in-the-middle-aitm-">
-          <div class="concept-tag-expand-name">Adversary-in-the-Middle (AiTM)</div>
-          <div class="concept-def">An attack technique where the attacker positions themselves between the victim and the legitimate service, relaying authentication in real time to capture session tokens and bypass multi-factor authentication.</div>
-          <div class="concept-rel">W3LL&#39;s toolkit used AiTM relaying to intercept MFA tokens in real time, rendering standard SMS and TOTP-based MFA ineffective against its phishing campaigns.</div>
-        </div><div class="concept-tag-expand" id="ct-fido2-passkeys">
-          <div class="concept-tag-expand-name">FIDO2 / Passkeys</div>
-          <div class="concept-def">A phishing-resistant authentication standard that uses public-key cryptography bound to the specific website origin, making it impossible for attackers to relay credentials to a fake site.</div>
-          <div class="concept-rel">FIDO2/passkeys are the primary technical countermeasure that would have neutralized W3LL&#39;s AiTM attacks, since cryptographic origin verification prevents credential relay to cloned portals.</div>
-        </div><div class="concept-tag-expand" id="ct-supply-side-disruption">
-          <div class="concept-tag-expand-name">Supply-Side Disruption</div>
-          <div class="concept-def">A law enforcement strategy that targets the developers and infrastructure providers enabling cybercrime, rather than pursuing individual end-user criminals one by one.</div>
-          <div class="concept-rel">The FBI-Indonesian operation targeted the W3LL platform developer rather than individual phishing operators, aiming to disrupt the supply chain that enabled thousands of downstream attacks.</div>
-        </div><div class="concept-tag-expand" id="ct-credential-harvesting">
-          <div class="concept-tag-expand-name">Credential Harvesting</div>
-          <div class="concept-def">The systematic collection of usernames, passwords, and session tokens from victims, typically through fake login pages or malware, for use in account takeover or fraud.</div>
-          <div class="concept-rel">W3LL&#39;s core function was credential harvesting at scale — its phishing pages captured login data and session cookies from thousands of victims across Microsoft 365 and other platforms.</div>
+      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-ecdsa-signature-verification')">ECDSA Signature Verification</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-tls-certificate-forgery')">TLS Certificate Forgery</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-man-in-the-middle-attack')">Man-in-the-Middle Attack</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-embedded-iot-security')">Embedded/IoT Security</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-cryptographic-library-flaw')">Cryptographic Library Flaw</button></div>
+      <div class="concept-tag-expand" id="ct-ecdsa-signature-verification">
+          <div class="concept-tag-expand-name">ECDSA Signature Verification</div>
+          <div class="concept-def">ECDSA is a cryptographic algorithm used to digitally sign and verify TLS certificates, proving they were issued by a trusted certificate authority.</div>
+          <div class="concept-rel">The wolfSSL flaw is specifically in the ECDSA verification logic — it fails to check the hash algorithm and size, allowing forged signatures to pass as valid.</div>
+        </div><div class="concept-tag-expand" id="ct-tls-certificate-forgery">
+          <div class="concept-tag-expand-name">TLS Certificate Forgery</div>
+          <div class="concept-def">Creating a fake TLS certificate that a client incorrectly accepts as legitimate, allowing an attacker to impersonate any server.</div>
+          <div class="concept-rel">This vulnerability enables complete certificate forgery, meaning an attacker can impersonate any website or service to wolfSSL clients.</div>
+        </div><div class="concept-tag-expand" id="ct-man-in-the-middle-attack">
+          <div class="concept-tag-expand-name">Man-in-the-Middle Attack</div>
+          <div class="concept-def">An attack where an adversary secretly intercepts and potentially alters communications between two parties who believe they are communicating directly.</div>
+          <div class="concept-rel">Forged certificates allow attackers to position themselves between wolfSSL clients and legitimate servers, intercepting all supposedly encrypted traffic.</div>
+        </div><div class="concept-tag-expand" id="ct-embedded-iot-security">
+          <div class="concept-tag-expand-name">Embedded/IoT Security</div>
+          <div class="concept-def">The practice of securing resource-constrained devices like sensors, industrial controllers, and smart devices that often lack robust update mechanisms.</div>
+          <div class="concept-rel">wolfSSL is the dominant TLS library for embedded and IoT systems, meaning this flaw affects millions of devices that are notoriously difficult and slow to patch.</div>
+        </div><div class="concept-tag-expand" id="ct-cryptographic-library-flaw">
+          <div class="concept-tag-expand-name">Cryptographic Library Flaw</div>
+          <div class="concept-def">A bug in a software library that implements cryptographic operations, which can undermine security without breaking the underlying mathematics.</div>
+          <div class="concept-rel">This vulnerability doesn&#39;t break ECDSA math itself — it sidesteps it by exploiting an implementation error in how wolfSSL checks signatures, turning strong cryptography into an open door.</div>
         </div>
     </div>
   </div>
@@ -476,56 +428,45 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
         <details class="hunt-entry" open>
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Anomalous sign-in with immediate mailbox rule creation</span>
+            <span class="hunt-signal">Unexpected or anomalous TLS certificate chains on wolfSSL-dependent connections</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Look for sign-in events from unusual IPs or geolocations (especially VPN/proxy exit nodes) immediately followed by creation of inbox rules that forward, redirect, or delete emails. This is a hallmark post-compromise action by W3LL operators to maintain access and intercept password reset notifications. Time delta of &lt; 5 minutes between sign-in and rule creation is highly suspicious.</div>
-            <span class="hunt-log-tag">Azure AD / Entra ID Sign-in Logs</span><span class="hunt-log-tag">Exchange Online Unified Audit Log (Set-InboxRule, New-InboxRule)</span><span class="hunt-log-tag">Google Workspace Admin Audit Log</span>
+            <div class="hunt-desc">Look for TLS handshakes where the presented server certificate has an issuer that does not match your expected CA list, or where certificate chain depth is unusual. Forged certificates may use unexpected signing algorithms or malformed signature fields. Inspect certificate metadata in connection logs for hash algorithm mismatches in the signature block.</div>
+            <span class="hunt-log-tag">wolfSSL debug/verbose TLS handshake logs</span><span class="hunt-log-tag">Network IDS/IPS TLS inspection logs</span><span class="hunt-log-tag">Proxy or gateway TLS termination logs</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Impossible travel or rapid geo-shift in authenticated sessions</span>
+            <span class="hunt-signal">ECDSA certificates with mismatched hash algorithm indicators</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Detect scenarios where the same user account authenticates from geographically distant locations within an implausibly short time window (e.g., two countries within minutes). AiTM attacks cause the legitimate user&#39;s session to originate from their real location while the attacker&#39;s replayed session originates from a different location simultaneously.</div>
-            <span class="hunt-log-tag">Azure AD / Entra ID Sign-in Logs (Risk Detections)</span><span class="hunt-log-tag">Google Workspace Login Audit Events</span><span class="hunt-log-tag">SIEM correlation rules</span>
-          </div>
-        </details>
-        <details class="hunt-entry">
-          <summary>
-            <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Session token reuse from a new device or IP</span>
-            <span class="hunt-chevron">&#9658;</span>
-          </summary>
-          <div class="hunt-body">
-            <div class="hunt-desc">Monitor for existing session tokens being presented from device fingerprints or IP addresses that differ from the original authentication event. W3LL&#39;s AiTM relay captures session cookies which are then replayed from attacker infrastructure. Look for UserAgent or device ID mismatches within the same session.</div>
-            <span class="hunt-log-tag">Azure AD / Entra ID Sign-in Logs (Token fields)</span><span class="hunt-log-tag">Cloud Access Security Broker (CASB) logs</span><span class="hunt-log-tag">Web application firewall logs</span>
+            <div class="hunt-desc">Monitor for certificates where the signatureAlgorithm field in the TBSCertificate structure does not match the outer signatureAlgorithm field, or where the hash size in the ECDSA signature does not correspond to the declared algorithm (e.g., a SHA-256 OID but a hash length inconsistent with 32 bytes). This is the specific manipulation vector for this vulnerability.</div>
+            <span class="hunt-log-tag">Certificate Transparency logs</span><span class="hunt-log-tag">Network packet captures (PCAP) with TLS dissection</span><span class="hunt-log-tag">TLS inspection appliance logs</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority medium">Medium</span>
-            <span class="hunt-signal">Spike in OAuth app consent or app registrations</span>
+            <span class="hunt-signal">Unusual network traffic patterns from IoT/embedded devices</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">After credential compromise, attackers may register OAuth applications or grant consent to malicious apps to maintain persistent access beyond the stolen session. Look for unusual OAuth consent grants, especially to apps with broad permissions (Mail.Read, Mail.Send, Files.ReadWrite.All).</div>
-            <span class="hunt-log-tag">Azure AD / Entra ID Audit Logs (Consent to application)</span><span class="hunt-log-tag">Google Workspace Admin Console (Third-party app access)</span><span class="hunt-log-tag">Microsoft Defender for Cloud Apps</span>
+            <div class="hunt-desc">Watch for wolfSSL-based devices initiating connections to unexpected external destinations or exhibiting changed communication patterns that could indicate a successful MITM compromise — such as new data exfiltration flows, connections to previously unseen IPs, or increased data volumes on established channels.</div>
+            <span class="hunt-log-tag">Network flow logs (NetFlow/sFlow)</span><span class="hunt-log-tag">Firewall logs</span><span class="hunt-log-tag">IoT network monitoring platforms</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority medium">Medium</span>
-            <span class="hunt-signal">Phishing page infrastructure indicators in proxy/DNS logs</span>
+            <span class="hunt-signal">Certificate pinning violations or CT log discrepancies</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Search DNS query logs and web proxy logs for recently registered domains mimicking Microsoft 365 or Google login pages. Look for domains using typosquatting, homoglyph characters, or subdomains containing &#39;login&#39;, &#39;signin&#39;, &#39;outlook&#39;, or &#39;microsoftonline&#39;. Even with W3LL&#39;s infrastructure taken down, copycat platforms may reuse similar domain patterns.</div>
-            <span class="hunt-log-tag">DNS query logs (passive DNS)</span><span class="hunt-log-tag">Web proxy / Secure Web Gateway logs</span><span class="hunt-log-tag">Email gateway URL reputation logs</span>
+            <div class="hunt-desc">If certificate pinning is implemented, monitor for pin validation failures on wolfSSL-backed connections. Additionally, cross-reference certificates seen in your environment against Certificate Transparency logs to identify certificates not logged by legitimate CAs.</div>
+            <span class="hunt-log-tag">Application-level pinning failure logs</span><span class="hunt-log-tag">Certificate Transparency monitoring services</span><span class="hunt-log-tag">SIEM correlation rules</span>
           </div>
         </details></div></div>
   </div>
@@ -533,50 +474,35 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#9762;</span><span class="sec-block-title amber">Indicators of Compromise</span><button class="ioc-copy-btn" style="margin-left:auto" onclick="copyAllIOCs()">&#10064; Copy All IOCs</button></div>
     <div class="sec-block-body">
-      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific IOCs (hashes, IPs, domains, file paths, or URI patterns) were reported in the source article for this takedown. The W3LL infrastructure has been seized by law enforcement. Organizations should monitor for copycat PhaaS platforms that may emerge. All IOC arrays are empty as none were explicitly mentioned — do not treat absence of IOCs as absence of risk. Verify any future W3LL-related IOCs through FBI Flash alerts, CISA advisories, or trusted threat intelligence feeds before actioning.</span></div>
+      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific indicators of compromise (hashes, IPs, domains, file paths, or URI patterns) were reported in the source article. This is a library-level vulnerability, and exploitation would manifest as forged TLS certificates in network traffic rather than traditional file-based IOCs. Any IOCs shared by the community should be independently verified before use in detection rules.</span></div>
       <div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Hashes (SHA-256)</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Command &amp;amp; Control IPs</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Malicious Domains</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Paths / Artifacts</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Suspicious URI Patterns</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div>
     </div>
   </div>
 
-  
-      <div class="sec-block">
-        <div class="sec-block-header">
-          <span class="sec-block-icon">&#9670;</span>
-          <span class="sec-block-title" style="color:var(--purple)">Attributed Threat Actor</span>
-          <span class="conf-badge">High Confidence</span>
-        </div>
-        <div class="sec-block-body">
-          <div class="ta-card">
-            <div class="ta-header">
-              <div class="ta-avatar">&#9760;</div>
-              <div class="ta-name-wrap">
-                <div class="ta-name">W3LL</div>
-                <div class="ta-aliases"><span class="ta-alias">W3LL Panel</span><span class="ta-alias">W3LL Store</span></div>
-              </div>
-            </div>
-            <div class="ta-grid">
-              <div class="ta-cell"><div class="ta-cell-label">Origin</div><div class="ta-cell-value">Indonesia</div></div>
-              <div class="ta-cell"><div class="ta-cell-label">Motivation</div><div class="ta-cell-value purple">Financial</div></div>
-            </div>
-            <div class="ta-desc">W3LL is a phishing-as-a-service operation allegedly run by a developer based in Indonesia who built and maintained a sophisticated phishing toolkit sold via an underground marketplace. The platform offered ready-made phishing pages, adversary-in-the-middle session hijacking, credential harvesting panels, customer support, and regular updates — effectively industrializing phishing for a global customer base. The operation fueled over $20 million in fraud attempts and compromised thousands of accounts before being dismantled by a joint FBI-Indonesian police operation in April 2026.</div>
-            <div class="ta-ttps-label">Known TTPs</div>
-            <div class="ta-ttps"><span class="ta-ttp">Phishing-as-a-Service platform development and sales</span><span class="ta-ttp">Adversary-in-the-middle (AiTM) real-time credential and session token relay</span><span class="ta-ttp">Cloned login portal phishing pages targeting Microsoft 365 and Google Workspace</span><span class="ta-ttp">Centralized admin panels for campaign management and credential exfiltration</span><span class="ta-ttp">Bulletproof hosting and infrastructure obfuscation to evade takedowns</span></div>
-          </div>
-        </div>
-      </div>
-
   <div class="share-footer">
     <div class="share-footer-text"><strong>Share this advisory</strong><br><span style="font-size:0.78rem;">Help your network patch faster.</span></div>
     <div class="share-footer-btns">
-      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20FBI%20and%20Indonesian%20Police%20Dismantle%20W3LL%20Phishing-as-a-Service%20Empire%20Behind%20%2420M%20in%20Fraud%0A%0ACVSS%20N/A%20%C2%B7%20High%20%C2%B7%20Mitigation%20Only&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-2.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
+      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20Critical%20wolfSSL%20Flaw%20Lets%20Attackers%20Forge%20TLS%20Certificates%20via%20Broken%20ECDSA%20Verification%0A%0ACVSS%209.8%20%C2%B7%20Critical%20%C2%B7%20No%20Fix%20Yet&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-2.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
+      <a href="https://wa.me/?text=%F0%9F%9B%A1%20Critical%20wolfSSL%20Flaw%20Lets%20Attackers%20Forge%20TLS%20Certificates%20via%20Broken%20ECDSA%20Verification%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-2.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
+      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-2.html&amp;text=Critical%20wolfSSL%20Flaw%20Lets%20Attackers%20Forge%20TLS%20Certificates%20via%20Broken%20ECDSA%20Verification" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
       <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/story-cyber-2.html" class="share-opt linkedin" target="_blank" rel="noopener">in Share</a>
       <button class="share-opt copy-link" onclick="copyPageLink(this)">&#128279; Copy Link</button>
     </div>
   </div>
 
 </main>
+
+<div class="popover-overlay" id="mitre-ta-overlay" onclick="closeOverlay(event)">
+  <div class="popover-box" id="mitre-ta-box" onclick="event.stopPropagation()">
+    <button class="popover-close" onclick="closeOverlay()">&#10005;</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <script>
+function escHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
 function toggleConcept(btn,id){
   var el=document.getElementById(id);
   if(!el)return;
@@ -614,6 +540,68 @@ function copyPageLink(btn){
     setTimeout(function(){btn.textContent=o;if(btn.classList)btn.classList.remove('copied');},1800);
     showToast('Link copied');
   });
+}
+function _showOverlay(html){
+  var ov=document.getElementById('mitre-ta-overlay');
+  var bx=document.getElementById('mitre-ta-box');
+  if(!ov||!bx)return;
+  bx.innerHTML='<button class="popover-close" onclick="closeOverlay()">&#10005;</button>'+html;
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeOverlay(e){
+  if(e&&e.target!==document.getElementById('mitre-ta-overlay'))return;
+  var ov=document.getElementById('mitre-ta-overlay');
+  if(ov)ov.classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeOverlay();});
+function openMitrePopover(e,btn){
+  e.stopPropagation();
+  var raw=btn.getAttribute('data-mitre');
+  if(!raw)return;
+  var d;try{d=JSON.parse(raw);}catch(err){return;}
+  var html='';
+  if(d.type==='technique'){
+    html='<span class="popover-type-tag technique">Technique</span>'+
+      '<div class="popover-title">'+escHtml(d.name)+'</div>'+
+      '<div class="popover-subtitle">'+escHtml(d.id)+' &middot; '+escHtml(d.tactic)+'</div>'+
+      '<div class="popover-section-label">How This Relates to the Story</div>'+
+      '<div class="popover-relevance">'+escHtml(d.relevance||'')+'</div>'+
+      '<a href="'+escHtml(d.url)+'" class="popover-att-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a>';
+  }else if(d.type==='tactic'){
+    var techs=(d.techniques||[]).map(function(t){
+      return '<span class="popover-tag purple">'+escHtml(t.id?t.id+' ':'')+escHtml(t.name||'')+'</span>';
+    }).join('');
+    var tacSlug=d.name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    var tacUrl='https://attack.mitre.org/tactics/';
+    html='<span class="popover-type-tag tactic">Tactic</span>'+
+      '<div class="popover-title">'+escHtml(d.name)+'</div>'+
+      '<div class="popover-section-label">Relevant Techniques in This Story</div>'+
+      '<div class="popover-tags-row">'+techs+'</div>'+
+      '<a href="'+tacUrl+'" class="popover-att-link" target="_blank" rel="noopener">Browse Tactics on ATT&amp;CK &#8599;</a>';
+  }
+  _showOverlay(html);
+}
+function openTAPopover(e,btn){
+  e.stopPropagation();
+  var raw=btn.getAttribute('data-ta');
+  if(!raw)return;
+  var d;try{d=JSON.parse(raw);}catch(err){return;}
+  var aliases=(d.aliases||[]).map(function(a){return '<span class="popover-tag alias">'+escHtml(a)+'</span>';}).join('');
+  var ttps=(d.known_ttps||[]).map(function(t){return '<span class="popover-tag purple">'+escHtml(t)+'</span>';}).join('');
+  var conf=d.attribution_confidence?'<span class="conf-badge" style="margin-left:8px">'+escHtml(d.attribution_confidence)+' Confidence</span>':'';
+  var html='<span class="popover-type-tag actor">Threat Actor</span>'+conf+
+    '<div class="popover-title" style="color:var(--purple)">'+escHtml(d.name)+'</div>'+
+    (aliases?'<div class="popover-tags-row" style="margin-bottom:10px">'+aliases+'</div>':'')+
+    '<div class="popover-grid">'+
+      '<div class="popover-cell"><div class="popover-cell-label">Origin</div><div class="popover-cell-value">'+escHtml(d.origin||'Unknown')+'</div></div>'+
+      '<div class="popover-cell"><div class="popover-cell-label">Motivation</div><div class="popover-cell-value purple">'+escHtml(d.motivation||'Unknown')+'</div></div>'+
+    '</div>'+
+    (d.description?'<div class="popover-section-label">Description</div><div class="popover-body-text">'+escHtml(d.description)+'</div>':'')+
+    (d.story_relevance?'<div class="popover-section-label">Story Relevance</div><div class="popover-relevance">'+escHtml(d.story_relevance)+'</div>':'')+
+    (ttps?'<div class="popover-section-label">Known TTPs</div><div class="popover-tags-row">'+ttps+'</div>':'');
+  _showOverlay(html);
 }
 document.addEventListener('DOMContentLoaded',function(){
   document.querySelectorAll('.cvss-bar-fill').forEach(function(bar){
