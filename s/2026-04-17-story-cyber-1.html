@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
-<title>Operation PowerOFF — 53 DDoS-for-Hire Domains Seized, 75K Users Identified | The Daily Rundown</title>
+<title>CVE-2026-34197 – Apache ActiveMQ Classic Remote Code Execution (CISA KEV) — CVE-2026-34197 | The Daily Rundown</title>
 <meta property="og:type"        content="article">
 <meta property="og:site_name"   content="The Daily Rundown">
-<meta property="og:title"       content="Operation PowerOFF — 53 DDoS-for-Hire Domains Seized, 75K Users Identified">
-<meta property="og:description" content="A coordinated international law enforcement operation across 21 countries seized 53 DDoS-for-hire (booter/stresser) service domains and identified approximately 75,000 users who purchased attack services. This latest and largest wave of Operation PowerOFF signals a strategic shif">
+<meta property="og:title"       content="CVE-2026-34197 – Apache ActiveMQ Classic Remote Code Execution (CISA KEV)">
+<meta property="og:description" content="CVE-2026-34197 is a high-severity vulnerability (CVSS 8.8) in Apache ActiveMQ Classic that is under active exploitation in the wild. CISA has added it to the Known Exploited Vulnerabilities (KEV) catalog, triggering mandatory remediation deadlines for all federal civilian agencie">
 <meta property="og:url"         content="https://dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html">
 <meta name="twitter:card"        content="summary">
-<meta name="twitter:title"       content="Operation PowerOFF — 53 DDoS-for-Hire Domains Seized, 75K Users Identified">
-<meta name="twitter:description" content="A coordinated international law enforcement operation across 21 countries seized 53 DDoS-for-hire (booter/stresser) service domains and identified approximately 75,000 users who purchased attack services. This latest and largest wave of Operation PowerOFF signals a strategic shif">
+<meta name="twitter:title"       content="CVE-2026-34197 – Apache ActiveMQ Classic Remote Code Execution (CISA KEV)">
+<meta name="twitter:description" content="CVE-2026-34197 is a high-severity vulnerability (CVSS 8.8) in Apache ActiveMQ Classic that is under active exploitation in the wild. CISA has added it to the Known Exploited Vulnerabilities (KEV) catalog, triggering mandatory remediation deadlines for all federal civilian agencie">
 <style>
 :root {
   --bg:#0b0d16; --surface:#12152a; --surface2:#1a1d32; --surface3:#20233c;
@@ -20,8 +20,8 @@
   --cyber:#34d399; --cyber2:#10b981; --purple:#a78bfa; --amber:#fbbf24; --ai:#818cf8;
   --border:#252840; --border2:#333660;
   --body-text:#c0c8d8;
-  --sec:#fbbf24; --sec2:#dc2626; --sec-soft:#fde68a;
-  --sec-glow:rgba(251,191,36,0.15); --sec-bg:rgba(251,191,36,0.04); --sec-border:rgba(251,191,36,0.22);
+  --sec:#ef4444; --sec2:#dc2626; --sec-soft:#f87171;
+  --sec-glow:rgba(239,68,68,0.15); --sec-bg:rgba(239,68,68,0.04); --sec-border:rgba(239,68,68,0.22);
 }
 html.light {
   --bg:#f4f6fb; --surface:#ffffff; --surface2:#eef0f7; --surface3:#e4e7f2;
@@ -244,7 +244,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
 <body>
 <nav class="top-nav">
   <a href="https://dizchrisctrl.github.io/daily-digest" class="back-btn">&#8592; Back to Digest</a>
-  <span class="nav-breadcrumb">The Daily Rundown <span>/</span> 2026-04-17 <span>/</span> Breach Report</span>
+  <span class="nav-breadcrumb">The Daily Rundown <span>/</span> 2026-04-17 <span>/</span> Vulnerability Advisory</span>
   <div class="nav-actions">
     <button class="theme-toggle" onclick="document.documentElement.classList.toggle('light')">&#9788; Theme</button>
     <button class="share-btn-top" onclick="copyPageLink(this)">&#8679; Share</button>
@@ -254,21 +254,21 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-badges">
-      <span class="type-badge">&#9650; Breach Report</span>
-      
+      <span class="type-badge">&#9888; Vulnerability Advisory</span>
+      <span class="live-badge"><span class="live-dot"></span>Active Exploitation</span>
       
     </div>
-    <h1 class="hero-title">Operation PowerOFF Dismantles 53 DDoS-for-Hire Domains, Identifies 75K Users Across 21 Countries</h1>
+    <h1 class="hero-title">Apache ActiveMQ Flaw Under Active Exploitation, CISA Orders Federal Agencies to Patch</h1>
     <div class="score-row">
-      
+      <div class="cvss-wrap"><span class="cvss-label">CVSS</span><div class="cvss-bar-track"><div class="cvss-bar-fill" style="width:88%"></div></div><span class="cvss-score-num">8.8</span></div>
       <span class="severity-pill sev-high">High</span>
-      <span class="patch-pill patch-mitigation">&#9888; Mitigation Only</span>
+      <span class="patch-pill patch-available">&#10003; Patch Available</span>
     </div>
-    <p class="hero-desc">A coordinated international law enforcement operation across 21 countries seized 53 DDoS-for-hire (booter/stresser) service domains and identified approximately 75,000 users who purchased attack services. This latest and largest wave of Operation PowerOFF signals a strategic shift toward demand-side deterrence, targeting not just operators and infrastructure but the customers who fund the cybercrime ecosystem. Organizations should assess whether they have been targeted by such services and ensure adequate DDoS mitigation is in place.</p>
+    <p class="hero-desc">CVE-2026-34197 is a high-severity vulnerability (CVSS 8.8) in Apache ActiveMQ Classic that is under active exploitation in the wild. CISA has added it to the Known Exploited Vulnerabilities (KEV) catalog, triggering mandatory remediation deadlines for all federal civilian agencies. Because ActiveMQ serves as a central message broker in enterprise architectures, exploitation of this flaw can give attackers a privileged foothold spanning dozens of connected services.</p>
     <div class="hero-meta">
-      <span class="hero-meta-item">&#128197; Apr 16, 2026 6:26 PM EDT</span><span class="hero-meta-sep">|</span>
-      <span class="hero-meta-item">Source: <a href="https://www.bleepingcomputer.com/news/security/operation-poweroff-identifies-75k-ddos-users-takes-down-53-domains/" class="src-link-hero" target="_blank" rel="noopener">BleepingComputer &#8599;</a></span>
-      
+      <span class="hero-meta-item">&#128197; Apr 16, 2026 11:22 PM EDT</span><span class="hero-meta-sep">|</span>
+      <span class="hero-meta-item">Source: <a href="https://thehackernews.com/2026/04/apache-activemq-cve-2026-34197-added-to.html" class="src-link-hero" target="_blank" rel="noopener">The Hacker News &#8599;</a></span>
+      <span class="hero-meta-sep">|</span><span class="hero-meta-item" style="font-family:monospace;color:var(--sec-soft);">CVE-2026-34197</span>
     </div>
   </div>
 </header>
@@ -282,108 +282,72 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
           <div class="diagram-wrap">
             <div class="diagram-bar">
               <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-              <span class="diagram-title">Operation PowerOFF — 53 DDoS-for-Hire Domains Seized, 75K Users Identified</span>
+              <span class="diagram-title">CVE-2026-34197 – Apache ActiveMQ Classic Remote Code Execution (CISA KEV)</span>
             </div>
             <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#34d399"/>
-    </marker>
-    <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#f87171"/>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#34d399"/>
     </marker>
   </defs>
+  <!-- Background -->
   <rect width="700" height="340" fill="#060912"/>
-
   <!-- Title -->
-  <text x="350" y="28" fill="#7a849a" font-size="12" font-family="monospace" text-anchor="middle">DDoS-for-Hire Attack Chain &amp; Law Enforcement Disruption</text>
-
-  <!-- Row 1: Attack flow -->
-  <!-- Customer -->
-  <rect x="20" y="60" width="110" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="75" y="82" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Customer</text>
-  <text x="75" y="97" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">75K identified</text>
-
+  <text x="350" y="28" text-anchor="middle" fill="#34d399" font-size="14" font-family="monospace" font-weight="bold">CVE-2026-34197 Attack Chain</text>
+  <!-- Step 1: Attacker -->
+  <rect x="20" y="70" width="120" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="80" y="93" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Attacker</text>
+  <text x="80" y="112" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Sends exploit</text>
   <!-- Arrow 1 -->
-  <line x1="130" y1="85" x2="175" y2="85" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <text x="153" y="78" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">pays $</text>
-
-  <!-- Booter Panel -->
-  <rect x="178" y="60" width="120" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="238" y="82" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">Booter Panel</text>
-  <text x="238" y="97" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">53 domains seized</text>
-
+  <line x1="140" y1="97" x2="185" y2="97" stroke="#34d399" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <!-- Step 2: Network -->
+  <rect x="190" y="70" width="120" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="250" y="93" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Network</text>
+  <text x="250" y="112" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Adjacent access</text>
   <!-- Arrow 2 -->
-  <line x1="298" y1="85" x2="343" y2="85" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <text x="321" y="78" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">commands</text>
-
-  <!-- Attack Infra -->
-  <rect x="346" y="60" width="130" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="411" y="82" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Attack Infra</text>
-  <text x="411" y="97" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">botnets/reflectors</text>
-
+  <line x1="310" y1="97" x2="355" y2="97" stroke="#34d399" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <!-- Step 3: ActiveMQ Broker -->
+  <rect x="360" y="60" width="140" height="75" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2.5"/>
+  <text x="430" y="85" text-anchor="middle" fill="#34d399" font-size="13" font-family="monospace" font-weight="bold">ActiveMQ</text>
+  <text x="430" y="103" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">CVE-2026-34197</text>
+  <text x="430" y="121" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">CVSS 8.8 exploited</text>
   <!-- Arrow 3 -->
-  <line x1="476" y1="85" x2="530" y2="85" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowRed)"/>
-  <text x="503" y="78" fill="#f87171" font-size="9" font-family="monospace" text-anchor="middle">flood</text>
-
-  <!-- Victim -->
-  <rect x="533" y="60" width="140" height="50" rx="6" fill="#12152a" stroke="#f87171" stroke-width="2"/>
-  <text x="603" y="82" fill="#f87171" font-size="12" font-family="monospace" text-anchor="middle">Victim Target</text>
-  <text x="603" y="97" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">websites / servers</text>
-
-  <!-- Divider -->
-  <line x1="30" y1="140" x2="670" y2="140" stroke="#252840" stroke-width="1" stroke-dasharray="5,5"/>
-  <text x="350" y="160" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">⬇ Operation PowerOFF Disruption Points ⬇</text>
-
-  <!-- Row 2: LE actions -->
-  <!-- LE action 1: User ID -->
-  <rect x="20" y="185" width="140" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="90" y="207" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">User Identification</text>
-  <text x="90" y="224" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">75K accounts logged</text>
-
-  <!-- Arrow up to Customer -->
-  <line x1="75" y1="185" x2="75" y2="115" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="4,3"/>
-
-  <!-- LE action 2: Domain Seizure -->
-  <rect x="195" y="185" width="140" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="265" y="207" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">Domain Seizure</text>
-  <text x="265" y="224" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">53 domains down</text>
-
-  <!-- Arrow up to Booter -->
-  <line x1="238" y1="185" x2="238" y2="115" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="4,3"/>
-
-  <!-- LE action 3: International Cooperation -->
-  <rect x="370" y="185" width="140" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="440" y="207" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">Intl Cooperation</text>
-  <text x="440" y="224" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">21 countries</text>
-
-  <!-- LE action 4: Deterrence -->
-  <rect x="545" y="185" width="130" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="610" y="207" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">Deterrence</text>
-  <text x="610" y="224" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">warnings &amp; charges</text>
-
-  <!-- Bottom label -->
-  <rect x="180" y="275" width="340" height="40" rx="8" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
-  <text x="350" y="295" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Strategy: Disrupt SUPPLY + DEMAND</text>
-  <text x="350" y="310" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Shrink customer base → collapse business model</text>
+  <line x1="500" y1="97" x2="545" y2="97" stroke="#34d399" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <!-- Step 4: RCE -->
+  <rect x="550" y="70" width="130" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="615" y="93" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Code Exec</text>
+  <text x="615" y="112" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Server compromised</text>
+  <!-- Downstream: Connected Services -->
+  <line x1="430" y1="135" x2="430" y2="175" stroke="#34d399" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <rect x="310" y="180" width="240" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="430" y="202" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Connected Services</text>
+  <text x="430" y="220" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">All downstream apps at risk</text>
+  <!-- CISA KEV Box -->
+  <rect x="190" y="265" width="320" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="350" y="287" text-anchor="middle" fill="#34d399" font-size="13" font-family="monospace" font-weight="bold">CISA KEV Catalog</text>
+  <text x="350" y="305" text-anchor="middle" fill="#7a849a" font-size="11" font-family="monospace">Mandatory federal patching deadline triggered</text>
+  <!-- Arrow from RCE down to CISA -->
+  <line x1="615" y1="125" x2="615" y2="280" stroke="#7a849a" stroke-width="1" stroke-dasharray="5,5"/>
+  <line x1="615" y1="280" x2="515" y2="280" stroke="#7a849a" stroke-width="1" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
+  <text x="620" y="205" fill="#7a849a" font-size="10" font-family="monospace" transform="rotate(90,620,205)">exploitation confirmed</text>
 </svg></div>
           </div>
-          <div class="attack-vector-text">DDoS-for-hire platforms provided web-based attack panels where customers selected a target IP, chose an attack method (volumetric UDP floods, TCP SYN floods, application-layer HTTP floods), and launched attacks using networks of compromised devices, rented servers, or abused amplification protocols (DNS, NTP, memcached reflection) capable of generating hundreds of gigabits per second of malicious traffic.</div>
+          <div class="attack-vector-text">A network-accessible attacker can exploit CVE-2026-34197 in Apache ActiveMQ Classic to achieve remote code execution or privilege escalation on the broker with minimal attack complexity, likely via malicious serialized objects or protocol-level abuse targeting JMS/OpenWire endpoints.</div>
         </div>
       </div>
 
-  
+  <div class="sec-block"><div class="sec-block-header"><span class="sec-block-icon">&#9432;</span><span class="sec-block-title red">Vulnerability Details</span></div><div class="sec-block-body"><div class="details-grid"><div class="detail-cell"><div class="detail-label">CVE ID</div><div class="detail-value red">CVE-2026-34197</div></div><div class="detail-cell"><div class="detail-label">CVSS v3.1 Score</div><div class="detail-value red">8.8 / 10</div></div><div class="detail-cell"><div class="detail-label">Severity</div><div class="detail-value red">High</div></div><div class="detail-cell"><div class="detail-label">Patch Status</div><div class="detail-value green">Patch Available</div></div><div class="detail-cell cvss-vector-cell"><div class="detail-label">CVSS Vector</div><div class="detail-value muted">CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H</div></div></div></div></div>
 
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#128336;</span><span class="sec-block-title amber">Timeline</span></div>
     <div class="sec-block-body">
-      <div class="timeline-track"><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Disclosed</div><div class="tl-date">2026-04-13</div></div><div class="tl-step"><div class="tl-dot empty"></div><div class="tl-label">Exploited in Wild</div><div class="tl-date na">Unknown</div></div><div class="tl-step"><div class="tl-dot amber"></div><div class="tl-label">Patch Released</div><div class="tl-date na">Unknown</div></div></div>
+      <div class="timeline-track"><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Disclosed</div><div class="tl-date">2026-04-16</div></div><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Exploited in Wild</div><div class="tl-date">2026-04-16</div></div><div class="tl-step"><div class="tl-dot empty"></div><div class="tl-label">Patch Released</div><div class="tl-date na">Unknown</div></div></div>
     </div>
   </div>
 
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Map</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tactic or technique for details</span></div>
-    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Impact&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1498&quot;, &quot;name&quot;: &quot;Network Denial of Service&quot;}, {&quot;id&quot;: &quot;T1499&quot;, &quot;name&quot;: &quot;Endpoint Denial of Service&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Impact</span><span class="mitre-tactic-cnt">2 techniques</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1498</span><span class="mitre-tech-name">Network Denial of Service</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The core service offered by the 53 seized booter platforms was network-layer DDoS attacks (volumetric UDP floods, SYN floods) designed to overwhelm target bandwidth and connection-handling capacity.</p><a href="https://attack.mitre.org/techniques/T1498/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1499</span><span class="mitre-tech-name">Endpoint Denial of Service</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Several booter services offered application-layer HTTP flood attacks targeting web servers and APIs, exhausting server resources rather than just network bandwidth.</p><a href="https://attack.mitre.org/techniques/T1499/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Resource Development&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1583.005&quot;, &quot;name&quot;: &quot;Acquire Infrastructure: Botnet&quot;}, {&quot;id&quot;: &quot;T1584&quot;, &quot;name&quot;: &quot;Compromise Infrastructure&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Resource Development</span><span class="mitre-tactic-cnt">2 techniques</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1583.005</span><span class="mitre-tech-name">Acquire Infrastructure: Botnet</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Booter operators maintained or rented botnets of compromised devices to generate the distributed attack traffic sold to their 75,000 customers.</p><a href="https://attack.mitre.org/techniques/T1583/005/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1584</span><span class="mitre-tech-name">Compromise Infrastructure</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">DDoS-for-hire services exploited misconfigured DNS, NTP, and memcached servers as amplification reflectors to multiply attack volume without owning the infrastructure.</p><a href="https://attack.mitre.org/techniques/T1584/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
+    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Initial Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1190&quot;, &quot;name&quot;: &quot;Exploit Public-Facing Application&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Initial Access</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1190</span><span class="mitre-tech-name">Exploit Public-Facing Application</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Attackers are exploiting CVE-2026-34197 on internet- or network-exposed ActiveMQ broker instances to gain initial access.</p><a href="https://attack.mitre.org/techniques/T1190/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Execution&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1203&quot;, &quot;name&quot;: &quot;Exploitation for Client Execution&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Execution</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1203</span><span class="mitre-tech-name">Exploitation for Client Execution</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The vulnerability likely allows execution of arbitrary code on the ActiveMQ broker through crafted protocol messages or serialized objects.</p><a href="https://attack.mitre.org/techniques/T1203/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Privilege Escalation&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1068&quot;, &quot;name&quot;: &quot;Exploitation for Privilege Escalation&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Privilege Escalation</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1068</span><span class="mitre-tech-name">Exploitation for Privilege Escalation</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">With a CVSS 8.8 score indicating high impact across confidentiality, integrity, and availability, successful exploitation may grant elevated privileges on the broker host.</p><a href="https://attack.mitre.org/techniques/T1068/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Lateral Movement&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1570&quot;, &quot;name&quot;: &quot;Lateral Tool Transfer&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Lateral Movement</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1570</span><span class="mitre-tech-name">Lateral Tool Transfer</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">A compromised message broker sits at a network nexus connecting many services, making it an ideal pivot point for lateral movement to downstream applications.</p><a href="https://attack.mitre.org/techniques/T1570/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Impact&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1499&quot;, &quot;name&quot;: &quot;Endpoint Denial of Service&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Impact</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1499</span><span class="mitre-tech-name">Endpoint Denial of Service</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Disrupting or crashing the central message broker can cascade failures across all dependent enterprise services.</p><a href="https://attack.mitre.org/techniques/T1499/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
   </div>
 
   
@@ -393,10 +357,10 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
           <table class="affected-table">
             <thead><tr><th>Vendor</th><th>Product</th><th>Versions Affected</th><th>Fixed In</th></tr></thead>
             <tbody><tr>
-          <td><span class="prod-vendor">Various</span></td>
-          <td><span class="prod-name">53 DDoS-for-Hire / Booter / Stresser Platforms</span></td>
-          <td><span class="prod-ver">All — domains seized by law enforcement</span></td>
-          <td><span class="prod-fix none">Mitigate: Domains seized; potential targets should deploy DDoS mitigation services</span></td>
+          <td><span class="prod-vendor">Apache Software Foundation</span></td>
+          <td><span class="prod-name">Apache ActiveMQ Classic</span></td>
+          <td><span class="prod-ver">All versions — see vendor advisory</span></td>
+          <td><span class="prod-fix none">Mitigate: Apply vendor patch when available; restrict network access immediately</span></td>
         </tr></tbody>
           </table>
         </div>
@@ -406,7 +370,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="sec-block-header"><span class="sec-block-icon">&#10067;</span><span class="sec-block-title amber">Am I Affected?</span></div>
     <div class="sec-block-body">
       <p class="apply-intro">You are likely at risk if <strong>any</strong> of the following apply:</p>
-      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You operate internet-facing services (websites, APIs, gaming servers) without dedicated DDoS mitigation</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your organization has been targeted by DDoS attacks from unknown sources in the past 12 months</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment relies on single-provider hosting without anycast or traffic scrubbing capabilities</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You run DNS, NTP, or memcached services that are publicly accessible and could be abused as amplification reflectors</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your organization has enterprise-grade DDoS protection with rate limiting, geo-blocking, and upstream scrubbing already deployed and tested</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your environment has no internet-facing services and operates entirely on private networks</span></div></div>
+      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You run Apache ActiveMQ Classic in any version in your environment (on-premises or cloud)</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your ActiveMQ broker ports (default 61616, 8161, 5672, 61613) are exposed to the internet or untrusted network segments</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment uses ActiveMQ Classic as middleware between critical business applications or microservices</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You are a U.S. federal civilian agency subject to CISA Binding Operational Directive 22-01</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">You exclusively use Apache ActiveMQ Artemis (the next-generation broker) and have no Classic instances deployed</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your ActiveMQ instances are fully isolated on internal network segments with strict authentication and no exposure to untrusted networks</span></div></div>
     </div>
   </div>
 
@@ -414,8 +378,8 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="sec-block-header"><span class="sec-block-icon">&#128736;</span><span class="sec-block-title green">Fix &amp; Recommendations</span></div>
     <div class="sec-block-body">
       <div class="fix-grid">
-        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Review your DDoS mitigation posture: confirm that upstream scrubbing services (e.g., Cloudflare, Akamai, AWS Shield Advanced) are active and properly configured for all public-facing IPs and domains.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Audit publicly exposed UDP services (DNS, NTP, memcached, SSDP) and disable or restrict access to prevent your infrastructure from being used as an amplification reflector — run `nmap -sU -p 53,123,11211,1900 &lt;your-public-IP-range&gt;` to identify exposed services.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Verify that rate-limiting and connection-throttling rules are in place on load balancers and web application firewalls for HTTP/HTTPS endpoints.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Establish or review your DDoS incident response runbook, ensuring escalation contacts for your ISP and DDoS mitigation provider are current and tested.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>If your organization has received DDoS threats or experienced attacks recently, preserve logs and report them to law enforcement via IC3 (FBI) or Europol&#39;s reporting portal, as Operation PowerOFF investigators may be able to correlate with seized user databases.</span></li></ul></div>
-        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Implement always-on DDoS protection with automatic traffic scrubbing rather than on-demand activation, which introduces dangerous response lag during volumetric attacks.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Adopt an anycast network architecture for critical services so that attack traffic is distributed across multiple PoPs rather than concentrated on a single origin.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Deploy network telescopes or darknet sensors to detect amplification abuse originating from your own infrastructure, and implement BCP38/BCP84 (source address validation) to prevent IP spoofing from your network.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Conduct regular DDoS simulation exercises (tabletop and live) with your mitigation provider to validate that protections hold under realistic attack scenarios and that failover procedures work as documented.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Integrate DDoS attack telemetry into your SIEM and threat intelligence platform to correlate attack patterns with known booter service signatures, enabling faster attribution and law enforcement reporting.</span></li></ul></div>
+        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Inventory all Apache ActiveMQ Classic instances across your environment, including forgotten or shadow-IT deployments, using network scans for default ports 61616 (OpenWire), 8161 (web console), 5672 (AMQP), and 61613 (STOMP).</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Immediately restrict network access to ActiveMQ broker ports using firewall rules or security groups — block all inbound connections from untrusted networks and limit access to only known application hosts.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Disable the ActiveMQ web console (port 8161) if it is not strictly required: remove or comment out the `&lt;import resource=&quot;jetty.xml&quot;/&gt;` line in `activemq.xml`, then restart the broker.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Monitor Apache&#39;s security advisories page (https://activemq.apache.org/security-advisories) and apply the vendor patch as soon as a fixed version is published.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Review ActiveMQ broker logs (`data/activemq.log`) and host-level process logs for unusual activity — unexpected outbound connections, new child processes spawned by the broker JVM, or unrecognized client connections.</span></li></ul></div>
+        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Implement network segmentation to isolate message brokers in dedicated VLANs or security zones with strict ingress/egress filtering, ensuring brokers cannot directly reach the internet.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Enforce strong authentication and TLS encryption on all ActiveMQ transport connectors — disable anonymous access and require client certificate or LDAP-backed authentication for all producers and consumers.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Establish a middleware asset inventory and patching cadence that treats message brokers, API gateways, and load balancers as Tier-1 critical infrastructure with accelerated patch SLAs.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Deploy runtime application self-protection (RASP) or Java deserialization filtering (e.g., JEP 290 serial filters) on ActiveMQ JVM instances to block exploitation of serialization-based attack vectors.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Evaluate migration to Apache ActiveMQ Artemis, the actively developed next-generation broker, which has a modernized codebase and improved security posture compared to Classic.</span></li></ul></div>
       </div>
     </div>
   </div>
@@ -423,27 +387,27 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#128218;</span><span class="sec-block-title ai">Concept Briefing</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tag to expand</span></div>
     <div class="sec-block-body">
-      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-ddos-for-hire-services')">DDoS-for-Hire Services</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-amplification-attacks')">Amplification Attacks</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-demand-side-deterrence')">Demand-Side Deterrence</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-domain-seizure')">Domain Seizure</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-coordinated-takedown-operation')">Coordinated Takedown Operations</button></div>
-      <div class="concept-tag-expand" id="ct-ddos-for-hire-services">
-          <div class="concept-tag-expand-name">DDoS-for-Hire Services</div>
-          <div class="concept-def">Web-based platforms (called &#39;booters&#39; or &#39;stressers&#39;) that let anyone rent distributed denial-of-service attacks against a target for a small fee, requiring no technical expertise.</div>
-          <div class="concept-rel">The 53 seized domains were booter/stresser platforms whose 75,000 customers used them to launch attacks, forming the core of what Operation PowerOFF dismantled.</div>
-        </div><div class="concept-tag-expand" id="ct-amplification-attacks">
-          <div class="concept-tag-expand-name">Amplification Attacks</div>
-          <div class="concept-def">A DDoS technique where attackers send small requests to misconfigured servers (DNS, NTP, memcached) with a spoofed source IP, causing those servers to send much larger responses to the victim.</div>
-          <div class="concept-rel">Booter services commonly abuse amplification protocols to multiply their attack bandwidth by 50-500x, enabling massive floods from relatively modest infrastructure.</div>
-        </div><div class="concept-tag-expand" id="ct-demand-side-deterrence">
-          <div class="concept-tag-expand-name">Demand-Side Deterrence</div>
-          <div class="concept-def">A law enforcement strategy that targets the buyers of illegal services rather than just the sellers, aiming to collapse the economic model by shrinking the customer base.</div>
-          <div class="concept-rel">By identifying 75,000 users — not just operators — Operation PowerOFF aims to deter future customers from purchasing DDoS attacks, a strategic shift from traditional supply-side takedowns.</div>
-        </div><div class="concept-tag-expand" id="ct-domain-seizure">
-          <div class="concept-tag-expand-name">Domain Seizure</div>
-          <div class="concept-def">A legal process where law enforcement takes control of internet domain names, redirecting them to seizure notices and preventing the services from operating under those addresses.</div>
-          <div class="concept-rel">The 53 domain seizures immediately disrupted booter platform operations, though historically operators have re-registered under new domains — which is why user identification was the more significant action.</div>
-        </div><div class="concept-tag-expand" id="ct-coordinated-takedown-operation">
-          <div class="concept-tag-expand-name">Coordinated Takedown Operations</div>
-          <div class="concept-def">Multi-agency law enforcement actions spanning multiple countries that simultaneously disrupt cybercriminal infrastructure to prevent operators from simply shifting to jurisdictions beyond reach.</div>
-          <div class="concept-rel">Operation PowerOFF spanned 21 countries, reflecting the borderless nature of booter platforms and the necessity of international coordination to effectively dismantle them.</div>
+      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-message-broker')">Message Broker</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-cisa-kev-catalog')">CISA KEV Catalog</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-java-deserialization-attack')">Java Deserialization Attack</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-binding-operational-directive')">Binding Operational Directive</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-middleware-as-high-value-targe')">Middleware as High-Value Target</button></div>
+      <div class="concept-tag-expand" id="ct-message-broker">
+          <div class="concept-tag-expand-name">Message Broker</div>
+          <div class="concept-def">A middleware component that routes messages between applications, acting as a central &#39;post office&#39; so services can communicate asynchronously without direct connections to each other.</div>
+          <div class="concept-rel">Apache ActiveMQ Classic is a message broker — compromising it gives an attacker visibility into and control over communications across all connected enterprise services.</div>
+        </div><div class="concept-tag-expand" id="ct-cisa-kev-catalog">
+          <div class="concept-tag-expand-name">CISA KEV Catalog</div>
+          <div class="concept-def">The Known Exploited Vulnerabilities catalog maintained by CISA, listing vulnerabilities confirmed to be actively exploited in the wild, with mandatory remediation timelines for federal agencies under BOD 22-01.</div>
+          <div class="concept-rel">CVE-2026-34197&#39;s addition to the KEV catalog confirms active exploitation and legally requires federal agencies to patch within a strict deadline, signaling extreme urgency to all organizations.</div>
+        </div><div class="concept-tag-expand" id="ct-java-deserialization-attack">
+          <div class="concept-tag-expand-name">Java Deserialization Attack</div>
+          <div class="concept-def">An attack that abuses how Java applications reconstruct objects from byte streams — by sending a maliciously crafted serialized object, an attacker can execute arbitrary code on the target.</div>
+          <div class="concept-rel">ActiveMQ&#39;s Java-based architecture and history of deserialization vulnerabilities (including the 2023 RCE) make this a likely attack vector for CVE-2026-34197.</div>
+        </div><div class="concept-tag-expand" id="ct-binding-operational-directive">
+          <div class="concept-tag-expand-name">Binding Operational Directive</div>
+          <div class="concept-def">A compulsory directive issued by CISA to federal civilian agencies requiring specific cybersecurity actions within set timeframes, enforceable under federal law.</div>
+          <div class="concept-rel">BOD 22-01 requires federal agencies to remediate any vulnerability added to the KEV catalog, transforming CVE-2026-34197 from an advisory into a legal mandate.</div>
+        </div><div class="concept-tag-expand" id="ct-middleware-as-high-value-targe">
+          <div class="concept-tag-expand-name">Middleware as High-Value Target</div>
+          <div class="concept-def">Infrastructure components like message brokers, API gateways, and load balancers that sit between many services and handle aggregated traffic, making them especially valuable targets for attackers.</div>
+          <div class="concept-rel">ActiveMQ&#39;s central position means a single compromise can give attackers access to data and systems across the entire enterprise, explaining why these components are increasingly targeted.</div>
         </div>
     </div>
   </div>
@@ -454,56 +418,56 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
         <details class="hunt-entry" open>
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Inbound volumetric UDP flood traffic from diverse source IPs</span>
+            <span class="hunt-signal">Unexpected outbound connections from ActiveMQ broker host</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Look for sudden spikes in inbound UDP traffic (especially on ports 53, 123, 11211, 1900) from hundreds or thousands of distinct source IPs — a hallmark of amplification-based DDoS attacks launched by booter services. Traffic volumes exceeding 2-5x normal baseline sustained for minutes to hours indicate an active attack.</div>
-            <span class="hunt-log-tag">NetFlow/sFlow collectors</span><span class="hunt-log-tag">Firewall logs</span><span class="hunt-log-tag">ISP traffic dashboards</span><span class="hunt-log-tag">DDoS mitigation provider dashboards</span>
+            <div class="hunt-desc">After exploitation, attackers typically establish reverse shells or C2 callbacks. Look for the ActiveMQ JVM process (java) initiating outbound TCP connections to external IPs on non-standard ports, which would not occur during normal broker operation.</div>
+            <span class="hunt-log-tag">Network flow logs (NetFlow/IPFIX)</span><span class="hunt-log-tag">Host-based firewall logs</span><span class="hunt-log-tag">EDR process network telemetry</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Outbound amplification traffic from your infrastructure</span>
+            <span class="hunt-signal">Anomalous child processes spawned by ActiveMQ JVM</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Monitor for your DNS, NTP, or memcached servers sending disproportionately large responses to external IPs you don&#39;t recognize. A ratio of response-to-request size exceeding 10:1 to many distinct destination IPs suggests your servers are being abused as reflectors by booter services.</div>
-            <span class="hunt-log-tag">DNS query logs</span><span class="hunt-log-tag">NTP monlist logs</span><span class="hunt-log-tag">NetFlow/sFlow data</span><span class="hunt-log-tag">Firewall egress logs</span>
+            <div class="hunt-desc">The ActiveMQ Java process should not spawn shell interpreters or system utilities. Watch for the ActiveMQ JVM (java) parent process launching child processes such as cmd.exe, powershell.exe, /bin/sh, /bin/bash, curl, wget, or certutil — a strong indicator of post-exploitation command execution.</div>
+            <span class="hunt-log-tag">EDR process creation logs</span><span class="hunt-log-tag">Sysmon Event ID 1 (Process Create)</span><span class="hunt-log-tag">Linux auditd execve logs</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">Unusual OpenWire or STOMP protocol traffic patterns</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Exploitation payloads may appear as malformed or abnormally large OpenWire (port 61616) or STOMP (port 61613) messages. Monitor for connections from unexpected source IPs, atypical message sizes, or protocol errors logged in activemq.log that could indicate exploitation attempts.</div>
+            <span class="hunt-log-tag">ActiveMQ broker logs (data/activemq.log)</span><span class="hunt-log-tag">Network IDS/IPS (Suricata, Snort)</span><span class="hunt-log-tag">Packet capture on broker ports</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority medium">Medium</span>
-            <span class="hunt-signal">HTTP/HTTPS request floods with abnormal patterns</span>
+            <span class="hunt-signal">Web console access from non-administrative sources</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Detect application-layer DDoS by monitoring for sudden surges in HTTP requests with repetitive User-Agent strings, requests concentrated on resource-heavy endpoints (search, login, API calls), or connections from IPs associated with known hosting/VPS providers rather than legitimate user ISPs.</div>
-            <span class="hunt-log-tag">Web server access logs (Apache/Nginx)</span><span class="hunt-log-tag">WAF logs</span><span class="hunt-log-tag">CDN analytics</span><span class="hunt-log-tag">Load balancer connection logs</span>
+            <div class="hunt-desc">The ActiveMQ web console (port 8161) is a common attack surface. Review web access logs for login attempts or authenticated sessions from IP addresses that are not part of your administrative network, especially brute-force patterns or access at unusual hours.</div>
+            <span class="hunt-log-tag">ActiveMQ Jetty access logs</span><span class="hunt-log-tag">Reverse proxy / WAF logs</span><span class="hunt-log-tag">Network flow logs</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority medium">Medium</span>
-            <span class="hunt-signal">SYN flood or connection exhaustion indicators</span>
+            <span class="hunt-signal">New or modified files in ActiveMQ installation directories</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Watch for a high rate of half-open TCP connections (SYN_RECEIVED state) or connection table exhaustion on firewalls and servers. Run `netstat -an | grep SYN_RECV | wc -l` or check firewall connection tracking tables for abnormal spikes indicating TCP SYN flood attacks from booter services.</div>
-            <span class="hunt-log-tag">Firewall connection state tables</span><span class="hunt-log-tag">Server OS network statistics</span><span class="hunt-log-tag">IDS/IPS alerts (Snort/Suricata SYN flood rules)</span>
-          </div>
-        </details>
-        <details class="hunt-entry">
-          <summary>
-            <span class="hunt-priority low">Low</span>
-            <span class="hunt-signal">Internal users accessing known booter domains or successors</span>
-            <span class="hunt-chevron">&#9658;</span>
-          </summary>
-          <div class="hunt-body">
-            <div class="hunt-desc">Monitor DNS query logs and web proxy logs for internal users resolving or visiting domains associated with DDoS-for-hire services. While the 53 specific domains have been seized, successor sites and related forums may appear. Correlate against threat intelligence feeds that track booter platform domains.</div>
-            <span class="hunt-log-tag">DNS resolver query logs</span><span class="hunt-log-tag">Web proxy/SWG logs</span><span class="hunt-log-tag">SIEM with threat intelligence feed integration</span>
+            <div class="hunt-desc">Post-exploitation activity may involve dropping web shells, modified configuration files, or additional tooling into the ActiveMQ installation directory (e.g., webapps/, conf/, or temp/). Monitor for file creation or modification events in these paths outside of known maintenance windows.</div>
+            <span class="hunt-log-tag">File integrity monitoring (FIM)</span><span class="hunt-log-tag">Sysmon Event ID 11 (File Create)</span><span class="hunt-log-tag">EDR file telemetry</span>
           </div>
         </details></div></div>
   </div>
@@ -511,7 +475,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#9762;</span><span class="sec-block-title amber">Indicators of Compromise</span><button class="ioc-copy-btn" style="margin-left:auto" onclick="copyAllIOCs()">&#10064; Copy All IOCs</button></div>
     <div class="sec-block-body">
-      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific indicators of compromise (hashes, IPs, domains, file paths, or URI patterns) were reported in the source article. The 53 seized domain names were not individually listed. All IOC arrays are empty. If specific seized domains or associated infrastructure details are published by Europol or the FBI, update this advisory accordingly. Always verify any IOCs against your own environment before taking blocking actions.</span></div>
+      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific indicators of compromise (hashes, IPs, domains, file paths, or URI patterns) were reported in the source article. All IOC arrays are intentionally empty. If IOCs are published by CISA, Apache, or threat intelligence vendors, verify them against your environment independently before taking blocking action.</span></div>
       <div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Hashes (SHA-256)</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Command &amp;amp; Control IPs</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Malicious Domains</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Paths / Artifacts</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Suspicious URI Patterns</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div>
     </div>
   </div>
@@ -519,9 +483,9 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="share-footer">
     <div class="share-footer-text"><strong>Share this advisory</strong><br><span style="font-size:0.78rem;">Help your network patch faster.</span></div>
     <div class="share-footer-btns">
-      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20Operation%20PowerOFF%20Dismantles%2053%20DDoS-for-Hire%20Domains%2C%20Identifies%2075K%20Users%20Across%2021%20Countries%0A%0ACVSS%20N/A%20%C2%B7%20High%20%C2%B7%20Mitigation%20Only&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
-      <a href="https://wa.me/?text=%F0%9F%9B%A1%20Operation%20PowerOFF%20Dismantles%2053%20DDoS-for-Hire%20Domains%2C%20Identifies%2075K%20Users%20Across%2021%20Countries%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
-      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html&amp;text=Operation%20PowerOFF%20Dismantles%2053%20DDoS-for-Hire%20Domains%2C%20Identifies%2075K%20Users%20Across%2021%20Countries" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
+      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20Apache%20ActiveMQ%20Flaw%20Under%20Active%20Exploitation%2C%20CISA%20Orders%20Federal%20Agencies%20to%20Patch%0A%0ACVSS%208.8%20%C2%B7%20High%20%C2%B7%20Patch%20Available&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
+      <a href="https://wa.me/?text=%F0%9F%9B%A1%20Apache%20ActiveMQ%20Flaw%20Under%20Active%20Exploitation%2C%20CISA%20Orders%20Federal%20Agencies%20to%20Patch%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
+      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html&amp;text=Apache%20ActiveMQ%20Flaw%20Under%20Active%20Exploitation%2C%20CISA%20Orders%20Federal%20Agencies%20to%20Patch" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
       <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html" class="share-opt linkedin" target="_blank" rel="noopener">in Share</a>
       <button class="share-opt copy-link" onclick="copyPageLink(this)">&#128279; Copy Link</button>
     </div>

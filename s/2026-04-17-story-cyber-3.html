@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
-<title>ZionSiphon: OT Malware Targeting Water Treatment and Desalination Infrastructure | The Daily Rundown</title>
+<title>ZionSiphon – OT Malware Targeting Water Treatment and Desalination Systems | The Daily Rundown</title>
 <meta property="og:type"        content="article">
 <meta property="og:site_name"   content="The Daily Rundown">
-<meta property="og:title"       content="ZionSiphon: OT Malware Targeting Water Treatment and Desalination Infrastructure">
-<meta property="og:description" content="ZionSiphon is a newly discovered, purpose-built malware designed to sabotage water treatment and desalination systems by manipulating industrial control systems (ICS), including PLCs, HMIs, and SCADA components. Unlike generic IT malware, ZionSiphon demonstrates deep domain knowl">
+<meta property="og:title"       content="ZionSiphon – OT Malware Targeting Water Treatment and Desalination Systems">
+<meta property="og:description" content="ZionSiphon is a newly discovered malware framework purpose-built to infiltrate and sabotage operational technology (OT) in water treatment and desalination plants. It targets SCADA/ICS components—including PLCs, HMIs, and industrial protocols like Modbus and DNP3—to send rogue co">
 <meta property="og:url"         content="https://dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-3.html">
 <meta name="twitter:card"        content="summary">
-<meta name="twitter:title"       content="ZionSiphon: OT Malware Targeting Water Treatment and Desalination Infrastructure">
-<meta name="twitter:description" content="ZionSiphon is a newly discovered, purpose-built malware designed to sabotage water treatment and desalination systems by manipulating industrial control systems (ICS), including PLCs, HMIs, and SCADA components. Unlike generic IT malware, ZionSiphon demonstrates deep domain knowl">
+<meta name="twitter:title"       content="ZionSiphon – OT Malware Targeting Water Treatment and Desalination Systems">
+<meta name="twitter:description" content="ZionSiphon is a newly discovered malware framework purpose-built to infiltrate and sabotage operational technology (OT) in water treatment and desalination plants. It targets SCADA/ICS components—including PLCs, HMIs, and industrial protocols like Modbus and DNP3—to send rogue co">
 <style>
 :root {
   --bg:#0b0d16; --surface:#12152a; --surface2:#1a1d32; --surface3:#20233c;
@@ -258,13 +258,13 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
       
       
     </div>
-    <h1 class="hero-title">ZionSiphon: Purpose-Built Malware Targets Water Treatment Infrastructure</h1>
+    <h1 class="hero-title">ZionSiphon: Purpose-Built Malware Targets Water Treatment and Desalination Systems</h1>
     <div class="score-row">
       
       <span class="severity-pill sev-critical">Critical</span>
       <span class="patch-pill patch-mitigation">&#9888; Mitigation Only</span>
     </div>
-    <p class="hero-desc">ZionSiphon is a newly discovered, purpose-built malware designed to sabotage water treatment and desalination systems by manipulating industrial control systems (ICS), including PLCs, HMIs, and SCADA components. Unlike generic IT malware, ZionSiphon demonstrates deep domain knowledge of water treatment processes — targeting membrane pressures, chemical dosing rates, and pH balancing — representing a dangerous escalation in threats to critical public health infrastructure. A successful attack could cause equipment damage, produce unsafe drinking water, or shut down treatment capacity while masking changes from operators.</p>
+    <p class="hero-desc">ZionSiphon is a newly discovered malware framework purpose-built to infiltrate and sabotage operational technology (OT) in water treatment and desalination plants. It targets SCADA/ICS components—including PLCs, HMIs, and industrial protocols like Modbus and DNP3—to send rogue commands that can alter chemical dosing, valve positions, and safety interlocks. This represents a significant escalation in OT-targeted threats, directly endangering public health and water supply safety for millions of people.</p>
     <div class="hero-meta">
       <span class="hero-meta-item">&#128197; Apr 16, 2026 6:04 PM EDT</span><span class="hero-meta-sep">|</span>
       <span class="hero-meta-item">Source: <a href="https://www.bleepingcomputer.com/news/security/zionsiphon-malware-designed-to-sabotage-water-treatment-systems/" class="src-link-hero" target="_blank" rel="noopener">BleepingComputer &#8599;</a></span>
@@ -282,89 +282,69 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
           <div class="diagram-wrap">
             <div class="diagram-bar">
               <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-              <span class="diagram-title">ZionSiphon: OT Malware Targeting Water Treatment and Desalination Infrastructure</span>
+              <span class="diagram-title">ZionSiphon – OT Malware Targeting Water Treatment and Desalination Systems</span>
             </div>
             <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#34d399"/>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#34d399"/>
     </marker>
   </defs>
   <rect width="700" height="340" fill="#060912"/>
-  <text x="350" y="28" text-anchor="middle" fill="#34d399" font-size="14" font-family="monospace" font-weight="bold">ZionSiphon Attack Chain — Water Treatment Sabotage</text>
-
+  <!-- Title -->
+  <text x="350" y="28" text-anchor="middle" fill="#34d399" font-size="14" font-family="monospace" font-weight="bold">ZionSiphon Attack Chain</text>
   <!-- Step 1: Initial Access -->
-  <rect x="20" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
-  <text x="80" y="84" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Initial</text>
+  <rect x="20" y="60" width="120" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="80" y="83" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Initial</text>
   <text x="80" y="100" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Access</text>
-  <text x="80" y="126" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">IT/OT boundary</text>
-
-  <!-- Arrow 1-2 -->
-  <line x1="140" y1="88" x2="175" y2="88" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-
-  <!-- Step 2: Reconnaissance -->
-  <rect x="178" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="238" y="84" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">OT Recon</text>
-  <text x="238" y="100" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">& Discovery</text>
-  <text x="238" y="126" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Identify PLCs/HMIs</text>
-
-  <!-- Arrow 2-3 -->
-  <line x1="298" y1="88" x2="333" y2="88" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-
+  <text x="80" y="125" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">IT/OT boundary</text>
+  <!-- Arrow 1→2 -->
+  <line x1="140" y1="87" x2="175" y2="87" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- Step 2: Recon -->
+  <rect x="180" y="60" width="120" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="240" y="83" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">OT Recon</text>
+  <text x="240" y="100" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">& Discovery</text>
+  <text x="240" y="125" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Scan PLCs/HMIs</text>
+  <!-- Arrow 2→3 -->
+  <line x1="300" y1="87" x2="335" y2="87" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
   <!-- Step 3: Protocol Abuse -->
-  <rect x="336" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="396" y="84" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Protocol</text>
-  <text x="396" y="100" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Manipulation</text>
-  <text x="396" y="126" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Modbus / DNP3</text>
-
-  <!-- Arrow 3-4 -->
-  <line x1="456" y1="88" x2="491" y2="88" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-
+  <rect x="340" y="60" width="120" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="400" y="83" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Protocol</text>
+  <text x="400" y="100" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Manipulation</text>
+  <text x="400" y="125" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Modbus / DNP3</text>
+  <!-- Arrow 3→4 -->
+  <line x1="460" y1="87" x2="495" y2="87" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
   <!-- Step 4: Sabotage -->
-  <rect x="494" y="60" width="130" height="56" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="559" y="84" text-anchor="middle" fill="#34d399" font-size="12" font-family="monospace" font-weight="bold">Sabotage</text>
-  <text x="559" y="100" text-anchor="middle" fill="#34d399" font-size="12" font-family="monospace" font-weight="bold">Execution</text>
-  <text x="559" y="126" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Alter parameters</text>
-
-  <!-- Physical impact targets below -->
-  <text x="350" y="165" text-anchor="middle" fill="#7a849a" font-size="11" font-family="monospace">── Physical Targets ──</text>
-
-  <!-- Target: Chemical Dosing -->
-  <rect x="40" y="185" width="140" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="110" y="207" text-anchor="middle" fill="#eaedf5" font-size="11" font-family="monospace">Chemical Dosing</text>
-  <text x="110" y="223" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Chlorine / pH levels</text>
-
-  <!-- Target: Membrane Pressure -->
-  <rect x="210" y="185" width="140" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="280" y="207" text-anchor="middle" fill="#eaedf5" font-size="11" font-family="monospace">Membrane Pressure</text>
-  <text x="280" y="223" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Desalination RO</text>
-
-  <!-- Target: Pump Control -->
-  <rect x="380" y="185" width="140" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="450" y="207" text-anchor="middle" fill="#eaedf5" font-size="11" font-family="monospace">Pump Control</text>
-  <text x="450" y="223" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Flow rates / valves</text>
-
-  <!-- Target: HMI Spoofing -->
-  <rect x="550" y="185" width="130" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
-  <text x="615" y="207" text-anchor="middle" fill="#eaedf5" font-size="11" font-family="monospace">HMI Spoofing</text>
-  <text x="615" y="223" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Hide from operators</text>
-
+  <rect x="500" y="60" width="170" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="585" y="83" text-anchor="middle" fill="#34d399" font-size="12" font-family="monospace" font-weight="bold">Process</text>
+  <text x="585" y="100" text-anchor="middle" fill="#34d399" font-size="12" font-family="monospace" font-weight="bold">Sabotage</text>
+  <text x="585" y="125" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Alter treatment params</text>
+  <!-- Lower section: Physical targets -->
+  <text x="350" y="170" text-anchor="middle" fill="#7a849a" font-size="11" font-family="monospace">─── Physical Process Targets ───</text>
+  <!-- Target boxes -->
+  <rect x="40" y="195" width="130" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="105" y="217" text-anchor="middle" fill="#eaedf5" font-size="11" font-family="monospace">Chemical Dosing</text>
+  <text x="105" y="234" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Chlorine levels</text>
+  <rect x="200" y="195" width="130" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="265" y="217" text-anchor="middle" fill="#eaedf5" font-size="11" font-family="monospace">Pressure Valves</text>
+  <text x="265" y="234" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Flow regulation</text>
+  <rect x="360" y="195" width="140" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="430" y="217" text-anchor="middle" fill="#eaedf5" font-size="11" font-family="monospace">Reverse Osmosis</text>
+  <text x="430" y="234" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Desalination membranes</text>
+  <rect x="530" y="195" width="140" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="600" y="217" text-anchor="middle" fill="#eaedf5" font-size="11" font-family="monospace">Safety Interlocks</text>
+  <text x="600" y="234" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Alarm suppression</text>
   <!-- Arrows from sabotage to targets -->
-  <line x1="559" y1="116" x2="110" y2="185" stroke="#34d399" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrowhead)"/>
-  <line x1="559" y1="116" x2="280" y2="185" stroke="#34d399" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrowhead)"/>
-  <line x1="559" y1="116" x2="450" y2="185" stroke="#34d399" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrowhead)"/>
-  <line x1="559" y1="116" x2="615" y2="185" stroke="#34d399" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrowhead)"/>
-
-  <!-- Outcome -->
-  <rect x="175" y="272" width="350" height="48" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="350" y="293" text-anchor="middle" fill="#34d399" font-size="13" font-family="monospace" font-weight="bold">OUTCOME: Unsafe water / equipment damage</text>
-  <text x="350" y="310" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Public health risk + infrastructure disruption</text>
-
-  <!-- Arrow to outcome -->
-  <line x1="350" y1="240" x2="350" y2="272" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <line x1="540" y1="115" x2="105" y2="195" stroke="#34d399" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <line x1="560" y1="115" x2="265" y2="195" stroke="#34d399" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <line x1="585" y1="115" x2="430" y2="195" stroke="#34d399" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <line x1="620" y1="115" x2="600" y2="195" stroke="#34d399" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <!-- Impact label -->
+  <rect x="220" y="280" width="260" height="40" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="350" y="305" text-anchor="middle" fill="#34d399" font-size="13" font-family="monospace" font-weight="bold">⚠ Public Water Supply at Risk</text>
 </svg></div>
           </div>
-          <div class="attack-vector-text">ZionSiphon exploits unauthenticated legacy industrial protocols such as Modbus and DNP3 to send malicious commands to programmable logic controllers (PLCs) and SCADA systems within water treatment and desalination facilities, manipulating physical process parameters like chemical dosing, pressure levels, and valve states while potentially spoofing operator dashboard readings to conceal the attack.</div>
+          <div class="attack-vector-text">ZionSiphon is engineered to communicate over industrial protocols (Modbus, DNP3, OPC UA) used in water treatment environments, enabling it to send unauthorized commands to PLCs and SCADA systems that control physical processes such as chemical dosing, pressure regulation, and filtration—while potentially spoofing sensor readings to mask its activity from operators.</div>
         </div>
       </div>
 
@@ -379,7 +359,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
 
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Map</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tactic or technique for details</span></div>
-    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Initial Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T0819&quot;, &quot;name&quot;: &quot;Exploit Public-Facing Application&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Initial Access</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0819</span><span class="mitre-tech-name">Exploit Public-Facing Application</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">ZionSiphon likely gains initial access through internet-exposed SCADA/HMI interfaces or engineering workstations in water treatment environments.</p><a href="https://attack.mitre.org/techniques/T0819/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Impair Process Control&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T0855&quot;, &quot;name&quot;: &quot;Unauthorized Command Message&quot;}, {&quot;id&quot;: &quot;T0836&quot;, &quot;name&quot;: &quot;Modify Parameter&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Impair Process Control</span><span class="mitre-tactic-cnt">2 techniques</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0855</span><span class="mitre-tech-name">Unauthorized Command Message</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The malware sends unauthorized commands over unauthenticated industrial protocols (Modbus/DNP3) to manipulate PLCs controlling water treatment processes.</p><a href="https://attack.mitre.org/techniques/T0855/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0836</span><span class="mitre-tech-name">Modify Parameter</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">ZionSiphon alters critical process parameters such as chemical dosing rates, membrane pressures, and pH levels to sabotage water treatment operations.</p><a href="https://attack.mitre.org/techniques/T0836/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Evasion&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T0856&quot;, &quot;name&quot;: &quot;Spoof Reporting Message&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Evasion</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0856</span><span class="mitre-tech-name">Spoof Reporting Message</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The malware can potentially mask its process modifications from operator HMI dashboards, hiding dangerous parameter changes from human oversight.</p><a href="https://attack.mitre.org/techniques/T0856/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Impact&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T0831&quot;, &quot;name&quot;: &quot;Manipulation of Control&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Impact</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0831</span><span class="mitre-tech-name">Manipulation of Control</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The ultimate goal of ZionSiphon is to manipulate physical control of water treatment processes to cause equipment damage, produce unsafe water, or disable treatment capacity.</p><a href="https://attack.mitre.org/techniques/T0831/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
+    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Initial Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T0819&quot;, &quot;name&quot;: &quot;Exploit Public-Facing Application&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Initial Access</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0819</span><span class="mitre-tech-name">Exploit Public-Facing Application</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">ZionSiphon likely gains initial foothold by exploiting internet-exposed SCADA/HMI interfaces or VPN gateways common in water utilities.</p><a href="https://attack.mitre.org/techniques/T0819/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Impair Process Control&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T0855&quot;, &quot;name&quot;: &quot;Unauthorized Command Message&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Impair Process Control</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0855</span><span class="mitre-tech-name">Unauthorized Command Message</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The malware sends rogue Modbus/DNP3 commands to PLCs to alter valve positions, chemical dosing rates, and other physical process parameters.</p><a href="https://attack.mitre.org/techniques/T0855/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Evasion&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T0856&quot;, &quot;name&quot;: &quot;Spoof Reporting Message&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Evasion</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0856</span><span class="mitre-tech-name">Spoof Reporting Message</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">ZionSiphon can spoof sensor readings fed back to HMIs and SCADA servers, hiding dangerous process changes from plant operators.</p><a href="https://attack.mitre.org/techniques/T0856/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Impact&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T0831&quot;, &quot;name&quot;: &quot;Manipulation of Control&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Impact</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0831</span><span class="mitre-tech-name">Manipulation of Control</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The malware&#39;s core objective is to manipulate control logic governing water treatment processes to cause unsafe water conditions or physical damage.</p><a href="https://attack.mitre.org/techniques/T0831/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Inhibit Response Function&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T0816&quot;, &quot;name&quot;: &quot;Device Restart/Shutdown&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Inhibit Response Function</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0816</span><span class="mitre-tech-name">Device Restart/Shutdown</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">ZionSiphon may disable safety interlocks and protective systems designed to prevent dangerous operating conditions in water treatment plants.</p><a href="https://attack.mitre.org/techniques/T0816/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
   </div>
 
   
@@ -389,20 +369,20 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
           <table class="affected-table">
             <thead><tr><th>Vendor</th><th>Product</th><th>Versions Affected</th><th>Fixed In</th></tr></thead>
             <tbody><tr>
-          <td><span class="prod-vendor">Multiple ICS Vendors</span></td>
-          <td><span class="prod-name">Programmable Logic Controllers (PLCs) used in water treatment/desalination</span></td>
+          <td><span class="prod-vendor">Multiple / Generic</span></td>
+          <td><span class="prod-name">SCADA/HMI systems used in water treatment and desalination plants</span></td>
           <td><span class="prod-ver">All versions — see vendor advisory</span></td>
           <td><span class="prod-fix none">No fix yet</span></td>
         </tr><tr>
-          <td><span class="prod-vendor">Multiple ICS Vendors</span></td>
-          <td><span class="prod-name">SCADA/HMI systems used in water treatment/desalination</span></td>
+          <td><span class="prod-vendor">Multiple / Generic</span></td>
+          <td><span class="prod-name">Programmable Logic Controllers (PLCs) supporting Modbus/DNP3 in water infrastructure</span></td>
           <td><span class="prod-ver">All versions — see vendor advisory</span></td>
           <td><span class="prod-fix none">No fix yet</span></td>
         </tr><tr>
-          <td><span class="prod-vendor">Multiple ICS Vendors</span></td>
-          <td><span class="prod-name">Devices communicating via Modbus/DNP3 protocols</span></td>
-          <td><span class="prod-ver">All versions using unauthenticated Modbus or DNP3</span></td>
-          <td><span class="prod-fix none">Mitigate: Network segmentation and protocol authentication</span></td>
+          <td><span class="prod-vendor">Multiple / Generic</span></td>
+          <td><span class="prod-name">OPC UA servers and gateways in water treatment environments</span></td>
+          <td><span class="prod-ver">All versions — see vendor advisory</span></td>
+          <td><span class="prod-fix none">No fix yet</span></td>
         </tr></tbody>
           </table>
         </div>
@@ -412,7 +392,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="sec-block-header"><span class="sec-block-icon">&#10067;</span><span class="sec-block-title amber">Am I Affected?</span></div>
     <div class="sec-block-body">
       <p class="apply-intro">You are likely at risk if <strong>any</strong> of the following apply:</p>
-      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your organization operates or manages water treatment or desalination facilities</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment uses PLCs, SCADA, or HMI systems that communicate over Modbus or DNP3 protocols without authentication</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your OT network is not fully segmented from your IT network or the internet</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment lacks dedicated OT network monitoring or industrial protocol-aware intrusion detection</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your organization operates in a non-water critical infrastructure sector with no SCADA/ICS systems</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your OT environment is fully air-gapped with enforced unidirectional data flows and authenticated industrial protocols</span></div></div>
+      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You operate or manage a water treatment or desalination facility with networked SCADA/ICS systems</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment uses Modbus, DNP3, or OPC UA protocols for process control in water infrastructure</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your OT network has any connectivity to corporate IT networks or the internet (directly or via VPN)</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">You rely solely on air-gapped OT networks with no remote access, USB policies enforced, and verified network segmentation</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your environment has no water treatment or desalination OT systems (e.g., you are a purely IT-based organization)</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your water treatment PLCs lack authentication for command execution and firmware updates</span></div></div>
     </div>
   </div>
 
@@ -420,8 +400,8 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="sec-block-header"><span class="sec-block-icon">&#128736;</span><span class="sec-block-title green">Fix &amp; Recommendations</span></div>
     <div class="sec-block-body">
       <div class="fix-grid">
-        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Immediately audit all internet-facing connections to OT/SCADA networks in water treatment facilities and disconnect or firewall any unnecessary external access within 24 hours.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Verify network segmentation between IT and OT environments; ensure OT networks are isolated behind industrial-grade firewalls or data diodes with strict allowlisting of traffic by protocol, source, and destination.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Enable logging on all Modbus/DNP3 communications and deploy OT-aware network monitoring (e.g., Claroty, Dragos, Nozomi Networks) to detect anomalous command sequences or unauthorized parameter changes.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Review and validate current PLC program logic and HMI configurations against known-good baselines; investigate any unexplained changes to chemical dosing, pressure setpoints, or valve states.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Coordinate with CISA (for US facilities) or your national CERT to report exposure and obtain the latest ZionSiphon indicators and detection guidance.</span></li></ul></div>
-        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Implement a defense-in-depth OT security architecture aligned with IEC 62443 / NIST SP 800-82, including network segmentation zones and conduits, enforced with industrial DMZs between IT and OT layers.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Migrate from unauthenticated legacy protocols (Modbus TCP, DNP3) to authenticated and encrypted alternatives (OPC UA with certificates, Modbus/TCP Security, DNP3 Secure Authentication) wherever technically feasible.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Deploy independent Safety Instrumented Systems (SIS) with hardwired interlocks for critical parameters (chlorine levels, pH, pressure) that cannot be overridden by software alone, ensuring physical safety limits are enforced.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Establish a continuous OT asset inventory and configuration management program with automated change detection for PLC logic, HMI screens, and SCADA configurations.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Invest in cross-trained personnel or managed OT security services that combine cybersecurity expertise with water treatment process engineering knowledge to enable effective threat detection and incident response.</span></li></ul></div>
+        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Immediately audit and disable all unnecessary remote access paths to OT networks—shut down unused VPN tunnels, RDP sessions, and internet-exposed HMI/SCADA portals within 24 hours.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Deploy or verify network segmentation between IT and OT zones using industrial firewalls or demilitarized zones (DMZs); block all Modbus (TCP/502), DNP3 (TCP/20000), and OPC UA (TCP/4840) traffic from crossing IT/OT boundaries.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Enable deep packet inspection (DPI) on any remaining IT-OT conduits to detect anomalous industrial protocol commands; configure alerts for unexpected write commands or configuration changes to PLCs.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Verify that all PLC programs and HMI configurations match known-good baselines by comparing current logic snapshots against offline backups; flag any unauthorized changes for immediate investigation.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Coordinate with CISA, WaterISAC, and your SCADA/PLC vendors to obtain the latest threat intelligence and any available detection signatures specific to ZionSiphon.</span></li></ul></div>
+        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Implement a Purdue Model (ISA/IEC 62443) network architecture with enforced zone segmentation, data diodes for one-way telemetry flows, and strict conduit policies between OT levels.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Deploy an OT-specific intrusion detection system (e.g., Claroty, Dragos, Nozomi Networks) capable of parsing Modbus/DNP3/OPC UA traffic and alerting on anomalous command sequences or unauthorized PLC reprogramming.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Establish a PLC configuration management program with version-controlled logic backups, scheduled integrity checks, and change-management workflows that require dual authorization for any control logic modifications.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Conduct tabletop exercises and red team assessments specifically simulating OT-targeted malware scenarios in water treatment environments to validate incident response plans and operator awareness.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Advocate for and pursue dedicated cybersecurity funding for water utility OT environments, including hiring or contracting OT security specialists, as the sector has historically been underfunded relative to the threat level.</span></li></ul></div>
       </div>
     </div>
   </div>
@@ -429,27 +409,27 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#128218;</span><span class="sec-block-title ai">Concept Briefing</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tag to expand</span></div>
     <div class="sec-block-body">
-      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-ot-ics-malware')">OT/ICS Malware</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-scada-systems')">SCADA Systems</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-industrial-protocol-exploitati')">Industrial Protocol Exploitation</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-critical-infrastructure-target')">Critical Infrastructure Targeting</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-safety-instrumented-systems')">Safety Instrumented Systems</button></div>
-      <div class="concept-tag-expand" id="ct-ot-ics-malware">
-          <div class="concept-tag-expand-name">OT/ICS Malware</div>
-          <div class="concept-def">Malware specifically designed to target Operational Technology and Industrial Control Systems that govern physical processes like pumps, valves, and chemical dosing, as opposed to traditional IT systems.</div>
-          <div class="concept-rel">ZionSiphon is purpose-built OT malware that targets water treatment control systems, joining a lineage of ICS-specific threats like Stuxnet, Industroyer, and PIPEDREAM.</div>
-        </div><div class="concept-tag-expand" id="ct-scada-systems">
-          <div class="concept-tag-expand-name">SCADA Systems</div>
-          <div class="concept-def">Supervisory Control and Data Acquisition systems that provide centralized monitoring and control of industrial processes, typically including HMIs for operators and communication links to field devices like PLCs.</div>
-          <div class="concept-rel">ZionSiphon targets the SCADA layer in water treatment plants, manipulating the controllers and potentially spoofing operator displays to hide its sabotage.</div>
-        </div><div class="concept-tag-expand" id="ct-industrial-protocol-exploitati">
-          <div class="concept-tag-expand-name">Industrial Protocol Exploitation</div>
-          <div class="concept-def">Legacy industrial communication protocols like Modbus and DNP3 were designed decades ago without authentication or encryption, allowing any device on the network to send commands to controllers.</div>
-          <div class="concept-rel">ZionSiphon exploits these unauthenticated protocols to inject malicious commands to water treatment PLCs without triggering conventional IT security controls.</div>
-        </div><div class="concept-tag-expand" id="ct-critical-infrastructure-target">
-          <div class="concept-tag-expand-name">Critical Infrastructure Targeting</div>
-          <div class="concept-def">Cyberattacks directed at systems essential to public health, safety, and national security — such as water, power, and transportation — where disruption has immediate real-world consequences.</div>
-          <div class="concept-rel">Water treatment is among the most sensitive critical infrastructure targets; a successful ZionSiphon attack could compromise drinking water safety for entire communities.</div>
-        </div><div class="concept-tag-expand" id="ct-safety-instrumented-systems">
-          <div class="concept-tag-expand-name">Safety Instrumented Systems</div>
-          <div class="concept-def">Independent hardware-based safety systems designed to bring a process to a safe state when dangerous conditions are detected, providing a last line of defense independent of the primary control system.</div>
-          <div class="concept-rel">Properly configured SIS with hardwired interlocks can prevent ZionSiphon from causing physical harm even if the primary SCADA/PLC layer is compromised.</div>
+      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-ot-specific-malware')">OT-Specific Malware</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-scada-ics')">SCADA / ICS</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-industrial-protocol-abuse')">Industrial Protocol Abuse</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-safety-interlock-bypass')">Safety Interlock Bypass</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-water-sector-resilience')">Water Sector Resilience</button></div>
+      <div class="concept-tag-expand" id="ct-ot-specific-malware">
+          <div class="concept-tag-expand-name">OT-Specific Malware</div>
+          <div class="concept-def">Malware purpose-built to interact with industrial control systems (PLCs, SCADA, HMIs) using specialized protocols, aiming to manipulate physical processes rather than steal data.</div>
+          <div class="concept-rel">ZionSiphon is a textbook example—designed from the ground up to speak Modbus/DNP3 and target the exact process logic found in water treatment and desalination plants.</div>
+        </div><div class="concept-tag-expand" id="ct-scada-ics">
+          <div class="concept-tag-expand-name">SCADA / ICS</div>
+          <div class="concept-def">Supervisory Control and Data Acquisition (SCADA) and Industrial Control Systems (ICS) are the computerized systems that monitor and control physical infrastructure like water plants, power grids, and factories.</div>
+          <div class="concept-rel">These are the direct targets of ZionSiphon; compromising them allows an attacker to alter chemical dosing, valve states, and safety systems in a water facility.</div>
+        </div><div class="concept-tag-expand" id="ct-industrial-protocol-abuse">
+          <div class="concept-tag-expand-name">Industrial Protocol Abuse</div>
+          <div class="concept-def">Legacy industrial protocols like Modbus and DNP3 were designed for reliability, not security—they typically lack authentication, allowing anyone with network access to send commands.</div>
+          <div class="concept-rel">ZionSiphon exploits this design weakness to send unauthorized control commands that PLCs accept as legitimate, enabling process manipulation without credentials.</div>
+        </div><div class="concept-tag-expand" id="ct-safety-interlock-bypass">
+          <div class="concept-tag-expand-name">Safety Interlock Bypass</div>
+          <div class="concept-def">Safety interlocks are automated safeguards that shut down or restrict operations when dangerous conditions are detected (e.g., excessive chemical levels or overpressure).</div>
+          <div class="concept-rel">ZionSiphon may disable these protections to allow harmful process states to persist undetected, dramatically increasing the risk of physical harm.</div>
+        </div><div class="concept-tag-expand" id="ct-water-sector-resilience">
+          <div class="concept-tag-expand-name">Water Sector Resilience</div>
+          <div class="concept-def">The water sector encompasses drinking water treatment, wastewater, and desalination—critical services that are often underfunded and understaffed for cybersecurity compared to energy or finance.</div>
+          <div class="concept-rel">ZionSiphon&#39;s emergence highlights the acute vulnerability of water utilities, which now face nation-state-caliber threats with limited defensive resources.</div>
         </div>
     </div>
   </div>
@@ -460,56 +440,56 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
         <details class="hunt-entry" open>
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Anomalous Modbus/DNP3 write commands to process-critical PLCs</span>
+            <span class="hunt-signal">Anomalous Modbus/DNP3 write commands to PLCs</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Look for unexpected write commands on Modbus (function codes 0x05, 0x06, 0x0F, 0x10) or DNP3 direct/select-before-operate commands targeting registers associated with chemical dosing rates, membrane pressure setpoints, or valve states. Unusual source IPs, commands outside maintenance windows, or rapid successive writes are strong indicators.</div>
-            <span class="hunt-log-tag">OT network monitoring (Dragos, Claroty, Nozomi)</span><span class="hunt-log-tag">Industrial firewall logs</span><span class="hunt-log-tag">Packet captures on OT network segments</span>
+            <div class="hunt-desc">Look for unexpected write-multiple-registers (Modbus function code 0x10) or DNP3 direct-operate commands targeting chemical dosing or valve control points outside of scheduled maintenance windows. These may indicate ZionSiphon issuing rogue commands to alter process parameters.</div>
+            <span class="hunt-log-tag">OT network traffic captures (PCAP)</span><span class="hunt-log-tag">Industrial IDS/DPI logs (Claroty, Dragos, Nozomi)</span><span class="hunt-log-tag">SCADA historian event logs</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">PLC logic or configuration changes without corresponding change tickets</span>
+            <span class="hunt-signal">PLC logic or firmware changes without change tickets</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Monitor for unauthorized modifications to PLC ladder logic, function block diagrams, or configuration parameters. Compare current PLC programs against known-good baselines. Any change without an approved change management record should be treated as a potential compromise indicator.</div>
-            <span class="hunt-log-tag">PLC configuration management tools</span><span class="hunt-log-tag">Engineering workstation audit logs</span><span class="hunt-log-tag">OT change management system</span>
+            <div class="hunt-desc">Monitor for PLC program uploads, downloads, or firmware flashes that do not correspond to approved change-management records. ZionSiphon may reprogram PLCs to alter process control logic. Compare current PLC logic hashes against known-good baselines.</div>
+            <span class="hunt-log-tag">PLC configuration management tools</span><span class="hunt-log-tag">Engineering workstation file-access logs</span><span class="hunt-log-tag">OT asset management platforms</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Discrepancies between HMI-displayed values and independent sensor readings</span>
+            <span class="hunt-signal">Sensor reading discrepancies between independent sources</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Cross-reference values displayed on operator HMIs (chlorine levels, pH, pressure) with independent out-of-band sensors or manual readings. Persistent discrepancies may indicate that HMI displays are being spoofed to mask malicious process changes.</div>
-            <span class="hunt-log-tag">SCADA historian data</span><span class="hunt-log-tag">Independent sensor/analyzer readings</span><span class="hunt-log-tag">Laboratory water quality test results</span>
+            <div class="hunt-desc">Cross-reference SCADA-reported sensor values (chlorine levels, pH, pressure, flow rates) against independent physical instruments or lab samples. Persistent discrepancies may indicate ZionSiphon is spoofing sensor telemetry to mask process manipulation.</div>
+            <span class="hunt-log-tag">SCADA historian databases</span><span class="hunt-log-tag">Independent lab/field measurement records</span><span class="hunt-log-tag">Process alarm logs</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
-            <span class="hunt-priority medium">Medium</span>
-            <span class="hunt-signal">Unexpected network connections from engineering workstations or HMI servers</span>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">Unexpected IT-to-OT lateral movement traffic</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Watch for engineering workstations or HMI servers initiating outbound connections to unfamiliar external IPs, or establishing lateral connections to PLCs they don&#39;t normally communicate with. These may indicate a compromised engineering host being used as a pivot point.</div>
-            <span class="hunt-log-tag">OT network monitoring</span><span class="hunt-log-tag">Windows event logs on engineering workstations</span><span class="hunt-log-tag">Firewall/router logs at IT-OT boundary</span>
+            <div class="hunt-desc">Alert on any new connections from IT-zone hosts to OT-zone IP ranges, especially targeting TCP ports 502 (Modbus), 20000 (DNP3), or 4840 (OPC UA). This may indicate the initial stage of ZionSiphon pivoting from a compromised IT asset into the OT network.</div>
+            <span class="hunt-log-tag">Firewall logs at IT/OT boundary</span><span class="hunt-log-tag">Network flow data (NetFlow/sFlow)</span><span class="hunt-log-tag">Industrial DMZ logs</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
-            <span class="hunt-priority medium">Medium</span>
-            <span class="hunt-signal">New or modified scheduled tasks, services, or executables on OT Windows hosts</span>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">Safety system alarm suppression or interlock disabling</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Inspect SCADA servers, HMI workstations, and historian servers for newly created scheduled tasks, unfamiliar services, or modified executables — especially those with names mimicking legitimate OT software. Focus on hosts that have connectivity to PLCs or industrial protocol networks.</div>
-            <span class="hunt-log-tag">Windows Security Event Log (Event IDs 4698, 7045)</span><span class="hunt-log-tag">EDR/endpoint monitoring on OT Windows hosts</span><span class="hunt-log-tag">File integrity monitoring</span>
+            <div class="hunt-desc">Watch for safety instrumented system (SIS) alarms being acknowledged programmatically, interlocks being placed in bypass mode, or safety controller mode changes occurring outside maintenance windows. ZionSiphon may target these to allow dangerous conditions to persist.</div>
+            <span class="hunt-log-tag">SIS/Safety PLC event logs</span><span class="hunt-log-tag">SCADA alarm management system</span><span class="hunt-log-tag">Operator action audit trails</span>
           </div>
         </details></div></div>
   </div>
@@ -517,7 +497,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#9762;</span><span class="sec-block-title amber">Indicators of Compromise</span><button class="ioc-copy-btn" style="margin-left:auto" onclick="copyAllIOCs()">&#10064; Copy All IOCs</button></div>
     <div class="sec-block-body">
-      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific indicators of compromise (file hashes, IP addresses, domains, file paths, or URI patterns) were reported in the source article for ZionSiphon as of 2026-04-17. All IOC arrays are empty. Check CISA, Dragos, and vendor advisories for updated IOCs as analysis progresses. Any IOCs shared through threat intelligence channels should be independently verified before use in detection rules.</span></div>
+      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific indicators of compromise (hashes, IPs, domains, file paths, or URI patterns) were reported in the source article. All IOC arrays are empty. Organizations should monitor CISA, WaterISAC, and vendor advisories for updated IOCs as analysis of ZionSiphon progresses. Do not treat the absence of published IOCs as absence of threat—behavioral detection and process anomaly monitoring are the primary detection methods for this type of OT malware.</span></div>
       <div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Hashes (SHA-256)</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Command &amp;amp; Control IPs</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Malicious Domains</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Paths / Artifacts</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Suspicious URI Patterns</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div>
     </div>
   </div>
@@ -525,9 +505,9 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="share-footer">
     <div class="share-footer-text"><strong>Share this advisory</strong><br><span style="font-size:0.78rem;">Help your network patch faster.</span></div>
     <div class="share-footer-btns">
-      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20ZionSiphon%3A%20Purpose-Built%20Malware%20Targets%20Water%20Treatment%20Infrastructure%0A%0ACVSS%20N/A%20%C2%B7%20Critical%20%C2%B7%20Mitigation%20Only&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-3.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
-      <a href="https://wa.me/?text=%F0%9F%9B%A1%20ZionSiphon%3A%20Purpose-Built%20Malware%20Targets%20Water%20Treatment%20Infrastructure%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-3.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
-      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-3.html&amp;text=ZionSiphon%3A%20Purpose-Built%20Malware%20Targets%20Water%20Treatment%20Infrastructure" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
+      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20ZionSiphon%3A%20Purpose-Built%20Malware%20Targets%20Water%20Treatment%20and%20Desalination%20Systems%0A%0ACVSS%20N/A%20%C2%B7%20Critical%20%C2%B7%20Mitigation%20Only&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-3.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
+      <a href="https://wa.me/?text=%F0%9F%9B%A1%20ZionSiphon%3A%20Purpose-Built%20Malware%20Targets%20Water%20Treatment%20and%20Desalination%20Systems%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-3.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
+      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-3.html&amp;text=ZionSiphon%3A%20Purpose-Built%20Malware%20Targets%20Water%20Treatment%20and%20Desalination%20Systems" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
       <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-3.html" class="share-opt linkedin" target="_blank" rel="noopener">in Share</a>
       <button class="share-opt copy-link" onclick="copyPageLink(this)">&#128279; Copy Link</button>
     </div>
