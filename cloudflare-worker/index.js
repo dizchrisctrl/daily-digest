@@ -23,6 +23,50 @@ const ALLOWED_ORIGINS = [
   'http://127.0.0.1',
 ];
 
+// ── Newsletter helpers ────────────────────────────────────────────────────────
+
+function isValidEmail(email) {
+  return typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+}
+
+/** Read sub_list from KV; returns array of { email, token } objects. */
+async function readSubList(kv) {
+  const raw = await kv.get('sub_list');
+  return raw ? JSON.parse(raw) : [];
+}
+
+/** Write sub_list back to KV. */
+async function writeSubList(kv, list) {
+  await kv.put('sub_list', JSON.stringify(list));
+}
+
+/** Send an email via Resend. */
+async function sendEmail(apiKey, { from, to, subject, html }) {
+  const resp = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from, to, subject, html }),
+  });
+  if (!resp.ok) {
+    const err = await resp.text();
+    throw new Error(`Resend error ${resp.status}: ${err}`);
+  }
+  return resp.json();
+}
+
+/** Simple HTML page response. */
+function htmlPage(title, body) {
+  return new Response(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${title}</title>
+<style>body{margin:0;background:#0f1117;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:24px}
+.card{background:#1a1d2e;border-radius:16px;padding:40px 32px;max-width:440px;width:100%}
+h1{font-size:1.5rem;font-weight:800;margin:0 0 12px}
+p{color:#94a3b8;font-size:0.95rem;line-height:1.6;margin:0 0 20px}
+a{color:#818cf8;text-decoration:none;font-weight:600}</style>
+</head><body><div class="card">${body}</div></body></html>`,
+    { status: 200, headers: { 'Content-Type': 'text/html;charset=UTF-8' } });
+}
+
 function corsHeaders(origin) {
   // Exact match only — startsWith() allows subdomain spoofing attacks
   const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
@@ -86,6 +130,58 @@ export default {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
     }
 
+    // ── Newsletter: GET /confirm?token= ──
+    if (request.method === 'GET' && url.pathname === '/confirm') {
+      const token = url.searchParams.get('token');
+      if (!token) return htmlPage('Invalid Link', '<h1>&#x274C; Invalid Link</h1><p>No token provided.</p><p><a href="https://dizchrisctrl.github.io/daily-digest">Back to digest</a></p>');
+
+      const email = await env.RATE_LIMIT?.get('sub_pending:' + token);
+      if (!email) return htmlPage('Link Expired', '<h1>&#x23F0; Link Expired</h1><p>This confirmation link has expired or already been used.</p><p><a href="https://dizchrisctrl.github.io/daily-digest">Sign up again</a></p>');
+
+      const unsubToken = crypto.randomUUID();
+      await env.RATE_LIMIT?.put('sub:' + email, JSON.stringify({ confirmed: true, token: unsubToken, subscribedAt: new Date().toISOString() }));
+      await env.RATE_LIMIT?.put('sub_unsub:' + unsubToken, email);
+      await env.RATE_LIMIT?.delete('sub_pending:' + token);
+
+      const list = await readSubList(env.RATE_LIMIT);
+      if (!list.find(s => s.email === email)) {
+        list.push({ email, token: unsubToken });
+        await writeSubList(env.RATE_LIMIT, list);
+      }
+
+      return htmlPage("You're subscribed!", '<h1 style="color:#34d399">&#x2713; You\'re subscribed!</h1><p>You\'ll receive The Daily Rundown every morning.</p><p><a href="https://dizchrisctrl.github.io/daily-digest">Read today\'s digest &#x2192;</a></p>');
+    }
+
+    // ── Newsletter: GET /unsubscribe?token= ──
+    if (request.method === 'GET' && url.pathname === '/unsubscribe') {
+      const token = url.searchParams.get('token');
+      if (!token) return htmlPage('Invalid Link', '<h1>&#x274C; Invalid Link</h1><p>No token provided.</p>');
+
+      const email = await env.RATE_LIMIT?.get('sub_unsub:' + token);
+      if (!email) return htmlPage('Already Unsubscribed', '<h1>&#x2713; Already Unsubscribed</h1><p>You have already been removed from the list.</p>');
+
+      await env.RATE_LIMIT?.delete('sub:' + email);
+      await env.RATE_LIMIT?.delete('sub_unsub:' + token);
+
+      const list = await readSubList(env.RATE_LIMIT);
+      await writeSubList(env.RATE_LIMIT, list.filter(s => s.email !== email));
+
+      return htmlPage('Unsubscribed', '<h1>&#x1F44B; You\'ve been unsubscribed</h1><p style="color:#94a3b8">Sorry to see you go. You won\'t receive any more digests.</p><p><a href="https://dizchrisctrl.github.io/daily-digest">Visit the digest</a></p>');
+    }
+
+    // ── Newsletter: GET /subscribers (internal, requires WORKER_SECRET) ──
+    if (request.method === 'GET' && url.pathname === '/subscribers') {
+      const auth = request.headers.get('Authorization') || '';
+      if (!env.WORKER_SECRET || auth !== `Bearer ${env.WORKER_SECRET}`) {
+        return new Response('Forbidden', { status: 403 });
+      }
+      const list = await readSubList(env.RATE_LIMIT);
+      return new Response(JSON.stringify({ subscribers: list }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
     // ── GET /card/<id> — retrieve a saved Card Maker card ──
     if (request.method === 'GET') {
       const match = url.pathname.match(/^\/card\/([a-z0-9-]+)$/i);
@@ -96,6 +192,38 @@ export default {
         status:  200,
         headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) },
       });
+    }
+
+    // ── Newsletter: POST /subscribe ──
+    if (request.method === 'POST' && url.pathname === '/subscribe') {
+      let body2;
+      try { body2 = await request.json(); } catch { return jsonResponse({ error: 'Invalid JSON.' }, 400, origin); }
+      const email = (body2.email || '').trim().toLowerCase();
+      if (!isValidEmail(email)) return jsonResponse({ error: 'Invalid email address.' }, 400, origin);
+
+      const existing = await env.RATE_LIMIT?.get('sub:' + email);
+      if (existing) {
+        const parsed = JSON.parse(existing);
+        if (parsed.confirmed) return jsonResponse({ status: 'already_subscribed' }, 200, origin);
+      }
+
+      const token = crypto.randomUUID();
+      await env.RATE_LIMIT?.put('sub_pending:' + token, email, { expirationTtl: 86400 });
+
+      const confirmUrl = `${url.origin}/confirm?token=${token}`;
+      await sendEmail(env.RESEND_API_KEY, {
+        from: 'The Daily Rundown <newsletter@resend.dev>',
+        to: email,
+        subject: 'Confirm your Daily Rundown subscription',
+        html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 16px">
+          <h2 style="color:#818cf8">Confirm your subscription</h2>
+          <p style="color:#94a3b8">Click the button below to confirm you'd like to receive The Daily Rundown digest.</p>
+          <a href="${confirmUrl}" style="display:inline-block;background:linear-gradient(135deg,#4f46e5,#059669);color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:700;margin:16px 0">Confirm Subscription</a>
+          <p style="color:#475569;font-size:0.8rem">If you didn't sign up, ignore this email. Link expires in 24 hours.</p>
+        </div>`,
+      });
+
+      return jsonResponse({ status: 'confirmation_sent' }, 200, origin);
     }
 
     if (request.method !== 'POST') {

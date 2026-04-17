@@ -12,3 +12,5 @@ id      = "57f33f7fe7e8459a842ce3794bfa554e"
 
 # ── Secrets (set via wrangler, not stored here) ──────────────────────────────
 #   wrangler secret put ANTHROPIC_API_KEY
+#   wrangler secret put RESEND_API_KEY
+#   wrangler secret put WORKER_SECRET     ← shared with GitHub Actions

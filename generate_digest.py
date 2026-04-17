@@ -4,21 +4,14 @@
 import os
 import re
 import json
-import base64
 import socket
 import urllib.parse
 import urllib.request
 import feedparser
 from datetime import datetime, timezone, timedelta
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 import anthropic
-from google.oauth2.credentials import Credentials
-from googleapiclient.discovery import build
 
 # ── Config ─────────────────────────────────────────────────────────────────────
-RECIPIENT_EMAIL = "Diazz.christian@gmail.com"
-SENDER_EMAIL    = os.environ["GMAIL_ADDRESS"]
 PAGES_URL       = "https://dizchrisctrl.github.io/daily-digest"
 _raw_worker_url = os.environ.get("WORKER_URL", "")
 _parsed_worker  = urllib.parse.urlparse(_raw_worker_url)
@@ -26,9 +19,8 @@ if _raw_worker_url and not (_parsed_worker.scheme == "https" and _parsed_worker.
     raise ValueError(f"WORKER_URL must be an https:// URL, got: {_raw_worker_url!r}")
 WORKER_URL = _raw_worker_url
 
-GMAIL_CLIENT_ID     = os.environ["GMAIL_CLIENT_ID"]
-GMAIL_CLIENT_SECRET = os.environ["GMAIL_CLIENT_SECRET"]
-GMAIL_REFRESH_TOKEN = os.environ["GMAIL_REFRESH_TOKEN"]
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
+WORKER_SECRET  = os.environ.get("WORKER_SECRET", "")
 
 # ── RSS Feeds ──────────────────────────────────────────────────────────────────
 AI_FEEDS = [
@@ -1584,6 +1576,20 @@ kbd {
   </section>
 </main>
 
+<section id="subscribe" style="text-align:center;padding:48px 20px;border-top:1px solid var(--border)">
+  <h2 style="font-size:1.1rem;font-weight:800;margin:0 0 8px">Get it in your inbox</h2>
+  <p style="color:var(--muted);font-size:0.88rem;margin:0 0 20px">Daily digest delivered every morning. No spam. Unsubscribe anytime.</p>
+  <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;max-width:400px;margin:0 auto">
+    <input id="sub-email" type="email" placeholder="you@example.com"
+      style="flex:1;min-width:180px;padding:10px 14px;border-radius:8px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:0.9rem;outline:none">
+    <button onclick="doSubscribe()" id="sub-btn"
+      style="padding:10px 22px;background:linear-gradient(135deg,#4f46e5,#059669);color:#fff;font-weight:700;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem">
+      Subscribe
+    </button>
+  </div>
+  <div id="sub-msg" style="margin-top:12px;font-size:0.85rem;min-height:1.2em"></div>
+</section>
+
 <footer class="site-footer">
   The Daily Rundown &middot; Generated with Claude Opus &middot; <a href="https://github.com/dizchrisctrl/daily-digest">GitHub</a>
 </footer>
@@ -1598,6 +1604,41 @@ const indicator = document.getElementById('indicator');
 const tabColors = { ai: '#818cf8', cyber: '#34d399', notables: '#fbbf24', cardmaker: '#f472b6' };
 let currentIndex = -1;
 let kbdTimeout;
+
+// ── Subscribe form ──
+async function doSubscribe() {
+  const emailEl = document.getElementById('sub-email');
+  const btn     = document.getElementById('sub-btn');
+  const msg     = document.getElementById('sub-msg');
+  const email   = emailEl.value.trim();
+  if (!email) { msg.style.color = '#f87171'; msg.textContent = 'Please enter your email.'; return; }
+  btn.disabled = true; btn.textContent = 'Sending\u2026';
+  msg.textContent = '';
+  try {
+    const WORKER = '__WORKER_URL__';
+    if (!WORKER) { msg.style.color = '#f87171'; msg.textContent = 'Subscriptions not yet configured.'; return; }
+    const resp = await fetch(WORKER + '/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const data = await resp.json();
+    if (resp.ok) {
+      msg.style.color = '#34d399';
+      msg.textContent = data.status === 'already_subscribed'
+        ? "You\u2019re already subscribed!"
+        : 'Check your inbox for a confirmation email!';
+      emailEl.value = '';
+    } else {
+      msg.style.color = '#f87171';
+      msg.textContent = data.error || 'Something went wrong. Try again.';
+    }
+  } catch(e) {
+    msg.style.color = '#f87171';
+    msg.textContent = 'Network error. Please try again.';
+  }
+  btn.disabled = false; btn.textContent = 'Subscribe';
+}
 
 // ── Progress bar ──
 window.addEventListener('scroll', () => {
@@ -3171,16 +3212,50 @@ def generate_html(data):
             .replace("__NOTABLES__",      not_html))
 
 
+def fetch_subscribers():
+    """Fetch the subscriber list from the Cloudflare Worker."""
+    if not WORKER_URL or not WORKER_SECRET:
+        print("  ⚠ WORKER_URL or WORKER_SECRET not set — skipping subscriber fetch")
+        return []
+    req = urllib.request.Request(
+        f"{WORKER_URL}/subscribers",
+        headers={"Authorization": f"Bearer {WORKER_SECRET}"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read()).get("subscribers", [])
+    except Exception as e:
+        print(f"  ⚠ Could not fetch subscribers: {e}")
+        return []
+
+
 def send_email(data):
-    today       = esc(data.get("date", ""))
-    ai_items    = "".join(f"<li><strong>{esc(s.get('headline',''))}</strong> &mdash; {esc(s.get('tldr',''))}</li>" for s in data.get("ai_stories", []))
-    cyber_items = "".join(f"<li><strong>{esc(s.get('headline',''))}</strong> &mdash; {esc(s.get('tldr',''))}</li>" for s in data.get("cyber_stories", []))
+    if not RESEND_API_KEY:
+        print("  ⚠ RESEND_API_KEY not set — skipping email send")
+        return
+
+    subscribers = fetch_subscribers()
+    if not subscribers:
+        print("  No subscribers — skipping email send")
+        return
+
+    today          = esc(data.get("date", ""))
+    ai_items       = "".join(f"<li><strong>{esc(s.get('headline',''))}</strong> &mdash; {esc(s.get('tldr',''))}</li>" for s in data.get("ai_stories", []))
+    cyber_items    = "".join(f"<li><strong>{esc(s.get('headline',''))}</strong> &mdash; {esc(s.get('tldr',''))}</li>" for s in data.get("cyber_stories", []))
     notables_items = "".join(
         f"<li><span style='color:#94a3b8;font-size:0.75rem'>[{esc(n.get('category',''))}]</span> <strong>{esc(n.get('headline',''))}</strong></li>"
         for n in data.get("notables", [])
     )
 
-    html_body = f"""<!DOCTYPE html>
+    sent = 0
+    for sub in subscribers:
+        email      = sub.get("email", "")
+        unsub_token = sub.get("token", "")
+        if not email:
+            continue
+        unsub_url = f"{WORKER_URL}/unsubscribe?token={unsub_token}" if unsub_token else ""
+
+        html_body = f"""<!DOCTYPE html>
 <html><body style="margin:0;padding:0;background:#0f1117;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e2e8f0">
 <div style="max-width:600px;margin:0 auto;padding:24px 16px">
   <div style="text-align:center;padding:28px 0 24px;border-bottom:1px solid #2d3148">
@@ -3201,27 +3276,38 @@ def send_email(data):
   </div>
   <p style="text-align:center;color:#475569;font-size:0.78rem;margin-top:24px">
     Generated with Claude Opus &middot; <a href="https://github.com/dizchrisctrl/daily-digest" style="color:#818cf8;text-decoration:none">daily-digest</a>
+    {f'&middot; <a href="{unsub_url}" style="color:#475569;text-decoration:none">Unsubscribe</a>' if unsub_url else ''}
   </p>
 </div></body></html>"""
 
-    msg            = MIMEMultipart("alternative")
-    msg["Subject"] = f"The Daily Rundown -- {today}"
-    msg["From"]    = SENDER_EMAIL
-    msg["To"]      = RECIPIENT_EMAIL
-    msg.attach(MIMEText(html_body, "html"))
+        payload = json.dumps({
+            "from": "The Daily Rundown <newsletter@resend.dev>",
+            "to": [email],
+            "subject": f"The Daily Rundown — {today}",
+            "html": html_body,
+            "headers": {
+                "List-Unsubscribe": f"<{unsub_url}>",
+                "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+            } if unsub_url else {},
+        }).encode()
 
-    creds = Credentials(
-        token=None,
-        refresh_token=GMAIL_REFRESH_TOKEN,
-        client_id=GMAIL_CLIENT_ID,
-        client_secret=GMAIL_CLIENT_SECRET,
-        token_uri="https://oauth2.googleapis.com/token",
-        scopes=["https://www.googleapis.com/auth/gmail.send"],
-    )
-    service = build("gmail", "v1", credentials=creds, cache_discovery=False)
-    raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
-    service.users().messages().send(userId="me", body={"raw": raw}).execute()
-    print("  Email sent via Gmail API (send-only scope)")
+        try:
+            req = urllib.request.Request(
+                "https://api.resend.com/emails",
+                data=payload,
+                headers={
+                    "Authorization": f"Bearer {RESEND_API_KEY}",
+                    "Content-Type": "application/json",
+                },
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=30):
+                pass
+            sent += 1
+        except Exception as e:
+            print(f"  ⚠ Failed to send to {email}: {e}")
+
+    print(f"  Email sent to {sent}/{len(subscribers)} subscribers via Resend")
 
 
 GUIDE_HTML = """<!DOCTYPE html>
