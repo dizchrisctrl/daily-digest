@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
+<title>ZionSiphon: OT Malware Targeting Water Treatment Infrastructure | The Daily Rundown</title>
+<meta property="og:type"        content="article">
+<meta property="og:site_name"   content="The Daily Rundown">
+<meta property="og:title"       content="ZionSiphon: OT Malware Targeting Water Treatment Infrastructure">
+<meta property="og:description" content="A newly discovered OT-specific malware called ZionSiphon has been identified targeting water treatment and desalination facilities with the explicit goal of sabotaging physical operations. The malware manipulates industrial control systems — including PLCs, SCADA interfaces, and ">
+<meta property="og:url"         content="https://dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-3.html">
+<meta name="twitter:card"        content="summary">
+<meta name="twitter:title"       content="ZionSiphon: OT Malware Targeting Water Treatment Infrastructure">
+<meta name="twitter:description" content="A newly discovered OT-specific malware called ZionSiphon has been identified targeting water treatment and desalination facilities with the explicit goal of sabotaging physical operations. The malware manipulates industrial control systems — including PLCs, SCADA interfaces, and ">
+<style>
+:root {
+  --bg:#0b0d16; --surface:#12152a; --surface2:#1a1d32; --surface3:#20233c;
+  --text:#eaedf5; --muted:#7a849a; --muted2:#5a6275;
+  --cyber:#34d399; --cyber2:#10b981; --purple:#a78bfa; --amber:#fbbf24; --ai:#818cf8;
+  --border:#252840; --border2:#333660;
+  --body-text:#c0c8d8;
+  --sec:#a78bfa; --sec2:#dc2626; --sec-soft:#c4b5fd;
+  --sec-glow:rgba(167,139,250,0.15); --sec-bg:rgba(167,139,250,0.04); --sec-border:rgba(167,139,250,0.22);
+}
+html.light {
+  --bg:#f4f6fb; --surface:#ffffff; --surface2:#eef0f7; --surface3:#e4e7f2;
+  --text:#1a1d2e; --muted:#4a5568; --muted2:#718096;
+  --border:#d4d8ec; --border2:#c0c5df; --body-text:#2d3748;
+  --sec-bg:rgba(239,68,68,0.03); --sec-border:rgba(239,68,68,0.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;min-height:100vh;}
+.top-nav{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);padding:0 20px;height:52px;display:flex;align-items:center;gap:12px;}
+.back-btn{display:flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:5px 12px;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;transition:color 0.2s,border-color 0.2s;white-space:nowrap;flex-shrink:0;}
+.back-btn:hover{color:var(--text);border-color:var(--border2);}
+.nav-breadcrumb{flex:1;min-width:0;font-size:0.75rem;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nav-breadcrumb span{color:var(--muted);}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.theme-toggle{background:var(--surface2);border:1px solid var(--border2);color:var(--muted);border-radius:20px;padding:5px 11px;font-size:0.75rem;cursor:pointer;transition:background 0.2s,color 0.2s;}
+.theme-toggle:hover{color:var(--text);}
+.share-btn-top{display:flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--sec-border);color:var(--sec-soft);border-radius:20px;padding:5px 12px;font-size:0.78rem;font-weight:600;cursor:pointer;transition:background 0.2s;}
+.share-btn-top:hover{background:var(--sec-bg);}
+.hero{padding:32px 20px 28px;border-bottom:1px solid var(--sec-border);background:linear-gradient(180deg,var(--sec-glow) 0%,transparent 100%);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 0%,var(--sec-glow) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{max-width:860px;margin:0 auto;position:relative;}
+.hero-badges{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:16px;}
+.type-badge{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:3px 10px;border-radius:4px;background:var(--sec-glow);color:var(--sec-soft);border:1px solid var(--sec-border);}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 9px;border-radius:4px;background:rgba(239,68,68,0.1);color:var(--sec);border:1px solid rgba(239,68,68,0.3);animation:live-pulse 2s ease-in-out infinite;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--sec);flex-shrink:0;animation:live-pulse 1.2s ease-in-out infinite;}
+@keyframes live-pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.hero-title{font-size:1.85rem;font-weight:900;line-height:1.2;letter-spacing:-0.5px;margin-bottom:16px;color:var(--text);}
+.score-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+.cvss-wrap{display:flex;align-items:center;gap:10px;}
+.cvss-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);white-space:nowrap;}
+.cvss-bar-track{width:140px;height:7px;border-radius:4px;background:var(--surface3);border:1px solid var(--border);overflow:hidden;}
+.cvss-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#22c55e 0%,#f59e0b 40%,#ef4444 70%);transition:width 0.6s cubic-bezier(0.4,0,0.2,1);}
+.cvss-score-num{font-size:1.15rem;font-weight:900;font-variant-numeric:tabular-nums;color:var(--sec);font-family:'Courier New',monospace;line-height:1;}
+.severity-pill,.patch-pill{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;padding:3px 10px;border-radius:20px;}
+.sev-critical{background:rgba(239,68,68,0.18);color:#f87171;border:1px solid rgba(239,68,68,0.35);}
+.sev-high{background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.3);}
+.sev-medium{background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);}
+.sev-low{background:rgba(52,211,153,0.12);color:var(--cyber);border:1px solid rgba(52,211,153,0.25);}
+.patch-available{background:rgba(52,211,153,0.1);color:var(--cyber);border:1px solid rgba(52,211,153,0.25);}
+.patch-mitigation{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.22);}
+.patch-none{background:rgba(239,68,68,0.1);color:var(--sec);border:1px solid var(--sec-border);}
+.hero-desc{font-size:0.97rem;color:var(--body-text);line-height:1.75;margin-bottom:18px;max-width:740px;}
+.hero-meta{display:flex;align-items:center;flex-wrap:wrap;gap:10px;}
+.hero-meta-item{font-size:0.76rem;color:var(--muted2);display:flex;align-items:center;gap:5px;}
+.hero-meta-sep{color:var(--border2);font-size:0.7rem;}
+.src-link-hero{font-size:0.76rem;font-weight:600;color:var(--sec-soft);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color 0.15s;}
+.src-link-hero:hover{color:var(--sec);}
+.page-body{max-width:860px;margin:0 auto;padding:28px 16px 80px;}
+.sec-block{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden;}
+.sec-block-header{padding:16px 20px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.sec-block-icon{font-size:1rem;flex-shrink:0;}
+.sec-block-title{font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted2);flex:1;}
+.sec-block-title.red{color:var(--sec-soft);} .sec-block-title.green{color:var(--cyber);} .sec-block-title.amber{color:var(--amber);}
+.sec-block-body{padding:20px;}
+.conf-badge{font-size:0.65rem;font-weight:700;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);color:var(--purple);}
+.diagram-wrap{border-radius:10px;overflow:hidden;border:1px solid #1e3055;background:#060912;}
+.diagram-bar{background:#0d1020;padding:9px 14px;display:flex;align-items:center;gap:7px;border-bottom:1px solid #1e3055;}
+.dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;} .dot-r{background:#ff5f57;} .dot-y{background:#febc2e;} .dot-g{background:#28c840;}
+.diagram-title{flex:1;text-align:center;font-size:0.67rem;color:#3a4a60;font-family:monospace;}
+.diagram-svg svg{width:100%;height:auto;display:block;}
+.attack-vector-text{margin-top:14px;font-size:0.92rem;color:var(--body-text);line-height:1.72;padding:13px 16px;background:var(--sec-bg);border:1px solid var(--sec-border);border-radius:8px;border-left:3px solid var(--sec);}
+.details-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;}
+.detail-cell{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:13px 15px;}
+.detail-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:6px;}
+.detail-value{font-size:0.93rem;font-weight:700;color:var(--text);font-family:'Courier New',monospace;word-break:break-all;}
+.detail-value.red{color:var(--sec-soft);} .detail-value.green{color:var(--cyber);} .detail-value.amber{color:var(--amber);} .detail-value.muted{color:var(--muted);font-weight:400;font-size:0.78rem;font-family:inherit;}
+.cvss-vector-cell{grid-column:1/-1;}
+.timeline-track{display:flex;align-items:flex-start;position:relative;padding:8px 0 4px;}
+.timeline-track::before{content:'';position:absolute;top:24px;left:24px;right:24px;height:2px;background:linear-gradient(90deg,var(--sec) 0%,var(--amber) 50%,var(--cyber) 100%);z-index:0;}
+.tl-step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;}
+.tl-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--surface2);margin-bottom:10px;flex-shrink:0;}
+.tl-dot.red{background:var(--sec);box-shadow:0 0 10px rgba(239,68,68,0.5);} .tl-dot.amber{background:var(--amber);box-shadow:0 0 10px rgba(251,191,36,0.4);} .tl-dot.green{background:var(--cyber);box-shadow:0 0 10px rgba(52,211,153,0.4);} .tl-dot.empty{background:var(--surface3);border-color:var(--border2);}
+.tl-label{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted2);text-align:center;margin-bottom:4px;}
+.tl-date{font-size:0.8rem;font-weight:700;color:var(--text);text-align:center;font-family:'Courier New',monospace;}
+.tl-date.na{color:var(--muted2);font-style:italic;font-size:0.72rem;}
+.mitre-map{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;padding-bottom:6px;}
+.mitre-col{display:flex;flex-direction:column;gap:5px;min-width:150px;flex:1;}
+.mitre-tactic-hdr{background:linear-gradient(135deg,rgba(239,68,68,0.13),rgba(239,68,68,0.05));border:1px solid rgba(239,68,68,0.35);border-radius:8px;padding:10px 11px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:3px;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;width:100%;text-align:left;font-family:inherit;}
+.mitre-tactic-hdr:hover{border-color:var(--sec-soft);background:rgba(239,68,68,0.18);box-shadow:0 2px 12px rgba(239,68,68,0.12);}
+.mitre-tactic-lbl{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:0.9px;color:var(--sec-soft);line-height:1.3;}
+.mitre-tactic-cnt{font-size:0.58rem;color:var(--muted2);display:flex;align-items:center;gap:4px;}
+.mitre-tactic-cnt::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:rgba(239,68,68,0.5);}
+.mitre-tactic-hint{font-size:0.53rem;color:var(--muted2);opacity:0.7;margin-top:2px;}
+.mitre-techs{display:flex;flex-direction:column;gap:4px;}
+details.mitre-tech-detail{border:1px solid var(--border);border-radius:7px;overflow:hidden;transition:border-color 0.15s,box-shadow 0.15s;}
+details.mitre-tech-detail[open]{border-color:var(--border2);box-shadow:0 2px 10px rgba(0,0,0,0.18);}
+details.mitre-tech-detail summary{display:flex;align-items:flex-start;gap:7px;padding:8px 10px;cursor:pointer;list-style:none;background:var(--surface2);transition:background 0.15s;user-select:none;}
+details.mitre-tech-detail summary:hover{background:var(--surface3);}
+details.mitre-tech-detail summary::-webkit-details-marker{display:none;}
+details.mitre-tech-detail[open] summary{background:var(--surface3);border-bottom:1px solid var(--border);}
+.mitre-tech-id{font-size:0.6rem;font-weight:800;font-family:'Courier New',monospace;color:var(--amber);background:rgba(251,191,36,0.08);padding:1px 5px;border-radius:3px;border:1px solid rgba(251,191,36,0.18);flex-shrink:0;margin-top:1px;}
+.mitre-tech-name{font-size:0.72rem;color:var(--body-text);line-height:1.35;flex:1;}
+.mitre-tech-chevron{font-size:0.5rem;color:var(--muted2);transition:transform 0.2s;flex-shrink:0;margin-top:3px;margin-left:auto;}
+details.mitre-tech-detail[open] .mitre-tech-chevron{transform:rotate(90deg);color:var(--amber);}
+.mitre-tech-body{padding:10px 10px 11px;background:var(--surface);}
+.mitre-tech-rel{font-size:0.8rem;color:var(--body-text);line-height:1.6;margin-bottom:8px;padding-left:8px;border-left:2px solid rgba(251,191,36,0.3);}
+.mitre-tech-link{display:inline-flex;align-items:center;gap:4px;font-size:0.7rem;font-weight:600;color:var(--sec-soft);text-decoration:none;transition:color 0.15s;padding:3px 8px;border:1px solid var(--sec-border);border-radius:5px;}
+.mitre-tech-link:hover{color:var(--sec);border-color:var(--sec);}
+.affected-table{width:100%;border-collapse:collapse;}
+.affected-table th{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2);}
+.affected-table td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.affected-table tr:last-child td{border-bottom:none;}
+.affected-table tr:hover td{background:rgba(255,255,255,0.02);}
+.prod-vendor{font-size:0.8rem;color:var(--muted);} .prod-name{font-size:0.9rem;font-weight:700;color:var(--text);}
+.prod-ver{font-family:'Courier New',monospace;font-size:0.78rem;color:#fca5a5;background:rgba(239,68,68,0.09);padding:3px 8px;border-radius:5px;border:1px solid rgba(239,68,68,0.18);white-space:nowrap;}
+.prod-fix{font-family:'Courier New',monospace;font-size:0.78rem;color:var(--cyber);background:rgba(52,211,153,0.08);padding:3px 8px;border-radius:5px;border:1px solid rgba(52,211,153,0.2);white-space:nowrap;}
+.prod-fix.none{color:var(--sec-soft);background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2);}
+.apply-intro{font-size:0.88rem;color:var(--muted);line-height:1.65;margin-bottom:14px;}
+.apply-list{display:flex;flex-direction:column;gap:8px;}
+.apply-item{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);}
+.apply-check{font-size:0.85rem;flex-shrink:0;margin-top:1px;} .apply-text{font-size:0.88rem;color:var(--body-text);line-height:1.55;}
+.fix-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fix-panel{border-radius:10px;padding:16px 18px;}
+.fix-panel.immediate{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);}
+.fix-panel.strategic{background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.18);}
+.fix-panel-label{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.fix-panel.immediate .fix-panel-label{color:var(--sec-soft);} .fix-panel.strategic .fix-panel-label{color:var(--cyber);}
+.fix-steps{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.fix-step{display:flex;align-items:flex-start;gap:9px;font-size:0.87rem;color:var(--body-text);line-height:1.55;}
+.fix-step-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;font-size:0.63rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.fix-panel.immediate .fix-step-num{background:rgba(239,68,68,0.15);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}
+.fix-panel.strategic .fix-step-num{background:rgba(52,211,153,0.12);color:var(--cyber);border:1px solid rgba(52,211,153,0.22);}
+.concept-tags-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+.concept-tag-pill{font-size:0.72rem;font-weight:700;font-family:'Courier New',monospace;padding:5px 12px;border-radius:6px;background:var(--surface2);color:var(--muted);border:1px solid var(--border2);cursor:pointer;transition:color 0.15s,border-color 0.15s,background 0.15s;}
+.concept-tag-pill:hover,.concept-tag-pill.active{color:var(--ai);border-color:rgba(129,140,248,0.4);background:rgba(129,140,248,0.08);}
+.concept-tag-expand{display:none;padding:14px 16px;border-radius:9px;background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.15);margin-top:4px;}
+.concept-tag-expand.visible{display:block;}
+.concept-tag-expand-name{font-size:0.85rem;font-weight:800;color:var(--ai);font-family:'Courier New',monospace;margin-bottom:8px;}
+.concept-def{font-size:0.88rem;color:var(--body-text);line-height:1.65;margin-bottom:9px;}
+.concept-rel{font-size:0.85rem;color:var(--muted);line-height:1.6;font-style:italic;padding-left:12px;border-left:2px solid rgba(129,140,248,0.35);}
+.hunt-list{display:flex;flex-direction:column;gap:8px;}
+details.hunt-entry{border-radius:9px;overflow:hidden;border:1px solid var(--border);transition:border-color 0.2s;}
+details.hunt-entry[open]{border-color:var(--border2);}
+details.hunt-entry summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;background:var(--surface2);transition:background 0.15s;}
+details.hunt-entry summary:hover{background:var(--surface3);}
+details.hunt-entry summary::-webkit-details-marker{display:none;}
+.hunt-priority{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;flex-shrink:0;}
+.hunt-priority.high{background:rgba(239,68,68,0.15);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}
+.hunt-priority.medium{background:rgba(251,191,36,0.12);color:var(--amber);border:1px solid rgba(251,191,36,0.22);}
+.hunt-priority.low{background:rgba(52,211,153,0.1);color:var(--cyber);border:1px solid rgba(52,211,153,0.2);}
+.hunt-signal{font-size:0.88rem;font-weight:700;color:var(--text);flex:1;}
+.hunt-chevron{font-size:0.6rem;color:var(--muted2);transition:transform 0.2s;flex-shrink:0;}
+details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
+.hunt-body{padding:12px 14px;border-top:1px solid var(--border);background:var(--surface);}
+.hunt-desc{font-size:0.88rem;color:var(--muted);line-height:1.65;}
+.hunt-log-tag{display:inline-block;margin-top:8px;margin-right:5px;font-size:0.68rem;font-weight:700;font-family:'Courier New',monospace;padding:2px 8px;border-radius:4px;background:rgba(129,140,248,0.1);color:var(--ai);border:1px solid rgba(129,140,248,0.2);}
+.ioc-caveat{padding:12px 15px;border-radius:8px;margin-bottom:16px;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.25);display:flex;align-items:flex-start;gap:10px;}
+.ioc-caveat-icon{font-size:1rem;flex-shrink:0;margin-top:1px;} .ioc-caveat-text{font-size:0.83rem;color:var(--body-text);line-height:1.6;}
+.ioc-caveat-text strong{color:var(--amber);font-weight:700;}
+.ioc-group{margin-bottom:16px;} .ioc-group:last-child{margin-bottom:0;}
+.ioc-group-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.ioc-group-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);}
+.ioc-copy-btn{font-size:0.68rem;font-weight:600;padding:3px 10px;border-radius:20px;background:transparent;border:1px solid var(--border2);color:var(--muted2);cursor:pointer;transition:color 0.15s,border-color 0.15s;display:flex;align-items:center;gap:4px;}
+.ioc-copy-btn:hover,.ioc-copy-btn.copied{color:var(--cyber);border-color:rgba(52,211,153,0.4);}
+.ioc-list{background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.ioc-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);font-family:'Courier New',monospace;font-size:0.8rem;color:var(--body-text);word-break:break-all;}
+.ioc-item:last-child{border-bottom:none;} .ioc-item:hover{background:rgba(255,255,255,0.02);}
+.ioc-copy-single{flex-shrink:0;background:none;border:none;cursor:pointer;color:var(--muted2);font-size:0.72rem;padding:2px 6px;border-radius:4px;transition:color 0.15s;font-family:inherit;}
+.ioc-copy-single:hover{color:var(--cyber);}
+.ioc-no-data{padding:12px;font-size:0.83rem;color:var(--muted2);font-style:italic;text-align:center;}
+.ta-inline-tag{display:inline-flex;align-items:center;gap:5px;font-size:0.63rem;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.28);cursor:pointer;transition:background 0.15s,border-color 0.15s;font-family:inherit;white-space:nowrap;}
+.ta-inline-tag:hover{background:rgba(167,139,250,0.18);border-color:rgba(167,139,250,0.45);}
+.share-footer{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.share-footer-text{font-size:0.85rem;color:var(--muted);}
+.share-footer-text strong{color:var(--text);}
+.share-footer-btns{display:flex;flex-wrap:wrap;gap:7px;}
+.share-opt{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 13px;cursor:pointer;text-decoration:none;font-size:0.8rem;font-weight:600;color:var(--muted);transition:border-color 0.18s,color 0.18s;font-family:inherit;}
+.share-opt:hover{color:var(--text);border-color:var(--border2);}
+.share-opt.x:hover{border-color:#e7e7e7;color:#e7e7e7;}
+.share-opt.whatsapp:hover{border-color:#25d366;color:#25d366;}
+.share-opt.telegram:hover{border-color:#2aabee;color:#2aabee;}
+.share-opt.linkedin:hover{border-color:#0a66c2;color:#0a66c2;}
+.share-opt.copy-link:hover{border-color:var(--cyber);color:var(--cyber);}
+.popover-overlay{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.6);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.popover-overlay.open{opacity:1;pointer-events:all;}
+.popover-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:24px 24px 20px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto;transform:translateY(12px);transition:transform 0.2s;position:relative;}
+.popover-overlay.open .popover-box{transform:translateY(0);}
+.popover-close{position:absolute;top:14px;right:14px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.78rem;display:flex;align-items:center;justify-content:center;transition:color 0.15s;font-family:inherit;}
+.popover-close:hover{color:var(--text);}
+.popover-type-tag{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;padding:2px 9px;border-radius:4px;display:inline-block;margin-bottom:10px;}
+.popover-type-tag.technique{background:rgba(251,191,36,0.12);color:var(--amber);border:1px solid rgba(251,191,36,0.25);}
+.popover-type-tag.tactic{background:rgba(239,68,68,0.12);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}
+.popover-type-tag.actor{background:rgba(167,139,250,0.12);color:var(--purple);border:1px solid rgba(167,139,250,0.25);}
+.popover-title{font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:4px;line-height:1.3;}
+.popover-subtitle{font-size:0.75rem;font-weight:600;font-family:'Courier New',monospace;color:var(--muted2);margin-bottom:14px;}
+.popover-section-label{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:6px;margin-top:14px;}
+.popover-body-text{font-size:0.9rem;color:var(--body-text);line-height:1.7;}
+.popover-relevance{font-size:0.88rem;color:var(--muted);line-height:1.65;padding:10px 14px;background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.18);border-radius:8px;border-left:3px solid rgba(129,140,248,0.4);margin-top:6px;}
+.popover-att-link{display:inline-flex;align-items:center;gap:4px;margin-top:12px;font-size:0.75rem;font-weight:600;color:var(--sec-soft);text-decoration:none;transition:color 0.15s;}
+.popover-att-link:hover{color:var(--sec);}
+.popover-tags-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.popover-tag{font-size:0.68rem;font-weight:600;padding:3px 9px;border-radius:5px;font-family:inherit;}
+.popover-tag.purple{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.22);}
+.popover-tag.alias{background:var(--surface3);color:var(--muted2);border:1px solid var(--border2);}
+.popover-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.popover-cell{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.popover-cell-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);margin-bottom:4px;}
+.popover-cell-value{font-size:0.88rem;font-weight:700;color:var(--text);}
+.popover-cell-value.purple{color:var(--purple);}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface2);border:1px solid var(--cyber);color:var(--cyber);padding:8px 18px;border-radius:20px;font-size:0.78rem;font-weight:600;opacity:0;transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:9999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+@media(max-width:640px){
+  .hero-title{font-size:1.35rem;}
+  .top-nav .nav-breadcrumb{display:none;}
+  .score-row{gap:8px;}
+  .cvss-bar-track{width:100px;}
+  .page-body{padding:16px 12px 60px;}
+  .sec-block-body{padding:14px;}
+  .details-grid{grid-template-columns:1fr 1fr;}
+  .fix-grid{grid-template-columns:1fr;}
+  .share-footer{flex-direction:column;}
+  .affected-table th,.affected-table td{padding:8px;}
+  .mitre-col{min-width:130px;}
+  .popover-grid{grid-template-columns:1fr;}
+  .popover-box{padding:18px 16px 16px;}
+}
+</style>
+</head>
+<body>
+<nav class="top-nav">
+  <a href="https://dizchrisctrl.github.io/daily-digest" class="back-btn">&#8592; Back to Digest</a>
+  <span class="nav-breadcrumb">The Daily Rundown <span>/</span> 2026-04-17 <span>/</span> Threat Actor Profile</span>
+  <div class="nav-actions">
+    <button class="theme-toggle" onclick="document.documentElement.classList.toggle('light')">&#9788; Theme</button>
+    <button class="share-btn-top" onclick="copyPageLink(this)">&#8679; Share</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-badges">
+      <span class="type-badge">&#9670; Threat Actor Profile</span>
+      
+      
+    </div>
+    <h1 class="hero-title">ZionSiphon: Purpose-Built Malware Targets Water Treatment Infrastructure</h1>
+    <div class="score-row">
+      
+      <span class="severity-pill sev-critical">Critical</span>
+      <span class="patch-pill patch-none">&#9888; No Fix Yet</span>
+    </div>
+    <p class="hero-desc">A newly discovered OT-specific malware called ZionSiphon has been identified targeting water treatment and desalination facilities with the explicit goal of sabotaging physical operations. The malware manipulates industrial control systems — including PLCs, SCADA interfaces, and protocols like Modbus and DNP3 — to alter chemical dosing and purification processes while spoofing operator displays to hide the attack. This represents a dangerous evolution in ICS malware, joining the lineage of Stuxnet, Industroyer, and Triton but shifting focus to water infrastructure, one of the most critical and under-resourced sectors in cybersecurity.</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">&#128197; Apr 16, 2026 6:04 PM EDT</span><span class="hero-meta-sep">|</span>
+      <span class="hero-meta-item">Source: <a href="https://www.bleepingcomputer.com/news/security/zionsiphon-malware-designed-to-sabotage-water-treatment-systems/" class="src-link-hero" target="_blank" rel="noopener">BleepingComputer &#8599;</a></span>
+      
+    </div>
+  </div>
+</header>
+
+<main class="page-body">
+
+  
+      <div class="sec-block">
+        <div class="sec-block-header"><span class="sec-block-icon">&#9654;</span><span class="sec-block-title red">Attack Flow</span></div>
+        <div class="sec-block-body">
+          <div class="diagram-wrap">
+            <div class="diagram-bar">
+              <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+              <span class="diagram-title">ZionSiphon: OT Malware Targeting Water Treatment Infrastructure</span>
+            </div>
+            <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#34d399"/>
+    </marker>
+  </defs>
+  <rect width="700" height="340" fill="#060912"/>
+  <!-- Title -->
+  <text x="350" y="28" text-anchor="middle" fill="#34d399" font-size="14" font-family="monospace" font-weight="bold">ZionSiphon Attack Chain</text>
+  <!-- Step 1: Initial Access -->
+  <rect x="20" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="80" y="84" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Initial</text>
+  <text x="80" y="100" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Access</text>
+  <text x="80" y="128" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">IT/OT boundary</text>
+  <!-- Arrow 1 -->
+  <line x1="140" y1="88" x2="178" y2="88" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- Step 2: Lateral Movement -->
+  <rect x="180" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="240" y="84" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Lateral</text>
+  <text x="240" y="100" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Movement</text>
+  <text x="240" y="128" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">SCADA network</text>
+  <!-- Arrow 2 -->
+  <line x1="300" y1="88" x2="338" y2="88" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- Step 3: PLC Manipulation -->
+  <rect x="340" y="60" width="130" height="56" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="405" y="84" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">PLC/RTU</text>
+  <text x="405" y="100" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Manipulation</text>
+  <text x="405" y="128" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Alter process logic</text>
+  <!-- Arrow 3 -->
+  <line x1="470" y1="88" x2="508" y2="88" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <!-- Step 4: Sabotage -->
+  <rect x="510" y="60" width="160" height="56" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="590" y="84" text-anchor="middle" fill="#34d399" font-size="13" font-family="monospace" font-weight="bold">Sabotage</text>
+  <text x="590" y="100" text-anchor="middle" fill="#eaedf5" font-size="11" font-family="monospace">Chemical dosing</text>
+  <text x="590" y="128" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Unsafe water output</text>
+  <!-- HMI Spoofing branch -->
+  <line x1="405" y1="116" x2="405" y2="175" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="330" y="178" width="150" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="405" y="200" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">HMI Spoofing</text>
+  <text x="405" y="216" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">False "normal" readings</text>
+  <!-- Operator sees normal -->
+  <line x1="405" y1="228" x2="405" y2="265" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="320" y="268" width="170" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="405" y="290" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Operator Unaware</text>
+  <text x="405" y="304" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">No alarms triggered</text>
+  <!-- Label: OT Zone -->
+  <rect x="20" y="150" width="90" height="26" rx="4" fill="#34d399"/>
+  <text x="65" y="167" text-anchor="middle" fill="#060912" font-size="11" font-family="monospace" font-weight="bold">OT ZONE</text>
+  <!-- Label: IT Zone -->
+  <rect x="20" y="180" width="90" height="26" rx="4" fill="#252840"/>
+  <text x="65" y="197" text-anchor="middle" fill="#7a849a" font-size="11" font-family="monospace">IT ZONE</text>
+  <!-- Divider line -->
+  <line x1="15" y1="145" x2="685" y2="145" stroke="#252840" stroke-width="1" stroke-dasharray="5,5"/>
+  <text x="630" y="160" fill="#7a849a" font-size="10" font-family="monospace">IT / OT boundary</text>
+</svg></div>
+          </div>
+          <div class="attack-vector-text">ZionSiphon infiltrates water treatment OT/ICS environments and manipulates industrial control protocols (Modbus, DNP3) to reprogram PLCs and alter chemical dosing or filtration parameters, while simultaneously spoofing HMI sensor readings so operators see normal conditions even as the facility produces unsafe output.</div>
+        </div>
+      </div>
+
+  
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128336;</span><span class="sec-block-title amber">Timeline</span></div>
+    <div class="sec-block-body">
+      <div class="timeline-track"><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Disclosed</div><div class="tl-date">2026-04-16</div></div><div class="tl-step"><div class="tl-dot empty"></div><div class="tl-label">Exploited in Wild</div><div class="tl-date na">Unknown</div></div><div class="tl-step"><div class="tl-dot empty"></div><div class="tl-label">Patch Released</div><div class="tl-date na">Unknown</div></div></div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Map</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tactic or technique for details</span></div>
+    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Initial Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T0819&quot;, &quot;name&quot;: &quot;Exploit Public-Facing Application&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Initial Access</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0819</span><span class="mitre-tech-name">Exploit Public-Facing Application</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">ZionSiphon likely gains initial foothold by exploiting internet-facing OT/IT boundary systems or exposed SCADA services at water treatment facilities.</p><a href="https://attack.mitre.org/techniques/T0819/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Impair Process Control&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T0855&quot;, &quot;name&quot;: &quot;Unauthorized Command Message&quot;}, {&quot;id&quot;: &quot;T0836&quot;, &quot;name&quot;: &quot;Modify Parameter&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Impair Process Control</span><span class="mitre-tactic-cnt">2 techniques</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0855</span><span class="mitre-tech-name">Unauthorized Command Message</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The malware sends unauthorized Modbus/DNP3 commands to PLCs to alter chemical dosing and filtration parameters in water treatment processes.</p><a href="https://attack.mitre.org/techniques/T0855/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0836</span><span class="mitre-tech-name">Modify Parameter</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The malware modifies PLC parameters controlling chemical dosing levels and purification setpoints to produce dangerous output.</p><a href="https://attack.mitre.org/techniques/T0836/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Evasion&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T0856&quot;, &quot;name&quot;: &quot;Spoof Reporting Message&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Evasion</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0856</span><span class="mitre-tech-name">Spoof Reporting Message</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">ZionSiphon spoofs sensor readings sent to HMIs so operators see normal values while physical processes are being sabotaged.</p><a href="https://attack.mitre.org/techniques/T0856/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Inhibit Response Function&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T0816&quot;, &quot;name&quot;: &quot;Device Restart/Shutdown&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Inhibit Response Function</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T0816</span><span class="mitre-tech-name">Device Restart/Shutdown</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">ZionSiphon may disable safety interlocks and force restarts of safety-critical controllers to prevent automated protective shutdowns.</p><a href="https://attack.mitre.org/techniques/T0816/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
+  </div>
+
+  
+      <div class="sec-block">
+        <div class="sec-block-header"><span class="sec-block-icon">&#9888;</span><span class="sec-block-title red">Affected Products</span></div>
+        <div class="sec-block-body" style="padding:0;overflow-x:auto;">
+          <table class="affected-table">
+            <thead><tr><th>Vendor</th><th>Product</th><th>Versions Affected</th><th>Fixed In</th></tr></thead>
+            <tbody><tr>
+          <td><span class="prod-vendor">Multiple / Generic</span></td>
+          <td><span class="prod-name">SCADA/HMI Systems (Water Treatment)</span></td>
+          <td><span class="prod-ver">All versions — see vendor advisory</span></td>
+          <td><span class="prod-fix none">No fix yet</span></td>
+        </tr><tr>
+          <td><span class="prod-vendor">Multiple / Generic</span></td>
+          <td><span class="prod-name">Programmable Logic Controllers (PLCs) using Modbus/DNP3</span></td>
+          <td><span class="prod-ver">All versions — see vendor advisory</span></td>
+          <td><span class="prod-fix none">No fix yet</span></td>
+        </tr><tr>
+          <td><span class="prod-vendor">Multiple / Generic</span></td>
+          <td><span class="prod-name">Water Treatment and Desalination Control Systems</span></td>
+          <td><span class="prod-ver">All versions — see vendor advisory</span></td>
+          <td><span class="prod-fix none">No fix yet</span></td>
+        </tr></tbody>
+          </table>
+        </div>
+      </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#10067;</span><span class="sec-block-title amber">Am I Affected?</span></div>
+    <div class="sec-block-body">
+      <p class="apply-intro">You are likely at risk if <strong>any</strong> of the following apply:</p>
+      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You operate or manage a water treatment or desalination facility with SCADA/ICS systems</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment uses Modbus or DNP3 protocols for process control in water infrastructure</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your OT network is not fully air-gapped or has IT/OT convergence points with internet-facing components</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your water treatment PLCs and HMIs run on legacy systems without recent firmware validation</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">You operate only IT environments with no OT/ICS infrastructure connected to physical processes</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your OT environment is fully air-gapped with no remote access, verified network segmentation, and continuous integrity monitoring on all PLCs</span></div></div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128736;</span><span class="sec-block-title green">Fix &amp; Recommendations</span></div>
+    <div class="sec-block-body">
+      <div class="fix-grid">
+        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Immediately audit all remote access paths into OT/ICS networks at water treatment facilities — disable any unnecessary VPN, RDP, or vendor remote access connections to SCADA systems.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Verify PLC firmware integrity by comparing current PLC program checksums against known-good baselines; flag any unauthorized changes to dosing logic or setpoint parameters.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Enable and review logging on all Modbus/DNP3 traffic using OT-aware network monitoring tools (e.g., Claroty, Dragos, Nozomi Networks) and look for anomalous command patterns or unexpected writes to PLCs.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Cross-validate HMI sensor readings against independent physical measurements (manual water quality sampling, inline analyzers with separate data paths) to detect spoofed readings.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Ensure safety interlocks and emergency shutdown systems are functioning independently and have not been tampered with; test manual overrides.</span></li></ul></div>
+        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Implement robust IT/OT network segmentation with unidirectional security gateways (data diodes) between corporate IT and process control networks.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Deploy continuous OT network monitoring and anomaly detection platforms capable of deep packet inspection of Modbus, DNP3, and proprietary SCADA protocols.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Establish a PLC configuration management program with regular integrity checks, version-controlled backups, and automated alerts on unauthorized logic changes.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Develop and regularly exercise incident response plans specific to OT/ICS compromise scenarios, including manual operational fallback procedures for water treatment.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Engage with CISA, WaterISAC, and sector-specific information sharing organizations to stay current on ZionSiphon indicators and collaborate on sector-wide defensive measures.</span></li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128218;</span><span class="sec-block-title ai">Concept Briefing</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tag to expand</span></div>
+    <div class="sec-block-body">
+      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-ot-ics-malware')">OT/ICS Malware</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-scada-systems')">SCADA Systems</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-industrial-protocol-abuse')">Industrial Protocol Abuse</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-sensor-spoofing')">Sensor Spoofing</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-critical-infrastructure-target')">Critical Infrastructure Targeting</button></div>
+      <div class="concept-tag-expand" id="ct-ot-ics-malware">
+          <div class="concept-tag-expand-name">OT/ICS Malware</div>
+          <div class="concept-def">Malware specifically designed to target Operational Technology and Industrial Control Systems that manage physical processes like water treatment, power generation, and manufacturing.</div>
+          <div class="concept-rel">ZionSiphon is purpose-built OT malware targeting water treatment ICS environments, joining an elite class of kinetic-effect malware like Stuxnet and Triton.</div>
+        </div><div class="concept-tag-expand" id="ct-scada-systems">
+          <div class="concept-tag-expand-name">SCADA Systems</div>
+          <div class="concept-def">Supervisory Control and Data Acquisition systems that provide centralized monitoring and control over distributed industrial processes via sensors, PLCs, and human-machine interfaces.</div>
+          <div class="concept-rel">ZionSiphon targets SCADA components at water facilities — manipulating PLCs and spoofing HMI displays to hide sabotage from operators.</div>
+        </div><div class="concept-tag-expand" id="ct-industrial-protocol-abuse">
+          <div class="concept-tag-expand-name">Industrial Protocol Abuse</div>
+          <div class="concept-def">Exploitation of specialized communication protocols like Modbus and DNP3 that were designed for reliability in isolated networks and often lack authentication or encryption.</div>
+          <div class="concept-rel">ZionSiphon leverages inherent weaknesses in Modbus/DNP3 to send unauthorized commands that alter chemical dosing without proper authentication barriers.</div>
+        </div><div class="concept-tag-expand" id="ct-sensor-spoofing">
+          <div class="concept-tag-expand-name">Sensor Spoofing</div>
+          <div class="concept-def">The act of sending falsified data to monitoring displays so operators believe a process is running normally when it has actually been compromised.</div>
+          <div class="concept-rel">A core capability of ZionSiphon is spoofing HMI sensor readings to mask dangerous changes to water treatment parameters.</div>
+        </div><div class="concept-tag-expand" id="ct-critical-infrastructure-target">
+          <div class="concept-tag-expand-name">Critical Infrastructure Targeting</div>
+          <div class="concept-def">Cyberattacks aimed at essential services like water, energy, and transportation that can cause physical harm, public health emergencies, or societal disruption.</div>
+          <div class="concept-rel">ZionSiphon explicitly targets water treatment — a sector historically under-resourced in cybersecurity — with potential to endanger public health at scale.</div>
+        </div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128269;</span><span class="sec-block-title amber">Threat Hunting Signals</span></div>
+    <div class="sec-block-body"><div class="hunt-list">
+        <details class="hunt-entry" open>
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">Anomalous Modbus/DNP3 write commands to PLCs</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Look for unexpected write commands (Modbus function codes 05, 06, 15, 16) or DNP3 direct operate commands targeting chemical dosing setpoints or safety interlock registers, especially from unusual source IPs or during non-maintenance windows. These may indicate unauthorized PLC reprogramming by ZionSiphon.</div>
+            <span class="hunt-log-tag">OT network traffic captures (PCAP)</span><span class="hunt-log-tag">Modbus/DNP3 deep packet inspection logs (Claroty, Dragos, Nozomi Networks)</span><span class="hunt-log-tag">Firewall logs at IT/OT boundary</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">PLC logic or firmware integrity deviation</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Compare current PLC program checksums and configuration against known-good baselines. Any unauthorized deviation in dosing logic, setpoint values, or safety interlock configurations may indicate ZionSiphon has modified controller behavior.</div>
+            <span class="hunt-log-tag">PLC configuration management tools</span><span class="hunt-log-tag">Asset inventory and change management systems</span><span class="hunt-log-tag">Engineering workstation audit logs</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">Discrepancy between HMI readings and physical sensors</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Cross-reference values displayed on SCADA HMIs with independent physical measurements (manual sampling, inline analyzers on separate data paths). Persistent discrepancies — especially in chlorine levels, pH, turbidity — may indicate sensor spoofing by ZionSiphon.</div>
+            <span class="hunt-log-tag">SCADA historian databases</span><span class="hunt-log-tag">Independent inline water quality analyzer logs</span><span class="hunt-log-tag">Manual sampling records</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority medium">Medium</span>
+            <span class="hunt-signal">Unexpected outbound connections from OT network segments</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Monitor for any network connections originating from OT/ICS segments toward external IP addresses or unusual internal hosts. OT environments should have minimal outbound traffic; any anomaly could indicate C2 communication or data exfiltration by the malware.</div>
+            <span class="hunt-log-tag">OT network monitoring platforms</span><span class="hunt-log-tag">Firewall and router logs at OT perimeter</span><span class="hunt-log-tag">DNS query logs from OT segments</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority medium">Medium</span>
+            <span class="hunt-signal">Unauthorized access to engineering workstations</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Review authentication logs on engineering workstations and SCADA servers for unusual login times, failed authentication attempts, or use of service/default credentials that could indicate an attacker gaining access to reprogram PLCs.</div>
+            <span class="hunt-log-tag">Windows Security Event Logs (Event IDs 4624, 4625, 4648)</span><span class="hunt-log-tag">Engineering workstation application logs</span><span class="hunt-log-tag">Active Directory/LDAP authentication logs</span>
+          </div>
+        </details></div></div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#9762;</span><span class="sec-block-title amber">Indicators of Compromise</span><button class="ioc-copy-btn" style="margin-left:auto" onclick="copyAllIOCs()">&#10064; Copy All IOCs</button></div>
+    <div class="sec-block-body">
+      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific IOCs (hashes, IPs, domains, file paths, or URI patterns) were reported in the source article for ZionSiphon as of 2026-04-17. All IOC arrays below are empty. Monitor CISA, WaterISAC, and OT security vendor advisories for updated indicators as analysis progresses. Always verify any future IOCs against your own environment before taking blocking action.</span></div>
+      <div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Hashes (SHA-256)</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Command &amp;amp; Control IPs</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Malicious Domains</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Paths / Artifacts</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Suspicious URI Patterns</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div>
+    </div>
+  </div>
+
+  <div class="share-footer">
+    <div class="share-footer-text"><strong>Share this advisory</strong><br><span style="font-size:0.78rem;">Help your network patch faster.</span></div>
+    <div class="share-footer-btns">
+      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20ZionSiphon%3A%20Purpose-Built%20Malware%20Targets%20Water%20Treatment%20Infrastructure%0A%0ACVSS%20N/A%20%C2%B7%20Critical%20%C2%B7%20No%20Fix%20Yet&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-3.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
+      <a href="https://wa.me/?text=%F0%9F%9B%A1%20ZionSiphon%3A%20Purpose-Built%20Malware%20Targets%20Water%20Treatment%20Infrastructure%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-3.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
+      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-3.html&amp;text=ZionSiphon%3A%20Purpose-Built%20Malware%20Targets%20Water%20Treatment%20Infrastructure" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-3.html" class="share-opt linkedin" target="_blank" rel="noopener">in Share</a>
+      <button class="share-opt copy-link" onclick="copyPageLink(this)">&#128279; Copy Link</button>
+    </div>
+  </div>
+
+</main>
+
+<div class="popover-overlay" id="mitre-ta-overlay" onclick="closeOverlay(event)">
+  <div class="popover-box" id="mitre-ta-box" onclick="event.stopPropagation()">
+    <button class="popover-close" onclick="closeOverlay()">&#10005;</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+function escHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function toggleConcept(btn,id){
+  var el=document.getElementById(id);
+  if(!el)return;
+  var open=el.classList.contains('visible');
+  document.querySelectorAll('.concept-tag-expand').forEach(function(e){e.classList.remove('visible');});
+  document.querySelectorAll('.concept-tag-pill').forEach(function(b){b.classList.remove('active');});
+  if(!open){el.classList.add('visible');btn.classList.add('active');el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+}
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2200);
+}
+function copyText(btn,text){
+  navigator.clipboard.writeText(text).then(function(){
+    var o=btn.textContent;btn.textContent='&#10003;';
+    setTimeout(function(){btn.textContent=o;},1400);
+    showToast('Copied');
+  });
+}
+function copyIOCGroup(gid){
+  var el=document.getElementById('ioc-'+gid);
+  if(!el)return;
+  var items=Array.from(el.querySelectorAll('.ioc-item > span')).map(function(s){return s.textContent.trim();});
+  navigator.clipboard.writeText(items.join('\n')).then(function(){showToast(items.length+' IOC'+(items.length!==1?'s':'')+' copied');});
+}
+function copyAllIOCs(){
+  var all=Array.from(document.querySelectorAll('.ioc-item > span')).map(function(s){return s.textContent.trim();});
+  navigator.clipboard.writeText(all.join('\n')).then(function(){showToast(all.length+' IOCs copied');});
+}
+function copyPageLink(btn){
+  navigator.clipboard.writeText(window.location.href).then(function(){
+    var o=btn.textContent;btn.textContent='&#10003; Copied!';
+    if(btn.classList)btn.classList.add('copied');
+    setTimeout(function(){btn.textContent=o;if(btn.classList)btn.classList.remove('copied');},1800);
+    showToast('Link copied');
+  });
+}
+function _showOverlay(html){
+  var ov=document.getElementById('mitre-ta-overlay');
+  var bx=document.getElementById('mitre-ta-box');
+  if(!ov||!bx)return;
+  bx.innerHTML='<button class="popover-close" onclick="closeOverlay()">&#10005;</button>'+html;
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeOverlay(e){
+  if(e&&e.target!==document.getElementById('mitre-ta-overlay'))return;
+  var ov=document.getElementById('mitre-ta-overlay');
+  if(ov)ov.classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeOverlay();});
+var MITRE_TACTIC_DESC={
+  'Reconnaissance':'The adversary is gathering information to plan future operations — identifying targets, mapping infrastructure, or probing defenses before striking.',
+  'Resource Development':'The adversary is acquiring or building capabilities: purchasing domains, setting up infrastructure, obtaining tools, or developing malware.',
+  'Initial Access':'The adversary is trying to get a foothold. Common methods include phishing, exploiting public-facing applications, and leveraging valid credentials.',
+  'Execution':'The adversary is running malicious code on a local or remote system to carry out their objectives — via scripts, native APIs, or exploited applications.',
+  'Persistence':'The adversary is maintaining their foothold so they survive reboots, credential changes, and re-imaging. They want to stay in, not just get in.',
+  'Privilege Escalation':'The adversary is gaining higher-level permissions — moving from user to admin or from standard process to SYSTEM — to unlock restricted resources.',
+  'Defense Evasion':'The adversary is avoiding detection. Techniques include disabling security tools, obfuscating code, masquerading as legitimate processes, and clearing logs.',
+  'Credential Access':'The adversary is stealing passwords, tokens, and keys — through keylogging, dumping memory, or exploiting authentication weaknesses.',
+  'Discovery':'The adversary is learning about the environment: what systems exist, who has access, how the network is laid out, and where the valuable data lives.',
+  'Lateral Movement':'The adversary is spreading through the network — pivoting from an initial beachhead to reach high-value targets using stolen credentials and trust relationships.',
+  'Collection':'The adversary is gathering data relevant to their goal: emails, files, clipboard contents, screenshots, credentials, or sensitive records.',
+  'Command and Control':'The adversary is communicating with compromised systems — issuing commands, receiving data, and maintaining covert channels to control the operation.',
+  'Exfiltration':'The adversary is stealing your data — compressing, encrypting, and transferring it to attacker-controlled infrastructure, often over legitimate channels.',
+  'Impact':'The adversary is disrupting, destroying, or manipulating your systems — through ransomware, data deletion, manipulation, or denial of service.',
+};
+function openMitrePopover(e,btn){
+  e.stopPropagation();
+  var raw=btn.getAttribute('data-mitre');
+  if(!raw)return;
+  var d;try{d=JSON.parse(raw);}catch(err){return;}
+  var html='';
+  if(d.type==='tactic'){
+    var tacDesc=MITRE_TACTIC_DESC[d.name]||'A phase in the ATT&amp;CK lifecycle describing how adversaries achieve a goal within a broader attack chain.';
+    var techs=(d.techniques||[]).map(function(t){
+      return '<span class="popover-tag purple">'+escHtml((t.id?t.id+' ':'')+escHtml(t.name||''))+'</span>';
+    }).join('');
+    html='<span class="popover-type-tag tactic">ATT&amp;CK Tactic</span>'+
+      '<div class="popover-title">'+escHtml(d.name)+'</div>'+
+      '<div class="popover-section-label">What This Means</div>'+
+      '<div class="popover-body-text">'+tacDesc+'</div>'+
+      (techs?'<div class="popover-section-label">Techniques Relevant to This Story</div><div class="popover-tags-row">'+techs+'</div>':'')+
+      '<a href="https://attack.mitre.org/tactics/" class="popover-att-link" target="_blank" rel="noopener">Browse ATT&amp;CK Tactics &#8599;</a>';
+  }
+  _showOverlay(html);
+}
+function openTAPopover(e,btn){
+  e.stopPropagation();
+  var raw=btn.getAttribute('data-ta');
+  if(!raw)return;
+  var d;try{d=JSON.parse(raw);}catch(err){return;}
+  var aliases=(d.aliases||[]).map(function(a){return '<span class="popover-tag alias">'+escHtml(a)+'</span>';}).join('');
+  var ttps=(d.known_ttps||[]).map(function(t){return '<span class="popover-tag purple">'+escHtml(t)+'</span>';}).join('');
+  var conf=d.attribution_confidence?'<span class="conf-badge" style="margin-left:8px">'+escHtml(d.attribution_confidence)+' Confidence</span>':'';
+  var html='<span class="popover-type-tag actor">Threat Actor</span>'+conf+
+    '<div class="popover-title" style="color:var(--purple)">'+escHtml(d.name)+'</div>'+
+    (aliases?'<div class="popover-tags-row" style="margin-bottom:10px">'+aliases+'</div>':'')+
+    '<div class="popover-grid">'+
+      '<div class="popover-cell"><div class="popover-cell-label">Origin</div><div class="popover-cell-value">'+escHtml(d.origin||'Unknown')+'</div></div>'+
+      '<div class="popover-cell"><div class="popover-cell-label">Motivation</div><div class="popover-cell-value purple">'+escHtml(d.motivation||'Unknown')+'</div></div>'+
+    '</div>'+
+    (d.description?'<div class="popover-section-label">Description</div><div class="popover-body-text">'+escHtml(d.description)+'</div>':'')+
+    (d.story_relevance?'<div class="popover-section-label">Story Relevance</div><div class="popover-relevance">'+escHtml(d.story_relevance)+'</div>':'')+
+    (ttps?'<div class="popover-section-label">Known TTPs</div><div class="popover-tags-row">'+ttps+'</div>':'');
+  _showOverlay(html);
+}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.cvss-bar-fill').forEach(function(bar){
+    var w=bar.style.width;bar.style.width='0%';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){bar.style.width=w;});});
+  });
+});
+</script>
+</body>
+</html>

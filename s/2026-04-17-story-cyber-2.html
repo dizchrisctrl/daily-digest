@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
+<title>Anthropic MCP STDIO Transport — Remote Code Execution via Unsafe Defaults | The Daily Rundown</title>
+<meta property="og:type"        content="article">
+<meta property="og:site_name"   content="The Daily Rundown">
+<meta property="og:title"       content="Anthropic MCP STDIO Transport — Remote Code Execution via Unsafe Defaults">
+<meta property="og:description" content="OX Security researchers discovered that Anthropic&#39;s Model Context Protocol (MCP) reference implementation uses unsafe STDIO transport defaults that enable remote code execution across the AI agent ecosystem. The vulnerability stems from a design decision rather than a simple ">
+<meta property="og:url"         content="https://dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-2.html">
+<meta name="twitter:card"        content="summary">
+<meta name="twitter:title"       content="Anthropic MCP STDIO Transport — Remote Code Execution via Unsafe Defaults">
+<meta name="twitter:description" content="OX Security researchers discovered that Anthropic&#39;s Model Context Protocol (MCP) reference implementation uses unsafe STDIO transport defaults that enable remote code execution across the AI agent ecosystem. The vulnerability stems from a design decision rather than a simple ">
+<style>
+:root {
+  --bg:#0b0d16; --surface:#12152a; --surface2:#1a1d32; --surface3:#20233c;
+  --text:#eaedf5; --muted:#7a849a; --muted2:#5a6275;
+  --cyber:#34d399; --cyber2:#10b981; --purple:#a78bfa; --amber:#fbbf24; --ai:#818cf8;
+  --border:#252840; --border2:#333660;
+  --body-text:#c0c8d8;
+  --sec:#ef4444; --sec2:#dc2626; --sec-soft:#f87171;
+  --sec-glow:rgba(239,68,68,0.15); --sec-bg:rgba(239,68,68,0.04); --sec-border:rgba(239,68,68,0.22);
+}
+html.light {
+  --bg:#f4f6fb; --surface:#ffffff; --surface2:#eef0f7; --surface3:#e4e7f2;
+  --text:#1a1d2e; --muted:#4a5568; --muted2:#718096;
+  --border:#d4d8ec; --border2:#c0c5df; --body-text:#2d3748;
+  --sec-bg:rgba(239,68,68,0.03); --sec-border:rgba(239,68,68,0.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;min-height:100vh;}
+.top-nav{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);padding:0 20px;height:52px;display:flex;align-items:center;gap:12px;}
+.back-btn{display:flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:5px 12px;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;transition:color 0.2s,border-color 0.2s;white-space:nowrap;flex-shrink:0;}
+.back-btn:hover{color:var(--text);border-color:var(--border2);}
+.nav-breadcrumb{flex:1;min-width:0;font-size:0.75rem;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nav-breadcrumb span{color:var(--muted);}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.theme-toggle{background:var(--surface2);border:1px solid var(--border2);color:var(--muted);border-radius:20px;padding:5px 11px;font-size:0.75rem;cursor:pointer;transition:background 0.2s,color 0.2s;}
+.theme-toggle:hover{color:var(--text);}
+.share-btn-top{display:flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--sec-border);color:var(--sec-soft);border-radius:20px;padding:5px 12px;font-size:0.78rem;font-weight:600;cursor:pointer;transition:background 0.2s;}
+.share-btn-top:hover{background:var(--sec-bg);}
+.hero{padding:32px 20px 28px;border-bottom:1px solid var(--sec-border);background:linear-gradient(180deg,var(--sec-glow) 0%,transparent 100%);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 0%,var(--sec-glow) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{max-width:860px;margin:0 auto;position:relative;}
+.hero-badges{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:16px;}
+.type-badge{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:3px 10px;border-radius:4px;background:var(--sec-glow);color:var(--sec-soft);border:1px solid var(--sec-border);}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 9px;border-radius:4px;background:rgba(239,68,68,0.1);color:var(--sec);border:1px solid rgba(239,68,68,0.3);animation:live-pulse 2s ease-in-out infinite;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--sec);flex-shrink:0;animation:live-pulse 1.2s ease-in-out infinite;}
+@keyframes live-pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.hero-title{font-size:1.85rem;font-weight:900;line-height:1.2;letter-spacing:-0.5px;margin-bottom:16px;color:var(--text);}
+.score-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+.cvss-wrap{display:flex;align-items:center;gap:10px;}
+.cvss-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);white-space:nowrap;}
+.cvss-bar-track{width:140px;height:7px;border-radius:4px;background:var(--surface3);border:1px solid var(--border);overflow:hidden;}
+.cvss-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#22c55e 0%,#f59e0b 40%,#ef4444 70%);transition:width 0.6s cubic-bezier(0.4,0,0.2,1);}
+.cvss-score-num{font-size:1.15rem;font-weight:900;font-variant-numeric:tabular-nums;color:var(--sec);font-family:'Courier New',monospace;line-height:1;}
+.severity-pill,.patch-pill{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;padding:3px 10px;border-radius:20px;}
+.sev-critical{background:rgba(239,68,68,0.18);color:#f87171;border:1px solid rgba(239,68,68,0.35);}
+.sev-high{background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.3);}
+.sev-medium{background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);}
+.sev-low{background:rgba(52,211,153,0.12);color:var(--cyber);border:1px solid rgba(52,211,153,0.25);}
+.patch-available{background:rgba(52,211,153,0.1);color:var(--cyber);border:1px solid rgba(52,211,153,0.25);}
+.patch-mitigation{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.22);}
+.patch-none{background:rgba(239,68,68,0.1);color:var(--sec);border:1px solid var(--sec-border);}
+.hero-desc{font-size:0.97rem;color:var(--body-text);line-height:1.75;margin-bottom:18px;max-width:740px;}
+.hero-meta{display:flex;align-items:center;flex-wrap:wrap;gap:10px;}
+.hero-meta-item{font-size:0.76rem;color:var(--muted2);display:flex;align-items:center;gap:5px;}
+.hero-meta-sep{color:var(--border2);font-size:0.7rem;}
+.src-link-hero{font-size:0.76rem;font-weight:600;color:var(--sec-soft);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color 0.15s;}
+.src-link-hero:hover{color:var(--sec);}
+.page-body{max-width:860px;margin:0 auto;padding:28px 16px 80px;}
+.sec-block{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden;}
+.sec-block-header{padding:16px 20px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.sec-block-icon{font-size:1rem;flex-shrink:0;}
+.sec-block-title{font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted2);flex:1;}
+.sec-block-title.red{color:var(--sec-soft);} .sec-block-title.green{color:var(--cyber);} .sec-block-title.amber{color:var(--amber);}
+.sec-block-body{padding:20px;}
+.conf-badge{font-size:0.65rem;font-weight:700;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);color:var(--purple);}
+.diagram-wrap{border-radius:10px;overflow:hidden;border:1px solid #1e3055;background:#060912;}
+.diagram-bar{background:#0d1020;padding:9px 14px;display:flex;align-items:center;gap:7px;border-bottom:1px solid #1e3055;}
+.dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;} .dot-r{background:#ff5f57;} .dot-y{background:#febc2e;} .dot-g{background:#28c840;}
+.diagram-title{flex:1;text-align:center;font-size:0.67rem;color:#3a4a60;font-family:monospace;}
+.diagram-svg svg{width:100%;height:auto;display:block;}
+.attack-vector-text{margin-top:14px;font-size:0.92rem;color:var(--body-text);line-height:1.72;padding:13px 16px;background:var(--sec-bg);border:1px solid var(--sec-border);border-radius:8px;border-left:3px solid var(--sec);}
+.details-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;}
+.detail-cell{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:13px 15px;}
+.detail-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:6px;}
+.detail-value{font-size:0.93rem;font-weight:700;color:var(--text);font-family:'Courier New',monospace;word-break:break-all;}
+.detail-value.red{color:var(--sec-soft);} .detail-value.green{color:var(--cyber);} .detail-value.amber{color:var(--amber);} .detail-value.muted{color:var(--muted);font-weight:400;font-size:0.78rem;font-family:inherit;}
+.cvss-vector-cell{grid-column:1/-1;}
+.timeline-track{display:flex;align-items:flex-start;position:relative;padding:8px 0 4px;}
+.timeline-track::before{content:'';position:absolute;top:24px;left:24px;right:24px;height:2px;background:linear-gradient(90deg,var(--sec) 0%,var(--amber) 50%,var(--cyber) 100%);z-index:0;}
+.tl-step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;}
+.tl-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--surface2);margin-bottom:10px;flex-shrink:0;}
+.tl-dot.red{background:var(--sec);box-shadow:0 0 10px rgba(239,68,68,0.5);} .tl-dot.amber{background:var(--amber);box-shadow:0 0 10px rgba(251,191,36,0.4);} .tl-dot.green{background:var(--cyber);box-shadow:0 0 10px rgba(52,211,153,0.4);} .tl-dot.empty{background:var(--surface3);border-color:var(--border2);}
+.tl-label{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted2);text-align:center;margin-bottom:4px;}
+.tl-date{font-size:0.8rem;font-weight:700;color:var(--text);text-align:center;font-family:'Courier New',monospace;}
+.tl-date.na{color:var(--muted2);font-style:italic;font-size:0.72rem;}
+.mitre-map{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;padding-bottom:6px;}
+.mitre-col{display:flex;flex-direction:column;gap:5px;min-width:150px;flex:1;}
+.mitre-tactic-hdr{background:linear-gradient(135deg,rgba(239,68,68,0.13),rgba(239,68,68,0.05));border:1px solid rgba(239,68,68,0.35);border-radius:8px;padding:10px 11px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:3px;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;width:100%;text-align:left;font-family:inherit;}
+.mitre-tactic-hdr:hover{border-color:var(--sec-soft);background:rgba(239,68,68,0.18);box-shadow:0 2px 12px rgba(239,68,68,0.12);}
+.mitre-tactic-lbl{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:0.9px;color:var(--sec-soft);line-height:1.3;}
+.mitre-tactic-cnt{font-size:0.58rem;color:var(--muted2);display:flex;align-items:center;gap:4px;}
+.mitre-tactic-cnt::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:rgba(239,68,68,0.5);}
+.mitre-tactic-hint{font-size:0.53rem;color:var(--muted2);opacity:0.7;margin-top:2px;}
+.mitre-techs{display:flex;flex-direction:column;gap:4px;}
+details.mitre-tech-detail{border:1px solid var(--border);border-radius:7px;overflow:hidden;transition:border-color 0.15s,box-shadow 0.15s;}
+details.mitre-tech-detail[open]{border-color:var(--border2);box-shadow:0 2px 10px rgba(0,0,0,0.18);}
+details.mitre-tech-detail summary{display:flex;align-items:flex-start;gap:7px;padding:8px 10px;cursor:pointer;list-style:none;background:var(--surface2);transition:background 0.15s;user-select:none;}
+details.mitre-tech-detail summary:hover{background:var(--surface3);}
+details.mitre-tech-detail summary::-webkit-details-marker{display:none;}
+details.mitre-tech-detail[open] summary{background:var(--surface3);border-bottom:1px solid var(--border);}
+.mitre-tech-id{font-size:0.6rem;font-weight:800;font-family:'Courier New',monospace;color:var(--amber);background:rgba(251,191,36,0.08);padding:1px 5px;border-radius:3px;border:1px solid rgba(251,191,36,0.18);flex-shrink:0;margin-top:1px;}
+.mitre-tech-name{font-size:0.72rem;color:var(--body-text);line-height:1.35;flex:1;}
+.mitre-tech-chevron{font-size:0.5rem;color:var(--muted2);transition:transform 0.2s;flex-shrink:0;margin-top:3px;margin-left:auto;}
+details.mitre-tech-detail[open] .mitre-tech-chevron{transform:rotate(90deg);color:var(--amber);}
+.mitre-tech-body{padding:10px 10px 11px;background:var(--surface);}
+.mitre-tech-rel{font-size:0.8rem;color:var(--body-text);line-height:1.6;margin-bottom:8px;padding-left:8px;border-left:2px solid rgba(251,191,36,0.3);}
+.mitre-tech-link{display:inline-flex;align-items:center;gap:4px;font-size:0.7rem;font-weight:600;color:var(--sec-soft);text-decoration:none;transition:color 0.15s;padding:3px 8px;border:1px solid var(--sec-border);border-radius:5px;}
+.mitre-tech-link:hover{color:var(--sec);border-color:var(--sec);}
+.affected-table{width:100%;border-collapse:collapse;}
+.affected-table th{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2);}
+.affected-table td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.affected-table tr:last-child td{border-bottom:none;}
+.affected-table tr:hover td{background:rgba(255,255,255,0.02);}
+.prod-vendor{font-size:0.8rem;color:var(--muted);} .prod-name{font-size:0.9rem;font-weight:700;color:var(--text);}
+.prod-ver{font-family:'Courier New',monospace;font-size:0.78rem;color:#fca5a5;background:rgba(239,68,68,0.09);padding:3px 8px;border-radius:5px;border:1px solid rgba(239,68,68,0.18);white-space:nowrap;}
+.prod-fix{font-family:'Courier New',monospace;font-size:0.78rem;color:var(--cyber);background:rgba(52,211,153,0.08);padding:3px 8px;border-radius:5px;border:1px solid rgba(52,211,153,0.2);white-space:nowrap;}
+.prod-fix.none{color:var(--sec-soft);background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2);}
+.apply-intro{font-size:0.88rem;color:var(--muted);line-height:1.65;margin-bottom:14px;}
+.apply-list{display:flex;flex-direction:column;gap:8px;}
+.apply-item{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);}
+.apply-check{font-size:0.85rem;flex-shrink:0;margin-top:1px;} .apply-text{font-size:0.88rem;color:var(--body-text);line-height:1.55;}
+.fix-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fix-panel{border-radius:10px;padding:16px 18px;}
+.fix-panel.immediate{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);}
+.fix-panel.strategic{background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.18);}
+.fix-panel-label{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.fix-panel.immediate .fix-panel-label{color:var(--sec-soft);} .fix-panel.strategic .fix-panel-label{color:var(--cyber);}
+.fix-steps{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.fix-step{display:flex;align-items:flex-start;gap:9px;font-size:0.87rem;color:var(--body-text);line-height:1.55;}
+.fix-step-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;font-size:0.63rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.fix-panel.immediate .fix-step-num{background:rgba(239,68,68,0.15);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}
+.fix-panel.strategic .fix-step-num{background:rgba(52,211,153,0.12);color:var(--cyber);border:1px solid rgba(52,211,153,0.22);}
+.concept-tags-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+.concept-tag-pill{font-size:0.72rem;font-weight:700;font-family:'Courier New',monospace;padding:5px 12px;border-radius:6px;background:var(--surface2);color:var(--muted);border:1px solid var(--border2);cursor:pointer;transition:color 0.15s,border-color 0.15s,background 0.15s;}
+.concept-tag-pill:hover,.concept-tag-pill.active{color:var(--ai);border-color:rgba(129,140,248,0.4);background:rgba(129,140,248,0.08);}
+.concept-tag-expand{display:none;padding:14px 16px;border-radius:9px;background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.15);margin-top:4px;}
+.concept-tag-expand.visible{display:block;}
+.concept-tag-expand-name{font-size:0.85rem;font-weight:800;color:var(--ai);font-family:'Courier New',monospace;margin-bottom:8px;}
+.concept-def{font-size:0.88rem;color:var(--body-text);line-height:1.65;margin-bottom:9px;}
+.concept-rel{font-size:0.85rem;color:var(--muted);line-height:1.6;font-style:italic;padding-left:12px;border-left:2px solid rgba(129,140,248,0.35);}
+.hunt-list{display:flex;flex-direction:column;gap:8px;}
+details.hunt-entry{border-radius:9px;overflow:hidden;border:1px solid var(--border);transition:border-color 0.2s;}
+details.hunt-entry[open]{border-color:var(--border2);}
+details.hunt-entry summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;background:var(--surface2);transition:background 0.15s;}
+details.hunt-entry summary:hover{background:var(--surface3);}
+details.hunt-entry summary::-webkit-details-marker{display:none;}
+.hunt-priority{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;flex-shrink:0;}
+.hunt-priority.high{background:rgba(239,68,68,0.15);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}
+.hunt-priority.medium{background:rgba(251,191,36,0.12);color:var(--amber);border:1px solid rgba(251,191,36,0.22);}
+.hunt-priority.low{background:rgba(52,211,153,0.1);color:var(--cyber);border:1px solid rgba(52,211,153,0.2);}
+.hunt-signal{font-size:0.88rem;font-weight:700;color:var(--text);flex:1;}
+.hunt-chevron{font-size:0.6rem;color:var(--muted2);transition:transform 0.2s;flex-shrink:0;}
+details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
+.hunt-body{padding:12px 14px;border-top:1px solid var(--border);background:var(--surface);}
+.hunt-desc{font-size:0.88rem;color:var(--muted);line-height:1.65;}
+.hunt-log-tag{display:inline-block;margin-top:8px;margin-right:5px;font-size:0.68rem;font-weight:700;font-family:'Courier New',monospace;padding:2px 8px;border-radius:4px;background:rgba(129,140,248,0.1);color:var(--ai);border:1px solid rgba(129,140,248,0.2);}
+.ioc-caveat{padding:12px 15px;border-radius:8px;margin-bottom:16px;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.25);display:flex;align-items:flex-start;gap:10px;}
+.ioc-caveat-icon{font-size:1rem;flex-shrink:0;margin-top:1px;} .ioc-caveat-text{font-size:0.83rem;color:var(--body-text);line-height:1.6;}
+.ioc-caveat-text strong{color:var(--amber);font-weight:700;}
+.ioc-group{margin-bottom:16px;} .ioc-group:last-child{margin-bottom:0;}
+.ioc-group-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.ioc-group-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);}
+.ioc-copy-btn{font-size:0.68rem;font-weight:600;padding:3px 10px;border-radius:20px;background:transparent;border:1px solid var(--border2);color:var(--muted2);cursor:pointer;transition:color 0.15s,border-color 0.15s;display:flex;align-items:center;gap:4px;}
+.ioc-copy-btn:hover,.ioc-copy-btn.copied{color:var(--cyber);border-color:rgba(52,211,153,0.4);}
+.ioc-list{background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.ioc-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);font-family:'Courier New',monospace;font-size:0.8rem;color:var(--body-text);word-break:break-all;}
+.ioc-item:last-child{border-bottom:none;} .ioc-item:hover{background:rgba(255,255,255,0.02);}
+.ioc-copy-single{flex-shrink:0;background:none;border:none;cursor:pointer;color:var(--muted2);font-size:0.72rem;padding:2px 6px;border-radius:4px;transition:color 0.15s;font-family:inherit;}
+.ioc-copy-single:hover{color:var(--cyber);}
+.ioc-no-data{padding:12px;font-size:0.83rem;color:var(--muted2);font-style:italic;text-align:center;}
+.ta-inline-tag{display:inline-flex;align-items:center;gap:5px;font-size:0.63rem;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.28);cursor:pointer;transition:background 0.15s,border-color 0.15s;font-family:inherit;white-space:nowrap;}
+.ta-inline-tag:hover{background:rgba(167,139,250,0.18);border-color:rgba(167,139,250,0.45);}
+.share-footer{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.share-footer-text{font-size:0.85rem;color:var(--muted);}
+.share-footer-text strong{color:var(--text);}
+.share-footer-btns{display:flex;flex-wrap:wrap;gap:7px;}
+.share-opt{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 13px;cursor:pointer;text-decoration:none;font-size:0.8rem;font-weight:600;color:var(--muted);transition:border-color 0.18s,color 0.18s;font-family:inherit;}
+.share-opt:hover{color:var(--text);border-color:var(--border2);}
+.share-opt.x:hover{border-color:#e7e7e7;color:#e7e7e7;}
+.share-opt.whatsapp:hover{border-color:#25d366;color:#25d366;}
+.share-opt.telegram:hover{border-color:#2aabee;color:#2aabee;}
+.share-opt.linkedin:hover{border-color:#0a66c2;color:#0a66c2;}
+.share-opt.copy-link:hover{border-color:var(--cyber);color:var(--cyber);}
+.popover-overlay{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.6);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.popover-overlay.open{opacity:1;pointer-events:all;}
+.popover-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:24px 24px 20px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto;transform:translateY(12px);transition:transform 0.2s;position:relative;}
+.popover-overlay.open .popover-box{transform:translateY(0);}
+.popover-close{position:absolute;top:14px;right:14px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.78rem;display:flex;align-items:center;justify-content:center;transition:color 0.15s;font-family:inherit;}
+.popover-close:hover{color:var(--text);}
+.popover-type-tag{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;padding:2px 9px;border-radius:4px;display:inline-block;margin-bottom:10px;}
+.popover-type-tag.technique{background:rgba(251,191,36,0.12);color:var(--amber);border:1px solid rgba(251,191,36,0.25);}
+.popover-type-tag.tactic{background:rgba(239,68,68,0.12);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}
+.popover-type-tag.actor{background:rgba(167,139,250,0.12);color:var(--purple);border:1px solid rgba(167,139,250,0.25);}
+.popover-title{font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:4px;line-height:1.3;}
+.popover-subtitle{font-size:0.75rem;font-weight:600;font-family:'Courier New',monospace;color:var(--muted2);margin-bottom:14px;}
+.popover-section-label{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:6px;margin-top:14px;}
+.popover-body-text{font-size:0.9rem;color:var(--body-text);line-height:1.7;}
+.popover-relevance{font-size:0.88rem;color:var(--muted);line-height:1.65;padding:10px 14px;background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.18);border-radius:8px;border-left:3px solid rgba(129,140,248,0.4);margin-top:6px;}
+.popover-att-link{display:inline-flex;align-items:center;gap:4px;margin-top:12px;font-size:0.75rem;font-weight:600;color:var(--sec-soft);text-decoration:none;transition:color 0.15s;}
+.popover-att-link:hover{color:var(--sec);}
+.popover-tags-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.popover-tag{font-size:0.68rem;font-weight:600;padding:3px 9px;border-radius:5px;font-family:inherit;}
+.popover-tag.purple{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.22);}
+.popover-tag.alias{background:var(--surface3);color:var(--muted2);border:1px solid var(--border2);}
+.popover-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.popover-cell{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.popover-cell-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);margin-bottom:4px;}
+.popover-cell-value{font-size:0.88rem;font-weight:700;color:var(--text);}
+.popover-cell-value.purple{color:var(--purple);}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface2);border:1px solid var(--cyber);color:var(--cyber);padding:8px 18px;border-radius:20px;font-size:0.78rem;font-weight:600;opacity:0;transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:9999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+@media(max-width:640px){
+  .hero-title{font-size:1.35rem;}
+  .top-nav .nav-breadcrumb{display:none;}
+  .score-row{gap:8px;}
+  .cvss-bar-track{width:100px;}
+  .page-body{padding:16px 12px 60px;}
+  .sec-block-body{padding:14px;}
+  .details-grid{grid-template-columns:1fr 1fr;}
+  .fix-grid{grid-template-columns:1fr;}
+  .share-footer{flex-direction:column;}
+  .affected-table th,.affected-table td{padding:8px;}
+  .mitre-col{min-width:130px;}
+  .popover-grid{grid-template-columns:1fr;}
+  .popover-box{padding:18px 16px 16px;}
+}
+</style>
+</head>
+<body>
+<nav class="top-nav">
+  <a href="https://dizchrisctrl.github.io/daily-digest" class="back-btn">&#8592; Back to Digest</a>
+  <span class="nav-breadcrumb">The Daily Rundown <span>/</span> 2026-04-17 <span>/</span> Vulnerability Advisory</span>
+  <div class="nav-actions">
+    <button class="theme-toggle" onclick="document.documentElement.classList.toggle('light')">&#9788; Theme</button>
+    <button class="share-btn-top" onclick="copyPageLink(this)">&#8679; Share</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-badges">
+      <span class="type-badge">&#9888; Vulnerability Advisory</span>
+      <span class="live-badge"><span class="live-dot"></span>Active Exploitation</span>
+      
+    </div>
+    <h1 class="hero-title">MCP&#39;s &quot;RCE by Design&quot;: Anthropic&#39;s AI Agent Protocol Ships with Unsafe Defaults That Let Attackers Execute Code</h1>
+    <div class="score-row">
+      
+      <span class="severity-pill sev-critical">Critical</span>
+      <span class="patch-pill patch-none">&#9888; No Fix Yet</span>
+    </div>
+    <p class="hero-desc">OX Security researchers discovered that Anthropic&#39;s Model Context Protocol (MCP) reference implementation uses unsafe STDIO transport defaults that enable remote code execution across the AI agent ecosystem. The vulnerability stems from a design decision rather than a simple bug: MCP server configurations are implicitly trusted over STDIO, allowing any compromised or malicious server definition to execute arbitrary commands with full host privileges. Exploitation was confirmed against six real companies&#39; official MCP services, demonstrating active, production-level risk across the rapidly growing MCP ecosystem.</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">&#128197; Apr 16, 2026 6:14 PM EDT</span><span class="hero-meta-sep">|</span>
+      <span class="hero-meta-item">Source: <a href="https://www.csoonline.com/article/4159889/rce-by-design-mcp-architectural-choice-haunts-ai-agent-ecosystem.html" class="src-link-hero" target="_blank" rel="noopener">CSO Online &#8599;</a></span>
+      
+    </div>
+  </div>
+</header>
+
+<main class="page-body">
+
+  
+      <div class="sec-block">
+        <div class="sec-block-header"><span class="sec-block-icon">&#9654;</span><span class="sec-block-title red">Attack Flow</span></div>
+        <div class="sec-block-body">
+          <div class="diagram-wrap">
+            <div class="diagram-bar">
+              <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+              <span class="diagram-title">Anthropic MCP STDIO Transport — Remote Code Execution via Unsafe Defaults</span>
+            </div>
+            <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#34d399"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#f87171"/>
+    </marker>
+  </defs>
+  <rect width="700" height="340" fill="#060912"/>
+  
+  <!-- Title -->
+  <text x="350" y="28" fill="#7a849a" font-size="12" font-family="monospace" text-anchor="middle">MCP STDIO Attack Chain — RCE via Unsafe Defaults</text>
+  
+  <!-- Step 1: Attacker -->
+  <rect x="20" y="60" width="120" height="56" rx="6" fill="#12152a" stroke="#f87171" stroke-width="1.5"/>
+  <text x="80" y="84" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Attacker</text>
+  <text x="80" y="102" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">crafts malicious</text>
+  <text x="80" y="114" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">MCP server cfg</text>
+  
+  <!-- Arrow 1 -->
+  <line x1="140" y1="88" x2="178" y2="88" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+  <text x="159" y="80" fill="#f87171" font-size="9" font-family="monospace" text-anchor="middle">inject</text>
+  
+  <!-- Step 2: MCP Config -->
+  <rect x="182" y="60" width="130" height="56" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="247" y="84" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">MCP Server</text>
+  <text x="247" y="102" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">config loaded</text>
+  <text x="247" y="114" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">by AI agent</text>
+  
+  <!-- Arrow 2 -->
+  <line x1="312" y1="88" x2="350" y2="88" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <text x="331" y="80" fill="#34d399" font-size="9" font-family="monospace" text-anchor="middle">STDIO</text>
+  
+  <!-- Step 3: Agent Runtime -->
+  <rect x="354" y="60" width="130" height="56" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="419" y="84" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">AI Agent</text>
+  <text x="419" y="102" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">executes cmds</text>
+  <text x="419" y="114" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">no sandboxing</text>
+  
+  <!-- Arrow 3 -->
+  <line x1="484" y1="88" x2="522" y2="88" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+  <text x="503" y="80" fill="#f87171" font-size="9" font-family="monospace" text-anchor="middle">RCE</text>
+  
+  <!-- Step 4: Host System -->
+  <rect x="526" y="60" width="148" height="56" rx="6" fill="#12152a" stroke="#f87171" stroke-width="2"/>
+  <text x="600" y="84" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Host System</text>
+  <text x="600" y="102" fill="#f87171" font-size="10" font-family="monospace" text-anchor="middle">FULL PRIVILEGES</text>
+  <text x="600" y="114" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">compromised</text>
+  
+  <!-- Divider -->
+  <line x1="30" y1="145" x2="670" y2="145" stroke="#252840" stroke-width="1" stroke-dasharray="4,4"/>
+  <text x="350" y="168" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">WHY THIS HAPPENS: Unsafe Defaults in STDIO Transport</text>
+  
+  <!-- Bottom comparison boxes -->
+  <rect x="40" y="190" width="280" height="120" rx="6" fill="#12152a" stroke="#f87171" stroke-width="1.5"/>
+  <text x="180" y="212" fill="#f87171" font-size="12" font-family="monospace" text-anchor="middle">CURRENT DEFAULT (insecure)</text>
+  <text x="180" y="236" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">✗ No command sandboxing</text>
+  <text x="180" y="256" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">✗ No input validation</text>
+  <text x="180" y="276" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">✗ Full host process privs</text>
+  <text x="180" y="296" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">✗ Implicit trust of servers</text>
+
+  <rect x="380" y="190" width="280" height="120" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="520" y="212" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">SECURE BY DEFAULT (needed)</text>
+  <text x="520" y="236" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">✓ Sandboxed execution</text>
+  <text x="520" y="256" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">✓ Schema-validated inputs</text>
+  <text x="520" y="276" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">✓ Least-privilege process</text>
+  <text x="520" y="296" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">✓ Explicit server allowlist</text>
+</svg></div>
+          </div>
+          <div class="attack-vector-text">An attacker who controls or compromises an MCP server definition can leverage the STDIO transport&#39;s implicit trust model to pipe arbitrary system commands through standard input/output streams, achieving remote code execution with the full privileges of the host process running the MCP client.</div>
+        </div>
+      </div>
+
+  <div class="sec-block"><div class="sec-block-header"><span class="sec-block-icon">&#9432;</span><span class="sec-block-title red">Vulnerability Details</span></div><div class="sec-block-body"><div class="details-grid"><div class="detail-cell"><div class="detail-label">CVE ID</div><div class="detail-value red"></div></div><div class="detail-cell"><div class="detail-label">CVSS v3.1 Score</div><div class="detail-value red">N/A</div></div><div class="detail-cell"><div class="detail-label">Severity</div><div class="detail-value red">Critical</div></div><div class="detail-cell"><div class="detail-label">Patch Status</div><div class="detail-value green">No Fix Yet</div></div></div></div></div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128336;</span><span class="sec-block-title amber">Timeline</span></div>
+    <div class="sec-block-body">
+      <div class="timeline-track"><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Disclosed</div><div class="tl-date">2026-04-16</div></div><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Exploited in Wild</div><div class="tl-date">2026-04-16</div></div><div class="tl-step"><div class="tl-dot empty"></div><div class="tl-label">Patch Released</div><div class="tl-date na">Unknown</div></div></div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Map</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tactic or technique for details</span></div>
+    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Execution&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1059&quot;, &quot;name&quot;: &quot;Command and Scripting Interpreter&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Execution</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1059</span><span class="mitre-tech-name">Command and Scripting Interpreter</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Malicious MCP server definitions execute arbitrary system commands through the STDIO transport, leveraging the host OS command interpreter with full process privileges.</p><a href="https://attack.mitre.org/techniques/T1059/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Initial Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1195.002&quot;, &quot;name&quot;: &quot;Supply Chain Compromise: Compromise Software Supply Chain&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Initial Access</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1195.002</span><span class="mitre-tech-name">Supply Chain Compromise: Compromise Software Supply Chain</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The vulnerability exists in a widely adopted reference implementation that downstream products inherit, making it a supply-chain-level architectural flaw affecting the entire MCP ecosystem.</p><a href="https://attack.mitre.org/techniques/T1195/002/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Persistence&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1078&quot;, &quot;name&quot;: &quot;Valid Accounts&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Persistence</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1078</span><span class="mitre-tech-name">Valid Accounts</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Compromised MCP server configurations run with the legitimate privileges of the host process, effectively abusing the trust relationship between the MCP client and the configured server.</p><a href="https://attack.mitre.org/techniques/T1078/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Privilege Escalation&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1068&quot;, &quot;name&quot;: &quot;Exploitation for Privilege Escalation&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Privilege Escalation</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1068</span><span class="mitre-tech-name">Exploitation for Privilege Escalation</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Because STDIO transport operates with full host-level privileges by default and no sandboxing, command execution automatically inherits elevated access without additional exploitation.</p><a href="https://attack.mitre.org/techniques/T1068/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Command and Control&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1105&quot;, &quot;name&quot;: &quot;Ingress Tool Transfer&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Command and Control</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1105</span><span class="mitre-tech-name">Ingress Tool Transfer</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Once arbitrary command execution is achieved via MCP STDIO, attackers can download and deploy additional payloads or tooling onto the compromised host.</p><a href="https://attack.mitre.org/techniques/T1105/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
+  </div>
+
+  
+      <div class="sec-block">
+        <div class="sec-block-header"><span class="sec-block-icon">&#9888;</span><span class="sec-block-title red">Affected Products</span></div>
+        <div class="sec-block-body" style="padding:0;overflow-x:auto;">
+          <table class="affected-table">
+            <thead><tr><th>Vendor</th><th>Product</th><th>Versions Affected</th><th>Fixed In</th></tr></thead>
+            <tbody><tr>
+          <td><span class="prod-vendor">Anthropic</span></td>
+          <td><span class="prod-name">Model Context Protocol (MCP) Reference Implementation — STDIO Transport</span></td>
+          <td><span class="prod-ver">All versions using default STDIO configuration</span></td>
+          <td><span class="prod-fix none">No fix yet</span></td>
+        </tr><tr>
+          <td><span class="prod-vendor">Multiple Vendors</span></td>
+          <td><span class="prod-name">AI Agent Platforms and Services Built on MCP Reference Implementation</span></td>
+          <td><span class="prod-ver">All versions inheriting MCP STDIO defaults — see vendor advisories</span></td>
+          <td><span class="prod-fix none">No fix yet</span></td>
+        </tr></tbody>
+          </table>
+        </div>
+      </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#10067;</span><span class="sec-block-title amber">Am I Affected?</span></div>
+    <div class="sec-block-body">
+      <p class="apply-intro">You are likely at risk if <strong>any</strong> of the following apply:</p>
+      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You have deployed or are using AI agents that connect to external tools or data sources via the Model Context Protocol (MCP)</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment includes MCP server configurations using the default STDIO transport without additional sandboxing or input validation</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You consume third-party or community-contributed MCP server definitions without reviewing their configuration for safety</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your AI agent deployments run MCP clients with elevated or unsandboxed host-level privileges</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">You do not use MCP at all and your AI agent integrations use custom or non-MCP protocols exclusively</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your MCP deployments use only the SSE/HTTP transport with strict authentication and do not use STDIO transport</span></div></div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128736;</span><span class="sec-block-title green">Fix &amp; Recommendations</span></div>
+    <div class="sec-block-body">
+      <div class="fix-grid">
+        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Inventory all MCP deployments across your organization: identify every AI agent, tool integration, or service that uses the Model Context Protocol, paying special attention to those using STDIO transport.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Restrict MCP client processes to least-privilege execution: run MCP clients under dedicated, unprivileged service accounts and never as root/admin. On Linux, use systemd sandboxing directives (e.g., ProtectSystem=strict, NoNewPrivileges=true) to limit host access.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Audit and whitelist MCP server configurations: review all configured MCP server definitions for unexpected or untrusted entries. Remove any third-party server definitions that have not been explicitly vetted by your security team.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Isolate MCP client workloads in sandboxed environments: deploy MCP clients inside containers (e.g., Docker with --read-only and restricted capabilities) or VMs to contain any command execution to the sandbox boundary.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Disable STDIO transport where possible: switch MCP connections to HTTP/SSE transport with mutual authentication until Anthropic provides hardened STDIO defaults.</span></li></ul></div>
+        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Establish a formal vetting and approval process for all MCP server definitions before they are deployed in production, treating them with the same rigor as executable code in your supply chain.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Implement network-level segmentation and zero-trust architecture around AI agent workloads so that even if an MCP server achieves code execution, lateral movement and data exfiltration are contained.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Engage with Anthropic and the MCP community to advocate for secure-by-default design changes: mandatory sandboxing, input validation, explicit privilege scoping, and cryptographic authentication for STDIO transport.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Build internal tooling or adopt third-party solutions to continuously monitor MCP server configurations for drift, unauthorized changes, or injection of malicious definitions.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Develop and regularly exercise an incident response playbook specific to AI agent compromise, covering scenarios where MCP-connected tools are weaponized for lateral movement or data theft.</span></li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128218;</span><span class="sec-block-title ai">Concept Briefing</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tag to expand</span></div>
+    <div class="sec-block-body">
+      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-unsafe-defaults')">Unsafe Defaults</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-model-context-protocol')">Model Context Protocol</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-stdio-transport')">STDIO Transport</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-supply-chain-risk')">Supply Chain Risk</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-secure-by-default-design')">Secure-by-Default Design</button></div>
+      <div class="concept-tag-expand" id="ct-unsafe-defaults">
+          <div class="concept-tag-expand-name">Unsafe Defaults</div>
+          <div class="concept-def">A design pattern where software ships in a permissive state — open ports, no authentication, unrestricted execution — unless the user explicitly opts into security hardening.</div>
+          <div class="concept-rel">MCP&#39;s STDIO transport trusts server configurations implicitly by default, enabling remote code execution unless operators manually add sandboxing and restrictions.</div>
+        </div><div class="concept-tag-expand" id="ct-model-context-protocol">
+          <div class="concept-tag-expand-name">Model Context Protocol</div>
+          <div class="concept-def">An open protocol by Anthropic that standardizes how AI agents connect to external tools, data sources, and services — acting as a universal integration layer for the AI ecosystem.</div>
+          <div class="concept-rel">MCP is the core subject of this advisory; its STDIO reference implementation&#39;s architectural flaw creates a systemic risk across every product and deployment built on it.</div>
+        </div><div class="concept-tag-expand" id="ct-stdio-transport">
+          <div class="concept-tag-expand-name">STDIO Transport</div>
+          <div class="concept-def">A communication mechanism that uses standard input/output streams (stdin/stdout) to pass data between processes on the same host, commonly used for simple inter-process communication.</div>
+          <div class="concept-rel">The STDIO transport is the specific attack surface: its implicit trust model allows malicious server configurations to pipe arbitrary commands to the host operating system.</div>
+        </div><div class="concept-tag-expand" id="ct-supply-chain-risk">
+          <div class="concept-tag-expand-name">Supply Chain Risk</div>
+          <div class="concept-def">The security exposure that arises when vulnerabilities or malicious code in upstream components (libraries, protocols, reference implementations) are inherited by all downstream products that depend on them.</div>
+          <div class="concept-rel">Because MCP is widely adopted as the standard connector for AI agents, its architectural flaw propagates to hundreds of downstream products and thousands of deployments automatically.</div>
+        </div><div class="concept-tag-expand" id="ct-secure-by-default-design">
+          <div class="concept-tag-expand-name">Secure-by-Default Design</div>
+          <div class="concept-def">An engineering principle where software ships in the most restrictive, secure configuration possible, requiring users to explicitly opt into less secure settings rather than the reverse.</div>
+          <div class="concept-rel">The absence of secure-by-default design in MCP&#39;s STDIO transport is the root cause of this vulnerability; adopting this principle would have prevented the ecosystem-wide exposure.</div>
+        </div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128269;</span><span class="sec-block-title amber">Threat Hunting Signals</span></div>
+    <div class="sec-block-body"><div class="hunt-list">
+        <details class="hunt-entry" open>
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">Unexpected child process spawning from MCP client processes</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Monitor for MCP client processes (or their parent AI agent processes) spawning unexpected child processes such as shells (bash, sh, cmd.exe, powershell.exe) or system utilities (curl, wget, whoami, net). This indicates that an MCP server configuration may be executing arbitrary commands via STDIO transport. Look for process trees where the MCP client is the parent of suspicious command-line invocations.</div>
+            <span class="hunt-log-tag">EDR telemetry</span><span class="hunt-log-tag">Sysmon (Event ID 1 — Process Creation)</span><span class="hunt-log-tag">Linux auditd (execve syscall)</span><span class="hunt-log-tag">Windows Security Event Log (Event ID 4688)</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">Anomalous stdin/stdout data patterns on MCP client processes</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Look for MCP client processes receiving unusually large or encoded stdin payloads, or producing stdout that contains command output inconsistent with normal MCP tool responses (e.g., directory listings, system information, credential dumps). Pipe monitoring tools can capture this at the OS level.</div>
+            <span class="hunt-log-tag">EDR telemetry with stdin/stdout capture</span><span class="hunt-log-tag">Sysmon (Event ID 1 with command-line logging)</span><span class="hunt-log-tag">Application-level MCP debug logs</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">Unauthorized changes to MCP server configuration files</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Monitor for modifications to MCP configuration files (e.g., mcp.json, server config directories, or environment-specific config stores) that add new server definitions or alter existing STDIO transport settings. Unauthorized additions may indicate an attacker injecting a malicious server definition to achieve code execution.</div>
+            <span class="hunt-log-tag">File integrity monitoring (FIM)</span><span class="hunt-log-tag">Sysmon (Event ID 11 — File Created / Event ID 2 — File Modification)</span><span class="hunt-log-tag">Git/version control audit logs for config repos</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority medium">Medium</span>
+            <span class="hunt-signal">Outbound network connections from MCP client sandbox or host</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">After achieving code execution via STDIO, attackers are likely to establish outbound connections for C2 or data exfiltration. Monitor for unexpected outbound network connections from hosts running MCP clients, especially to IPs or domains not in your allowlist.</div>
+            <span class="hunt-log-tag">Network firewall logs</span><span class="hunt-log-tag">NDR/NTA tools</span><span class="hunt-log-tag">Sysmon (Event ID 3 — Network Connection)</span><span class="hunt-log-tag">Cloud VPC flow logs</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority medium">Medium</span>
+            <span class="hunt-signal">MCP client running with elevated privileges</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Audit running processes to identify MCP clients executing as root, SYSTEM, or other highly privileged accounts. This condition maximizes the blast radius of any exploitation and should be treated as a critical misconfiguration even absent active exploitation.</div>
+            <span class="hunt-log-tag">EDR telemetry</span><span class="hunt-log-tag">Linux auditd</span><span class="hunt-log-tag">Windows Security Event Log</span><span class="hunt-log-tag">Container orchestration audit logs (Kubernetes audit)</span>
+          </div>
+        </details></div></div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#9762;</span><span class="sec-block-title amber">Indicators of Compromise</span><button class="ioc-copy-btn" style="margin-left:auto" onclick="copyAllIOCs()">&#10064; Copy All IOCs</button></div>
+    <div class="sec-block-body">
+      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific indicators of compromise (hashes, IPs, domains, file paths, or URI patterns) were reported in the source article. The vulnerability is architectural in nature, stemming from unsafe default configurations rather than a specific malware payload or attacker infrastructure. All IOC arrays are intentionally empty. Any IOCs shared in future advisories from OX Security or Anthropic should be independently verified before use in detection rules.</span></div>
+      <div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Hashes (SHA-256)</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Command &amp;amp; Control IPs</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Malicious Domains</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Paths / Artifacts</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Suspicious URI Patterns</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div>
+    </div>
+  </div>
+
+  <div class="share-footer">
+    <div class="share-footer-text"><strong>Share this advisory</strong><br><span style="font-size:0.78rem;">Help your network patch faster.</span></div>
+    <div class="share-footer-btns">
+      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20MCP%27s%20%22RCE%20by%20Design%22%3A%20Anthropic%27s%20AI%20Agent%20Protocol%20Ships%20with%20Unsafe%20Defaults%20That%20Let%20Attackers%20Execute%20Code%0A%0ACVSS%20N/A%20%C2%B7%20Critical%20%C2%B7%20No%20Fix%20Yet&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-2.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
+      <a href="https://wa.me/?text=%F0%9F%9B%A1%20MCP%27s%20%22RCE%20by%20Design%22%3A%20Anthropic%27s%20AI%20Agent%20Protocol%20Ships%20with%20Unsafe%20Defaults%20That%20Let%20Attackers%20Execute%20Code%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-2.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
+      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-2.html&amp;text=MCP%27s%20%22RCE%20by%20Design%22%3A%20Anthropic%27s%20AI%20Agent%20Protocol%20Ships%20with%20Unsafe%20Defaults%20That%20Let%20Attackers%20Execute%20Code" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-2.html" class="share-opt linkedin" target="_blank" rel="noopener">in Share</a>
+      <button class="share-opt copy-link" onclick="copyPageLink(this)">&#128279; Copy Link</button>
+    </div>
+  </div>
+
+</main>
+
+<div class="popover-overlay" id="mitre-ta-overlay" onclick="closeOverlay(event)">
+  <div class="popover-box" id="mitre-ta-box" onclick="event.stopPropagation()">
+    <button class="popover-close" onclick="closeOverlay()">&#10005;</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+function escHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function toggleConcept(btn,id){
+  var el=document.getElementById(id);
+  if(!el)return;
+  var open=el.classList.contains('visible');
+  document.querySelectorAll('.concept-tag-expand').forEach(function(e){e.classList.remove('visible');});
+  document.querySelectorAll('.concept-tag-pill').forEach(function(b){b.classList.remove('active');});
+  if(!open){el.classList.add('visible');btn.classList.add('active');el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+}
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2200);
+}
+function copyText(btn,text){
+  navigator.clipboard.writeText(text).then(function(){
+    var o=btn.textContent;btn.textContent='&#10003;';
+    setTimeout(function(){btn.textContent=o;},1400);
+    showToast('Copied');
+  });
+}
+function copyIOCGroup(gid){
+  var el=document.getElementById('ioc-'+gid);
+  if(!el)return;
+  var items=Array.from(el.querySelectorAll('.ioc-item > span')).map(function(s){return s.textContent.trim();});
+  navigator.clipboard.writeText(items.join('\n')).then(function(){showToast(items.length+' IOC'+(items.length!==1?'s':'')+' copied');});
+}
+function copyAllIOCs(){
+  var all=Array.from(document.querySelectorAll('.ioc-item > span')).map(function(s){return s.textContent.trim();});
+  navigator.clipboard.writeText(all.join('\n')).then(function(){showToast(all.length+' IOCs copied');});
+}
+function copyPageLink(btn){
+  navigator.clipboard.writeText(window.location.href).then(function(){
+    var o=btn.textContent;btn.textContent='&#10003; Copied!';
+    if(btn.classList)btn.classList.add('copied');
+    setTimeout(function(){btn.textContent=o;if(btn.classList)btn.classList.remove('copied');},1800);
+    showToast('Link copied');
+  });
+}
+function _showOverlay(html){
+  var ov=document.getElementById('mitre-ta-overlay');
+  var bx=document.getElementById('mitre-ta-box');
+  if(!ov||!bx)return;
+  bx.innerHTML='<button class="popover-close" onclick="closeOverlay()">&#10005;</button>'+html;
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeOverlay(e){
+  if(e&&e.target!==document.getElementById('mitre-ta-overlay'))return;
+  var ov=document.getElementById('mitre-ta-overlay');
+  if(ov)ov.classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeOverlay();});
+var MITRE_TACTIC_DESC={
+  'Reconnaissance':'The adversary is gathering information to plan future operations — identifying targets, mapping infrastructure, or probing defenses before striking.',
+  'Resource Development':'The adversary is acquiring or building capabilities: purchasing domains, setting up infrastructure, obtaining tools, or developing malware.',
+  'Initial Access':'The adversary is trying to get a foothold. Common methods include phishing, exploiting public-facing applications, and leveraging valid credentials.',
+  'Execution':'The adversary is running malicious code on a local or remote system to carry out their objectives — via scripts, native APIs, or exploited applications.',
+  'Persistence':'The adversary is maintaining their foothold so they survive reboots, credential changes, and re-imaging. They want to stay in, not just get in.',
+  'Privilege Escalation':'The adversary is gaining higher-level permissions — moving from user to admin or from standard process to SYSTEM — to unlock restricted resources.',
+  'Defense Evasion':'The adversary is avoiding detection. Techniques include disabling security tools, obfuscating code, masquerading as legitimate processes, and clearing logs.',
+  'Credential Access':'The adversary is stealing passwords, tokens, and keys — through keylogging, dumping memory, or exploiting authentication weaknesses.',
+  'Discovery':'The adversary is learning about the environment: what systems exist, who has access, how the network is laid out, and where the valuable data lives.',
+  'Lateral Movement':'The adversary is spreading through the network — pivoting from an initial beachhead to reach high-value targets using stolen credentials and trust relationships.',
+  'Collection':'The adversary is gathering data relevant to their goal: emails, files, clipboard contents, screenshots, credentials, or sensitive records.',
+  'Command and Control':'The adversary is communicating with compromised systems — issuing commands, receiving data, and maintaining covert channels to control the operation.',
+  'Exfiltration':'The adversary is stealing your data — compressing, encrypting, and transferring it to attacker-controlled infrastructure, often over legitimate channels.',
+  'Impact':'The adversary is disrupting, destroying, or manipulating your systems — through ransomware, data deletion, manipulation, or denial of service.',
+};
+function openMitrePopover(e,btn){
+  e.stopPropagation();
+  var raw=btn.getAttribute('data-mitre');
+  if(!raw)return;
+  var d;try{d=JSON.parse(raw);}catch(err){return;}
+  var html='';
+  if(d.type==='tactic'){
+    var tacDesc=MITRE_TACTIC_DESC[d.name]||'A phase in the ATT&amp;CK lifecycle describing how adversaries achieve a goal within a broader attack chain.';
+    var techs=(d.techniques||[]).map(function(t){
+      return '<span class="popover-tag purple">'+escHtml((t.id?t.id+' ':'')+escHtml(t.name||''))+'</span>';
+    }).join('');
+    html='<span class="popover-type-tag tactic">ATT&amp;CK Tactic</span>'+
+      '<div class="popover-title">'+escHtml(d.name)+'</div>'+
+      '<div class="popover-section-label">What This Means</div>'+
+      '<div class="popover-body-text">'+tacDesc+'</div>'+
+      (techs?'<div class="popover-section-label">Techniques Relevant to This Story</div><div class="popover-tags-row">'+techs+'</div>':'')+
+      '<a href="https://attack.mitre.org/tactics/" class="popover-att-link" target="_blank" rel="noopener">Browse ATT&amp;CK Tactics &#8599;</a>';
+  }
+  _showOverlay(html);
+}
+function openTAPopover(e,btn){
+  e.stopPropagation();
+  var raw=btn.getAttribute('data-ta');
+  if(!raw)return;
+  var d;try{d=JSON.parse(raw);}catch(err){return;}
+  var aliases=(d.aliases||[]).map(function(a){return '<span class="popover-tag alias">'+escHtml(a)+'</span>';}).join('');
+  var ttps=(d.known_ttps||[]).map(function(t){return '<span class="popover-tag purple">'+escHtml(t)+'</span>';}).join('');
+  var conf=d.attribution_confidence?'<span class="conf-badge" style="margin-left:8px">'+escHtml(d.attribution_confidence)+' Confidence</span>':'';
+  var html='<span class="popover-type-tag actor">Threat Actor</span>'+conf+
+    '<div class="popover-title" style="color:var(--purple)">'+escHtml(d.name)+'</div>'+
+    (aliases?'<div class="popover-tags-row" style="margin-bottom:10px">'+aliases+'</div>':'')+
+    '<div class="popover-grid">'+
+      '<div class="popover-cell"><div class="popover-cell-label">Origin</div><div class="popover-cell-value">'+escHtml(d.origin||'Unknown')+'</div></div>'+
+      '<div class="popover-cell"><div class="popover-cell-label">Motivation</div><div class="popover-cell-value purple">'+escHtml(d.motivation||'Unknown')+'</div></div>'+
+    '</div>'+
+    (d.description?'<div class="popover-section-label">Description</div><div class="popover-body-text">'+escHtml(d.description)+'</div>':'')+
+    (d.story_relevance?'<div class="popover-section-label">Story Relevance</div><div class="popover-relevance">'+escHtml(d.story_relevance)+'</div>':'')+
+    (ttps?'<div class="popover-section-label">Known TTPs</div><div class="popover-tags-row">'+ttps+'</div>':'');
+  _showOverlay(html);
+}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.cvss-bar-fill').forEach(function(bar){
+    var w=bar.style.width;bar.style.width='0%';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){bar.style.width=w;});});
+  });
+});
+</script>
+</body>
+</html>
