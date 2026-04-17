@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
-<title>CVE-2026-34197 – Apache ActiveMQ Classic Remote Code Execution (CISA KEV) — CVE-2026-34197 | The Daily Rundown</title>
+<title>Microsoft Defender Zero-Days (BlueHammer, RedSun, UnDefend) — Active Exploitation, Two Unpatched | The Daily Rundown</title>
 <meta property="og:type"        content="article">
 <meta property="og:site_name"   content="The Daily Rundown">
-<meta property="og:title"       content="CVE-2026-34197 – Apache ActiveMQ Classic Remote Code Execution (CISA KEV)">
-<meta property="og:description" content="CVE-2026-34197 is a high-severity vulnerability (CVSS 8.8) in Apache ActiveMQ Classic that is under active exploitation in the wild. CISA has added it to the Known Exploited Vulnerabilities (KEV) catalog, triggering mandatory remediation deadlines for all federal civilian agencie">
+<meta property="og:title"       content="Microsoft Defender Zero-Days (BlueHammer, RedSun, UnDefend) — Active Exploitation, Two Unpatched">
+<meta property="og:description" content="Three zero-day privilege escalation vulnerabilities in Microsoft Defender — codenamed BlueHammer, RedSun, and UnDefend — are under active exploitation in the wild, as confirmed by Huntress. Only one of the three has been patched, leaving hundreds of millions of Windows systems ex">
 <meta property="og:url"         content="https://dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html">
 <meta name="twitter:card"        content="summary">
-<meta name="twitter:title"       content="CVE-2026-34197 – Apache ActiveMQ Classic Remote Code Execution (CISA KEV)">
-<meta name="twitter:description" content="CVE-2026-34197 is a high-severity vulnerability (CVSS 8.8) in Apache ActiveMQ Classic that is under active exploitation in the wild. CISA has added it to the Known Exploited Vulnerabilities (KEV) catalog, triggering mandatory remediation deadlines for all federal civilian agencie">
+<meta name="twitter:title"       content="Microsoft Defender Zero-Days (BlueHammer, RedSun, UnDefend) — Active Exploitation, Two Unpatched">
+<meta name="twitter:description" content="Three zero-day privilege escalation vulnerabilities in Microsoft Defender — codenamed BlueHammer, RedSun, and UnDefend — are under active exploitation in the wild, as confirmed by Huntress. Only one of the three has been patched, leaving hundreds of millions of Windows systems ex">
 <style>
 :root {
   --bg:#0b0d16; --surface:#12152a; --surface2:#1a1d32; --surface3:#20233c;
@@ -258,17 +258,17 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
       <span class="live-badge"><span class="live-dot"></span>Active Exploitation</span>
       
     </div>
-    <h1 class="hero-title">Apache ActiveMQ Flaw Under Active Exploitation, CISA Orders Federal Agencies to Patch</h1>
+    <h1 class="hero-title">Three Microsoft Defender Zero-Days Under Active Exploitation — Two Remain Unpatched</h1>
     <div class="score-row">
-      <div class="cvss-wrap"><span class="cvss-label">CVSS</span><div class="cvss-bar-track"><div class="cvss-bar-fill" style="width:88%"></div></div><span class="cvss-score-num">8.8</span></div>
-      <span class="severity-pill sev-high">High</span>
-      <span class="patch-pill patch-available">&#10003; Patch Available</span>
+      
+      <span class="severity-pill sev-critical">Critical</span>
+      <span class="patch-pill patch-mitigation">&#9888; Mitigation Only</span>
     </div>
-    <p class="hero-desc">CVE-2026-34197 is a high-severity vulnerability (CVSS 8.8) in Apache ActiveMQ Classic that is under active exploitation in the wild. CISA has added it to the Known Exploited Vulnerabilities (KEV) catalog, triggering mandatory remediation deadlines for all federal civilian agencies. Because ActiveMQ serves as a central message broker in enterprise architectures, exploitation of this flaw can give attackers a privileged foothold spanning dozens of connected services.</p>
+    <p class="hero-desc">Three zero-day privilege escalation vulnerabilities in Microsoft Defender — codenamed BlueHammer, RedSun, and UnDefend — are under active exploitation in the wild, as confirmed by Huntress. Only one of the three has been patched, leaving hundreds of millions of Windows systems exposed to attackers who can escalate from a low-privilege foothold to full SYSTEM-level control by abusing Defender&#39;s own elevated operations. The flaws were disclosed without coordinated notice by an independent researcher known as Chaotic Eclipse.</p>
     <div class="hero-meta">
-      <span class="hero-meta-item">&#128197; Apr 16, 2026 11:22 PM EDT</span><span class="hero-meta-sep">|</span>
-      <span class="hero-meta-item">Source: <a href="https://thehackernews.com/2026/04/apache-activemq-cve-2026-34197-added-to.html" class="src-link-hero" target="_blank" rel="noopener">The Hacker News &#8599;</a></span>
-      <span class="hero-meta-sep">|</span><span class="hero-meta-item" style="font-family:monospace;color:var(--sec-soft);">CVE-2026-34197</span>
+      <span class="hero-meta-item">&#128197; Apr 17, 2026 9:21 AM EDT</span><span class="hero-meta-sep">|</span>
+      <span class="hero-meta-item">Source: <a href="https://thehackernews.com/2026/04/three-microsoft-defender-zero-days.html" class="src-link-hero" target="_blank" rel="noopener">The Hacker News &#8599;</a></span>
+      
     </div>
   </div>
 </header>
@@ -282,72 +282,91 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
           <div class="diagram-wrap">
             <div class="diagram-bar">
               <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-              <span class="diagram-title">CVE-2026-34197 – Apache ActiveMQ Classic Remote Code Execution (CISA KEV)</span>
+              <span class="diagram-title">Microsoft Defender Zero-Days (BlueHammer, RedSun, UnDefend) — Active Exploitation, Two Unpatched</span>
             </div>
             <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#34d399"/>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#34d399"/>
     </marker>
   </defs>
-  <!-- Background -->
   <rect width="700" height="340" fill="#060912"/>
+  
   <!-- Title -->
-  <text x="350" y="28" text-anchor="middle" fill="#34d399" font-size="14" font-family="monospace" font-weight="bold">CVE-2026-34197 Attack Chain</text>
-  <!-- Step 1: Attacker -->
-  <rect x="20" y="70" width="120" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="80" y="93" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Attacker</text>
-  <text x="80" y="112" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Sends exploit</text>
-  <!-- Arrow 1 -->
-  <line x1="140" y1="97" x2="185" y2="97" stroke="#34d399" stroke-width="2" marker-end="url(#arrowhead)"/>
-  <!-- Step 2: Network -->
-  <rect x="190" y="70" width="120" height="55" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="250" y="93" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Network</text>
-  <text x="250" y="112" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Adjacent access</text>
-  <!-- Arrow 2 -->
-  <line x1="310" y1="97" x2="355" y2="97" stroke="#34d399" stroke-width="2" marker-end="url(#arrowhead)"/>
-  <!-- Step 3: ActiveMQ Broker -->
-  <rect x="360" y="60" width="140" height="75" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2.5"/>
-  <text x="430" y="85" text-anchor="middle" fill="#34d399" font-size="13" font-family="monospace" font-weight="bold">ActiveMQ</text>
-  <text x="430" y="103" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">CVE-2026-34197</text>
-  <text x="430" y="121" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">CVSS 8.8 exploited</text>
-  <!-- Arrow 3 -->
-  <line x1="500" y1="97" x2="545" y2="97" stroke="#34d399" stroke-width="2" marker-end="url(#arrowhead)"/>
-  <!-- Step 4: RCE -->
-  <rect x="550" y="70" width="130" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="615" y="93" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Code Exec</text>
-  <text x="615" y="112" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Server compromised</text>
-  <!-- Downstream: Connected Services -->
-  <line x1="430" y1="135" x2="430" y2="175" stroke="#34d399" stroke-width="2" marker-end="url(#arrowhead)"/>
-  <rect x="310" y="180" width="240" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="430" y="202" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Connected Services</text>
-  <text x="430" y="220" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">All downstream apps at risk</text>
-  <!-- CISA KEV Box -->
-  <rect x="190" y="265" width="320" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
-  <text x="350" y="287" text-anchor="middle" fill="#34d399" font-size="13" font-family="monospace" font-weight="bold">CISA KEV Catalog</text>
-  <text x="350" y="305" text-anchor="middle" fill="#7a849a" font-size="11" font-family="monospace">Mandatory federal patching deadline triggered</text>
-  <!-- Arrow from RCE down to CISA -->
-  <line x1="615" y1="125" x2="615" y2="280" stroke="#7a849a" stroke-width="1" stroke-dasharray="5,5"/>
-  <line x1="615" y1="280" x2="515" y2="280" stroke="#7a849a" stroke-width="1" stroke-dasharray="5,5" marker-end="url(#arrowhead)"/>
-  <text x="620" y="205" fill="#7a849a" font-size="10" font-family="monospace" transform="rotate(90,620,205)">exploitation confirmed</text>
+  <text x="350" y="28" fill="#7a849a" font-size="12" font-family="monospace" text-anchor="middle">ATTACK CHAIN: Defender Zero-Day Privilege Escalation</text>
+  
+  <!-- Step 1: Initial Access -->
+  <rect x="20" y="60" width="120" height="60" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="80" y="85" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Initial</text>
+  <text x="80" y="102" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Access</text>
+  <text x="80" y="135" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Phishing / RCE</text>
+  
+  <!-- Arrow 1→2 -->
+  <line x1="140" y1="90" x2="175" y2="90" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
+  
+  <!-- Step 2: Low-Privilege Shell -->
+  <rect x="178" y="60" width="120" height="60" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="238" y="85" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Low-Priv</text>
+  <text x="238" y="102" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Shell</text>
+  <text x="238" y="135" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">User context</text>
+  
+  <!-- Arrow 2→3 -->
+  <line x1="298" y1="90" x2="333" y2="90" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
+  
+  <!-- Step 3: Exploit Defender (Highlighted) -->
+  <rect x="336" y="50" width="140" height="80" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="406" y="75" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">Exploit</text>
+  <text x="406" y="92" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">Defender</text>
+  <text x="406" y="112" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">BlueHammer /</text>
+  <text x="406" y="124" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">RedSun / UnDefend</text>
+  
+  <!-- Arrow 3→4 -->
+  <line x1="476" y1="90" x2="511" y2="90" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
+  
+  <!-- Step 4: SYSTEM -->
+  <rect x="514" y="60" width="120" height="60" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
+  <text x="574" y="85" fill="#34d399" font-size="13" font-family="monospace" text-anchor="middle">SYSTEM</text>
+  <text x="574" y="102" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Full Control</text>
+  
+  <!-- Status boxes below -->
+  <rect x="60" y="190" width="170" height="55" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="145" y="212" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">BlueHammer</text>
+  <text x="145" y="232" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">✓ Patched</text>
+  
+  <rect x="265" y="190" width="170" height="55" rx="6" fill="#12152a" stroke="#ff6b6b" stroke-width="1.5"/>
+  <text x="350" y="212" fill="#ff6b6b" font-size="11" font-family="monospace" text-anchor="middle">RedSun</text>
+  <text x="350" y="232" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">✗ UNPATCHED</text>
+  
+  <rect x="470" y="190" width="170" height="55" rx="6" fill="#12152a" stroke="#ff6b6b" stroke-width="1.5"/>
+  <text x="555" y="212" fill="#ff6b6b" font-size="11" font-family="monospace" text-anchor="middle">UnDefend</text>
+  <text x="555" y="232" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">✗ UNPATCHED</text>
+  
+  <!-- Arrows from status to exploit step -->
+  <line x1="145" y1="190" x2="380" y2="135" stroke="#252840" stroke-width="1" stroke-dasharray="4"/>
+  <line x1="350" y1="190" x2="406" y2="135" stroke="#252840" stroke-width="1" stroke-dasharray="4"/>
+  <line x1="555" y1="190" x2="430" y2="135" stroke="#252840" stroke-width="1" stroke-dasharray="4"/>
+  
+  <!-- Legend -->
+  <text x="350" y="290" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">Defender runs as SYSTEM → exploiting it grants full privilege escalation</text>
+  <text x="350" y="310" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Source: Huntress advisory, Apr 2026</text>
 </svg></div>
           </div>
-          <div class="attack-vector-text">A network-accessible attacker can exploit CVE-2026-34197 in Apache ActiveMQ Classic to achieve remote code execution or privilege escalation on the broker with minimal attack complexity, likely via malicious serialized objects or protocol-level abuse targeting JMS/OpenWire endpoints.</div>
+          <div class="attack-vector-text">Attackers exploit flaws in Microsoft Defender&#39;s privileged operations (file handling, service management, or input processing) to escalate from standard user-level access to SYSTEM privileges. Because Defender runs at the highest privilege level on Windows, successful exploitation effectively grants full control of the compromised host.</div>
         </div>
       </div>
 
-  <div class="sec-block"><div class="sec-block-header"><span class="sec-block-icon">&#9432;</span><span class="sec-block-title red">Vulnerability Details</span></div><div class="sec-block-body"><div class="details-grid"><div class="detail-cell"><div class="detail-label">CVE ID</div><div class="detail-value red">CVE-2026-34197</div></div><div class="detail-cell"><div class="detail-label">CVSS v3.1 Score</div><div class="detail-value red">8.8 / 10</div></div><div class="detail-cell"><div class="detail-label">Severity</div><div class="detail-value red">High</div></div><div class="detail-cell"><div class="detail-label">Patch Status</div><div class="detail-value green">Patch Available</div></div><div class="detail-cell cvss-vector-cell"><div class="detail-label">CVSS Vector</div><div class="detail-value muted">CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H</div></div></div></div></div>
+  <div class="sec-block"><div class="sec-block-header"><span class="sec-block-icon">&#9432;</span><span class="sec-block-title red">Vulnerability Details</span></div><div class="sec-block-body"><div class="details-grid"><div class="detail-cell"><div class="detail-label">CVE ID</div><div class="detail-value red"></div></div><div class="detail-cell"><div class="detail-label">CVSS v3.1 Score</div><div class="detail-value red">N/A</div></div><div class="detail-cell"><div class="detail-label">Severity</div><div class="detail-value red">Critical</div></div><div class="detail-cell"><div class="detail-label">Patch Status</div><div class="detail-value green">Mitigation Only</div></div></div></div></div>
 
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#128336;</span><span class="sec-block-title amber">Timeline</span></div>
     <div class="sec-block-body">
-      <div class="timeline-track"><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Disclosed</div><div class="tl-date">2026-04-16</div></div><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Exploited in Wild</div><div class="tl-date">2026-04-16</div></div><div class="tl-step"><div class="tl-dot empty"></div><div class="tl-label">Patch Released</div><div class="tl-date na">Unknown</div></div></div>
+      <div class="timeline-track"><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Disclosed</div><div class="tl-date">2026-04-17</div></div><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Exploited in Wild</div><div class="tl-date">2026-04-17</div></div><div class="tl-step"><div class="tl-dot amber"></div><div class="tl-label">Patch Released</div><div class="tl-date na">Unknown</div></div></div>
     </div>
   </div>
 
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Map</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tactic or technique for details</span></div>
-    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Initial Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1190&quot;, &quot;name&quot;: &quot;Exploit Public-Facing Application&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Initial Access</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1190</span><span class="mitre-tech-name">Exploit Public-Facing Application</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Attackers are exploiting CVE-2026-34197 on internet- or network-exposed ActiveMQ broker instances to gain initial access.</p><a href="https://attack.mitre.org/techniques/T1190/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Execution&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1203&quot;, &quot;name&quot;: &quot;Exploitation for Client Execution&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Execution</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1203</span><span class="mitre-tech-name">Exploitation for Client Execution</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The vulnerability likely allows execution of arbitrary code on the ActiveMQ broker through crafted protocol messages or serialized objects.</p><a href="https://attack.mitre.org/techniques/T1203/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Privilege Escalation&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1068&quot;, &quot;name&quot;: &quot;Exploitation for Privilege Escalation&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Privilege Escalation</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1068</span><span class="mitre-tech-name">Exploitation for Privilege Escalation</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">With a CVSS 8.8 score indicating high impact across confidentiality, integrity, and availability, successful exploitation may grant elevated privileges on the broker host.</p><a href="https://attack.mitre.org/techniques/T1068/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Lateral Movement&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1570&quot;, &quot;name&quot;: &quot;Lateral Tool Transfer&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Lateral Movement</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1570</span><span class="mitre-tech-name">Lateral Tool Transfer</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">A compromised message broker sits at a network nexus connecting many services, making it an ideal pivot point for lateral movement to downstream applications.</p><a href="https://attack.mitre.org/techniques/T1570/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Impact&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1499&quot;, &quot;name&quot;: &quot;Endpoint Denial of Service&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Impact</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1499</span><span class="mitre-tech-name">Endpoint Denial of Service</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Disrupting or crashing the central message broker can cascade failures across all dependent enterprise services.</p><a href="https://attack.mitre.org/techniques/T1499/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
+    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Privilege Escalation&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1068&quot;, &quot;name&quot;: &quot;Exploitation for Privilege Escalation&quot;}, {&quot;id&quot;: &quot;T1574&quot;, &quot;name&quot;: &quot;Hijack Execution Flow&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Privilege Escalation</span><span class="mitre-tactic-cnt">2 techniques</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1068</span><span class="mitre-tech-name">Exploitation for Privilege Escalation</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">All three Defender zero-days (BlueHammer, RedSun, UnDefend) are privilege escalation exploits that elevate an attacker from user-level access to SYSTEM.</p><a href="https://attack.mitre.org/techniques/T1068/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1574</span><span class="mitre-tech-name">Hijack Execution Flow</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The vulnerabilities abuse Defender&#39;s own SYSTEM-level execution flow — including file handling and service management routines — to hijack its elevated privileges.</p><a href="https://attack.mitre.org/techniques/T1574/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Initial Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1078&quot;, &quot;name&quot;: &quot;Valid Accounts&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Initial Access</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1078</span><span class="mitre-tech-name">Valid Accounts</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Attackers are chaining these Defender exploits with initial access techniques, likely leveraging compromised credentials or accounts to establish the initial foothold before escalating.</p><a href="https://attack.mitre.org/techniques/T1078/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Defense Evasion&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1055&quot;, &quot;name&quot;: &quot;Process Injection&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Defense Evasion</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1055</span><span class="mitre-tech-name">Process Injection</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Exploiting the security software itself provides an ideal vector for defense evasion, as malicious activity originates from a trusted, highly privileged process.</p><a href="https://attack.mitre.org/techniques/T1055/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
   </div>
 
   
@@ -357,10 +376,15 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
           <table class="affected-table">
             <thead><tr><th>Vendor</th><th>Product</th><th>Versions Affected</th><th>Fixed In</th></tr></thead>
             <tbody><tr>
-          <td><span class="prod-vendor">Apache Software Foundation</span></td>
-          <td><span class="prod-name">Apache ActiveMQ Classic</span></td>
-          <td><span class="prod-ver">All versions — see vendor advisory</span></td>
-          <td><span class="prod-fix none">Mitigate: Apply vendor patch when available; restrict network access immediately</span></td>
+          <td><span class="prod-vendor">Microsoft</span></td>
+          <td><span class="prod-name">Microsoft Defender (Windows Defender Antivirus)</span></td>
+          <td><span class="prod-ver">All current versions as of April 2026 — specific version ranges not yet disclosed by Microsoft</span></td>
+          <td><span class="prod-fix">One of three flaws patched (details pending Microsoft advisory); two remain unpatched — No fix yet</span></td>
+        </tr><tr>
+          <td><span class="prod-vendor">Microsoft</span></td>
+          <td><span class="prod-name">Windows 10 / Windows 11 / Windows Server (with Defender enabled)</span></td>
+          <td><span class="prod-ver">All versions running Microsoft Defender — see vendor advisory</span></td>
+          <td><span class="prod-fix none">No fix yet for 2 of 3 vulnerabilities</span></td>
         </tr></tbody>
           </table>
         </div>
@@ -370,7 +394,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="sec-block-header"><span class="sec-block-icon">&#10067;</span><span class="sec-block-title amber">Am I Affected?</span></div>
     <div class="sec-block-body">
       <p class="apply-intro">You are likely at risk if <strong>any</strong> of the following apply:</p>
-      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You run Apache ActiveMQ Classic in any version in your environment (on-premises or cloud)</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your ActiveMQ broker ports (default 61616, 8161, 5672, 61613) are exposed to the internet or untrusted network segments</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment uses ActiveMQ Classic as middleware between critical business applications or microservices</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You are a U.S. federal civilian agency subject to CISA Binding Operational Directive 22-01</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">You exclusively use Apache ActiveMQ Artemis (the next-generation broker) and have no Classic instances deployed</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your ActiveMQ instances are fully isolated on internal network segments with strict authentication and no exposure to untrusted networks</span></div></div>
+      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You run Microsoft Defender as your primary or active endpoint protection on any Windows system</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment includes Windows 10, Windows 11, or Windows Server machines with Defender enabled (the default configuration)</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You have users with any level of local access on Windows machines where Defender is active, including standard (non-admin) users</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment relies on Defender in combination with other EDR tools but Defender is still running as an active service</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">You have completely disabled or uninstalled Microsoft Defender and use a third-party endpoint protection product exclusively with Defender services fully stopped</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your environment consists exclusively of non-Windows operating systems (Linux, macOS) without Defender for Endpoint deployed</span></div></div>
     </div>
   </div>
 
@@ -378,8 +402,8 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="sec-block-header"><span class="sec-block-icon">&#128736;</span><span class="sec-block-title green">Fix &amp; Recommendations</span></div>
     <div class="sec-block-body">
       <div class="fix-grid">
-        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Inventory all Apache ActiveMQ Classic instances across your environment, including forgotten or shadow-IT deployments, using network scans for default ports 61616 (OpenWire), 8161 (web console), 5672 (AMQP), and 61613 (STOMP).</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Immediately restrict network access to ActiveMQ broker ports using firewall rules or security groups — block all inbound connections from untrusted networks and limit access to only known application hosts.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Disable the ActiveMQ web console (port 8161) if it is not strictly required: remove or comment out the `&lt;import resource=&quot;jetty.xml&quot;/&gt;` line in `activemq.xml`, then restart the broker.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Monitor Apache&#39;s security advisories page (https://activemq.apache.org/security-advisories) and apply the vendor patch as soon as a fixed version is published.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Review ActiveMQ broker logs (`data/activemq.log`) and host-level process logs for unusual activity — unexpected outbound connections, new child processes spawned by the broker JVM, or unrecognized client connections.</span></li></ul></div>
-        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Implement network segmentation to isolate message brokers in dedicated VLANs or security zones with strict ingress/egress filtering, ensuring brokers cannot directly reach the internet.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Enforce strong authentication and TLS encryption on all ActiveMQ transport connectors — disable anonymous access and require client certificate or LDAP-backed authentication for all producers and consumers.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Establish a middleware asset inventory and patching cadence that treats message brokers, API gateways, and load balancers as Tier-1 critical infrastructure with accelerated patch SLAs.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Deploy runtime application self-protection (RASP) or Java deserialization filtering (e.g., JEP 290 serial filters) on ActiveMQ JVM instances to block exploitation of serialization-based attack vectors.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Evaluate migration to Apache ActiveMQ Artemis, the actively developed next-generation broker, which has a modernized codebase and improved security posture compared to Classic.</span></li></ul></div>
+        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Monitor Microsoft Security Response Center (MSRC) for emergency out-of-band patches and apply any Defender definition/platform updates immediately as they are released — check via PowerShell: Get-MpComputerStatus | Select AntivirusSignatureVersion, AMProductVersion, AMEngineVersion.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Audit and restrict local user accounts and interactive logon rights on critical systems — attackers need an initial foothold before escalating, so reducing who can log on locally narrows the attack surface (use Group Policy: Computer Configuration &gt; Windows Settings &gt; Security Settings &gt; Local Policies &gt; User Rights Assignment &gt; &#39;Allow log on locally&#39;).</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Enable and enforce Attack Surface Reduction (ASR) rules via Microsoft Defender for Endpoint or Group Policy, particularly rules targeting process creation from Office apps, script execution, and credential theft — these limit attacker chains leading to exploitation: Set-MpPreference -AttackSurfaceReductionRules_Ids &lt;GUID&gt; -AttackSurfaceReductionRules_Actions Enabled.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Increase monitoring on all endpoints: enable PowerShell Script Block Logging (GPO: Administrative Templates &gt; Windows Components &gt; Windows PowerShell &gt; Turn on Script Block Logging), Sysmon process creation logging, and Windows Security Event 4688 (Process Creation with command line) to detect exploitation attempts and post-exploitation behavior.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>If operationally feasible for high-value assets, consider temporarily deploying an alternative real-time antivirus product and disabling Defender&#39;s real-time protection (Set-MpPreference -DisableRealtimeMonitoring $true) as a stopgap — only on systems where replacement coverage is confirmed active.</span></li></ul></div>
+        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Implement a defense-in-depth endpoint strategy that does not rely solely on Microsoft Defender — layer a third-party EDR/XDR solution alongside or in place of Defender to ensure a single security product vulnerability cannot be the sole escalation path.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Deploy the principle of least privilege across all Windows endpoints using tiered administration models and Privileged Access Workstations (PAWs) so that even SYSTEM-level escalation on a single host cannot easily propagate to domain-wide compromise.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Establish a vulnerability response playbook specifically for security tooling zero-days that includes pre-approved fallback configurations, alternative AV deployment procedures, and communication templates — security software vulnerabilities require faster-than-normal response cycles.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Integrate continuous threat hunting for privilege escalation indicators into SOC operations, including baselining normal Defender service behavior (MsMpEng.exe, MpCmdRun.exe) and alerting on anomalous child process creation, file writes to sensitive directories, or token manipulation originating from Defender processes.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Engage with Microsoft&#39;s early notification programs (e.g., MAPP — Microsoft Active Protections Program) and threat intelligence sharing communities to receive advance warning of future Defender-related disclosures and exploits.</span></li></ul></div>
       </div>
     </div>
   </div>
@@ -387,27 +411,27 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#128218;</span><span class="sec-block-title ai">Concept Briefing</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tag to expand</span></div>
     <div class="sec-block-body">
-      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-message-broker')">Message Broker</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-cisa-kev-catalog')">CISA KEV Catalog</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-java-deserialization-attack')">Java Deserialization Attack</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-binding-operational-directive')">Binding Operational Directive</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-middleware-as-high-value-targe')">Middleware as High-Value Target</button></div>
-      <div class="concept-tag-expand" id="ct-message-broker">
-          <div class="concept-tag-expand-name">Message Broker</div>
-          <div class="concept-def">A middleware component that routes messages between applications, acting as a central &#39;post office&#39; so services can communicate asynchronously without direct connections to each other.</div>
-          <div class="concept-rel">Apache ActiveMQ Classic is a message broker — compromising it gives an attacker visibility into and control over communications across all connected enterprise services.</div>
-        </div><div class="concept-tag-expand" id="ct-cisa-kev-catalog">
-          <div class="concept-tag-expand-name">CISA KEV Catalog</div>
-          <div class="concept-def">The Known Exploited Vulnerabilities catalog maintained by CISA, listing vulnerabilities confirmed to be actively exploited in the wild, with mandatory remediation timelines for federal agencies under BOD 22-01.</div>
-          <div class="concept-rel">CVE-2026-34197&#39;s addition to the KEV catalog confirms active exploitation and legally requires federal agencies to patch within a strict deadline, signaling extreme urgency to all organizations.</div>
-        </div><div class="concept-tag-expand" id="ct-java-deserialization-attack">
-          <div class="concept-tag-expand-name">Java Deserialization Attack</div>
-          <div class="concept-def">An attack that abuses how Java applications reconstruct objects from byte streams — by sending a maliciously crafted serialized object, an attacker can execute arbitrary code on the target.</div>
-          <div class="concept-rel">ActiveMQ&#39;s Java-based architecture and history of deserialization vulnerabilities (including the 2023 RCE) make this a likely attack vector for CVE-2026-34197.</div>
-        </div><div class="concept-tag-expand" id="ct-binding-operational-directive">
-          <div class="concept-tag-expand-name">Binding Operational Directive</div>
-          <div class="concept-def">A compulsory directive issued by CISA to federal civilian agencies requiring specific cybersecurity actions within set timeframes, enforceable under federal law.</div>
-          <div class="concept-rel">BOD 22-01 requires federal agencies to remediate any vulnerability added to the KEV catalog, transforming CVE-2026-34197 from an advisory into a legal mandate.</div>
-        </div><div class="concept-tag-expand" id="ct-middleware-as-high-value-targe">
-          <div class="concept-tag-expand-name">Middleware as High-Value Target</div>
-          <div class="concept-def">Infrastructure components like message brokers, API gateways, and load balancers that sit between many services and handle aggregated traffic, making them especially valuable targets for attackers.</div>
-          <div class="concept-rel">ActiveMQ&#39;s central position means a single compromise can give attackers access to data and systems across the entire enterprise, explaining why these components are increasingly targeted.</div>
+      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-privilege-escalation')">Privilege Escalation</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-zero-day-vulnerability')">Zero-Day Vulnerability</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-security-software-as-attack-su')">Security Software as Attack Surface</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-coordinated-vs-full-disclosure')">Coordinated vs. Full Disclosure</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-system-level-access-windows-')">SYSTEM-Level Access (Windows)</button></div>
+      <div class="concept-tag-expand" id="ct-privilege-escalation">
+          <div class="concept-tag-expand-name">Privilege Escalation</div>
+          <div class="concept-def">A technique where an attacker upgrades their access level on a system — for example, going from a normal user to an administrator or SYSTEM account — gaining the ability to control everything on the machine.</div>
+          <div class="concept-rel">All three Defender zero-days are privilege escalation flaws, allowing attackers to jump from a basic foothold to the highest Windows privilege level (SYSTEM) by exploiting Defender&#39;s own operations.</div>
+        </div><div class="concept-tag-expand" id="ct-zero-day-vulnerability">
+          <div class="concept-tag-expand-name">Zero-Day Vulnerability</div>
+          <div class="concept-def">A software flaw that is unknown to the vendor and has no patch available at the time of discovery or exploitation, leaving defenders with zero days of advance warning.</div>
+          <div class="concept-rel">The researcher Chaotic Eclipse disclosed these three Defender flaws without coordinated notice to Microsoft, meaning they were weaponized before any patch existed — and two remain unpatched.</div>
+        </div><div class="concept-tag-expand" id="ct-security-software-as-attack-su">
+          <div class="concept-tag-expand-name">Security Software as Attack Surface</div>
+          <div class="concept-def">Security tools themselves can become targets because they run with elevated privileges and deep system access, meaning a flaw in the protector is often more dangerous than a flaw in what it protects.</div>
+          <div class="concept-rel">Microsoft Defender runs as SYSTEM — the highest privilege on Windows — so exploiting it gives attackers more power than compromising almost any other application on the system.</div>
+        </div><div class="concept-tag-expand" id="ct-coordinated-vs-full-disclosure">
+          <div class="concept-tag-expand-name">Coordinated vs. Full Disclosure</div>
+          <div class="concept-def">Coordinated disclosure means a researcher privately notifies a vendor before going public, giving time to build a patch. Full (or uncoordinated) disclosure means publishing the flaw immediately, which can leave users exposed.</div>
+          <div class="concept-rel">Chaotic Eclipse released these vulnerabilities as zero-days without advance notice to Microsoft, sparking controversy and leaving hundreds of millions of systems exposed before patches could be developed.</div>
+        </div><div class="concept-tag-expand" id="ct-system-level-access-windows-">
+          <div class="concept-tag-expand-name">SYSTEM-Level Access (Windows)</div>
+          <div class="concept-def">SYSTEM is the most powerful built-in account on Windows, with unrestricted access to all files, processes, registry keys, and services — more powerful even than a standard administrator account.</div>
+          <div class="concept-rel">Successful exploitation of these Defender flaws grants SYSTEM-level access, giving attackers the ability to fully control the compromised machine, disable security tools, and move laterally through the network.</div>
         </div>
     </div>
   </div>
@@ -418,56 +442,56 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
         <details class="hunt-entry" open>
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Unexpected outbound connections from ActiveMQ broker host</span>
+            <span class="hunt-signal">Anomalous child processes spawned by MsMpEng.exe or MpCmdRun.exe</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">After exploitation, attackers typically establish reverse shells or C2 callbacks. Look for the ActiveMQ JVM process (java) initiating outbound TCP connections to external IPs on non-standard ports, which would not occur during normal broker operation.</div>
-            <span class="hunt-log-tag">Network flow logs (NetFlow/IPFIX)</span><span class="hunt-log-tag">Host-based firewall logs</span><span class="hunt-log-tag">EDR process network telemetry</span>
+            <div class="hunt-desc">Microsoft Defender&#39;s core engine process (MsMpEng.exe) and command-line utility (MpCmdRun.exe) should have a predictable set of child processes. Look for unexpected child processes such as cmd.exe, powershell.exe, whoami.exe, net.exe, or any unsigned binaries spawning from these parent processes, which may indicate exploitation of one of the three zero-days to execute code at SYSTEM level.</div>
+            <span class="hunt-log-tag">Sysmon Event ID 1 (Process Creation)</span><span class="hunt-log-tag">Windows Security Event ID 4688</span><span class="hunt-log-tag">EDR telemetry (process tree analysis)</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Anomalous child processes spawned by ActiveMQ JVM</span>
+            <span class="hunt-signal">Defender service crashes, restarts, or unexpected configuration changes</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">The ActiveMQ Java process should not spawn shell interpreters or system utilities. Watch for the ActiveMQ JVM (java) parent process launching child processes such as cmd.exe, powershell.exe, /bin/sh, /bin/bash, curl, wget, or certutil — a strong indicator of post-exploitation command execution.</div>
-            <span class="hunt-log-tag">EDR process creation logs</span><span class="hunt-log-tag">Sysmon Event ID 1 (Process Create)</span><span class="hunt-log-tag">Linux auditd execve logs</span>
+            <div class="hunt-desc">Exploitation attempts may cause Defender&#39;s antimalware service (MsMpEng.exe) to crash or restart abnormally. Monitor for Windows Defender service stop/start events and for changes to Defender configuration keys in the registry (HKLM\SOFTWARE\Microsoft\Windows Defender) that are not initiated by authorized administrators or Group Policy.</div>
+            <span class="hunt-log-tag">Windows System Event Log (Event ID 7034, 7036, 7045)</span><span class="hunt-log-tag">Windows Security Event ID 4657 (Registry value modification)</span><span class="hunt-log-tag">Microsoft Defender operational log (Microsoft-Windows-Windows Defender/Operational)</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority medium">Medium</span>
+            <span class="hunt-signal">Unexpected token manipulation or privilege changes associated with Defender processes</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Watch for Security events indicating token manipulation (such as impersonation or assignment of special privileges) involving Defender-related processes. Event ID 4672 (Special Privileges Assigned to New Logon) and Event ID 4673 (Sensitive Privilege Use) correlated with Defender process names may indicate privilege escalation attempts.</div>
+            <span class="hunt-log-tag">Windows Security Event ID 4672</span><span class="hunt-log-tag">Windows Security Event ID 4673</span><span class="hunt-log-tag">Sysmon Event ID 10 (Process Access)</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority medium">Medium</span>
+            <span class="hunt-signal">Suspicious file writes to Defender&#39;s program or data directories</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Monitor for file creation or modification in Defender&#39;s installation directory (C:\ProgramData\Microsoft\Windows Defender, C:\Program Files\Windows Defender) by processes other than trusted Windows Update or Defender self-update mechanisms. Attackers may drop payloads or modify configuration files to exploit Defender&#39;s handling routines.</div>
+            <span class="hunt-log-tag">Sysmon Event ID 11 (File Create)</span><span class="hunt-log-tag">Sysmon Event ID 2 (File Creation Time Changed)</span><span class="hunt-log-tag">EDR file monitoring telemetry</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Unusual OpenWire or STOMP protocol traffic patterns</span>
+            <span class="hunt-signal">Rapid privilege escalation following initial low-privilege access</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Exploitation payloads may appear as malformed or abnormally large OpenWire (port 61616) or STOMP (port 61613) messages. Monitor for connections from unexpected source IPs, atypical message sizes, or protocol errors logged in activemq.log that could indicate exploitation attempts.</div>
-            <span class="hunt-log-tag">ActiveMQ broker logs (data/activemq.log)</span><span class="hunt-log-tag">Network IDS/IPS (Suricata, Snort)</span><span class="hunt-log-tag">Packet capture on broker ports</span>
-          </div>
-        </details>
-        <details class="hunt-entry">
-          <summary>
-            <span class="hunt-priority medium">Medium</span>
-            <span class="hunt-signal">Web console access from non-administrative sources</span>
-            <span class="hunt-chevron">&#9658;</span>
-          </summary>
-          <div class="hunt-body">
-            <div class="hunt-desc">The ActiveMQ web console (port 8161) is a common attack surface. Review web access logs for login attempts or authenticated sessions from IP addresses that are not part of your administrative network, especially brute-force patterns or access at unusual hours.</div>
-            <span class="hunt-log-tag">ActiveMQ Jetty access logs</span><span class="hunt-log-tag">Reverse proxy / WAF logs</span><span class="hunt-log-tag">Network flow logs</span>
-          </div>
-        </details>
-        <details class="hunt-entry">
-          <summary>
-            <span class="hunt-priority medium">Medium</span>
-            <span class="hunt-signal">New or modified files in ActiveMQ installation directories</span>
-            <span class="hunt-chevron">&#9658;</span>
-          </summary>
-          <div class="hunt-body">
-            <div class="hunt-desc">Post-exploitation activity may involve dropping web shells, modified configuration files, or additional tooling into the ActiveMQ installation directory (e.g., webapps/, conf/, or temp/). Monitor for file creation or modification events in these paths outside of known maintenance windows.</div>
-            <span class="hunt-log-tag">File integrity monitoring (FIM)</span><span class="hunt-log-tag">Sysmon Event ID 11 (File Create)</span><span class="hunt-log-tag">EDR file telemetry</span>
+            <div class="hunt-desc">Correlate initial access indicators (e.g., new user logon via Event ID 4624 Type 10/3 with standard user privileges) with near-immediate SYSTEM-level process execution on the same host. A short time delta (seconds to minutes) between initial logon and SYSTEM-level command execution is consistent with automated exploit chain behavior observed in these campaigns.</div>
+            <span class="hunt-log-tag">Windows Security Event ID 4624</span><span class="hunt-log-tag">Windows Security Event ID 4688</span><span class="hunt-log-tag">EDR process timeline</span>
           </div>
         </details></div></div>
   </div>
@@ -475,7 +499,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#9762;</span><span class="sec-block-title amber">Indicators of Compromise</span><button class="ioc-copy-btn" style="margin-left:auto" onclick="copyAllIOCs()">&#10064; Copy All IOCs</button></div>
     <div class="sec-block-body">
-      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific indicators of compromise (hashes, IPs, domains, file paths, or URI patterns) were reported in the source article. All IOC arrays are intentionally empty. If IOCs are published by CISA, Apache, or threat intelligence vendors, verify them against your environment independently before taking blocking action.</span></div>
+      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific indicators of compromise (hashes, IPs, domains, file paths, or URI patterns) were reported in the source article. All IOC arrays are empty. If Huntress, Microsoft, or other researchers publish IOCs related to BlueHammer, RedSun, or UnDefend exploitation, verify them against your own telemetry before using for blocking — false positives from unverified IOCs can disrupt operations.</span></div>
       <div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Hashes (SHA-256)</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Command &amp;amp; Control IPs</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Malicious Domains</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Paths / Artifacts</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Suspicious URI Patterns</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div>
     </div>
   </div>
@@ -483,9 +507,9 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="share-footer">
     <div class="share-footer-text"><strong>Share this advisory</strong><br><span style="font-size:0.78rem;">Help your network patch faster.</span></div>
     <div class="share-footer-btns">
-      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20Apache%20ActiveMQ%20Flaw%20Under%20Active%20Exploitation%2C%20CISA%20Orders%20Federal%20Agencies%20to%20Patch%0A%0ACVSS%208.8%20%C2%B7%20High%20%C2%B7%20Patch%20Available&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
-      <a href="https://wa.me/?text=%F0%9F%9B%A1%20Apache%20ActiveMQ%20Flaw%20Under%20Active%20Exploitation%2C%20CISA%20Orders%20Federal%20Agencies%20to%20Patch%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
-      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html&amp;text=Apache%20ActiveMQ%20Flaw%20Under%20Active%20Exploitation%2C%20CISA%20Orders%20Federal%20Agencies%20to%20Patch" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
+      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20Three%20Microsoft%20Defender%20Zero-Days%20Under%20Active%20Exploitation%20%E2%80%94%20Two%20Remain%20Unpatched%0A%0ACVSS%20N/A%20%C2%B7%20Critical%20%C2%B7%20Mitigation%20Only&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
+      <a href="https://wa.me/?text=%F0%9F%9B%A1%20Three%20Microsoft%20Defender%20Zero-Days%20Under%20Active%20Exploitation%20%E2%80%94%20Two%20Remain%20Unpatched%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
+      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html&amp;text=Three%20Microsoft%20Defender%20Zero-Days%20Under%20Active%20Exploitation%20%E2%80%94%20Two%20Remain%20Unpatched" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
       <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-17-story-cyber-1.html" class="share-opt linkedin" target="_blank" rel="noopener">in Share</a>
       <button class="share-opt copy-link" onclick="copyPageLink(this)">&#128279; Copy Link</button>
     </div>
