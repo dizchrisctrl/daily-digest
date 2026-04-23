@@ -15,7 +15,7 @@
  *   4. Add the *.workers.dev URL as WORKER_URL in GitHub repo secrets
  */
 
-const WEEKLY_LIMIT = 10;
+const WEEKLY_LIMIT = 20;
 
 const ALLOWED_ORIGINS = [
   'https://dizchrisctrl.github.io',
@@ -212,7 +212,7 @@ export default {
 
       const confirmUrl = `${url.origin}/confirm?token=${token}`;
       await sendEmail(env.RESEND_API_KEY, {
-        from: 'The Daily Rundown <newsletter@resend.dev>',
+        from: 'The Daily Rundown <onboarding@resend.dev>',
         to: email,
         subject: 'Confirm your Daily Rundown subscription',
         html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 16px">
