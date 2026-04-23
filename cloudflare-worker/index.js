@@ -15,7 +15,7 @@
  *   4. Add the *.workers.dev URL as WORKER_URL in GitHub repo secrets
  */
 
-const WEEKLY_LIMIT = 10;
+const WEEKLY_LIMIT = 20;
 
 const ALLOWED_ORIGINS = [
   'https://dizchrisctrl.github.io',
