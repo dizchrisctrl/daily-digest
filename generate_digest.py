@@ -1720,7 +1720,25 @@ function closeTagModal(e) {
 
 // ── Story card toggle ──
 function toggleStory(card) { card.classList.toggle('open'); }
-function toggleCard(card) { card.classList.toggle('open'); }
+function toggleCard(card) {
+  const ans = card.querySelector('.q-answer');
+  if (!ans) { card.classList.toggle('open'); return; }
+  if (card.classList.contains('open')) {
+    ans.style.maxHeight = ans.scrollHeight + 'px';
+    ans.offsetHeight;
+    requestAnimationFrame(() => { ans.style.maxHeight = '0'; });
+    card.classList.remove('open');
+  } else {
+    card.classList.add('open');
+    ans.style.maxHeight = ans.scrollHeight + 'px';
+    const onEnd = e => {
+      if (e.propertyName !== 'max-height') return;
+      ans.removeEventListener('transitionend', onEnd);
+      if (card.classList.contains('open')) ans.style.maxHeight = 'none';
+    };
+    ans.addEventListener('transitionend', onEnd);
+  }
+}
 function toggleCollapse(head) {
   const wrap = head.closest('.collapsible');
   const body = wrap.querySelector('.collapsible-body');
@@ -1731,13 +1749,17 @@ function toggleCollapse(head) {
     requestAnimationFrame(() => { body.style.maxHeight = '0'; });
     wrap.classList.remove('open');
   } else {
-    // Opening: animate to exact content height, then release so content can reflow freely
+    // Opening: animate to exact content height, then release so nested content can reflow freely.
+    // Filter by propertyName — CSS transitions margin-top/opacity/max-height concurrently and the
+    // fastest one fires transitionend first, so { once: true } would consume the listener early.
     wrap.classList.add('open');
     body.style.maxHeight = body.scrollHeight + 'px';
-    body.addEventListener('transitionend', e => {
-      if (e.propertyName === 'max-height' && wrap.classList.contains('open'))
-        body.style.maxHeight = 'none';
-    }, { once: true });
+    const onEnd = e => {
+      if (e.propertyName !== 'max-height') return;
+      body.removeEventListener('transitionend', onEnd);
+      if (wrap.classList.contains('open')) body.style.maxHeight = 'none';
+    };
+    body.addEventListener('transitionend', onEnd);
   }
 }
 function toggleNotable(card) { card.classList.toggle('open'); }
@@ -2314,40 +2336,28 @@ function cmRenderCard(story, color) {
       </div>
     </div>
     ${svgHtml}
-    <div class="block opinion-block collapsible">
-      <div class="collapsible-head" onclick="toggleCollapse(this)">
-        <div class="blabel">&#x1F465; Public Opinion</div>
-        <span class="collapsible-preview">${h(cmPreview((story.public_opinion||[{sentiment:''}])[0].sentiment||''))}</span>
-        <span class="collapsible-chevron">&#9656;</span>
-      </div>
-      <div class="collapsible-body">
-        ${opinionHtml}
-        <div class="blabel" style="margin-top:14px">&#x1F4CA; Sentiment Summary</div>
-        <p>${h(story.opinion_assessment||'')}</p>
-        <div class="block devil-block collapsible" style="margin-top:14px;padding:14px 16px;border-radius:8px">
-          <div class="collapsible-head" onclick="toggleCollapse(this)">
-            <div class="devil-intro">&#x1F608; Devil&#x2019;s Advocate</div>
-            <span class="collapsible-preview">${h(cmPreview(story.devils_advocate||''))}</span>
-            <span class="collapsible-chevron">&#9656;</span>
-          </div>
-          <div class="collapsible-body">
-            <p class="devil-text">${h(story.devils_advocate||'')}</p>
-          </div>
+    <div class="block opinion-block">
+      <div class="blabel">&#x1F465; Public Opinion</div>
+      ${opinionHtml}
+      <div class="blabel" style="margin-top:14px">&#x1F4CA; Sentiment Summary</div>
+      <p>${h(story.opinion_assessment||'')}</p>
+      <div class="block devil-block collapsible" style="margin-top:14px;padding:14px 16px;border-radius:8px">
+        <div class="collapsible-head" onclick="toggleCollapse(this)">
+          <div class="devil-intro">&#x1F608; Devil&#x2019;s Advocate</div>
+          <span class="collapsible-preview">${h(cmPreview(story.devils_advocate||''))}</span>
+          <span class="collapsible-chevron">&#9656;</span>
+        </div>
+        <div class="collapsible-body">
+          <p class="devil-text">${h(story.devils_advocate||'')}</p>
         </div>
       </div>
     </div>
     <div class="block"><div class="blabel">&#x1F4A1; Insights</div><div class="insights-grid">${quizHtml}</div></div>
-    <div class="block deepdive-block collapsible">
-      <div class="collapsible-head" onclick="toggleCollapse(this)">
-        <div class="blabel">&#x1F4AD; Deep Dive</div>
-        <span class="collapsible-preview">${h(cmPreview(story.deep_dive||''))}</span>
-        <span class="collapsible-chevron">&#9656;</span>
-      </div>
-      <div class="collapsible-body">
-        <p class="deepdive-text">${h(story.deep_dive||'')}</p>
-        ${story.deep_dive_impact?`<div class="deepdive-impact collapsible"><div class="collapsible-head" onclick="toggleCollapse(this)"><div class="deepdive-impact-label">&#x1F3AF; How This Affects You</div><span class="collapsible-preview">${h(cmPreview(story.deep_dive_impact))}</span><span class="collapsible-chevron">&#9656;</span></div><div class="collapsible-body"><p class="deepdive-impact-text">${h(story.deep_dive_impact)}</p></div></div>`:''}
-        ${story.deep_dive_outlook?`<div class="deepdive-outlook collapsible"><div class="collapsible-head" onclick="toggleCollapse(this)"><div class="deepdive-outlook-label">&#x1F52D; Outlook</div><span class="collapsible-preview">${h(cmPreview(story.deep_dive_outlook))}</span><span class="collapsible-chevron">&#9656;</span></div><div class="collapsible-body"><p class="deepdive-outlook-text">${h(story.deep_dive_outlook)}</p></div></div>`:''}
-      </div>
+    <div class="block deepdive-block">
+      <div class="blabel">&#x1F4AD; Deep Dive</div>
+      <p class="deepdive-text">${h(story.deep_dive||'')}</p>
+      ${story.deep_dive_impact?`<div class="deepdive-impact collapsible"><div class="collapsible-head" onclick="toggleCollapse(this)"><div class="deepdive-impact-label">&#x1F3AF; How This Affects You</div><span class="collapsible-preview">${h(cmPreview(story.deep_dive_impact))}</span><span class="collapsible-chevron">&#9656;</span></div><div class="collapsible-body"><p class="deepdive-impact-text">${h(story.deep_dive_impact)}</p></div></div>`:''}
+      ${story.deep_dive_outlook?`<div class="deepdive-outlook collapsible"><div class="collapsible-head" onclick="toggleCollapse(this)"><div class="deepdive-outlook-label">&#x1F52D; Outlook</div><span class="collapsible-preview">${h(cmPreview(story.deep_dive_outlook))}</span><span class="collapsible-chevron">&#9656;</span></div><div class="collapsible-body"><p class="deepdive-outlook-text">${h(story.deep_dive_outlook)}</p></div></div>`:''}
     </div>
     <div class="story-footer">
       <a class="src-link" href="${h(sourceUrl)}" target="_blank" rel="noopener noreferrer">Read original <span>&#x2192;</span></a>
