@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
+<title>Chinese APT Abuses Outlook, Slack, Discord, and file.io as C2 Channels Targeting Mongolia | The Daily Rundown</title>
+<meta property="og:type"        content="article">
+<meta property="og:site_name"   content="The Daily Rundown">
+<meta property="og:title"       content="Chinese APT Abuses Outlook, Slack, Discord, and file.io as C2 Channels Targeting Mongolia">
+<meta property="og:description" content="A Chinese state-sponsored threat actor is leveraging legitimate cloud services — Microsoft Outlook, Slack, Discord, and file.io — as command-and-control infrastructure in an espionage campaign targeting Mongolian government networks. By tunneling C2 traffic through trusted SaaS p">
+<meta property="og:url"         content="https://dizchrisctrl.github.io/daily-digest/s/2026-04-23-story-cyber-1.html">
+<meta name="twitter:card"        content="summary">
+<meta name="twitter:title"       content="Chinese APT Abuses Outlook, Slack, Discord, and file.io as C2 Channels Targeting Mongolia">
+<meta name="twitter:description" content="A Chinese state-sponsored threat actor is leveraging legitimate cloud services — Microsoft Outlook, Slack, Discord, and file.io — as command-and-control infrastructure in an espionage campaign targeting Mongolian government networks. By tunneling C2 traffic through trusted SaaS p">
+<style>
+:root {
+  --bg:#0b0d16; --surface:#12152a; --surface2:#1a1d32; --surface3:#20233c;
+  --text:#eaedf5; --muted:#7a849a; --muted2:#5a6275;
+  --cyber:#34d399; --cyber2:#10b981; --purple:#a78bfa; --amber:#fbbf24; --ai:#818cf8;
+  --border:#252840; --border2:#333660;
+  --body-text:#c0c8d8;
+  --sec:#a78bfa; --sec2:#dc2626; --sec-soft:#c4b5fd;
+  --sec-glow:rgba(167,139,250,0.15); --sec-bg:rgba(167,139,250,0.04); --sec-border:rgba(167,139,250,0.22);
+}
+html.light {
+  --bg:#f4f6fb; --surface:#ffffff; --surface2:#eef0f7; --surface3:#e4e7f2;
+  --text:#1a1d2e; --muted:#4a5568; --muted2:#718096;
+  --border:#d4d8ec; --border2:#c0c5df; --body-text:#2d3748;
+  --sec-bg:rgba(239,68,68,0.03); --sec-border:rgba(239,68,68,0.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;min-height:100vh;}
+.top-nav{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);padding:0 20px;height:52px;display:flex;align-items:center;gap:12px;}
+.back-btn{display:flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:5px 12px;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;transition:color 0.2s,border-color 0.2s;white-space:nowrap;flex-shrink:0;}
+.back-btn:hover{color:var(--text);border-color:var(--border2);}
+.nav-breadcrumb{flex:1;min-width:0;font-size:0.75rem;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nav-breadcrumb span{color:var(--muted);}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.theme-toggle{background:var(--surface2);border:1px solid var(--border2);color:var(--muted);border-radius:20px;padding:5px 11px;font-size:0.75rem;cursor:pointer;transition:background 0.2s,color 0.2s;}
+.theme-toggle:hover{color:var(--text);}
+.share-btn-top{display:flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--sec-border);color:var(--sec-soft);border-radius:20px;padding:5px 12px;font-size:0.78rem;font-weight:600;cursor:pointer;transition:background 0.2s;}
+.share-btn-top:hover{background:var(--sec-bg);}
+.hero{padding:32px 20px 28px;border-bottom:1px solid var(--sec-border);background:linear-gradient(180deg,var(--sec-glow) 0%,transparent 100%);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 0%,var(--sec-glow) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{max-width:860px;margin:0 auto;position:relative;}
+.hero-badges{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:16px;}
+.type-badge{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:3px 10px;border-radius:4px;background:var(--sec-glow);color:var(--sec-soft);border:1px solid var(--sec-border);}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 9px;border-radius:4px;background:rgba(239,68,68,0.1);color:var(--sec);border:1px solid rgba(239,68,68,0.3);animation:live-pulse 2s ease-in-out infinite;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--sec);flex-shrink:0;animation:live-pulse 1.2s ease-in-out infinite;}
+@keyframes live-pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.hero-title{font-size:1.85rem;font-weight:900;line-height:1.2;letter-spacing:-0.5px;margin-bottom:16px;color:var(--text);}
+.score-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+.cvss-wrap{display:flex;align-items:center;gap:10px;}
+.cvss-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);white-space:nowrap;}
+.cvss-bar-track{width:140px;height:7px;border-radius:4px;background:var(--surface3);border:1px solid var(--border);overflow:hidden;}
+.cvss-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#22c55e 0%,#f59e0b 40%,#ef4444 70%);transition:width 0.6s cubic-bezier(0.4,0,0.2,1);}
+.cvss-score-num{font-size:1.15rem;font-weight:900;font-variant-numeric:tabular-nums;color:var(--sec);font-family:'Courier New',monospace;line-height:1;}
+.severity-pill,.patch-pill{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;padding:3px 10px;border-radius:20px;}
+.sev-critical{background:rgba(239,68,68,0.18);color:#f87171;border:1px solid rgba(239,68,68,0.35);}
+.sev-high{background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.3);}
+.sev-medium{background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);}
+.sev-low{background:rgba(52,211,153,0.12);color:var(--cyber);border:1px solid rgba(52,211,153,0.25);}
+.patch-available{background:rgba(52,211,153,0.1);color:var(--cyber);border:1px solid rgba(52,211,153,0.25);}
+.patch-mitigation{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.22);}
+.patch-none{background:rgba(239,68,68,0.1);color:var(--sec);border:1px solid var(--sec-border);}
+.hero-desc{font-size:0.97rem;color:var(--body-text);line-height:1.75;margin-bottom:18px;max-width:740px;}
+.hero-meta{display:flex;align-items:center;flex-wrap:wrap;gap:10px;}
+.hero-meta-item{font-size:0.76rem;color:var(--muted2);display:flex;align-items:center;gap:5px;}
+.hero-meta-sep{color:var(--border2);font-size:0.7rem;}
+.src-link-hero{font-size:0.76rem;font-weight:600;color:var(--sec-soft);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color 0.15s;}
+.src-link-hero:hover{color:var(--sec);}
+.page-body{max-width:860px;margin:0 auto;padding:28px 16px 80px;}
+.sec-block{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden;}
+.sec-block-header{padding:16px 20px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.sec-block-icon{font-size:1rem;flex-shrink:0;}
+.sec-block-title{font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted2);flex:1;}
+.sec-block-title.red{color:var(--sec-soft);} .sec-block-title.green{color:var(--cyber);} .sec-block-title.amber{color:var(--amber);}
+.sec-block-body{padding:20px;}
+.conf-badge{font-size:0.65rem;font-weight:700;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);color:var(--purple);}
+.diagram-wrap{border-radius:10px;overflow:hidden;border:1px solid #1e3055;background:#060912;}
+.diagram-bar{background:#0d1020;padding:9px 14px;display:flex;align-items:center;gap:7px;border-bottom:1px solid #1e3055;}
+.dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;} .dot-r{background:#ff5f57;} .dot-y{background:#febc2e;} .dot-g{background:#28c840;}
+.diagram-title{flex:1;text-align:center;font-size:0.67rem;color:#3a4a60;font-family:monospace;}
+.diagram-svg svg{width:100%;height:auto;display:block;}
+.attack-vector-text{margin-top:14px;font-size:0.92rem;color:var(--body-text);line-height:1.72;padding:13px 16px;background:var(--sec-bg);border:1px solid var(--sec-border);border-radius:8px;border-left:3px solid var(--sec);}
+.details-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;}
+.detail-cell{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:13px 15px;}
+.detail-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:6px;}
+.detail-value{font-size:0.93rem;font-weight:700;color:var(--text);font-family:'Courier New',monospace;word-break:break-all;}
+.detail-value.red{color:var(--sec-soft);} .detail-value.green{color:var(--cyber);} .detail-value.amber{color:var(--amber);} .detail-value.muted{color:var(--muted);font-weight:400;font-size:0.78rem;font-family:inherit;}
+.cvss-vector-cell{grid-column:1/-1;}
+.timeline-track{display:flex;align-items:flex-start;position:relative;padding:8px 0 4px;}
+.timeline-track::before{content:'';position:absolute;top:24px;left:24px;right:24px;height:2px;background:linear-gradient(90deg,var(--sec) 0%,var(--amber) 50%,var(--cyber) 100%);z-index:0;}
+.tl-step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;}
+.tl-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--surface2);margin-bottom:10px;flex-shrink:0;}
+.tl-dot.red{background:var(--sec);box-shadow:0 0 10px rgba(239,68,68,0.5);} .tl-dot.amber{background:var(--amber);box-shadow:0 0 10px rgba(251,191,36,0.4);} .tl-dot.green{background:var(--cyber);box-shadow:0 0 10px rgba(52,211,153,0.4);} .tl-dot.empty{background:var(--surface3);border-color:var(--border2);}
+.tl-label{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted2);text-align:center;margin-bottom:4px;}
+.tl-date{font-size:0.8rem;font-weight:700;color:var(--text);text-align:center;font-family:'Courier New',monospace;}
+.tl-date.na{color:var(--muted2);font-style:italic;font-size:0.72rem;}
+.mitre-map{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;padding-bottom:6px;}
+.mitre-col{display:flex;flex-direction:column;gap:5px;min-width:150px;flex:1;}
+.mitre-tactic-hdr{background:linear-gradient(135deg,rgba(239,68,68,0.13),rgba(239,68,68,0.05));border:1px solid rgba(239,68,68,0.35);border-radius:8px;padding:10px 11px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:3px;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;width:100%;text-align:left;font-family:inherit;}
+.mitre-tactic-hdr:hover{border-color:var(--sec-soft);background:rgba(239,68,68,0.18);box-shadow:0 2px 12px rgba(239,68,68,0.12);}
+.mitre-tactic-lbl{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:0.9px;color:var(--sec-soft);line-height:1.3;}
+.mitre-tactic-cnt{font-size:0.58rem;color:var(--muted2);display:flex;align-items:center;gap:4px;}
+.mitre-tactic-cnt::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:rgba(239,68,68,0.5);}
+.mitre-tactic-hint{font-size:0.53rem;color:var(--muted2);opacity:0.7;margin-top:2px;}
+.mitre-techs{display:flex;flex-direction:column;gap:4px;}
+details.mitre-tech-detail{border:1px solid var(--border);border-radius:7px;overflow:hidden;transition:border-color 0.15s,box-shadow 0.15s;}
+details.mitre-tech-detail[open]{border-color:var(--border2);box-shadow:0 2px 10px rgba(0,0,0,0.18);}
+details.mitre-tech-detail summary{display:flex;align-items:flex-start;gap:7px;padding:8px 10px;cursor:pointer;list-style:none;background:var(--surface2);transition:background 0.15s;user-select:none;}
+details.mitre-tech-detail summary:hover{background:var(--surface3);}
+details.mitre-tech-detail summary::-webkit-details-marker{display:none;}
+details.mitre-tech-detail[open] summary{background:var(--surface3);border-bottom:1px solid var(--border);}
+.mitre-tech-id{font-size:0.6rem;font-weight:800;font-family:'Courier New',monospace;color:var(--amber);background:rgba(251,191,36,0.08);padding:1px 5px;border-radius:3px;border:1px solid rgba(251,191,36,0.18);flex-shrink:0;margin-top:1px;}
+.mitre-tech-name{font-size:0.72rem;color:var(--body-text);line-height:1.35;flex:1;}
+.mitre-tech-chevron{font-size:0.5rem;color:var(--muted2);transition:transform 0.2s;flex-shrink:0;margin-top:3px;margin-left:auto;}
+details.mitre-tech-detail[open] .mitre-tech-chevron{transform:rotate(90deg);color:var(--amber);}
+.mitre-tech-body{padding:10px 10px 11px;background:var(--surface);}
+.mitre-tech-rel{font-size:0.8rem;color:var(--body-text);line-height:1.6;margin-bottom:8px;padding-left:8px;border-left:2px solid rgba(251,191,36,0.3);}
+.mitre-tech-link{display:inline-flex;align-items:center;gap:4px;font-size:0.7rem;font-weight:600;color:var(--sec-soft);text-decoration:none;transition:color 0.15s;padding:3px 8px;border:1px solid var(--sec-border);border-radius:5px;}
+.mitre-tech-link:hover{color:var(--sec);border-color:var(--sec);}
+.affected-table{width:100%;border-collapse:collapse;}
+.affected-table th{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2);}
+.affected-table td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.affected-table tr:last-child td{border-bottom:none;}
+.affected-table tr:hover td{background:rgba(255,255,255,0.02);}
+.prod-vendor{font-size:0.8rem;color:var(--muted);} .prod-name{font-size:0.9rem;font-weight:700;color:var(--text);}
+.prod-ver{font-family:'Courier New',monospace;font-size:0.78rem;color:#fca5a5;background:rgba(239,68,68,0.09);padding:3px 8px;border-radius:5px;border:1px solid rgba(239,68,68,0.18);white-space:nowrap;}
+.prod-fix{font-family:'Courier New',monospace;font-size:0.78rem;color:var(--cyber);background:rgba(52,211,153,0.08);padding:3px 8px;border-radius:5px;border:1px solid rgba(52,211,153,0.2);white-space:nowrap;}
+.prod-fix.none{color:var(--sec-soft);background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2);}
+.apply-intro{font-size:0.88rem;color:var(--muted);line-height:1.65;margin-bottom:14px;}
+.apply-list{display:flex;flex-direction:column;gap:8px;}
+.apply-item{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);}
+.apply-check{font-size:0.85rem;flex-shrink:0;margin-top:1px;} .apply-text{font-size:0.88rem;color:var(--body-text);line-height:1.55;}
+.fix-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fix-panel{border-radius:10px;padding:16px 18px;}
+.fix-panel.immediate{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);}
+.fix-panel.strategic{background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.18);}
+.fix-panel-label{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.fix-panel.immediate .fix-panel-label{color:var(--sec-soft);} .fix-panel.strategic .fix-panel-label{color:var(--cyber);}
+.fix-steps{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.fix-step{display:flex;align-items:flex-start;gap:9px;font-size:0.87rem;color:var(--body-text);line-height:1.55;}
+.fix-step-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;font-size:0.63rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.fix-panel.immediate .fix-step-num{background:rgba(239,68,68,0.15);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}
+.fix-panel.strategic .fix-step-num{background:rgba(52,211,153,0.12);color:var(--cyber);border:1px solid rgba(52,211,153,0.22);}
+.concept-tags-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+.concept-tag-pill{font-size:0.72rem;font-weight:700;font-family:'Courier New',monospace;padding:5px 12px;border-radius:6px;background:var(--surface2);color:var(--muted);border:1px solid var(--border2);cursor:pointer;transition:color 0.15s,border-color 0.15s,background 0.15s;}
+.concept-tag-pill:hover,.concept-tag-pill.active{color:var(--ai);border-color:rgba(129,140,248,0.4);background:rgba(129,140,248,0.08);}
+.concept-tag-expand{display:none;padding:14px 16px;border-radius:9px;background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.15);margin-top:4px;}
+.concept-tag-expand.visible{display:block;}
+.concept-tag-expand-name{font-size:0.85rem;font-weight:800;color:var(--ai);font-family:'Courier New',monospace;margin-bottom:8px;}
+.concept-def{font-size:0.88rem;color:var(--body-text);line-height:1.65;margin-bottom:9px;}
+.concept-rel{font-size:0.85rem;color:var(--muted);line-height:1.6;font-style:italic;padding-left:12px;border-left:2px solid rgba(129,140,248,0.35);}
+.hunt-list{display:flex;flex-direction:column;gap:8px;}
+details.hunt-entry{border-radius:9px;overflow:hidden;border:1px solid var(--border);transition:border-color 0.2s;}
+details.hunt-entry[open]{border-color:var(--border2);}
+details.hunt-entry summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;background:var(--surface2);transition:background 0.15s;}
+details.hunt-entry summary:hover{background:var(--surface3);}
+details.hunt-entry summary::-webkit-details-marker{display:none;}
+.hunt-priority{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;flex-shrink:0;}
+.hunt-priority.high{background:rgba(239,68,68,0.15);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}
+.hunt-priority.medium{background:rgba(251,191,36,0.12);color:var(--amber);border:1px solid rgba(251,191,36,0.22);}
+.hunt-priority.low{background:rgba(52,211,153,0.1);color:var(--cyber);border:1px solid rgba(52,211,153,0.2);}
+.hunt-signal{font-size:0.88rem;font-weight:700;color:var(--text);flex:1;}
+.hunt-chevron{font-size:0.6rem;color:var(--muted2);transition:transform 0.2s;flex-shrink:0;}
+details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
+.hunt-body{padding:12px 14px;border-top:1px solid var(--border);background:var(--surface);}
+.hunt-desc{font-size:0.88rem;color:var(--muted);line-height:1.65;}
+.hunt-log-tag{display:inline-block;margin-top:8px;margin-right:5px;font-size:0.68rem;font-weight:700;font-family:'Courier New',monospace;padding:2px 8px;border-radius:4px;background:rgba(129,140,248,0.1);color:var(--ai);border:1px solid rgba(129,140,248,0.2);}
+.ioc-caveat{padding:12px 15px;border-radius:8px;margin-bottom:16px;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.25);display:flex;align-items:flex-start;gap:10px;}
+.ioc-caveat-icon{font-size:1rem;flex-shrink:0;margin-top:1px;} .ioc-caveat-text{font-size:0.83rem;color:var(--body-text);line-height:1.6;}
+.ioc-caveat-text strong{color:var(--amber);font-weight:700;}
+.ioc-group{margin-bottom:16px;} .ioc-group:last-child{margin-bottom:0;}
+.ioc-group-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.ioc-group-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);}
+.ioc-copy-btn{font-size:0.68rem;font-weight:600;padding:3px 10px;border-radius:20px;background:transparent;border:1px solid var(--border2);color:var(--muted2);cursor:pointer;transition:color 0.15s,border-color 0.15s;display:flex;align-items:center;gap:4px;}
+.ioc-copy-btn:hover,.ioc-copy-btn.copied{color:var(--cyber);border-color:rgba(52,211,153,0.4);}
+.ioc-list{background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.ioc-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);font-family:'Courier New',monospace;font-size:0.8rem;color:var(--body-text);word-break:break-all;}
+.ioc-item:last-child{border-bottom:none;} .ioc-item:hover{background:rgba(255,255,255,0.02);}
+.ioc-copy-single{flex-shrink:0;background:none;border:none;cursor:pointer;color:var(--muted2);font-size:0.72rem;padding:2px 6px;border-radius:4px;transition:color 0.15s;font-family:inherit;}
+.ioc-copy-single:hover{color:var(--cyber);}
+.ioc-no-data{padding:12px;font-size:0.83rem;color:var(--muted2);font-style:italic;text-align:center;}
+.ta-inline-tag{display:inline-flex;align-items:center;gap:5px;font-size:0.63rem;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.28);cursor:pointer;transition:background 0.15s,border-color 0.15s;font-family:inherit;white-space:nowrap;}
+.ta-inline-tag:hover{background:rgba(167,139,250,0.18);border-color:rgba(167,139,250,0.45);}
+.share-footer{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.share-footer-text{font-size:0.85rem;color:var(--muted);}
+.share-footer-text strong{color:var(--text);}
+.share-footer-btns{display:flex;flex-wrap:wrap;gap:7px;}
+.share-opt{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 13px;cursor:pointer;text-decoration:none;font-size:0.8rem;font-weight:600;color:var(--muted);transition:border-color 0.18s,color 0.18s;font-family:inherit;}
+.share-opt:hover{color:var(--text);border-color:var(--border2);}
+.share-opt.x:hover{border-color:#e7e7e7;color:#e7e7e7;}
+.share-opt.whatsapp:hover{border-color:#25d366;color:#25d366;}
+.share-opt.telegram:hover{border-color:#2aabee;color:#2aabee;}
+.share-opt.linkedin:hover{border-color:#0a66c2;color:#0a66c2;}
+.share-opt.copy-link:hover{border-color:var(--cyber);color:var(--cyber);}
+.popover-overlay{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.6);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.popover-overlay.open{opacity:1;pointer-events:all;}
+.popover-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:24px 24px 20px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto;transform:translateY(12px);transition:transform 0.2s;position:relative;}
+.popover-overlay.open .popover-box{transform:translateY(0);}
+.popover-close{position:absolute;top:14px;right:14px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.78rem;display:flex;align-items:center;justify-content:center;transition:color 0.15s;font-family:inherit;}
+.popover-close:hover{color:var(--text);}
+.popover-type-tag{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;padding:2px 9px;border-radius:4px;display:inline-block;margin-bottom:10px;}
+.popover-type-tag.technique{background:rgba(251,191,36,0.12);color:var(--amber);border:1px solid rgba(251,191,36,0.25);}
+.popover-type-tag.tactic{background:rgba(239,68,68,0.12);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}
+.popover-type-tag.actor{background:rgba(167,139,250,0.12);color:var(--purple);border:1px solid rgba(167,139,250,0.25);}
+.popover-title{font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:4px;line-height:1.3;}
+.popover-subtitle{font-size:0.75rem;font-weight:600;font-family:'Courier New',monospace;color:var(--muted2);margin-bottom:14px;}
+.popover-section-label{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:6px;margin-top:14px;}
+.popover-body-text{font-size:0.9rem;color:var(--body-text);line-height:1.7;}
+.popover-relevance{font-size:0.88rem;color:var(--muted);line-height:1.65;padding:10px 14px;background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.18);border-radius:8px;border-left:3px solid rgba(129,140,248,0.4);margin-top:6px;}
+.popover-att-link{display:inline-flex;align-items:center;gap:4px;margin-top:12px;font-size:0.75rem;font-weight:600;color:var(--sec-soft);text-decoration:none;transition:color 0.15s;}
+.popover-att-link:hover{color:var(--sec);}
+.popover-tags-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.popover-tag{font-size:0.68rem;font-weight:600;padding:3px 9px;border-radius:5px;font-family:inherit;}
+.popover-tag.purple{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.22);}
+.popover-tag.alias{background:var(--surface3);color:var(--muted2);border:1px solid var(--border2);}
+.popover-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.popover-cell{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.popover-cell-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);margin-bottom:4px;}
+.popover-cell-value{font-size:0.88rem;font-weight:700;color:var(--text);}
+.popover-cell-value.purple{color:var(--purple);}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface2);border:1px solid var(--cyber);color:var(--cyber);padding:8px 18px;border-radius:20px;font-size:0.78rem;font-weight:600;opacity:0;transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:9999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+@media(max-width:640px){
+  .hero-title{font-size:1.35rem;}
+  .top-nav .nav-breadcrumb{display:none;}
+  .score-row{gap:8px;}
+  .cvss-bar-track{width:100px;}
+  .page-body{padding:16px 12px 60px;}
+  .sec-block-body{padding:14px;}
+  .details-grid{grid-template-columns:1fr 1fr;}
+  .fix-grid{grid-template-columns:1fr;}
+  .share-footer{flex-direction:column;}
+  .affected-table th,.affected-table td{padding:8px;}
+  .mitre-col{min-width:130px;}
+  .popover-grid{grid-template-columns:1fr;}
+  .popover-box{padding:18px 16px 16px;}
+}
+</style>
+</head>
+<body>
+<nav class="top-nav">
+  <a href="https://dizchrisctrl.github.io/daily-digest" class="back-btn">&#8592; Back to Digest</a>
+  <span class="nav-breadcrumb">The Daily Rundown <span>/</span> 2026-04-23 <span>/</span> Threat Actor Profile</span>
+  <div class="nav-actions">
+    <button class="theme-toggle" onclick="document.documentElement.classList.toggle('light')">&#9788; Theme</button>
+    <button class="share-btn-top" onclick="copyPageLink(this)">&#8679; Share</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-badges">
+      <span class="type-badge">&#9670; Threat Actor Profile</span>
+      
+      <button class="ta-inline-tag" data-ta="{&quot;name&quot;: &quot;Unnamed Chinese APT&quot;, &quot;aliases&quot;: [], &quot;origin&quot;: &quot;China&quot;, &quot;motivation&quot;: &quot;Espionage&quot;, &quot;description&quot;: &quot;A Chinese state-sponsored advanced persistent threat group conducting espionage operations against Mongolian government targets. The group is notable for its sophisticated use of multiple legitimate cloud services \u2014 including Microsoft Outlook, Slack, Discord, and file.io \u2014 as redundant command-and-control channels, demonstrating mature tradecraft designed to evade network-based detection by blending with normal enterprise SaaS traffic.&quot;, &quot;known_ttps&quot;: [&quot;Abuse of legitimate cloud services (Outlook, Slack, Discord) as C2 channels&quot;, &quot;Use of Microsoft Graph API for Outlook draft-based C2&quot;, &quot;Discord webhook abuse for command delivery and data exfiltration&quot;, &quot;Ephemeral file-sharing services (file.io) for exfiltration staging&quot;, &quot;Multi-channel C2 redundancy for operational resilience&quot;, &quot;Targeting of government and geopolitically sensitive organizations in Asia-Pacific&quot;], &quot;attribution_confidence&quot;: &quot;Medium&quot;, &quot;story_relevance&quot;: &quot;&quot;}" onclick="openTAPopover(event,this)">&#9670; Unnamed Chinese APT &#8594;</button>
+    </div>
+    <h1 class="hero-title">Chinese APT Weaponizes Outlook, Slack, and Discord as C2 Channels to Spy on Mongolia</h1>
+    <div class="score-row">
+      
+      <span class="severity-pill sev-high">High</span>
+      <span class="patch-pill patch-mitigation">&#9888; Mitigation Only</span>
+    </div>
+    <p class="hero-desc">A Chinese state-sponsored threat actor is leveraging legitimate cloud services — Microsoft Outlook, Slack, Discord, and file.io — as command-and-control infrastructure in an espionage campaign targeting Mongolian government networks. By tunneling C2 traffic through trusted SaaS platforms, the attackers make detection extraordinarily difficult since security tools see legitimate API calls rather than suspicious connections, turning every organization&#39;s reliance on cloud collaboration tools into a potential blind spot.</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">&#128197; Apr 23, 2026 9:00 PM EDT</span><span class="hero-meta-sep">|</span>
+      <span class="hero-meta-item">Source: <a href="https://www.darkreading.com/cyberattacks-data-breaches/chinese-apt-abuses-cloud-tools-spy-mongolia" class="src-link-hero" target="_blank" rel="noopener">darkreading &#8599;</a></span>
+      
+    </div>
+  </div>
+</header>
+
+<main class="page-body">
+
+  
+      <div class="sec-block">
+        <div class="sec-block-header"><span class="sec-block-icon">&#9654;</span><span class="sec-block-title red">Attack Flow</span></div>
+        <div class="sec-block-body">
+          <div class="diagram-wrap">
+            <div class="diagram-bar">
+              <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+              <span class="diagram-title">Chinese APT Abuses Outlook, Slack, Discord, and file.io as C2 Channels Targeting Mongolia</span>
+            </div>
+            <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#34d399"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#f87171"/>
+    </marker>
+  </defs>
+  <!-- Background -->
+  <rect width="700" height="340" fill="#060912" rx="0"/>
+
+  <!-- Title -->
+  <text x="350" y="24" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">MULTI-CHANNEL CLOUD C2 — ATTACK DATA FLOW</text>
+
+  <!-- Victim Node -->
+  <rect x="20" y="130" width="120" height="56" rx="6" fill="#12152a" stroke="#f87171" stroke-width="1.5"/>
+  <text x="80" y="155" fill="#eaedf5" font-size="13" font-family="monospace" text-anchor="middle">Victim</text>
+  <text x="80" y="172" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Mongolia Gov</text>
+
+  <!-- Implant -->
+  <rect x="180" y="130" width="110" height="56" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="235" y="155" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">Implant</text>
+  <text x="235" y="172" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Multi-C2 Agent</text>
+
+  <!-- Arrow: Victim -> Implant -->
+  <line x1="140" y1="158" x2="178" y2="158" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+
+  <!-- Cloud Services -->
+  <!-- Outlook -->
+  <rect x="370" y="40" width="120" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/>
+  <text x="430" y="60" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Outlook</text>
+  <text x="430" y="75" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">Draft emails</text>
+
+  <!-- Slack -->
+  <rect x="370" y="100" width="120" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/>
+  <text x="430" y="120" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Slack</text>
+  <text x="430" y="135" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">Private channels</text>
+
+  <!-- Discord -->
+  <rect x="370" y="160" width="120" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/>
+  <text x="430" y="180" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Discord</text>
+  <text x="430" y="195" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">Webhooks</text>
+
+  <!-- file.io -->
+  <rect x="370" y="220" width="120" height="44" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/>
+  <text x="430" y="240" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">file.io</text>
+  <text x="430" y="255" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">Exfil staging</text>
+
+  <!-- Arrows: Implant -> Cloud services -->
+  <line x1="290" y1="148" x2="368" y2="62" stroke="#34d399" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <line x1="290" y1="153" x2="368" y2="122" stroke="#34d399" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <line x1="290" y1="160" x2="368" y2="180" stroke="#34d399" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <line x1="290" y1="165" x2="368" y2="240" stroke="#34d399" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+  <!-- APT Operator -->
+  <rect x="560" y="130" width="120" height="56" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="620" y="155" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">APT Operator</text>
+  <text x="620" y="172" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">China-nexus</text>
+
+  <!-- Arrows: Cloud -> APT -->
+  <line x1="490" y1="62" x2="558" y2="148" stroke="#34d399" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <line x1="490" y1="122" x2="558" y2="153" stroke="#34d399" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <line x1="490" y1="180" x2="558" y2="160" stroke="#34d399" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <line x1="490" y1="240" x2="558" y2="165" stroke="#34d399" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+  <!-- Label: TLS-encrypted -->
+  <rect x="285" y="290" width="140" height="28" rx="12" fill="#34d399"/>
+  <text x="355" y="308" fill="#060912" font-size="11" font-family="monospace" text-anchor="middle" font-weight="bold">TLS-encrypted</text>
+
+  <!-- Label: Looks legitimate -->
+  <text x="355" y="330" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">All traffic to allowlisted domains</text>
+</svg></div>
+          </div>
+          <div class="attack-vector-text">The APT deploys malware that communicates via the APIs of legitimate cloud services — reading commands from Outlook drafts, Slack private channels, and Discord webhooks, and exfiltrating data through file.io&#39;s ephemeral file-sharing service. This multi-channel approach provides redundancy and blends malicious traffic with normal enterprise SaaS usage, bypassing network-layer detection.</div>
+        </div>
+      </div>
+
+  
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128336;</span><span class="sec-block-title amber">Timeline</span></div>
+    <div class="sec-block-body">
+      <div class="timeline-track"><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Disclosed</div><div class="tl-date">2026-04-23</div></div><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Exploited in Wild</div><div class="tl-date">2026-04-23</div></div><div class="tl-step"><div class="tl-dot amber"></div><div class="tl-label">Patch Released</div><div class="tl-date na">Unknown</div></div></div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Map</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tactic or technique for details</span></div>
+    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Command and Control&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1102&quot;, &quot;name&quot;: &quot;Web Service&quot;}, {&quot;id&quot;: &quot;T1071.001&quot;, &quot;name&quot;: &quot;Application Layer Protocol: Web Protocols&quot;}, {&quot;id&quot;: &quot;T1008&quot;, &quot;name&quot;: &quot;Fallback Channels&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Command and Control</span><span class="mitre-tactic-cnt">3 techniques</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1102</span><span class="mitre-tech-name">Web Service</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The APT uses legitimate web services (Outlook, Slack, Discord, file.io) as C2 channels, making malicious traffic indistinguishable from normal SaaS usage.</p><a href="https://attack.mitre.org/techniques/T1102/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1071.001</span><span class="mitre-tech-name">Application Layer Protocol: Web Protocols</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Commands and exfiltrated data traverse HTTPS connections to well-known SaaS domains, blending with legitimate enterprise web traffic.</p><a href="https://attack.mitre.org/techniques/T1071/001/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1008</span><span class="mitre-tech-name">Fallback Channels</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The implant uses at least four separate cloud services simultaneously, providing seamless fallback if defenders block or monitor any single channel.</p><a href="https://attack.mitre.org/techniques/T1008/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Exfiltration&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1567.002&quot;, &quot;name&quot;: &quot;Exfiltration Over Web Service: Exfiltration to Cloud Storage&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Exfiltration</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1567.002</span><span class="mitre-tech-name">Exfiltration Over Web Service: Exfiltration to Cloud Storage</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Data is exfiltrated through file.io, whose ephemeral self-destructing file links minimize forensic evidence of stolen data.</p><a href="https://attack.mitre.org/techniques/T1567/002/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Defense Evasion&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1036&quot;, &quot;name&quot;: &quot;Masquerading&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Defense Evasion</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1036</span><span class="mitre-tech-name">Masquerading</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">By using legitimate cloud service APIs, the malware masquerades its network activity as normal employee usage of everyday collaboration tools.</p><a href="https://attack.mitre.org/techniques/T1036/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
+  </div>
+
+  
+      <div class="sec-block">
+        <div class="sec-block-header"><span class="sec-block-icon">&#9888;</span><span class="sec-block-title red">Affected Products</span></div>
+        <div class="sec-block-body" style="padding:0;overflow-x:auto;">
+          <table class="affected-table">
+            <thead><tr><th>Vendor</th><th>Product</th><th>Versions Affected</th><th>Fixed In</th></tr></thead>
+            <tbody><tr>
+          <td><span class="prod-vendor">Microsoft</span></td>
+          <td><span class="prod-name">Microsoft 365 / Outlook (Graph API)</span></td>
+          <td><span class="prod-ver">All versions — abused as C2 infrastructure, not a product vulnerability</span></td>
+          <td><span class="prod-fix none">Mitigate: Monitor and restrict Graph API OAuth app registrations and anomalous mailbox draft activity</span></td>
+        </tr><tr>
+          <td><span class="prod-vendor">Slack Technologies (Salesforce)</span></td>
+          <td><span class="prod-name">Slack</span></td>
+          <td><span class="prod-ver">All versions — abused as C2 infrastructure, not a product vulnerability</span></td>
+          <td><span class="prod-fix none">Mitigate: Audit Slack API tokens and monitor for anomalous bot/integration activity in private channels</span></td>
+        </tr><tr>
+          <td><span class="prod-vendor">Discord</span></td>
+          <td><span class="prod-name">Discord (Webhooks / CDN)</span></td>
+          <td><span class="prod-ver">All versions — abused as C2 infrastructure, not a product vulnerability</span></td>
+          <td><span class="prod-fix none">Mitigate: Block or monitor outbound webhook POST requests to Discord CDN from non-sanctioned endpoints</span></td>
+        </tr><tr>
+          <td><span class="prod-vendor">file.io</span></td>
+          <td><span class="prod-name">file.io (Ephemeral File Sharing)</span></td>
+          <td><span class="prod-ver">All versions — abused for data exfiltration staging</span></td>
+          <td><span class="prod-fix none">Mitigate: Block file.io domains at the proxy/firewall if not business-critical</span></td>
+        </tr></tbody>
+          </table>
+        </div>
+      </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#10067;</span><span class="sec-block-title amber">Am I Affected?</span></div>
+    <div class="sec-block-body">
+      <p class="apply-intro">You are likely at risk if <strong>any</strong> of the following apply:</p>
+      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment allows unrestricted outbound HTTPS access to Outlook (outlook.office365.com), Slack (slack.com), Discord (discord.com), and file.io without API-level inspection</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your organization operates in a government, diplomatic, or geopolitically sensitive sector in the Asia-Pacific region</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment permits unmanaged or loosely governed OAuth application registrations in Microsoft 365 / Azure AD</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your endpoint detection and response (EDR) solution does not monitor API-level interactions with cloud services from endpoint processes</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your organization blocks Discord, file.io, and non-sanctioned Slack workspaces at the network boundary and monitors Microsoft Graph API usage via CASB</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your environment has no Microsoft 365 deployment and does not permit Slack or Discord usage on corporate endpoints</span></div></div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128736;</span><span class="sec-block-title green">Fix &amp; Recommendations</span></div>
+    <div class="sec-block-body">
+      <div class="fix-grid">
+        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Block outbound connections to file.io (file.io, *.file.io) at the proxy/firewall immediately — this service has minimal legitimate enterprise use and is a known exfiltration vector.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>If Discord is not business-sanctioned, block discord.com and cdn.discordapp.com at the proxy/firewall; if sanctioned, restrict webhook creation and monitor outbound POST requests to Discord webhook URLs from non-browser processes.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Audit all OAuth app registrations and consent grants in Azure AD / Entra ID for Microsoft Graph API permissions (especially Mail.ReadWrite, Mail.Send, Files.ReadWrite.All) — revoke any unrecognized or overprivileged apps immediately using: Get-AzureADServicePrincipal | Where-Object {$_.Tags -notcontains &#39;WindowsAzureActiveDirectoryIntegratedApp&#39;}.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Deploy endpoint detection rules to alert on non-standard processes (i.e., not outlook.exe, slack.exe, or browser binaries) making API calls to graph.microsoft.com, slack.com/api, or discord.com/api endpoints.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Hunt for anomalous Outlook draft activity: query Microsoft 365 Unified Audit Logs for high-frequency MailItemsAccessed or Update operations on Draft folders from unusual client IDs or IP ranges.</span></li></ul></div>
+        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Deploy a Cloud Access Security Broker (CASB) with inline API inspection to gain visibility into Microsoft Graph API, Slack API, and Discord API traffic — enable anomaly detection for unusual volumes, timing, or client application patterns.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Implement conditional access policies in Azure AD / Entra ID that restrict Microsoft Graph API access to managed devices and approved applications only, using app-enforced restrictions and compliant device requirements.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Adopt behavioral analytics (UEBA) on endpoint telemetry to detect processes that mimic legitimate SaaS client behavior but originate from unsigned binaries, unusual file paths, or exhibit C2-like polling patterns (periodic beaconing intervals).</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Segment and monitor internal networks so that only designated service accounts and endpoints can reach SaaS API endpoints — enforce this via micro-segmentation or identity-aware proxies rather than simple allowlisting.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Establish a SaaS governance program that inventories all sanctioned cloud services, restricts OAuth consent to admin-approved apps, and continuously monitors for shadow IT usage of collaboration platforms that could serve as C2 channels.</span></li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128218;</span><span class="sec-block-title ai">Concept Briefing</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tag to expand</span></div>
+    <div class="sec-block-body">
+      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-living-off-trusted-services')">Living-off-Trusted-Services</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-multi-channel-c2-redundancy')">Multi-Channel C2 Redundancy</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-api-level-abuse')">API-Level Abuse</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-ephemeral-exfiltration-staging')">Ephemeral Exfiltration Staging</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-saas-blind-spot')">SaaS Blind Spot</button></div>
+      <div class="concept-tag-expand" id="ct-living-off-trusted-services">
+          <div class="concept-tag-expand-name">Living-off-Trusted-Services</div>
+          <div class="concept-def">An attack technique where adversaries route malicious command-and-control traffic through legitimate, widely-trusted cloud services instead of attacker-owned infrastructure.</div>
+          <div class="concept-rel">This Chinese APT uses Outlook, Slack, Discord, and file.io as C2 relays, making malicious traffic blend with normal enterprise SaaS usage and rendering traditional network-based detection ineffective.</div>
+        </div><div class="concept-tag-expand" id="ct-multi-channel-c2-redundancy">
+          <div class="concept-tag-expand-name">Multi-Channel C2 Redundancy</div>
+          <div class="concept-def">An adversary tactic of maintaining multiple independent command-and-control channels simultaneously so that blocking one does not sever the attacker&#39;s access.</div>
+          <div class="concept-rel">The APT operates across at least four cloud services at once, ensuring that if Mongolian defenders block one channel, the implant seamlessly falls back to another.</div>
+        </div><div class="concept-tag-expand" id="ct-api-level-abuse">
+          <div class="concept-tag-expand-name">API-Level Abuse</div>
+          <div class="concept-def">Exploiting the programmatic interfaces (APIs) of legitimate services for unauthorized purposes, such as reading commands from draft emails or posting data via webhooks.</div>
+          <div class="concept-rel">The attackers leverage Microsoft Graph API for Outlook draft manipulation and Discord webhooks for payload delivery, activities that appear identical to legitimate API usage.</div>
+        </div><div class="concept-tag-expand" id="ct-ephemeral-exfiltration-staging">
+          <div class="concept-tag-expand-name">Ephemeral Exfiltration Staging</div>
+          <div class="concept-def">Using temporary or self-destructing file-sharing services to stage stolen data, minimizing the forensic footprint available to investigators.</div>
+          <div class="concept-rel">file.io&#39;s auto-delete-after-first-download model is used by the APT to exfiltrate data while leaving minimal evidence for incident responders.</div>
+        </div><div class="concept-tag-expand" id="ct-saas-blind-spot">
+          <div class="concept-tag-expand-name">SaaS Blind Spot</div>
+          <div class="concept-def">A gap in security visibility that arises because traffic to trusted SaaS platforms is typically allowlisted and encrypted, preventing inspection by traditional security tools.</div>
+          <div class="concept-rel">The campaign exploits the fundamental trust organizations place in cloud collaboration tools — firewalls, proxies, and DLP see only TLS connections to trusted domains and cannot distinguish C2 traffic from legitimate use.</div>
+        </div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128269;</span><span class="sec-block-title amber">Threat Hunting Signals</span></div>
+    <div class="sec-block-body"><div class="hunt-list">
+        <details class="hunt-entry" open>
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">Non-standard processes accessing Microsoft Graph API</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Look for processes other than Outlook, Teams, OneDrive, or known browsers making HTTPS connections to graph.microsoft.com or outlook.office365.com. Malware implants will use custom binaries or injected processes to call Graph API endpoints for reading/writing Outlook drafts. Check for unsigned executables or processes running from unusual directories (e.g., %TEMP%, %APPDATA%\unusual_folder) establishing connections to these domains.</div>
+            <span class="hunt-log-tag">EDR telemetry (process-to-network mapping)</span><span class="hunt-log-tag">Proxy/firewall logs</span><span class="hunt-log-tag">Sysmon Event ID 3 (Network Connection)</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">Anomalous Outlook Draft folder activity</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Query Microsoft 365 Unified Audit Logs for high-frequency MailItemsAccessed or Update operations targeting the Drafts folder, especially from non-interactive or application-context sessions, unusual OAuth app client IDs, or IP addresses outside expected ranges. C2 via drafts typically creates a pattern of rapid create-read-delete cycles on draft messages.</div>
+            <span class="hunt-log-tag">Microsoft 365 Unified Audit Log</span><span class="hunt-log-tag">Azure AD Sign-in Logs</span><span class="hunt-log-tag">Microsoft Defender for Cloud Apps</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">Outbound Discord webhook POST requests from non-browser processes</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Monitor for HTTP POST requests to discord.com/api/webhooks/* originating from processes that are not the Discord desktop client or a standard browser. This pattern indicates a malware implant using Discord webhooks as a C2 or exfiltration channel. Pay attention to periodic, fixed-interval POST requests which suggest automated beaconing.</div>
+            <span class="hunt-log-tag">Proxy logs</span><span class="hunt-log-tag">EDR telemetry</span><span class="hunt-log-tag">Sysmon Event ID 22 (DNS Query) + Event ID 3</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority medium">Medium</span>
+            <span class="hunt-signal">Connections to file.io from enterprise endpoints</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Any connection to file.io or its associated CDN domains from corporate endpoints should be investigated as potential exfiltration staging. This ephemeral file-sharing service has very limited legitimate enterprise use. Look for POST requests (file uploads) followed by GET requests to unique download URLs.</div>
+            <span class="hunt-log-tag">Proxy/firewall logs</span><span class="hunt-log-tag">DNS query logs</span><span class="hunt-log-tag">EDR telemetry</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority medium">Medium</span>
+            <span class="hunt-signal">Slack API calls from unauthorized applications or tokens</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Review Slack audit logs (Enterprise Grid) or workspace access logs for API calls originating from unrecognized app tokens, bot tokens, or OAuth scopes not associated with sanctioned integrations. Look for messages being posted to or read from private channels by tokens that do not correspond to known Slack apps in the workspace.</div>
+            <span class="hunt-log-tag">Slack Audit Logs (Enterprise Grid)</span><span class="hunt-log-tag">Slack Access Logs</span><span class="hunt-log-tag">CASB logs</span>
+          </div>
+        </details></div></div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#9762;</span><span class="sec-block-title amber">Indicators of Compromise</span><button class="ioc-copy-btn" style="margin-left:auto" onclick="copyAllIOCs()">&#10064; Copy All IOCs</button></div>
+    <div class="sec-block-body">
+      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific indicators of compromise (hashes, IPs, domains, file paths, or URI patterns) were disclosed in the source reporting for this campaign. All IOC arrays are empty. Organizations should monitor for the behavioral patterns described in the threat hunting signals section rather than relying on static IOCs. If vendor or government advisories release specific IOCs in the future, verify them against your own telemetry before taking blocking actions.</span></div>
+      <div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Hashes (SHA-256)</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Command &amp;amp; Control IPs</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Malicious Domains</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Paths / Artifacts</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Suspicious URI Patterns</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div>
+    </div>
+  </div>
+
+  <div class="share-footer">
+    <div class="share-footer-text"><strong>Share this advisory</strong><br><span style="font-size:0.78rem;">Help your network patch faster.</span></div>
+    <div class="share-footer-btns">
+      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20Chinese%20APT%20Weaponizes%20Outlook%2C%20Slack%2C%20and%20Discord%20as%20C2%20Channels%20to%20Spy%20on%20Mongolia%0A%0ACVSS%20N/A%20%C2%B7%20High%20%C2%B7%20Mitigation%20Only&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-23-story-cyber-1.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
+      <a href="https://wa.me/?text=%F0%9F%9B%A1%20Chinese%20APT%20Weaponizes%20Outlook%2C%20Slack%2C%20and%20Discord%20as%20C2%20Channels%20to%20Spy%20on%20Mongolia%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-23-story-cyber-1.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
+      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-23-story-cyber-1.html&amp;text=Chinese%20APT%20Weaponizes%20Outlook%2C%20Slack%2C%20and%20Discord%20as%20C2%20Channels%20to%20Spy%20on%20Mongolia" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-23-story-cyber-1.html" class="share-opt linkedin" target="_blank" rel="noopener">in Share</a>
+      <button class="share-opt copy-link" onclick="copyPageLink(this)">&#128279; Copy Link</button>
+    </div>
+  </div>
+
+</main>
+
+<div class="popover-overlay" id="mitre-ta-overlay" onclick="closeOverlay(event)">
+  <div class="popover-box" id="mitre-ta-box" onclick="event.stopPropagation()">
+    <button class="popover-close" onclick="closeOverlay()">&#10005;</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+function escHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function toggleConcept(btn,id){
+  var el=document.getElementById(id);
+  if(!el)return;
+  var open=el.classList.contains('visible');
+  document.querySelectorAll('.concept-tag-expand').forEach(function(e){e.classList.remove('visible');});
+  document.querySelectorAll('.concept-tag-pill').forEach(function(b){b.classList.remove('active');});
+  if(!open){el.classList.add('visible');btn.classList.add('active');el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+}
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2200);
+}
+function copyText(btn,text){
+  navigator.clipboard.writeText(text).then(function(){
+    var o=btn.textContent;btn.textContent='&#10003;';
+    setTimeout(function(){btn.textContent=o;},1400);
+    showToast('Copied');
+  });
+}
+function copyIOCGroup(gid){
+  var el=document.getElementById('ioc-'+gid);
+  if(!el)return;
+  var items=Array.from(el.querySelectorAll('.ioc-item > span')).map(function(s){return s.textContent.trim();});
+  navigator.clipboard.writeText(items.join('\n')).then(function(){showToast(items.length+' IOC'+(items.length!==1?'s':'')+' copied');});
+}
+function copyAllIOCs(){
+  var all=Array.from(document.querySelectorAll('.ioc-item > span')).map(function(s){return s.textContent.trim();});
+  navigator.clipboard.writeText(all.join('\n')).then(function(){showToast(all.length+' IOCs copied');});
+}
+function copyPageLink(btn){
+  navigator.clipboard.writeText(window.location.href).then(function(){
+    var o=btn.textContent;btn.textContent='&#10003; Copied!';
+    if(btn.classList)btn.classList.add('copied');
+    setTimeout(function(){btn.textContent=o;if(btn.classList)btn.classList.remove('copied');},1800);
+    showToast('Link copied');
+  });
+}
+function _showOverlay(html){
+  var ov=document.getElementById('mitre-ta-overlay');
+  var bx=document.getElementById('mitre-ta-box');
+  if(!ov||!bx)return;
+  bx.innerHTML='<button class="popover-close" onclick="closeOverlay()">&#10005;</button>'+html;
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeOverlay(e){
+  if(e&&e.target!==document.getElementById('mitre-ta-overlay'))return;
+  var ov=document.getElementById('mitre-ta-overlay');
+  if(ov)ov.classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeOverlay();});
+var MITRE_TACTIC_DESC={
+  'Reconnaissance':'The adversary is gathering information to plan future operations — identifying targets, mapping infrastructure, or probing defenses before striking.',
+  'Resource Development':'The adversary is acquiring or building capabilities: purchasing domains, setting up infrastructure, obtaining tools, or developing malware.',
+  'Initial Access':'The adversary is trying to get a foothold. Common methods include phishing, exploiting public-facing applications, and leveraging valid credentials.',
+  'Execution':'The adversary is running malicious code on a local or remote system to carry out their objectives — via scripts, native APIs, or exploited applications.',
+  'Persistence':'The adversary is maintaining their foothold so they survive reboots, credential changes, and re-imaging. They want to stay in, not just get in.',
+  'Privilege Escalation':'The adversary is gaining higher-level permissions — moving from user to admin or from standard process to SYSTEM — to unlock restricted resources.',
+  'Defense Evasion':'The adversary is avoiding detection. Techniques include disabling security tools, obfuscating code, masquerading as legitimate processes, and clearing logs.',
+  'Credential Access':'The adversary is stealing passwords, tokens, and keys — through keylogging, dumping memory, or exploiting authentication weaknesses.',
+  'Discovery':'The adversary is learning about the environment: what systems exist, who has access, how the network is laid out, and where the valuable data lives.',
+  'Lateral Movement':'The adversary is spreading through the network — pivoting from an initial beachhead to reach high-value targets using stolen credentials and trust relationships.',
+  'Collection':'The adversary is gathering data relevant to their goal: emails, files, clipboard contents, screenshots, credentials, or sensitive records.',
+  'Command and Control':'The adversary is communicating with compromised systems — issuing commands, receiving data, and maintaining covert channels to control the operation.',
+  'Exfiltration':'The adversary is stealing your data — compressing, encrypting, and transferring it to attacker-controlled infrastructure, often over legitimate channels.',
+  'Impact':'The adversary is disrupting, destroying, or manipulating your systems — through ransomware, data deletion, manipulation, or denial of service.',
+};
+function openMitrePopover(e,btn){
+  e.stopPropagation();
+  var raw=btn.getAttribute('data-mitre');
+  if(!raw)return;
+  var d;try{d=JSON.parse(raw);}catch(err){return;}
+  var html='';
+  if(d.type==='tactic'){
+    var tacDesc=MITRE_TACTIC_DESC[d.name]||'A phase in the ATT&amp;CK lifecycle describing how adversaries achieve a goal within a broader attack chain.';
+    var techs=(d.techniques||[]).map(function(t){
+      return '<span class="popover-tag purple">'+escHtml((t.id?t.id+' ':'')+escHtml(t.name||''))+'</span>';
+    }).join('');
+    html='<span class="popover-type-tag tactic">ATT&amp;CK Tactic</span>'+
+      '<div class="popover-title">'+escHtml(d.name)+'</div>'+
+      '<div class="popover-section-label">What This Means</div>'+
+      '<div class="popover-body-text">'+tacDesc+'</div>'+
+      (techs?'<div class="popover-section-label">Techniques Relevant to This Story</div><div class="popover-tags-row">'+techs+'</div>':'')+
+      '<a href="https://attack.mitre.org/tactics/" class="popover-att-link" target="_blank" rel="noopener">Browse ATT&amp;CK Tactics &#8599;</a>';
+  }
+  _showOverlay(html);
+}
+function openTAPopover(e,btn){
+  e.stopPropagation();
+  var raw=btn.getAttribute('data-ta');
+  if(!raw)return;
+  var d;try{d=JSON.parse(raw);}catch(err){return;}
+  var aliases=(d.aliases||[]).map(function(a){return '<span class="popover-tag alias">'+escHtml(a)+'</span>';}).join('');
+  var ttps=(d.known_ttps||[]).map(function(t){return '<span class="popover-tag purple">'+escHtml(t)+'</span>';}).join('');
+  var conf=d.attribution_confidence?'<span class="conf-badge" style="margin-left:8px">'+escHtml(d.attribution_confidence)+' Confidence</span>':'';
+  var html='<span class="popover-type-tag actor">Threat Actor</span>'+conf+
+    '<div class="popover-title" style="color:var(--purple)">'+escHtml(d.name)+'</div>'+
+    (aliases?'<div class="popover-tags-row" style="margin-bottom:10px">'+aliases+'</div>':'')+
+    '<div class="popover-grid">'+
+      '<div class="popover-cell"><div class="popover-cell-label">Origin</div><div class="popover-cell-value">'+escHtml(d.origin||'Unknown')+'</div></div>'+
+      '<div class="popover-cell"><div class="popover-cell-label">Motivation</div><div class="popover-cell-value purple">'+escHtml(d.motivation||'Unknown')+'</div></div>'+
+    '</div>'+
+    (d.description?'<div class="popover-section-label">Description</div><div class="popover-body-text">'+escHtml(d.description)+'</div>':'')+
+    (d.story_relevance?'<div class="popover-section-label">Story Relevance</div><div class="popover-relevance">'+escHtml(d.story_relevance)+'</div>':'')+
+    (ttps?'<div class="popover-section-label">Known TTPs</div><div class="popover-tags-row">'+ttps+'</div>':'');
+  _showOverlay(html);
+}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.cvss-bar-fill').forEach(function(bar){
+    var w=bar.style.width;bar.style.width='0%';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){bar.style.width=w;});});
+  });
+});
+</script>
+</body>
+</html>
