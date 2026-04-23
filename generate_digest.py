@@ -3291,7 +3291,7 @@ def send_email(data):
 </div></body></html>"""
 
         payload = json.dumps({
-            "from": "The Daily Rundown <newsletter@resend.dev>",
+            "from": "The Daily Rundown <onboarding@resend.dev>",
             "to": [email],
             "subject": f"The Daily Rundown — {today}",
             "html": html_body,
