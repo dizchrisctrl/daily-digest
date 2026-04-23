@@ -2389,7 +2389,15 @@ const CM_TOOL = {
       },
       public_opinion: {
         type:'array',
-        items: { type:'object', required:['source','sentiment'], properties:{ source:{type:'string'}, sentiment:{type:'string'} } }
+        items: {
+          type:'object',
+          required:['source','sentiment','simulated'],
+          properties:{
+            source:{type:'string'},
+            sentiment:{type:'string'},
+            simulated:{type:'boolean', description:'Always true for Card Maker — these are AI-predicted reactions since no real community comments are scraped for user-submitted articles.'}
+          }
+        }
       },
       opinion_assessment: { type:'string' },
       devils_advocate:    { type:'string' },
@@ -2567,7 +2575,7 @@ Guidelines:
 - concept_explained: 4 paragraphs (blank line between each). P1: simple real-world analogy. P2: how it technically works. P3: how it connects to this exact story. P4: broader implications.
 - visual_svg: SVG diagram viewBox="0 0 700 340". Background #060912. Node fill #12152a. Accent color #f472b6. Include arrowheads via <defs><marker>. 8-15 elements. Short precise labels. Show actual directional flow — not floating boxes.
 - quiz: 3 insight cards — card 1 Scientific lens, card 2 Historical lens, card 3 Societal lens. Each: thought-provoking hook (q), crisp key insight (a), 2-3 sentence explanation (explain).
-- public_opinion: one entry each for Hacker News, Reddit, and Security Twitter/X.
+- public_opinion: one entry each for Hacker News, Reddit, and Security Twitter/X. Set simulated:true for every entry — Card Maker does not scrape real comments, so these are all AI-predicted reactions.
 - devils_advocate: sharp counter-perspective that challenges the dominant sentiment — an overlooked irony or reframe.
 - source_url: "${sourceUrl||''}"
 - deep_dive: 3-4 sentence narrative that draws the reader in like the opening of great longform journalism.
