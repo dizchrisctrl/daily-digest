@@ -6,4 +6,5 @@ __pycache__/
 .DS_Store
 client_secrets.json
 token.json
+github_secrets.txt
 SECURITY_REPORT.md
