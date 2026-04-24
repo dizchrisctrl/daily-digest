@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
-<title>Bitwarden CLI Trojanized via Compromised GitHub Action — Supply Chain Attack by TeamPCP | The Daily Rundown</title>
+<title>Bitwarden CLI Trojanized via Compromised GitHub Action – Supply Chain Attack by TeamPCP | The Daily Rundown</title>
 <meta property="og:type"        content="article">
 <meta property="og:site_name"   content="The Daily Rundown">
-<meta property="og:title"       content="Bitwarden CLI Trojanized via Compromised GitHub Action — Supply Chain Attack by TeamPCP">
-<meta property="og:description" content="Attackers linked to the TeamPCP group compromised a GitHub Action used in Bitwarden&#39;s CI/CD pipeline, injecting malicious code into the Bitwarden CLI password manager build process. The trojanized CLI tool was published to users as a legitimate release, potentially exposing t">
+<meta property="og:title"       content="Bitwarden CLI Trojanized via Compromised GitHub Action – Supply Chain Attack by TeamPCP">
+<meta property="og:description" content="Attackers linked to the TeamPCP group compromised a GitHub Action in Bitwarden&#39;s CI/CD pipeline to publish a trojanized version of the Bitwarden CLI password manager through official distribution channels. Because the attack targeted the build infrastructure rather than the s">
 <meta property="og:url"         content="https://dizchrisctrl.github.io/daily-digest/s/2026-04-24-story-cyber-1.html">
 <meta name="twitter:card"        content="summary">
-<meta name="twitter:title"       content="Bitwarden CLI Trojanized via Compromised GitHub Action — Supply Chain Attack by TeamPCP">
-<meta name="twitter:description" content="Attackers linked to the TeamPCP group compromised a GitHub Action used in Bitwarden&#39;s CI/CD pipeline, injecting malicious code into the Bitwarden CLI password manager build process. The trojanized CLI tool was published to users as a legitimate release, potentially exposing t">
+<meta name="twitter:title"       content="Bitwarden CLI Trojanized via Compromised GitHub Action – Supply Chain Attack by TeamPCP">
+<meta name="twitter:description" content="Attackers linked to the TeamPCP group compromised a GitHub Action in Bitwarden&#39;s CI/CD pipeline to publish a trojanized version of the Bitwarden CLI password manager through official distribution channels. Because the attack targeted the build infrastructure rather than the s">
 <style>
 :root {
   --bg:#0b0d16; --surface:#12152a; --surface2:#1a1d32; --surface3:#20233c;
@@ -256,7 +256,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="hero-badges">
       <span class="type-badge">&#9650; Breach Report</span>
       
-      <button class="ta-inline-tag" data-ta="{&quot;name&quot;: &quot;TeamPCP&quot;, &quot;aliases&quot;: [], &quot;origin&quot;: &quot;Unknown&quot;, &quot;motivation&quot;: &quot;Unknown&quot;, &quot;description&quot;: &quot;TeamPCP is a threat group attributed with conducting systematic supply chain attacks targeting open-source software repositories and CI/CD infrastructure. The group has been linked to multiple campaigns compromising GitHub Actions used by popular open-source projects, injecting malicious code into build pipelines to trojanize published artifacts at scale.&quot;, &quot;known_ttps&quot;: [&quot;Compromising third-party GitHub Actions to inject malicious code into CI/CD pipelines&quot;, &quot;Supply chain attacks targeting open-source software build infrastructure&quot;, &quot;Publishing trojanized build artifacts through legitimate distribution channels&quot;, &quot;Targeting high-value projects (password managers, developer tools) for maximum downstream impact&quot;], &quot;attribution_confidence&quot;: &quot;Medium&quot;, &quot;story_relevance&quot;: &quot;&quot;}" onclick="openTAPopover(event,this)">&#9670; TeamPCP &#8594;</button>
+      <button class="ta-inline-tag" data-ta="{&quot;name&quot;: &quot;TeamPCP&quot;, &quot;aliases&quot;: [], &quot;origin&quot;: &quot;Unknown&quot;, &quot;motivation&quot;: &quot;Unknown&quot;, &quot;description&quot;: &quot;TeamPCP is a threat group that has been systematically compromising GitHub Actions across multiple repositories to inject malicious code into CI/CD build pipelines. Their campaign targets the software supply chain by poisoning reusable build automation components, enabling them to trojanize published artifacts without modifying source code. The Bitwarden CLI compromise is one instance in a broader pattern of GitHub Action supply chain attacks attributed to this group.&quot;, &quot;known_ttps&quot;: [&quot;Compromising third-party GitHub Actions to inject malicious code into CI/CD pipelines&quot;, &quot;Supply chain attacks targeting build infrastructure rather than source repositories&quot;, &quot;Targeting widely-used open-source projects to maximize downstream impact&quot;, &quot;Producing trojanized build artifacts that pass standard code review processes&quot;], &quot;attribution_confidence&quot;: &quot;Medium&quot;, &quot;story_relevance&quot;: &quot;&quot;}" onclick="openTAPopover(event,this)">&#9670; TeamPCP &#8594;</button>
     </div>
     <h1 class="hero-title">Bitwarden CLI Trojanized via Compromised GitHub Action in Supply Chain Attack</h1>
     <div class="score-row">
@@ -264,10 +264,10 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
       <span class="severity-pill sev-critical">Critical</span>
       <span class="patch-pill patch-none">&#9888; Under Investigation</span>
     </div>
-    <p class="hero-desc">Attackers linked to the TeamPCP group compromised a GitHub Action used in Bitwarden&#39;s CI/CD pipeline, injecting malicious code into the Bitwarden CLI password manager build process. The trojanized CLI tool was published to users as a legitimate release, potentially exposing the entire password vaults of anyone who installed or updated during the compromise window. This is part of a broader, systematic campaign by TeamPCP targeting open-source software supply chains.</p>
+    <p class="hero-desc">Attackers linked to the TeamPCP group compromised a GitHub Action in Bitwarden&#39;s CI/CD pipeline to publish a trojanized version of the Bitwarden CLI password manager through official distribution channels. Because the attack targeted the build infrastructure rather than the source code, the malicious payload was injected after code review, meaning credentials stored in or accessed through the CLI could have been silently exfiltrated. This attack is especially significant given Bitwarden&#39;s widespread use among developers and DevOps teams for automated secret management.</p>
     <div class="hero-meta">
       <span class="hero-meta-item">&#128197; Apr 23, 2026 7:09 PM EDT</span><span class="hero-meta-sep">|</span>
-      <span class="hero-meta-item">Source: <a href="https://www.csoonline.com/article/4162865/bitwarden-cli-password-manager-trojanized-in-supply-chain-attack.html" class="src-link-hero" target="_blank" rel="noopener">CSO Online &#8599;</a></span>
+      <span class="hero-meta-item">Source: <a href="https://www.csoonline.com/article/4162865/bitwarden-cli-password-manager-trojanized-in-supply-chain-attack.html" class="src-link-hero" target="_blank" rel="noopener">Bitwarden CLI password manager trojanized in supply chain attack | CSO Online &#8599;</a></span>
       
     </div>
   </div>
@@ -282,80 +282,92 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
           <div class="diagram-wrap">
             <div class="diagram-bar">
               <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-              <span class="diagram-title">Bitwarden CLI Trojanized via Compromised GitHub Action — Supply Chain Attack by TeamPCP</span>
+              <span class="diagram-title">Bitwarden CLI Trojanized via Compromised GitHub Action – Supply Chain Attack by TeamPCP</span>
             </div>
             <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+  <rect width="700" height="340" fill="#060912"/>
   <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+    <marker id="arrowG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
       <polygon points="0 0, 8 3, 0 6" fill="#34d399"/>
     </marker>
-    <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#f87171"/>
+    <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#ef4444"/>
     </marker>
   </defs>
-  <rect width="700" height="340" fill="#060912"/>
 
   <!-- Title -->
-  <text x="350" y="28" fill="#7a849a" font-size="12" font-family="monospace" text-anchor="middle">CI/CD SUPPLY CHAIN ATTACK FLOW</text>
+  <text x="350" y="28" fill="#eaedf5" font-size="14" font-family="monospace" text-anchor="middle" font-weight="bold">CI/CD Supply Chain Attack Flow</text>
 
-  <!-- Step 1: Attacker -->
-  <rect x="20" y="60" width="120" height="50" rx="6" fill="#12152a" stroke="#f87171" stroke-width="1.5"/>
-  <text x="80" y="82" fill="#f87171" font-size="12" font-family="monospace" text-anchor="middle">TeamPCP</text>
-  <text x="80" y="98" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Attacker</text>
-
-  <!-- Step 2: Compromised GitHub Action -->
-  <rect x="190" y="60" width="140" height="50" rx="6" fill="#12152a" stroke="#f87171" stroke-width="1.5"/>
-  <text x="260" y="82" fill="#f87171" font-size="12" font-family="monospace" text-anchor="middle">GitHub Action</text>
-  <text x="260" y="98" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Compromised</text>
+  <!-- Step 1: Attacker compromises GitHub Action -->
+  <rect x="20" y="55" width="140" height="60" rx="6" fill="#12152a" stroke="#ef4444" stroke-width="2"/>
+  <text x="90" y="80" fill="#ef4444" font-size="11" font-family="monospace" text-anchor="middle">TeamPCP</text>
+  <text x="90" y="96" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Compromises</text>
+  <text x="90" y="108" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">GitHub Action</text>
 
   <!-- Arrow 1→2 -->
-  <line x1="140" y1="85" x2="185" y2="85" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowRed)"/>
-  <text x="162" y="77" fill="#f87171" font-size="9" font-family="monospace" text-anchor="middle">injects</text>
+  <line x1="160" y1="85" x2="195" y2="85" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowR)"/>
+
+  <!-- Step 2: GitHub Action (poisoned) -->
+  <rect x="200" y="55" width="140" height="60" rx="6" fill="#12152a" stroke="#ef4444" stroke-width="2"/>
+  <text x="270" y="80" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">GitHub Action</text>
+  <text x="270" y="96" fill="#ef4444" font-size="10" font-family="monospace" text-anchor="middle">⚠ POISONED</text>
 
   <!-- Step 3: Bitwarden CI/CD Pipeline -->
-  <rect x="380" y="60" width="140" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
-  <text x="450" y="82" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">Bitwarden</text>
-  <text x="450" y="98" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">CI/CD Pipeline</text>
+  <rect x="380" y="55" width="140" height="60" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="450" y="80" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Bitwarden</text>
+  <text x="450" y="96" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">CI/CD Pipeline</text>
 
   <!-- Arrow 2→3 -->
-  <line x1="330" y1="85" x2="375" y2="85" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowRed)"/>
-  <text x="352" y="77" fill="#f87171" font-size="9" font-family="monospace" text-anchor="middle">pulls</text>
+  <line x1="340" y1="85" x2="375" y2="85" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowR)"/>
+  <text x="358" y="75" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">injects</text>
 
-  <!-- Step 4: Trojanized CLI -->
-  <rect x="565" y="60" width="120" height="50" rx="6" fill="#12152a" stroke="#f87171" stroke-width="1.5"/>
-  <text x="625" y="82" fill="#f87171" font-size="12" font-family="monospace" text-anchor="middle">Trojanized</text>
-  <text x="625" y="98" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">CLI Package</text>
+  <!-- Step 4: Trojanized CLI Published -->
+  <rect x="560" y="55" width="120" height="60" rx="6" fill="#12152a" stroke="#ef4444" stroke-width="2"/>
+  <text x="620" y="80" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Trojanized</text>
+  <text x="620" y="96" fill="#ef4444" font-size="10" font-family="monospace" text-anchor="middle">CLI Published</text>
 
   <!-- Arrow 3→4 -->
-  <line x1="520" y1="85" x2="560" y2="85" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowRed)"/>
-  <text x="540" y="77" fill="#f87171" font-size="9" font-family="monospace" text-anchor="middle">builds</text>
+  <line x1="520" y1="85" x2="555" y2="85" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowR)"/>
+  <text x="538" y="75" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="middle">build</text>
 
-  <!-- Step 5: Users download -->
-  <rect x="565" y="155" width="120" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="625" y="177" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">End Users</text>
-  <text x="625" y="193" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">install CLI</text>
+  <!-- Divider -->
+  <line x1="30" y1="140" x2="670" y2="140" stroke="#252840" stroke-width="1" stroke-dasharray="4,4"/>
+  <text x="350" y="160" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">─── What the developer sees vs. what actually happens ───</text>
 
-  <!-- Arrow 4→5 -->
-  <line x1="625" y1="110" x2="625" y2="150" stroke="#f87171" stroke-width="1.5" marker-end="url(#arrowRed)"/>
-  <text x="654" y="134" fill="#f87171" font-size="9" font-family="monospace" text-anchor="middle">deploy</text>
+  <!-- Clean source repo -->
+  <rect x="50" y="180" width="160" height="65" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="130" y="200" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">Source Code</text>
+  <text x="130" y="216" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">✓ Reviewed &amp; Clean</text>
+  <text x="130" y="232" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">✓ Open Source</text>
 
-  <!-- Clean source code (contrast) -->
-  <rect x="380" y="155" width="140" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
-  <text x="450" y="177" fill="#34d399" font-size="12" font-family="monospace" text-anchor="middle">Source Code</text>
-  <text x="450" y="193" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">✓ Clean / Untouched</text>
+  <!-- Arrow source → pipeline -->
+  <line x1="210" y1="212" x2="270" y2="212" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowG)"/>
 
-  <!-- Dashed arrow from source to pipeline -->
-  <line x1="450" y1="155" x2="450" y2="115" stroke="#34d399" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrowhead)"/>
-  <text x="475" y="140" fill="#7a849a" font-size="9" font-family="monospace" text-anchor="start">feeds into</text>
+  <!-- Pipeline box -->
+  <rect x="275" y="180" width="160" height="65" rx="6" fill="#12152a" stroke="#ef4444" stroke-width="2"/>
+  <text x="355" y="200" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Build Pipeline</text>
+  <text x="355" y="216" fill="#ef4444" font-size="10" font-family="monospace" text-anchor="middle">✗ Malicious Action</text>
+  <text x="355" y="232" fill="#ef4444" font-size="10" font-family="monospace" text-anchor="middle">✗ Code injected here</text>
 
-  <!-- Key -->
-  <rect x="20" y="260" width="660" height="60" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/>
-  <text x="40" y="282" fill="#7a849a" font-size="11" font-family="monospace">KEY INSIGHT:</text>
-  <text x="40" y="302" fill="#eaedf5" font-size="11" font-family="monospace">Source code stays clean → Poison enters via build dependency → Published artifact is malicious</text>
-  <text x="40" y="318" fill="#7a849a" font-size="10" font-family="monospace">Code review alone cannot catch this class of attack — the build pipeline itself is the target.</text>
+  <!-- Arrow pipeline → artifact -->
+  <line x1="435" y1="212" x2="495" y2="212" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrowR)"/>
+
+  <!-- Published artifact -->
+  <rect x="500" y="180" width="160" height="65" rx="6" fill="#12152a" stroke="#ef4444" stroke-width="2"/>
+  <text x="580" y="200" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Published Binary</text>
+  <text x="580" y="216" fill="#ef4444" font-size="10" font-family="monospace" text-anchor="middle">✗ Trojanized</text>
+  <text x="580" y="232" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Looks legitimate</text>
+
+  <!-- Users downloading -->
+  <rect x="260" y="275" width="200" height="45" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="360" y="296" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Developers &amp; DevOps</text>
+  <text x="360" y="310" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">install via npm / package mgr</text>
+
+  <!-- Arrow artifact → users -->
+  <line x1="580" y1="245" x2="460" y2="278" stroke="#ef4444" stroke-width="1.5" marker-end="url(#arrowR)"/>
 </svg></div>
           </div>
-          <div class="attack-vector-text">The attackers compromised an upstream GitHub Action referenced in Bitwarden&#39;s CI/CD workflow. When Bitwarden&#39;s automated pipeline executed, it pulled in the poisoned Action, which injected malicious code into the CLI build artifact — meaning the published package contained a hidden payload even though Bitwarden&#39;s own source code repository remained clean.</div>
+          <div class="attack-vector-text">The TeamPCP group compromised a third-party GitHub Action used in Bitwarden&#39;s CI/CD pipeline, allowing them to inject malicious code during the automated build process. This produced a trojanized CLI binary that was published through normal distribution channels without any modification to Bitwarden&#39;s source repository, bypassing traditional code review controls.</div>
         </div>
       </div>
 
@@ -370,7 +382,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
 
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Map</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tactic or technique for details</span></div>
-    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Initial Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1195.002&quot;, &quot;name&quot;: &quot;Supply Chain Compromise: Compromise Software Supply Chain&quot;}, {&quot;id&quot;: &quot;T1199&quot;, &quot;name&quot;: &quot;Trusted Relationship&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Initial Access</span><span class="mitre-tactic-cnt">2 techniques</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1195.002</span><span class="mitre-tech-name">Supply Chain Compromise: Compromise Software Supply Chain</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">TeamPCP compromised a GitHub Action in Bitwarden&#39;s CI/CD pipeline to inject malicious code into the published CLI artifact, a textbook software supply chain attack.</p><a href="https://attack.mitre.org/techniques/T1195/002/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1199</span><span class="mitre-tech-name">Trusted Relationship</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The attack exploited the implicit trust Bitwarden&#39;s build pipeline placed in third-party GitHub Actions, leveraging that trusted relationship to inject malicious code.</p><a href="https://attack.mitre.org/techniques/T1199/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Execution&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1059&quot;, &quot;name&quot;: &quot;Command and Scripting Interpreter&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Execution</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1059</span><span class="mitre-tech-name">Command and Scripting Interpreter</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The trojanized GitHub Action executed malicious scripts during the automated CI/CD build process to inject the payload into the Bitwarden CLI binary.</p><a href="https://attack.mitre.org/techniques/T1059/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Credential Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1555&quot;, &quot;name&quot;: &quot;Credentials from Password Stores&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Credential Access</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1555</span><span class="mitre-tech-name">Credentials from Password Stores</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The trojanized CLI tool had direct access to users&#39; Bitwarden password vaults, enabling potential exfiltration of all stored credentials.</p><a href="https://attack.mitre.org/techniques/T1555/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Exfiltration&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1041&quot;, &quot;name&quot;: &quot;Exfiltration Over C2 Channel&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Exfiltration</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1041</span><span class="mitre-tech-name">Exfiltration Over C2 Channel</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The malicious payload in the trojanized CLI likely exfiltrated vault contents or credentials to attacker-controlled infrastructure.</p><a href="https://attack.mitre.org/techniques/T1041/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
+    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Initial Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1195.002&quot;, &quot;name&quot;: &quot;Supply Chain Compromise: Compromise Software Supply Chain&quot;}, {&quot;id&quot;: &quot;T1199&quot;, &quot;name&quot;: &quot;Trusted Relationship&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Initial Access</span><span class="mitre-tactic-cnt">2 techniques</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1195.002</span><span class="mitre-tech-name">Supply Chain Compromise: Compromise Software Supply Chain</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The attackers compromised a GitHub Action in Bitwarden&#39;s CI/CD pipeline to inject malicious code into the officially published CLI build artifact.</p><a href="https://attack.mitre.org/techniques/T1195/002/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1199</span><span class="mitre-tech-name">Trusted Relationship</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The attack exploited the trust relationship between Bitwarden&#39;s CI/CD pipeline and third-party GitHub Actions, leveraging implicit trust in the build automation ecosystem.</p><a href="https://attack.mitre.org/techniques/T1199/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Execution&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1059&quot;, &quot;name&quot;: &quot;Command and Scripting Interpreter&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Execution</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1059</span><span class="mitre-tech-name">Command and Scripting Interpreter</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The trojanized CLI binary would execute attacker-injected code alongside legitimate Bitwarden CLI functionality each time a user or automated process invoked the tool.</p><a href="https://attack.mitre.org/techniques/T1059/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Credential Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1555&quot;, &quot;name&quot;: &quot;Credentials from Password Stores&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Credential Access</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1555</span><span class="mitre-tech-name">Credentials from Password Stores</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">As a password manager CLI, the trojanized binary had direct access to vault credentials, master passwords, and session tokens during normal operation.</p><a href="https://attack.mitre.org/techniques/T1555/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Exfiltration&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1041&quot;, &quot;name&quot;: &quot;Exfiltration Over C2 Channel&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Exfiltration</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1041</span><span class="mitre-tech-name">Exfiltration Over C2 Channel</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The trojanized binary likely exfiltrated harvested credentials and secrets to attacker-controlled infrastructure during or after vault access operations.</p><a href="https://attack.mitre.org/techniques/T1041/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
   </div>
 
   
@@ -382,7 +394,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
             <tbody><tr>
           <td><span class="prod-vendor">Bitwarden</span></td>
           <td><span class="prod-name">Bitwarden CLI</span></td>
-          <td><span class="prod-ver">All versions — see vendor advisory (specific affected versions not yet confirmed)</span></td>
+          <td><span class="prod-ver">All versions — specific affected versions not yet confirmed; see Socket.dev and vendor advisory</span></td>
           <td><span class="prod-fix none">No fix yet</span></td>
         </tr></tbody>
           </table>
@@ -393,7 +405,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="sec-block-header"><span class="sec-block-icon">&#10067;</span><span class="sec-block-title amber">Am I Affected?</span></div>
     <div class="sec-block-body">
       <p class="apply-intro">You are likely at risk if <strong>any</strong> of the following apply:</p>
-      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You installed or updated the Bitwarden CLI tool during or after the compromise window (exact dates pending Bitwarden&#39;s advisory)</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You use the Bitwarden CLI in automated CI/CD pipelines or server environments to access vault secrets</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">You use the Bitwarden browser extension or desktop app exclusively and have never installed the CLI tool</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your environment pulls the Bitwarden CLI from an internal, pinned, and integrity-verified artifact repository</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You maintain GitHub Actions workflows that reference third-party Actions without pinning to specific commit SHAs</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your organization stores high-value credentials (API keys, infrastructure secrets) in Bitwarden vaults accessed via the CLI</span></div></div>
+      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You have installed or updated the Bitwarden CLI from npm, GitHub releases, or other official channels in the days or weeks prior to April 23, 2026</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment uses the Bitwarden CLI in CI/CD pipelines, automation scripts, or DevOps workflows for secret retrieval</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You use the Bitwarden CLI to access or manage organizational vault credentials or API keys</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your environment pins Bitwarden CLI to a verified, older version and validates artifact checksums or SLSA provenance before deployment</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">You exclusively use the Bitwarden desktop app, browser extension, or mobile app and have never installed the CLI tool</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment has network monitoring that would detect unexpected outbound connections from CLI tools used in automation</span></div></div>
     </div>
   </div>
 
@@ -401,8 +413,8 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="sec-block-header"><span class="sec-block-icon">&#128736;</span><span class="sec-block-title green">Fix &amp; Recommendations</span></div>
     <div class="sec-block-body">
       <div class="fix-grid">
-        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Determine whether the Bitwarden CLI is installed in your environment by running `which bw` or `where bw` (Windows) on all servers, developer workstations, and CI/CD runners, and document every instance with its version (`bw --version`).</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Stop using any installed Bitwarden CLI instances immediately until Bitwarden publishes its advisory with confirmed safe versions — remove the binary from CI/CD pipelines and disable scheduled jobs that invoke it.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>If the CLI was used during the suspected compromise window, treat all credentials stored in any accessed Bitwarden vaults as potentially compromised — begin rotating passwords, API keys, tokens, and SSH keys starting with the highest-privilege secrets.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Audit your GitHub Actions workflows for any third-party Actions that are referenced by mutable tags (e.g., `@v1`, `@main`) rather than pinned commit SHAs, and freeze all CI/CD pipelines until you can verify Action integrity.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Monitor outbound network traffic from systems where the Bitwarden CLI was installed for unusual connections to unknown external IPs or domains, using firewall logs and EDR telemetry.</span></li></ul></div>
-        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Adopt the SLSA (Supply-chain Levels for Software Artifacts) framework: require provenance attestation for all build artifacts and verify that published binaries match expected source inputs and build processes before deployment.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Pin all GitHub Actions to immutable commit SHAs instead of mutable version tags, and implement Dependabot or Renovate with hash-based verification to manage Action updates through a review process.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Implement artifact integrity verification in all CI/CD pipelines — use cosign, Sigstore, or equivalent tools to verify signatures and provenance of every third-party dependency and Action before execution.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Establish a software bill of materials (SBOM) process for all CI/CD pipelines, enumerating every dependency including build-time Actions, and monitor these for compromise indicators via automated supply chain security tooling (e.g., StepSecurity, Socket.dev).</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Segment vault access so that CI/CD service accounts use dedicated vaults with minimum-necessary credentials, reducing blast radius if a build tool is compromised — avoid granting pipeline identities access to organization-wide password vaults.</span></li></ul></div>
+        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Immediately identify all systems and CI/CD pipelines running the Bitwarden CLI by searching for &#39;bw&#39; or &#39;@bitwarden/cli&#39; binaries and npm packages; quarantine any instances installed or updated recently.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Check the installed Bitwarden CLI binary hash against known-good checksums from Bitwarden&#39;s official security communications and Socket.dev&#39;s published indicators of compromise.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Rotate ALL credentials, API keys, tokens, and secrets that were accessed through or stored in Bitwarden vaults used via the CLI — assume potential exfiltration until confirmed otherwise.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Review outbound network connections from hosts running the Bitwarden CLI for any unexpected destinations; block suspicious IPs and domains at the firewall.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Monitor Bitwarden&#39;s official security advisories and Socket.dev&#39;s research page for confirmed affected versions and updated indicators of compromise before reinstalling.</span></li></ul></div>
+        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Implement SLSA provenance verification for all software artifacts consumed in your development and operations workflows, ensuring published binaries can be cryptographically traced back to reviewed source code and trusted build environments.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Pin all GitHub Actions and CI/CD dependencies to specific commit SHAs rather than mutable tags, and audit third-party Actions for signs of compromise before adoption and after updates.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Deploy artifact integrity verification gates in your software supply chain — use tools like Sigstore/cosign, npm audit signatures, or in-toto attestations to validate packages before installation.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Establish network segmentation and egress filtering for CI/CD runners and automation hosts so that compromised tools cannot freely exfiltrate data to arbitrary external endpoints.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Adopt a secrets management architecture that limits the blast radius of any single compromised tool — use short-lived credentials, just-in-time access, and vault access logging to detect and contain credential theft.</span></li></ul></div>
       </div>
     </div>
   </div>
@@ -410,27 +422,27 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#128218;</span><span class="sec-block-title ai">Concept Briefing</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tag to expand</span></div>
     <div class="sec-block-body">
-      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-ci-cd-pipeline-attack')">CI/CD Pipeline Attack</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-supply-chain-compromise')">Supply Chain Compromise</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-github-actions')">GitHub Actions</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-slsa-framework')">SLSA Framework</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-credential-vault-exposure')">Credential Vault Exposure</button></div>
+      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-ci-cd-pipeline-attack')">CI/CD Pipeline Attack</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-supply-chain-compromise')">Supply Chain Compromise</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-slsa-provenance')">SLSA Provenance</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-github-actions')">GitHub Actions</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-credential-exfiltration')">Credential Exfiltration</button></div>
       <div class="concept-tag-expand" id="ct-ci-cd-pipeline-attack">
           <div class="concept-tag-expand-name">CI/CD Pipeline Attack</div>
-          <div class="concept-def">An attack that targets the automated systems (Continuous Integration/Continuous Deployment) used to build, test, and publish software, injecting malicious code into the build process rather than the source code itself.</div>
-          <div class="concept-rel">TeamPCP compromised a GitHub Action in Bitwarden&#39;s CI/CD pipeline, so the malicious code was injected during the build — not in Bitwarden&#39;s source repository — making it invisible to traditional code review.</div>
+          <div class="concept-def">An attack that targets the automated build, test, and deployment infrastructure used to produce software, rather than the source code itself. This allows attackers to inject malicious code into published artifacts without modifying the repository.</div>
+          <div class="concept-rel">TeamPCP compromised a GitHub Action in Bitwarden&#39;s CI/CD pipeline, injecting malicious code during the build process so the published CLI binary was trojanized even though the source code remained clean.</div>
         </div><div class="concept-tag-expand" id="ct-supply-chain-compromise">
           <div class="concept-tag-expand-name">Supply Chain Compromise</div>
-          <div class="concept-def">An attack strategy where adversaries target a trusted upstream component — such as a library, tool, or service — to indirectly compromise all downstream consumers who depend on it.</div>
-          <div class="concept-rel">By poisoning a single GitHub Action, the attackers were able to compromise every Bitwarden CLI build that used that Action, affecting potentially millions of downstream users without touching Bitwarden&#39;s own code.</div>
+          <div class="concept-def">An attack that targets a trusted upstream component — such as a library, build tool, or distribution channel — to indirectly compromise downstream users who depend on it.</div>
+          <div class="concept-rel">By poisoning a build component rather than Bitwarden&#39;s code directly, the attackers leveraged the trust millions of users place in official distribution channels to deliver a trojanized binary.</div>
+        </div><div class="concept-tag-expand" id="ct-slsa-provenance">
+          <div class="concept-tag-expand-name">SLSA Provenance</div>
+          <div class="concept-def">A framework that provides cryptographic proof linking a published software artifact back to its specific source code, build process, and build environment, allowing consumers to verify build integrity.</div>
+          <div class="concept-rel">SLSA provenance verification could have detected the discrepancy between Bitwarden&#39;s reviewed source code and the poisoned build output, making it the primary preventive control for this class of attack.</div>
         </div><div class="concept-tag-expand" id="ct-github-actions">
           <div class="concept-tag-expand-name">GitHub Actions</div>
-          <div class="concept-def">GitHub&#39;s built-in automation platform that lets developers define workflows triggered by repository events (like code pushes), using reusable &#39;Actions&#39; that are themselves code repositories.</div>
-          <div class="concept-rel">The compromised GitHub Action was the specific attack vector — it was a third-party reusable component that Bitwarden&#39;s build workflow trusted and executed automatically.</div>
-        </div><div class="concept-tag-expand" id="ct-slsa-framework">
-          <div class="concept-tag-expand-name">SLSA Framework</div>
-          <div class="concept-def">Supply-chain Levels for Software Artifacts — a Google-developed security framework that defines levels of integrity guarantees for how software is built, ensuring published artifacts verifiably match their claimed source and build process.</div>
-          <div class="concept-rel">SLSA provenance attestation could have detected that the published Bitwarden CLI artifact didn&#39;t match the expected clean build process, potentially preventing or flagging the compromise before it reached users.</div>
-        </div><div class="concept-tag-expand" id="ct-credential-vault-exposure">
-          <div class="concept-tag-expand-name">Credential Vault Exposure</div>
-          <div class="concept-def">A security event where a password manager or secrets store is compromised, potentially exposing all stored credentials — passwords, API keys, tokens — to an attacker in a single breach.</div>
-          <div class="concept-rel">Because the trojanized Bitwarden CLI had direct access to users&#39; password vaults, a single compromised tool could expose every secret a user or organization had stored in Bitwarden.</div>
+          <div class="concept-def">GitHub&#39;s built-in CI/CD automation platform where reusable workflow components (Actions) perform tasks like building, testing, and publishing code when triggered by repository events.</div>
+          <div class="concept-rel">The compromised GitHub Action was the specific attack vector — TeamPCP has been systematically targeting these reusable components across multiple repositories to inject malicious code at build time.</div>
+        </div><div class="concept-tag-expand" id="ct-credential-exfiltration">
+          <div class="concept-tag-expand-name">Credential Exfiltration</div>
+          <div class="concept-def">The unauthorized extraction and transmission of passwords, API keys, tokens, or other authentication secrets from a compromised system to an attacker-controlled destination.</div>
+          <div class="concept-rel">The trojanized Bitwarden CLI had direct access to vault credentials during normal operation, creating a high-value opportunity to silently steal the secrets the tool was designed to protect.</div>
         </div>
     </div>
   </div>
@@ -445,8 +457,8 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Look for the `bw` process (or its Node.js parent) initiating outbound connections to IP addresses or domains not associated with Bitwarden&#39;s known infrastructure (e.g., vault.bitwarden.com, api.bitwarden.com). The trojanized binary may beacon or exfiltrate data to attacker-controlled C2 infrastructure.</div>
-            <span class="hunt-log-tag">EDR telemetry</span><span class="hunt-log-tag">Firewall logs</span><span class="hunt-log-tag">Network flow logs (NetFlow/IPFIX)</span><span class="hunt-log-tag">DNS query logs</span>
+            <div class="hunt-desc">Look for the &#39;bw&#39; binary or node processes associated with @bitwarden/cli making network connections to destinations other than known Bitwarden API servers (e.g., vault.bitwarden.com, api.bitwarden.com). Trojanized builds may beacon to C2 infrastructure or exfiltrate data to attacker-controlled servers during vault unlock or secret retrieval operations.</div>
+            <span class="hunt-log-tag">Network flow logs (NetFlow/IPFIX)</span><span class="hunt-log-tag">EDR process network telemetry</span><span class="hunt-log-tag">Firewall/proxy logs</span><span class="hunt-log-tag">DNS query logs</span>
           </div>
         </details>
         <details class="hunt-entry">
@@ -456,41 +468,41 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Compare the SHA-256 hash of every installed `bw` binary against Bitwarden&#39;s official published hashes (once their advisory provides them). Any mismatch indicates a potentially trojanized version. Check CI/CD runner images, container layers, and developer workstations.</div>
-            <span class="hunt-log-tag">File integrity monitoring (FIM)</span><span class="hunt-log-tag">EDR file hash inventories</span><span class="hunt-log-tag">Container image scanning tools</span>
-          </div>
-        </details>
-        <details class="hunt-entry">
-          <summary>
-            <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Unusual CI/CD pipeline behavior during Bitwarden CLI builds or updates</span>
-            <span class="hunt-chevron">&#9658;</span>
-          </summary>
-          <div class="hunt-body">
-            <div class="hunt-desc">Review GitHub Actions workflow run logs for unexpected steps, additional network calls, or modified build outputs during the compromise window. Look for Actions that resolved to different commit SHAs than previously cached, or new environment variables being set by third-party Actions.</div>
-            <span class="hunt-log-tag">GitHub Actions workflow run logs</span><span class="hunt-log-tag">GitHub audit logs</span><span class="hunt-log-tag">CI/CD platform logs</span>
+            <div class="hunt-desc">Compare the SHA-256 hash of installed Bitwarden CLI binaries against checksums published in Bitwarden&#39;s official security advisory or Socket.dev&#39;s analysis. Any mismatch indicates a potentially trojanized build. Check both direct installations and cached copies in CI/CD runner images or container layers.</div>
+            <span class="hunt-log-tag">File integrity monitoring (FIM) tools</span><span class="hunt-log-tag">Asset inventory / software inventory databases</span><span class="hunt-log-tag">CI/CD runner image manifests</span><span class="hunt-log-tag">npm cache directories</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority medium">Medium</span>
-            <span class="hunt-signal">Vault access anomalies following CLI usage</span>
+            <span class="hunt-signal">Anomalous npm package installation or update events for @bitwarden/cli</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Correlate Bitwarden vault access logs for unusual patterns — such as bulk export of vault items, access from new IP addresses, or API calls made shortly after CLI authentication — which may indicate the trojanized CLI exfiltrated session tokens or vault contents.</div>
-            <span class="hunt-log-tag">Bitwarden organization event logs</span><span class="hunt-log-tag">Bitwarden API audit logs</span><span class="hunt-log-tag">SIEM correlation rules</span>
+            <div class="hunt-desc">Review npm audit logs and package-lock.json files for recent installations or updates of the @bitwarden/cli package. Correlate timestamps with the disclosure window. Look for installations that occurred without corresponding change requests or pipeline modifications.</div>
+            <span class="hunt-log-tag">npm audit logs</span><span class="hunt-log-tag">CI/CD pipeline execution logs</span><span class="hunt-log-tag">Package manager logs on developer workstations</span><span class="hunt-log-tag">SIEM events from build servers</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority medium">Medium</span>
-            <span class="hunt-signal">Third-party GitHub Action tag resolution changes</span>
+            <span class="hunt-signal">Unusual vault access patterns or bulk credential retrieval</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Detect when a GitHub Action referenced by a mutable tag (e.g., @v1) resolves to a different commit SHA than previous workflow runs. This is the mechanism by which a compromised Action gets pulled into a build. Use tools like StepSecurity Harden-Runner or custom audit scripts to monitor for drift.</div>
-            <span class="hunt-log-tag">GitHub Actions workflow run logs</span><span class="hunt-log-tag">Dependency monitoring tools</span><span class="hunt-log-tag">Git commit comparison tooling</span>
+            <div class="hunt-desc">Monitor Bitwarden vault access logs for unusual patterns such as bulk secret retrieval, access from new IP addresses, or access at unusual times that may indicate the trojanized CLI was used to systematically exfiltrate vault contents.</div>
+            <span class="hunt-log-tag">Bitwarden organization event logs</span><span class="hunt-log-tag">Bitwarden API access logs</span><span class="hunt-log-tag">SIEM correlation rules for credential access anomalies</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority medium">Medium</span>
+            <span class="hunt-signal">Compromised GitHub Action references in workflow files</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Audit .github/workflows/*.yml files across your repositories for references to GitHub Actions that use mutable tags (e.g., @v1, @latest) rather than pinned commit SHAs, especially any Actions that have been flagged by Socket.dev or the community as compromised by TeamPCP.</div>
+            <span class="hunt-log-tag">GitHub audit logs</span><span class="hunt-log-tag">Repository workflow file version history</span><span class="hunt-log-tag">CI/CD configuration management tools</span>
           </div>
         </details></div></div>
   </div>
@@ -498,7 +510,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#9762;</span><span class="sec-block-title amber">Indicators of Compromise</span><button class="ioc-copy-btn" style="margin-left:auto" onclick="copyAllIOCs()">&#10064; Copy All IOCs</button></div>
     <div class="sec-block-body">
-      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific IOCs (hashes, IPs, domains, file paths, or URI patterns) were reported in the source article. All IOC arrays are empty. Bitwarden has not yet published its detailed advisory with confirmed indicators. Monitor Bitwarden&#39;s official security advisories and GitHub security blog for updated IOCs. Do not treat the absence of IOCs as evidence that your environment is unaffected — verify binary integrity independently.</span></div>
+      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific IOCs (hashes, IPs, domains, file paths, or URI patterns) were published in the source article. Users should monitor Socket.dev&#39;s research page and Bitwarden&#39;s official security communications for confirmed indicators of compromise as the investigation progresses. Do not rely on any IOCs not officially published by these sources — independently verify all indicators before using them for detection or blocking.</span></div>
       <div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Hashes (SHA-256)</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Command &amp;amp; Control IPs</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Malicious Domains</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Paths / Artifacts</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Suspicious URI Patterns</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div>
     </div>
   </div>
