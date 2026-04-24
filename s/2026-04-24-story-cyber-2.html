@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
-<title>Chinese APT Abuses Outlook, Slack, Discord, and file.io as C2 Channels Targeting Mongolia | The Daily Rundown</title>
+<title>Chinese APT &quot;Living-off-Trusted-Sites&quot; Campaign Against Mongolia | The Daily Rundown</title>
 <meta property="og:type"        content="article">
 <meta property="og:site_name"   content="The Daily Rundown">
-<meta property="og:title"       content="Chinese APT Abuses Outlook, Slack, Discord, and file.io as C2 Channels Targeting Mongolia">
-<meta property="og:description" content="A Chinese state-sponsored threat actor is weaponizing legitimate cloud services — Microsoft Outlook, Slack, Discord, and file.io — as command-and-control (C2) infrastructure to conduct espionage operations against Mongolian government targets. By hiding C2 traffic inside trusted ">
+<meta property="og:title"       content="Chinese APT &quot;Living-off-Trusted-Sites&quot; Campaign Against Mongolia">
+<meta property="og:description" content="A Chinese state-aligned threat actor is conducting espionage against Mongolian government and adjacent targets using command-and-control traffic hidden inside legitimate SaaS platforms — Microsoft Outlook (Graph API), Slack, Discord webhooks, and file.io. By riding domains that a">
 <meta property="og:url"         content="https://dizchrisctrl.github.io/daily-digest/s/2026-04-24-story-cyber-2.html">
 <meta name="twitter:card"        content="summary">
-<meta name="twitter:title"       content="Chinese APT Abuses Outlook, Slack, Discord, and file.io as C2 Channels Targeting Mongolia">
-<meta name="twitter:description" content="A Chinese state-sponsored threat actor is weaponizing legitimate cloud services — Microsoft Outlook, Slack, Discord, and file.io — as command-and-control (C2) infrastructure to conduct espionage operations against Mongolian government targets. By hiding C2 traffic inside trusted ">
+<meta name="twitter:title"       content="Chinese APT &quot;Living-off-Trusted-Sites&quot; Campaign Against Mongolia">
+<meta name="twitter:description" content="A Chinese state-aligned threat actor is conducting espionage against Mongolian government and adjacent targets using command-and-control traffic hidden inside legitimate SaaS platforms — Microsoft Outlook (Graph API), Slack, Discord webhooks, and file.io. By riding domains that a">
 <style>
 :root {
   --bg:#0b0d16; --surface:#12152a; --surface2:#1a1d32; --surface3:#20233c;
@@ -256,15 +256,15 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="hero-badges">
       <span class="type-badge">&#9670; Threat Actor Profile</span>
       
-      <button class="ta-inline-tag" data-ta="{&quot;name&quot;: &quot;Unspecified Chinese APT&quot;, &quot;aliases&quot;: [], &quot;origin&quot;: &quot;China (People&#39;s Republic of China)&quot;, &quot;motivation&quot;: &quot;Espionage&quot;, &quot;description&quot;: &quot;A Chinese state-sponsored advanced persistent threat group conducting cyber espionage operations against Mongolian government targets. The group is notable for its sophisticated use of legitimate cloud services \u2014 including Microsoft Outlook, Slack, Discord, and file.io \u2014 as command-and-control infrastructure, demonstrating advanced tradecraft in blending malicious operations with legitimate enterprise traffic. The specific APT group name has not been publicly attributed in the source reporting.&quot;, &quot;known_ttps&quot;: [&quot;Living-off-Trusted-Services (LoTS) for C2 via Outlook, Slack, Discord&quot;, &quot;Ephemeral data staging and exfiltration via file.io&quot;, &quot;Multi-channel C2 redundancy across four cloud services&quot;, &quot;Abuse of Microsoft Graph API for mailbox-based dead drop C2&quot;, &quot;Discord webhook/bot token abuse for command delivery&quot;], &quot;attribution_confidence&quot;: &quot;Medium&quot;, &quot;story_relevance&quot;: &quot;&quot;}" onclick="openTAPopover(event,this)">&#9670; Unspecified Chinese APT &#8594;</button>
+      <button class="ta-inline-tag" data-ta="{&quot;name&quot;: &quot;Unnamed Chinese APT (Mongolia campaign)&quot;, &quot;aliases&quot;: [], &quot;origin&quot;: &quot;People&#39;s Republic of China (state-aligned)&quot;, &quot;motivation&quot;: &quot;Espionage&quot;, &quot;description&quot;: &quot;A Chinese state-aligned espionage crew targeting Mongolian government and adjacent entities (diplomatic, mining, Russian-border-related). The operator demonstrates mature tradecraft by engineering multi-channel SaaS-based C2 (Outlook Graph API, Slack, Discord webhooks, file.io) with failover between services to resist platform takedowns.&quot;, &quot;known_ttps&quot;: [&quot;Living-off-Trusted-Sites C2 via Microsoft Graph API (Outlook drafts/attachments)&quot;, &quot;Discord webhook beaconing&quot;, &quot;Slack workspace messaging as C2&quot;, &quot;file.io for ephemeral staging and exfiltration&quot;, &quot;Multi-channel C2 failover to defeat trust-and-safety takedowns&quot;, &quot;Strategic targeting aligned to PRC regional intelligence priorities&quot;], &quot;attribution_confidence&quot;: &quot;Medium&quot;, &quot;story_relevance&quot;: &quot;&quot;}" onclick="openTAPopover(event,this)">&#9670; Unnamed Chinese APT (Mongolia campaign) &#8594;</button>
     </div>
-    <h1 class="hero-title">Chinese APT Weaponizes Outlook, Slack, and Discord as C2 Channels to Spy on Mongolia</h1>
+    <h1 class="hero-title">Chinese APT Turns Slack, Discord, and Outlook Into a Spy Network Against Mongolia</h1>
     <div class="score-row">
       
       <span class="severity-pill sev-high">High</span>
       <span class="patch-pill patch-mitigation">&#9888; Mitigation Only</span>
     </div>
-    <p class="hero-desc">A Chinese state-sponsored threat actor is weaponizing legitimate cloud services — Microsoft Outlook, Slack, Discord, and file.io — as command-and-control (C2) infrastructure to conduct espionage operations against Mongolian government targets. By hiding C2 traffic inside trusted platforms, the adversary makes detection extraordinarily difficult since malicious commands are nearly indistinguishable from normal business traffic. The multi-channel approach provides built-in redundancy, ensuring persistent access even if one service is blocked.</p>
+    <p class="hero-desc">A Chinese state-aligned threat actor is conducting espionage against Mongolian government and adjacent targets using command-and-control traffic hidden inside legitimate SaaS platforms — Microsoft Outlook (Graph API), Slack, Discord webhooks, and file.io. By riding domains that are allow-listed at virtually every enterprise, the implants make malicious beacons indistinguishable from ordinary corporate chatter, and fail over between channels to defeat platform takedowns.</p>
     <div class="hero-meta">
       <span class="hero-meta-item">&#128197; Apr 23, 2026 9:00 PM EDT</span><span class="hero-meta-sep">|</span>
       <span class="hero-meta-item">Source: <a href="https://www.darkreading.com/cyberattacks-data-breaches/chinese-apt-abuses-cloud-tools-spy-mongolia" class="src-link-hero" target="_blank" rel="noopener">darkreading &#8599;</a></span>
@@ -282,71 +282,11 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
           <div class="diagram-wrap">
             <div class="diagram-bar">
               <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-              <span class="diagram-title">Chinese APT Abuses Outlook, Slack, Discord, and file.io as C2 Channels Targeting Mongolia</span>
+              <span class="diagram-title">Chinese APT &quot;Living-off-Trusted-Sites&quot; Campaign Against Mongolia</span>
             </div>
-            <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#34d399"/>
-    </marker>
-  </defs>
-  <rect width="700" height="340" fill="#060912"/>
-  
-  <!-- Victim -->
-  <rect x="30" y="130" width="100" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="80" y="160" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Victim</text>
-  <text x="80" y="175" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Mongolia</text>
-
-  <!-- Malware -->
-  <rect x="180" y="130" width="110" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="235" y="155" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">Implant</text>
-  <text x="235" y="172" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">multi-C2 agent</text>
-
-  <!-- Arrow victim to malware -->
-  <line x1="130" y1="155" x2="175" y2="155" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-
-  <!-- Cloud services -->
-  <rect x="390" y="20" width="120" height="42" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="450" y="46" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Outlook</text>
-  
-  <rect x="390" y="82" width="120" height="42" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="450" y="108" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Slack</text>
-  
-  <rect x="390" y="144" width="120" height="42" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="450" y="170" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">Discord</text>
-  
-  <rect x="390" y="206" width="120" height="42" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
-  <text x="450" y="232" text-anchor="middle" fill="#eaedf5" font-size="12" font-family="monospace">file.io</text>
-
-  <!-- Arrows from implant to each cloud service -->
-  <line x1="290" y1="140" x2="385" y2="41" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-  <line x1="290" y1="148" x2="385" y2="103" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-  <line x1="290" y1="155" x2="385" y2="165" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-  <line x1="290" y1="165" x2="385" y2="227" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-
-  <!-- APT Operator -->
-  <rect x="570" y="110" width="110" height="50" rx="6" fill="#12152a" stroke="#34d399" stroke-width="2"/>
-  <text x="625" y="133" text-anchor="middle" fill="#eaedf5" font-size="13" font-family="monospace">APT</text>
-  <text x="625" y="150" text-anchor="middle" fill="#34d399" font-size="11" font-family="monospace">Operator</text>
-
-  <!-- Arrows from cloud to APT -->
-  <line x1="510" y1="41" x2="565" y2="120" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)" stroke-dasharray="5,3"/>
-  <line x1="510" y1="103" x2="565" y2="128" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)" stroke-dasharray="5,3"/>
-  <line x1="510" y1="165" x2="565" y2="142" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)" stroke-dasharray="5,3"/>
-  <line x1="510" y1="227" x2="565" y2="155" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)" stroke-dasharray="5,3"/>
-
-  <!-- Labels -->
-  <text x="155" y="125" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">infected</text>
-  <text x="335" y="85" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">C2 polls</text>
-  <text x="545" y="88" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">cmds/exfil</text>
-
-  <!-- Firewall label -->
-  <rect x="230" y="275" width="240" height="36" rx="6" fill="#12152a" stroke="#252840" stroke-width="1"/>
-  <text x="350" y="298" text-anchor="middle" fill="#34d399" font-size="11" font-family="monospace">⚠ All traffic → trusted domains</text>
-  <text x="350" y="310" text-anchor="middle" fill="#7a849a" font-size="10" font-family="monospace">Firewalls see normal HTTPS</text>
-</svg></div>
+            <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#34d399"/></marker></defs><rect width="700" height="340" fill="#060912"/><text x="350" y="24" text-anchor="middle" fill="#eaedf5" font-family="monospace" font-size="14">C2 over legitimate SaaS — Chinese APT vs. Mongolia</text><rect x="30" y="140" width="130" height="60" fill="#12152a" stroke="#34d399" rx="6"/><text x="95" y="168" text-anchor="middle" fill="#eaedf5" font-family="monospace" font-size="13">Implant</text><text x="95" y="186" text-anchor="middle" fill="#7a849a" font-family="monospace" font-size="11">Mongolian target</text><rect x="290" y="40" width="140" height="44" fill="#12152a" stroke="#252840" rx="6"/><text x="360" y="66" text-anchor="middle" fill="#eaedf5" font-family="monospace" font-size="13">Outlook / Graph</text><rect x="290" y="100" width="140" height="44" fill="#12152a" stroke="#252840" rx="6"/><text x="360" y="126" text-anchor="middle" fill="#eaedf5" font-family="monospace" font-size="13">Slack webhook</text><rect x="290" y="160" width="140" height="44" fill="#12152a" stroke="#252840" rx="6"/><text x="360" y="186" text-anchor="middle" fill="#eaedf5" font-family="monospace" font-size="13">Discord webhook</text><rect x="290" y="220" width="140" height="44" fill="#12152a" stroke="#252840" rx="6"/><text x="360" y="246" text-anchor="middle" fill="#eaedf5" font-family="monospace" font-size="13">file.io upload</text><line x1="160" y1="158" x2="288" y2="62" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr)"/><line x1="160" y1="166" x2="288" y2="122" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr)"/><line x1="160" y1="180" x2="288" y2="182" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr)"/><line x1="160" y1="194" x2="288" y2="242" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr)"/><text x="225" y="100" fill="#7a849a" font-family="monospace" font-size="11">TLS 443 (allow-listed)</text><rect x="540" y="140" width="130" height="60" fill="#12152a" stroke="#34d399" rx="6"/><text x="605" y="168" text-anchor="middle" fill="#eaedf5" font-family="monospace" font-size="13">Operator</text><text x="605" y="186" text-anchor="middle" fill="#7a849a" font-family="monospace" font-size="11">PRC-aligned APT</text><line x1="430" y1="62" x2="538" y2="158" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr)"/><line x1="430" y1="122" x2="538" y2="166" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr)"/><line x1="430" y1="182" x2="538" y2="180" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr)"/><line x1="430" y1="242" x2="538" y2="194" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr)"/><rect x="250" y="290" width="200" height="34" fill="#34d399" rx="6"/><text x="350" y="312" text-anchor="middle" fill="#060912" font-family="monospace" font-size="12">Failover across 4 SaaS channels</text></svg></div>
           </div>
-          <div class="attack-vector-text">The APT programs custom malware to use legitimate cloud services as dead drops: it polls Outlook mailboxes (likely via Microsoft Graph API), Slack channels, and Discord (via webhooks or bot tokens) for encoded commands, executes them on the victim endpoint, and exfiltrates results back through these same channels or via the ephemeral file-sharing service file.io, which auto-deletes files after a single download to destroy forensic evidence.</div>
+          <div class="attack-vector-text">Malware implants authenticate to attacker-controlled SaaS tenants (Outlook mailboxes via Graph API, Slack workspaces, Discord webhooks, file.io uploads), polling for commands posted as messages/drafts and returning results over the same TLS channel. Because traffic terminates only at outlook.office.com, slack.com, discord.com, and file.io, perimeter and DNS controls see nothing abnormal.</div>
         </div>
       </div>
 
@@ -361,7 +301,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
 
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Map</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tactic or technique for details</span></div>
-    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Initial Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1566&quot;, &quot;name&quot;: &quot;Phishing&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Initial Access</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1566</span><span class="mitre-tech-name">Phishing</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Chinese APT campaigns targeting government entities commonly use spear-phishing as the initial delivery mechanism to deploy malware with cloud-based C2 capabilities.</p><a href="https://attack.mitre.org/techniques/T1566/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Command and Control&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1102&quot;, &quot;name&quot;: &quot;Web Service&quot;}, {&quot;id&quot;: &quot;T1102.002&quot;, &quot;name&quot;: &quot;Bidirectional Communication&quot;}, {&quot;id&quot;: &quot;T1008&quot;, &quot;name&quot;: &quot;Fallback Channels&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Command and Control</span><span class="mitre-tactic-cnt">3 techniques</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1102</span><span class="mitre-tech-name">Web Service</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The core technique: the APT uses Outlook, Slack, Discord, and file.io as bidirectional C2 channels, hiding commands and exfiltration in legitimate cloud service traffic.</p><a href="https://attack.mitre.org/techniques/T1102/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1102.002</span><span class="mitre-tech-name">Bidirectional Communication</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Malware reads instructions from cloud platforms (e.g., Outlook draft emails, Slack/Discord messages) and posts results back, establishing full two-way C2 via trusted services.</p><a href="https://attack.mitre.org/techniques/T1102/002/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1008</span><span class="mitre-tech-name">Fallback Channels</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The APT built redundancy across four cloud services simultaneously so that if defenders block one channel, the malware falls back to another, ensuring persistent C2 connectivity.</p><a href="https://attack.mitre.org/techniques/T1008/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Exfiltration&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1567&quot;, &quot;name&quot;: &quot;Exfiltration Over Web Service&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Exfiltration</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1567</span><span class="mitre-tech-name">Exfiltration Over Web Service</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Stolen data is staged and exfiltrated through file.io&#39;s ephemeral file sharing, which auto-deletes after a single download, minimizing forensic traces.</p><a href="https://attack.mitre.org/techniques/T1567/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
+    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Command and Control&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1102&quot;, &quot;name&quot;: &quot;Web Service&quot;}, {&quot;id&quot;: &quot;T1102.002&quot;, &quot;name&quot;: &quot;Bidirectional Communication&quot;}, {&quot;id&quot;: &quot;T1071.001&quot;, &quot;name&quot;: &quot;Application Layer Protocol: Web Protocols&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Command and Control</span><span class="mitre-tactic-cnt">3 techniques</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1102</span><span class="mitre-tech-name">Web Service</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Core technique: C2 is relayed through legitimate third-party SaaS (Slack, Discord, Outlook, file.io) instead of attacker-owned infrastructure.</p><a href="https://attack.mitre.org/techniques/T1102/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1102.002</span><span class="mitre-tech-name">Bidirectional Communication</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Implants both read commands from and post results to SaaS channels (mailbox drafts, webhook messages, channel posts).</p><a href="https://attack.mitre.org/techniques/T1102/002/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1071.001</span><span class="mitre-tech-name">Application Layer Protocol: Web Protocols</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">All communication rides standard HTTPS to well-known SaaS endpoints, blending with normal corporate traffic.</p><a href="https://attack.mitre.org/techniques/T1071/001/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Exfiltration&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1567.002&quot;, &quot;name&quot;: &quot;Exfiltration to Cloud Storage&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Exfiltration</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1567.002</span><span class="mitre-tech-name">Exfiltration to Cloud Storage</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">file.io is used as an ephemeral staging channel; its auto-delete behavior defeats post-hoc forensics.</p><a href="https://attack.mitre.org/techniques/T1567/002/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Defense Evasion&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1550.001&quot;, &quot;name&quot;: &quot;Use Alternate Authentication Material: Application Access Token&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Defense Evasion</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1550.001</span><span class="mitre-tech-name">Use Alternate Authentication Material: Application Access Token</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Implants authenticate to Graph API and Slack APIs using attacker-issued OAuth tokens/webhook URLs rather than user credentials.</p><a href="https://attack.mitre.org/techniques/T1550/001/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
   </div>
 
   
@@ -372,24 +312,24 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
             <thead><tr><th>Vendor</th><th>Product</th><th>Versions Affected</th><th>Fixed In</th></tr></thead>
             <tbody><tr>
           <td><span class="prod-vendor">Microsoft</span></td>
-          <td><span class="prod-name">Outlook / Microsoft 365 (Graph API)</span></td>
-          <td><span class="prod-ver">All versions — abused as C2 infrastructure, not a product vulnerability</span></td>
-          <td><span class="prod-fix none">Mitigate: Restrict OAuth app registrations and monitor Graph API usage for anomalous patterns</span></td>
+          <td><span class="prod-name">Outlook / Microsoft Graph API (M365)</span></td>
+          <td><span class="prod-ver">All versions — abused as legitimate C2 channel</span></td>
+          <td><span class="prod-fix none">Mitigate: restrict tenant-to-tenant Graph API access and monitor anomalous mailbox API use</span></td>
         </tr><tr>
-          <td><span class="prod-vendor">Slack Technologies (Salesforce)</span></td>
-          <td><span class="prod-name">Slack</span></td>
-          <td><span class="prod-ver">All versions — abused as C2 infrastructure, not a product vulnerability</span></td>
-          <td><span class="prod-fix none">Mitigate: Audit workspace integrations and restrict webhook/bot token creation</span></td>
+          <td><span class="prod-vendor">Slack Technologies</span></td>
+          <td><span class="prod-name">Slack Workspaces / Web API</span></td>
+          <td><span class="prod-ver">All versions — abused as legitimate C2 channel</span></td>
+          <td><span class="prod-fix none">Mitigate: block outbound to unknown Slack workspaces or require egress proxy allowlists</span></td>
         </tr><tr>
           <td><span class="prod-vendor">Discord Inc.</span></td>
-          <td><span class="prod-name">Discord</span></td>
-          <td><span class="prod-ver">All versions — abused as C2 infrastructure, not a product vulnerability</span></td>
-          <td><span class="prod-fix none">Mitigate: Block or proxy Discord traffic in enterprise environments where not business-justified</span></td>
+          <td><span class="prod-name">Discord Webhooks</span></td>
+          <td><span class="prod-ver">All versions — abused as legitimate C2 channel</span></td>
+          <td><span class="prod-fix none">Mitigate: block discord.com and discordapp.com egress from servers/workstations that have no business reason</span></td>
         </tr><tr>
           <td><span class="prod-vendor">file.io</span></td>
-          <td><span class="prod-name">file.io</span></td>
-          <td><span class="prod-ver">All versions — abused for ephemeral data staging and exfiltration</span></td>
-          <td><span class="prod-fix none">Mitigate: Block file.io domains at the proxy/firewall level</span></td>
+          <td><span class="prod-name">file.io anonymous file sharing</span></td>
+          <td><span class="prod-ver">All versions — abused for staging/exfiltration</span></td>
+          <td><span class="prod-fix none">Mitigate: block file.io at egress proxy / DNS</span></td>
         </tr></tbody>
           </table>
         </div>
@@ -399,7 +339,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="sec-block-header"><span class="sec-block-icon">&#10067;</span><span class="sec-block-title amber">Am I Affected?</span></div>
     <div class="sec-block-body">
       <p class="apply-intro">You are likely at risk if <strong>any</strong> of the following apply:</p>
-      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your organization operates in Mongolia or has diplomatic, governmental, or NGO ties to Mongolian entities</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment allows unrestricted outbound HTTPS access to Outlook/Microsoft 365, Slack, and Discord endpoints</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your organization does not inspect or monitor API-level usage of Microsoft Graph, Slack, or Discord for anomalous behavior</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment permits unmanaged OAuth app registrations or third-party integrations in Microsoft 365 or Slack without review</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your organization has no business use for Discord and has already blocked Discord domains at the network perimeter</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your environment enforces application allowlisting and monitors all outbound cloud service connections via a CASB or SASE solution</span></div></div>
+      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment is a Mongolian government, diplomatic, mining, or Russia-border-focused entity</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment allows unrestricted outbound HTTPS to Discord, Slack, and file.io from servers or endpoints without business justification</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You rely primarily on domain/IP allow-listing and DNS reputation for C2 detection, with no SaaS-behavior analytics</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your M365 tenant does not monitor or restrict Graph API calls to external (non-tenant) mailboxes</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your environment egress-filters all non-sanctioned SaaS, ingests Slack/Discord/M365 audit logs into a SIEM, and baselines per-user API behavior</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">You are a consumer/home user with no exposure to Mongolian government supply chains or targeted sectors</span></div></div>
     </div>
   </div>
 
@@ -407,8 +347,8 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="sec-block-header"><span class="sec-block-icon">&#128736;</span><span class="sec-block-title green">Fix &amp; Recommendations</span></div>
     <div class="sec-block-body">
       <div class="fix-grid">
-        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Block outbound access to file.io (file.io, *.file.io) at your web proxy and firewall — this ephemeral sharing service has minimal legitimate enterprise use and is commonly abused for exfiltration.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Block or restrict Discord (discord.com, cdn.discordapp.com, gateway.discord.gg) at the network perimeter if Discord is not a sanctioned business tool in your organization.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Audit Microsoft 365 tenant for unauthorized OAuth app registrations and review Graph API access logs (via Azure AD sign-in logs and unified audit log) for unusual mailbox access patterns such as automated reading/writing of draft emails.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Review Slack workspace integrations, bot tokens, and incoming/outgoing webhooks for any unauthorized or unrecognized entries; revoke suspicious tokens immediately.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Deploy or update endpoint detection rules to flag processes making high-frequency HTTPS requests to Outlook, Slack, or Discord APIs from non-browser, non-standard user-agent strings.</span></li></ul></div>
-        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Deploy a Cloud Access Security Broker (CASB) or Secure Access Service Edge (SASE) solution to gain visibility into and control over cloud service API usage, enabling detection of anomalous patterns like bot-like polling intervals or unusual data volumes in email drafts.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Implement behavioral analytics and UEBA (User and Entity Behavior Analytics) to detect Living-off-Trusted-Services techniques — baseline normal Graph API, Slack API, and Discord API usage patterns and alert on deviations such as automated mailbox manipulation or unusual channel activity.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Enforce strict OAuth app governance in Microsoft 365 and Slack: require admin consent for all third-party app registrations, implement app allowlisting, and regularly audit granted permissions.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Adopt a Zero Trust network model with microsegmentation that treats all outbound cloud traffic as potentially adversarial, requiring continuous authentication and authorization verification rather than trusting traffic based solely on destination domain reputation.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Establish a threat intelligence sharing relationship with peer organizations and national CERTs (especially if operating in the Central/East Asian region) to receive early indicators of Chinese APT targeting campaigns.</span></li></ul></div>
+        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Block file.io at web proxy and DNS resolver immediately — there is rarely a legitimate enterprise use case.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Block or alert on outbound requests to discord.com/discordapp.com from server subnets and any workstation without a documented need; specifically alert on POSTs to /api/webhooks/ paths.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>In Microsoft 365, enable and review Graph API audit logs; hunt for OAuth apps with Mail.Read/Mail.ReadWrite consented by users in targeted BUs in the last 90 days and revoke unknown ones.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Restrict Slack egress to sanctioned workspace IDs only via proxy inspection of the Authorization header or Slack Enterprise Key Management; block connections to unknown workspaces.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Hunt endpoint process telemetry for non-browser processes making TLS connections to slack.com, discord.com, outlook.office.com, or file.io.</span></li></ul></div>
+        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Shift detection investment from perimeter/DNS toward identity and SaaS audit logs: ingest M365 Unified Audit Log, Slack Audit Logs API, and EDR network telemetry into SIEM with per-user behavioral baselines.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Implement an egress SaaS allowlist model: default-deny outbound, and explicitly allow only sanctioned tenants for Slack/M365/Discord per business unit.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Deploy a CASB or SSE solution capable of distinguishing corporate-sanctioned SaaS tenants from attacker-controlled tenants riding the same domain.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Establish a threat-intel relationship covering PRC APT tradecraft and geopolitically adjacent targeting (Mongolia, Central Asia) — do not rely solely on Western-centric feeds.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Tabletop the &#39;trusted SaaS C2&#39; scenario with the SOC: validate that analysts can identify malicious outlook.office.com traffic without relying on domain reputation.</span></li></ul></div>
       </div>
     </div>
   </div>
@@ -416,27 +356,27 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#128218;</span><span class="sec-block-title ai">Concept Briefing</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tag to expand</span></div>
     <div class="sec-block-body">
-      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-living-off-trusted-services')">Living-off-Trusted-Services</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-dead-drop-c2')">Dead Drop C2</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-c2-channel-redundancy')">C2 Channel Redundancy</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-ephemeral-file-staging')">Ephemeral File Staging</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-state-sponsored-espionage')">State-Sponsored Espionage</button></div>
-      <div class="concept-tag-expand" id="ct-living-off-trusted-services">
-          <div class="concept-tag-expand-name">Living-off-Trusted-Services</div>
-          <div class="concept-def">An adversary technique where attackers use legitimate cloud platforms (email, chat, file sharing) as command-and-control infrastructure instead of dedicated malicious servers, making their traffic blend in with normal business communications.</div>
-          <div class="concept-rel">This Chinese APT built its entire C2 infrastructure on Outlook, Slack, Discord, and file.io — services that firewalls and blocklists inherently trust — rendering traditional perimeter defenses ineffective.</div>
-        </div><div class="concept-tag-expand" id="ct-dead-drop-c2">
-          <div class="concept-tag-expand-name">Dead Drop C2</div>
-          <div class="concept-def">A communication method where the attacker and malware exchange messages indirectly through a shared location (like an email draft or chat message) rather than communicating directly, borrowing the concept from traditional espionage tradecraft.</div>
-          <div class="concept-rel">The APT&#39;s malware checks Outlook drafts and chat messages for encoded commands and posts results back to the same platforms, using them as digital dead drops that leave minimal direct connection between attacker and victim.</div>
+      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-living-off-trusted-sites-lots-')">Living-off-Trusted-Sites (LOTS)</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-c2-channel-redundancy')">C2 Channel Redundancy</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-microsoft-graph-api-abuse')">Microsoft Graph API Abuse</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-identity-layer-detection')">Identity-Layer Detection</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-strategic-espionage')">Strategic Espionage</button></div>
+      <div class="concept-tag-expand" id="ct-living-off-trusted-sites-lots-">
+          <div class="concept-tag-expand-name">Living-off-Trusted-Sites (LOTS)</div>
+          <div class="concept-def">An attacker technique of running command-and-control and exfiltration through legitimate, widely-used SaaS platforms so the traffic blends with normal business activity.</div>
+          <div class="concept-rel">This entire campaign is built on LOTS — the APT owns no C2 infrastructure of its own; every channel is a legitimate SaaS endpoint.</div>
         </div><div class="concept-tag-expand" id="ct-c2-channel-redundancy">
           <div class="concept-tag-expand-name">C2 Channel Redundancy</div>
-          <div class="concept-def">The practice of establishing multiple independent command-and-control pathways so that if one is disrupted, others remain operational, ensuring persistent access to compromised systems.</div>
-          <div class="concept-rel">By simultaneously leveraging four different cloud services, this APT ensured that blocking any single channel would not sever their access — a self-healing C2 architecture built from ubiquitous SaaS products.</div>
-        </div><div class="concept-tag-expand" id="ct-ephemeral-file-staging">
-          <div class="concept-tag-expand-name">Ephemeral File Staging</div>
-          <div class="concept-def">Using temporary or self-destructing file-sharing services to transfer stolen data, where files are automatically deleted after download, destroying forensic evidence.</div>
-          <div class="concept-rel">The APT used file.io&#39;s single-download auto-deletion feature to exfiltrate data from Mongolian targets while minimizing the forensic footprint left behind.</div>
-        </div><div class="concept-tag-expand" id="ct-state-sponsored-espionage">
-          <div class="concept-tag-expand-name">State-Sponsored Espionage</div>
-          <div class="concept-def">Cyber operations conducted by or on behalf of a nation-state government, typically targeting foreign governments, militaries, or critical infrastructure for intelligence collection rather than financial gain.</div>
-          <div class="concept-rel">This campaign is attributed to a Chinese state-sponsored threat actor conducting intelligence-gathering operations against Mongolian government targets, consistent with China&#39;s geopolitical interests in the region.</div>
+          <div class="concept-def">Engineering malware with multiple fallback command-and-control paths so takedown of one does not sever the operator&#39;s access.</div>
+          <div class="concept-rel">The implant fails over between Discord, Slack, Outlook, and file.io, deliberately defeating platform trust-and-safety takedowns.</div>
+        </div><div class="concept-tag-expand" id="ct-microsoft-graph-api-abuse">
+          <div class="concept-tag-expand-name">Microsoft Graph API Abuse</div>
+          <div class="concept-def">Misuse of Microsoft&#39;s unified M365 REST API — typically via OAuth-consented apps or attacker-controlled tenants — to read mail, access files, or exfiltrate data.</div>
+          <div class="concept-rel">The APT uses Graph API calls against attacker-owned mailboxes, reading commands from drafts and writing results back as attachments.</div>
+        </div><div class="concept-tag-expand" id="ct-identity-layer-detection">
+          <div class="concept-tag-expand-name">Identity-Layer Detection</div>
+          <div class="concept-def">Detection approach centered on authentication events, token usage, and API behavior rather than network IPs/domains.</div>
+          <div class="concept-rel">Because C2 runs over allow-listed domains, the only reliable place to catch this activity is in SaaS audit logs and OAuth consent trails.</div>
+        </div><div class="concept-tag-expand" id="ct-strategic-espionage">
+          <div class="concept-tag-expand-name">Strategic Espionage</div>
+          <div class="concept-def">Long-dwell intrusion operations motivated by state intelligence priorities rather than financial gain.</div>
+          <div class="concept-rel">Targeting of Mongolian diplomatic, mining, and border-activity entities aligns with PRC regional intelligence requirements.</div>
         </div>
     </div>
   </div>
@@ -447,56 +387,56 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
         <details class="hunt-entry" open>
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Anomalous Microsoft Graph API mailbox access patterns</span>
+            <span class="hunt-signal">Non-browser process making TLS connections to discord.com, slack.com, or file.io</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Look for non-interactive or automated access to Outlook mailboxes — specifically, repeated read/write operations on draft emails at regular intervals (e.g., every 30-60 seconds) from non-standard client applications. This indicates malware polling an email draft folder as a C2 dead drop. Check for unusual OAuth tokens or application IDs accessing the mailbox.</div>
-            <span class="hunt-log-tag">Microsoft 365 Unified Audit Log</span><span class="hunt-log-tag">Azure AD Sign-in Logs</span><span class="hunt-log-tag">Microsoft Graph API activity logs</span>
+            <div class="hunt-desc">Endpoint telemetry showing rundll32.exe, powershell.exe, a signed LOLBin, or an unknown binary connecting to these domains is highly suspicious — these services are normally only contacted by browsers, Slack/Discord desktop clients, or sanctioned integration agents.</div>
+            <span class="hunt-log-tag">EDR network telemetry</span><span class="hunt-log-tag">Sysmon Event ID 3 (NetworkConnect)</span><span class="hunt-log-tag">Zeek conn.log + ssl.log</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Non-browser processes connecting to Discord or Slack APIs</span>
+            <span class="hunt-signal">HTTPS POSTs to /api/webhooks/ on discord.com from corporate endpoints</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Identify endpoint processes (not standard browsers or official Slack/Discord desktop apps) making HTTPS connections to discord.com, cdn.discordapp.com, gateway.discord.gg, or api.slack.com. Malware using these as C2 will typically present unusual user-agent strings, connect at fixed intervals, and transfer small encoded payloads. Cross-reference with process creation logs to identify the parent executable.</div>
-            <span class="hunt-log-tag">EDR telemetry</span><span class="hunt-log-tag">Web proxy logs</span><span class="hunt-log-tag">DNS query logs</span><span class="hunt-log-tag">Firewall logs</span>
+            <div class="hunt-desc">Discord webhook URLs follow a predictable path pattern and are almost never legitimately called from enterprise endpoints. Recurring POSTs on a jittered interval indicate beaconing.</div>
+            <span class="hunt-log-tag">Web proxy / SSL-inspecting firewall logs</span><span class="hunt-log-tag">NGFW URL logs</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Outbound connections to file.io</span>
+            <span class="hunt-signal">Graph API reads against external (non-tenant) mailboxes or unusual draft-folder access patterns</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Any outbound HTTP/HTTPS traffic to file.io or *.file.io should be investigated, especially from server or workstation endpoints where ephemeral file sharing has no business justification. Look for POST requests (file upload/staging) followed by GET requests from external IPs (attacker retrieval). The single-download deletion feature makes timing critical for forensic capture.</div>
-            <span class="hunt-log-tag">Web proxy logs</span><span class="hunt-log-tag">DNS query logs</span><span class="hunt-log-tag">Firewall logs</span><span class="hunt-log-tag">Network flow data</span>
+            <div class="hunt-desc">Implants using Outlook drafts as a dead-drop will repeatedly read/update the Drafts folder of an attacker-owned mailbox. Look for OAuth apps or sessions accessing mailboxes outside your tenant, or abnormal frequency of Drafts/Inbox API calls.</div>
+            <span class="hunt-log-tag">Microsoft 365 Unified Audit Log</span><span class="hunt-log-tag">Entra ID sign-in logs</span><span class="hunt-log-tag">MailItemsAccessed events</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">Any outbound connection to file.io from a corporate asset</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">file.io has effectively no legitimate enterprise use case; any hit should be investigated as either exfiltration staging or shadow-IT data leak.</div>
+            <span class="hunt-log-tag">Web proxy logs</span><span class="hunt-log-tag">DNS resolver logs</span><span class="hunt-log-tag">NGFW</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority medium">Medium</span>
-            <span class="hunt-signal">Periodic beaconing behavior to cloud service endpoints</span>
+            <span class="hunt-signal">New OAuth app consents granting Mail.Read, Mail.ReadWrite, or Files.ReadWrite scopes</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Analyze network traffic for regular, timed connections to Microsoft, Slack, or Discord endpoints that exhibit beacon-like periodicity (e.g., connections every 30, 60, or 120 seconds with low jitter). Legitimate user traffic to these services is bursty and irregular; automated C2 polling follows predictable timing patterns. Use statistical analysis on connection intervals to detect machine-driven communication.</div>
-            <span class="hunt-log-tag">Network flow data (NetFlow/IPFIX)</span><span class="hunt-log-tag">Web proxy logs</span><span class="hunt-log-tag">SIEM correlation rules</span>
-          </div>
-        </details>
-        <details class="hunt-entry">
-          <summary>
-            <span class="hunt-priority medium">Medium</span>
-            <span class="hunt-signal">Suspicious OAuth application registrations or consent grants</span>
-            <span class="hunt-chevron">&#9658;</span>
-          </summary>
-          <div class="hunt-body">
-            <div class="hunt-desc">Monitor for new OAuth application registrations in Azure AD or Slack that request mail read/write permissions, especially those created by compromised user accounts or with generic/unusual display names. Attackers may register rogue apps to obtain persistent API tokens for mailbox manipulation as part of the C2 channel setup.</div>
-            <span class="hunt-log-tag">Azure AD Audit Logs</span><span class="hunt-log-tag">Microsoft 365 Admin Center alerts</span><span class="hunt-log-tag">Slack admin audit logs</span>
+            <div class="hunt-desc">Initial access to Graph API C2 often begins with a user consenting to a malicious or third-party OAuth app. Review consents in the last 90 days, especially for apps with unverified publishers or consented by high-value users.</div>
+            <span class="hunt-log-tag">Entra ID Audit Logs (Consent to application)</span><span class="hunt-log-tag">Microsoft Defender for Cloud Apps</span>
           </div>
         </details></div></div>
   </div>
@@ -504,7 +444,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#9762;</span><span class="sec-block-title amber">Indicators of Compromise</span><button class="ioc-copy-btn" style="margin-left:auto" onclick="copyAllIOCs()">&#10064; Copy All IOCs</button></div>
     <div class="sec-block-body">
-      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific indicators of compromise (hashes, IPs, domains, file paths, or URI patterns) were disclosed in the source reporting for this campaign. All IOC arrays are empty. Organizations should monitor threat intelligence feeds from their national CERT, Microsoft Threat Intelligence, and other sources for updated IOCs as the investigation progresses. Do not fabricate or infer IOC values — verify all indicators against authoritative sources before operationalizing.</span></div>
+      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> The source reporting (Dark Reading, 23 Apr 2026) did not publish specific file hashes, IP addresses, or domains beyond the abused legitimate services (discord.com, slack.com, outlook.office.com, file.io), which should NOT be blocked wholesale. No atomic IOCs are included below. Verify against the primary vendor/research report before adding any detections.</span></div>
       <div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Hashes (SHA-256)</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Command &amp;amp; Control IPs</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Malicious Domains</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Paths / Artifacts</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Suspicious URI Patterns</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div>
     </div>
   </div>
@@ -512,9 +452,9 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="share-footer">
     <div class="share-footer-text"><strong>Share this advisory</strong><br><span style="font-size:0.78rem;">Help your network patch faster.</span></div>
     <div class="share-footer-btns">
-      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20Chinese%20APT%20Weaponizes%20Outlook%2C%20Slack%2C%20and%20Discord%20as%20C2%20Channels%20to%20Spy%20on%20Mongolia%0A%0ACVSS%20N/A%20%C2%B7%20High%20%C2%B7%20Mitigation%20Only&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-24-story-cyber-2.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
-      <a href="https://wa.me/?text=%F0%9F%9B%A1%20Chinese%20APT%20Weaponizes%20Outlook%2C%20Slack%2C%20and%20Discord%20as%20C2%20Channels%20to%20Spy%20on%20Mongolia%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-24-story-cyber-2.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
-      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-24-story-cyber-2.html&amp;text=Chinese%20APT%20Weaponizes%20Outlook%2C%20Slack%2C%20and%20Discord%20as%20C2%20Channels%20to%20Spy%20on%20Mongolia" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
+      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20Chinese%20APT%20Turns%20Slack%2C%20Discord%2C%20and%20Outlook%20Into%20a%20Spy%20Network%20Against%20Mongolia%0A%0ACVSS%20N/A%20%C2%B7%20High%20%C2%B7%20Mitigation%20Only&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-24-story-cyber-2.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
+      <a href="https://wa.me/?text=%F0%9F%9B%A1%20Chinese%20APT%20Turns%20Slack%2C%20Discord%2C%20and%20Outlook%20Into%20a%20Spy%20Network%20Against%20Mongolia%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-24-story-cyber-2.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
+      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-24-story-cyber-2.html&amp;text=Chinese%20APT%20Turns%20Slack%2C%20Discord%2C%20and%20Outlook%20Into%20a%20Spy%20Network%20Against%20Mongolia" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
       <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-24-story-cyber-2.html" class="share-opt linkedin" target="_blank" rel="noopener">in Share</a>
       <button class="share-opt copy-link" onclick="copyPageLink(this)">&#128279; Copy Link</button>
     </div>
