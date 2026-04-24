@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
+<title>UNC6692 – IT Helpdesk Impersonation via Microsoft Teams Deploying SNOW Malware | The Daily Rundown</title>
+<meta property="og:type"        content="article">
+<meta property="og:site_name"   content="The Daily Rundown">
+<meta property="og:title"       content="UNC6692 – IT Helpdesk Impersonation via Microsoft Teams Deploying SNOW Malware">
+<meta property="og:description" content="A newly tracked threat group designated UNC6692 is impersonating corporate IT helpdesk personnel via Microsoft Teams to social-engineer employees into installing a custom malware suite called SNOW. The campaign exploits the implicit trust users place in collaboration platforms, b">
+<meta property="og:url"         content="https://dizchrisctrl.github.io/daily-digest/s/2026-04-24-story-cyber-3.html">
+<meta name="twitter:card"        content="summary">
+<meta name="twitter:title"       content="UNC6692 – IT Helpdesk Impersonation via Microsoft Teams Deploying SNOW Malware">
+<meta name="twitter:description" content="A newly tracked threat group designated UNC6692 is impersonating corporate IT helpdesk personnel via Microsoft Teams to social-engineer employees into installing a custom malware suite called SNOW. The campaign exploits the implicit trust users place in collaboration platforms, b">
+<style>
+:root {
+  --bg:#0b0d16; --surface:#12152a; --surface2:#1a1d32; --surface3:#20233c;
+  --text:#eaedf5; --muted:#7a849a; --muted2:#5a6275;
+  --cyber:#34d399; --cyber2:#10b981; --purple:#a78bfa; --amber:#fbbf24; --ai:#818cf8;
+  --border:#252840; --border2:#333660;
+  --body-text:#c0c8d8;
+  --sec:#a78bfa; --sec2:#dc2626; --sec-soft:#c4b5fd;
+  --sec-glow:rgba(167,139,250,0.15); --sec-bg:rgba(167,139,250,0.04); --sec-border:rgba(167,139,250,0.22);
+}
+html.light {
+  --bg:#f4f6fb; --surface:#ffffff; --surface2:#eef0f7; --surface3:#e4e7f2;
+  --text:#1a1d2e; --muted:#4a5568; --muted2:#718096;
+  --border:#d4d8ec; --border2:#c0c5df; --body-text:#2d3748;
+  --sec-bg:rgba(239,68,68,0.03); --sec-border:rgba(239,68,68,0.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.7;min-height:100vh;}
+.top-nav{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);padding:0 20px;height:52px;display:flex;align-items:center;gap:12px;}
+.back-btn{display:flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);color:var(--muted);border-radius:20px;padding:5px 12px;font-size:0.78rem;font-weight:600;cursor:pointer;text-decoration:none;transition:color 0.2s,border-color 0.2s;white-space:nowrap;flex-shrink:0;}
+.back-btn:hover{color:var(--text);border-color:var(--border2);}
+.nav-breadcrumb{flex:1;min-width:0;font-size:0.75rem;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nav-breadcrumb span{color:var(--muted);}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.theme-toggle{background:var(--surface2);border:1px solid var(--border2);color:var(--muted);border-radius:20px;padding:5px 11px;font-size:0.75rem;cursor:pointer;transition:background 0.2s,color 0.2s;}
+.theme-toggle:hover{color:var(--text);}
+.share-btn-top{display:flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--sec-border);color:var(--sec-soft);border-radius:20px;padding:5px 12px;font-size:0.78rem;font-weight:600;cursor:pointer;transition:background 0.2s;}
+.share-btn-top:hover{background:var(--sec-bg);}
+.hero{padding:32px 20px 28px;border-bottom:1px solid var(--sec-border);background:linear-gradient(180deg,var(--sec-glow) 0%,transparent 100%);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 0%,var(--sec-glow) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{max-width:860px;margin:0 auto;position:relative;}
+.hero-badges{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:16px;}
+.type-badge{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:3px 10px;border-radius:4px;background:var(--sec-glow);color:var(--sec-soft);border:1px solid var(--sec-border);}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 9px;border-radius:4px;background:rgba(239,68,68,0.1);color:var(--sec);border:1px solid rgba(239,68,68,0.3);animation:live-pulse 2s ease-in-out infinite;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--sec);flex-shrink:0;animation:live-pulse 1.2s ease-in-out infinite;}
+@keyframes live-pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.hero-title{font-size:1.85rem;font-weight:900;line-height:1.2;letter-spacing:-0.5px;margin-bottom:16px;color:var(--text);}
+.score-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+.cvss-wrap{display:flex;align-items:center;gap:10px;}
+.cvss-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);white-space:nowrap;}
+.cvss-bar-track{width:140px;height:7px;border-radius:4px;background:var(--surface3);border:1px solid var(--border);overflow:hidden;}
+.cvss-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#22c55e 0%,#f59e0b 40%,#ef4444 70%);transition:width 0.6s cubic-bezier(0.4,0,0.2,1);}
+.cvss-score-num{font-size:1.15rem;font-weight:900;font-variant-numeric:tabular-nums;color:var(--sec);font-family:'Courier New',monospace;line-height:1;}
+.severity-pill,.patch-pill{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;padding:3px 10px;border-radius:20px;}
+.sev-critical{background:rgba(239,68,68,0.18);color:#f87171;border:1px solid rgba(239,68,68,0.35);}
+.sev-high{background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.3);}
+.sev-medium{background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);}
+.sev-low{background:rgba(52,211,153,0.12);color:var(--cyber);border:1px solid rgba(52,211,153,0.25);}
+.patch-available{background:rgba(52,211,153,0.1);color:var(--cyber);border:1px solid rgba(52,211,153,0.25);}
+.patch-mitigation{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.22);}
+.patch-none{background:rgba(239,68,68,0.1);color:var(--sec);border:1px solid var(--sec-border);}
+.hero-desc{font-size:0.97rem;color:var(--body-text);line-height:1.75;margin-bottom:18px;max-width:740px;}
+.hero-meta{display:flex;align-items:center;flex-wrap:wrap;gap:10px;}
+.hero-meta-item{font-size:0.76rem;color:var(--muted2);display:flex;align-items:center;gap:5px;}
+.hero-meta-sep{color:var(--border2);font-size:0.7rem;}
+.src-link-hero{font-size:0.76rem;font-weight:600;color:var(--sec-soft);text-decoration:none;display:flex;align-items:center;gap:4px;transition:color 0.15s;}
+.src-link-hero:hover{color:var(--sec);}
+.page-body{max-width:860px;margin:0 auto;padding:28px 16px 80px;}
+.sec-block{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden;}
+.sec-block-header{padding:16px 20px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);}
+.sec-block-icon{font-size:1rem;flex-shrink:0;}
+.sec-block-title{font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted2);flex:1;}
+.sec-block-title.red{color:var(--sec-soft);} .sec-block-title.green{color:var(--cyber);} .sec-block-title.amber{color:var(--amber);}
+.sec-block-body{padding:20px;}
+.conf-badge{font-size:0.65rem;font-weight:700;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);color:var(--purple);}
+.diagram-wrap{border-radius:10px;overflow:hidden;border:1px solid #1e3055;background:#060912;}
+.diagram-bar{background:#0d1020;padding:9px 14px;display:flex;align-items:center;gap:7px;border-bottom:1px solid #1e3055;}
+.dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;} .dot-r{background:#ff5f57;} .dot-y{background:#febc2e;} .dot-g{background:#28c840;}
+.diagram-title{flex:1;text-align:center;font-size:0.67rem;color:#3a4a60;font-family:monospace;}
+.diagram-svg svg{width:100%;height:auto;display:block;}
+.attack-vector-text{margin-top:14px;font-size:0.92rem;color:var(--body-text);line-height:1.72;padding:13px 16px;background:var(--sec-bg);border:1px solid var(--sec-border);border-radius:8px;border-left:3px solid var(--sec);}
+.details-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;}
+.detail-cell{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:13px 15px;}
+.detail-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:6px;}
+.detail-value{font-size:0.93rem;font-weight:700;color:var(--text);font-family:'Courier New',monospace;word-break:break-all;}
+.detail-value.red{color:var(--sec-soft);} .detail-value.green{color:var(--cyber);} .detail-value.amber{color:var(--amber);} .detail-value.muted{color:var(--muted);font-weight:400;font-size:0.78rem;font-family:inherit;}
+.cvss-vector-cell{grid-column:1/-1;}
+.timeline-track{display:flex;align-items:flex-start;position:relative;padding:8px 0 4px;}
+.timeline-track::before{content:'';position:absolute;top:24px;left:24px;right:24px;height:2px;background:linear-gradient(90deg,var(--sec) 0%,var(--amber) 50%,var(--cyber) 100%);z-index:0;}
+.tl-step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;}
+.tl-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--surface2);margin-bottom:10px;flex-shrink:0;}
+.tl-dot.red{background:var(--sec);box-shadow:0 0 10px rgba(239,68,68,0.5);} .tl-dot.amber{background:var(--amber);box-shadow:0 0 10px rgba(251,191,36,0.4);} .tl-dot.green{background:var(--cyber);box-shadow:0 0 10px rgba(52,211,153,0.4);} .tl-dot.empty{background:var(--surface3);border-color:var(--border2);}
+.tl-label{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted2);text-align:center;margin-bottom:4px;}
+.tl-date{font-size:0.8rem;font-weight:700;color:var(--text);text-align:center;font-family:'Courier New',monospace;}
+.tl-date.na{color:var(--muted2);font-style:italic;font-size:0.72rem;}
+.mitre-map{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;padding-bottom:6px;}
+.mitre-col{display:flex;flex-direction:column;gap:5px;min-width:150px;flex:1;}
+.mitre-tactic-hdr{background:linear-gradient(135deg,rgba(239,68,68,0.13),rgba(239,68,68,0.05));border:1px solid rgba(239,68,68,0.35);border-radius:8px;padding:10px 11px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:3px;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;width:100%;text-align:left;font-family:inherit;}
+.mitre-tactic-hdr:hover{border-color:var(--sec-soft);background:rgba(239,68,68,0.18);box-shadow:0 2px 12px rgba(239,68,68,0.12);}
+.mitre-tactic-lbl{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:0.9px;color:var(--sec-soft);line-height:1.3;}
+.mitre-tactic-cnt{font-size:0.58rem;color:var(--muted2);display:flex;align-items:center;gap:4px;}
+.mitre-tactic-cnt::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:rgba(239,68,68,0.5);}
+.mitre-tactic-hint{font-size:0.53rem;color:var(--muted2);opacity:0.7;margin-top:2px;}
+.mitre-techs{display:flex;flex-direction:column;gap:4px;}
+details.mitre-tech-detail{border:1px solid var(--border);border-radius:7px;overflow:hidden;transition:border-color 0.15s,box-shadow 0.15s;}
+details.mitre-tech-detail[open]{border-color:var(--border2);box-shadow:0 2px 10px rgba(0,0,0,0.18);}
+details.mitre-tech-detail summary{display:flex;align-items:flex-start;gap:7px;padding:8px 10px;cursor:pointer;list-style:none;background:var(--surface2);transition:background 0.15s;user-select:none;}
+details.mitre-tech-detail summary:hover{background:var(--surface3);}
+details.mitre-tech-detail summary::-webkit-details-marker{display:none;}
+details.mitre-tech-detail[open] summary{background:var(--surface3);border-bottom:1px solid var(--border);}
+.mitre-tech-id{font-size:0.6rem;font-weight:800;font-family:'Courier New',monospace;color:var(--amber);background:rgba(251,191,36,0.08);padding:1px 5px;border-radius:3px;border:1px solid rgba(251,191,36,0.18);flex-shrink:0;margin-top:1px;}
+.mitre-tech-name{font-size:0.72rem;color:var(--body-text);line-height:1.35;flex:1;}
+.mitre-tech-chevron{font-size:0.5rem;color:var(--muted2);transition:transform 0.2s;flex-shrink:0;margin-top:3px;margin-left:auto;}
+details.mitre-tech-detail[open] .mitre-tech-chevron{transform:rotate(90deg);color:var(--amber);}
+.mitre-tech-body{padding:10px 10px 11px;background:var(--surface);}
+.mitre-tech-rel{font-size:0.8rem;color:var(--body-text);line-height:1.6;margin-bottom:8px;padding-left:8px;border-left:2px solid rgba(251,191,36,0.3);}
+.mitre-tech-link{display:inline-flex;align-items:center;gap:4px;font-size:0.7rem;font-weight:600;color:var(--sec-soft);text-decoration:none;transition:color 0.15s;padding:3px 8px;border:1px solid var(--sec-border);border-radius:5px;}
+.mitre-tech-link:hover{color:var(--sec);border-color:var(--sec);}
+.affected-table{width:100%;border-collapse:collapse;}
+.affected-table th{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2);}
+.affected-table td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.affected-table tr:last-child td{border-bottom:none;}
+.affected-table tr:hover td{background:rgba(255,255,255,0.02);}
+.prod-vendor{font-size:0.8rem;color:var(--muted);} .prod-name{font-size:0.9rem;font-weight:700;color:var(--text);}
+.prod-ver{font-family:'Courier New',monospace;font-size:0.78rem;color:#fca5a5;background:rgba(239,68,68,0.09);padding:3px 8px;border-radius:5px;border:1px solid rgba(239,68,68,0.18);white-space:nowrap;}
+.prod-fix{font-family:'Courier New',monospace;font-size:0.78rem;color:var(--cyber);background:rgba(52,211,153,0.08);padding:3px 8px;border-radius:5px;border:1px solid rgba(52,211,153,0.2);white-space:nowrap;}
+.prod-fix.none{color:var(--sec-soft);background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2);}
+.apply-intro{font-size:0.88rem;color:var(--muted);line-height:1.65;margin-bottom:14px;}
+.apply-list{display:flex;flex-direction:column;gap:8px;}
+.apply-item{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);}
+.apply-check{font-size:0.85rem;flex-shrink:0;margin-top:1px;} .apply-text{font-size:0.88rem;color:var(--body-text);line-height:1.55;}
+.fix-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.fix-panel{border-radius:10px;padding:16px 18px;}
+.fix-panel.immediate{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);}
+.fix-panel.strategic{background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.18);}
+.fix-panel-label{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.fix-panel.immediate .fix-panel-label{color:var(--sec-soft);} .fix-panel.strategic .fix-panel-label{color:var(--cyber);}
+.fix-steps{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.fix-step{display:flex;align-items:flex-start;gap:9px;font-size:0.87rem;color:var(--body-text);line-height:1.55;}
+.fix-step-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;font-size:0.63rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.fix-panel.immediate .fix-step-num{background:rgba(239,68,68,0.15);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}
+.fix-panel.strategic .fix-step-num{background:rgba(52,211,153,0.12);color:var(--cyber);border:1px solid rgba(52,211,153,0.22);}
+.concept-tags-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+.concept-tag-pill{font-size:0.72rem;font-weight:700;font-family:'Courier New',monospace;padding:5px 12px;border-radius:6px;background:var(--surface2);color:var(--muted);border:1px solid var(--border2);cursor:pointer;transition:color 0.15s,border-color 0.15s,background 0.15s;}
+.concept-tag-pill:hover,.concept-tag-pill.active{color:var(--ai);border-color:rgba(129,140,248,0.4);background:rgba(129,140,248,0.08);}
+.concept-tag-expand{display:none;padding:14px 16px;border-radius:9px;background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.15);margin-top:4px;}
+.concept-tag-expand.visible{display:block;}
+.concept-tag-expand-name{font-size:0.85rem;font-weight:800;color:var(--ai);font-family:'Courier New',monospace;margin-bottom:8px;}
+.concept-def{font-size:0.88rem;color:var(--body-text);line-height:1.65;margin-bottom:9px;}
+.concept-rel{font-size:0.85rem;color:var(--muted);line-height:1.6;font-style:italic;padding-left:12px;border-left:2px solid rgba(129,140,248,0.35);}
+.hunt-list{display:flex;flex-direction:column;gap:8px;}
+details.hunt-entry{border-radius:9px;overflow:hidden;border:1px solid var(--border);transition:border-color 0.2s;}
+details.hunt-entry[open]{border-color:var(--border2);}
+details.hunt-entry summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;background:var(--surface2);transition:background 0.15s;}
+details.hunt-entry summary:hover{background:var(--surface3);}
+details.hunt-entry summary::-webkit-details-marker{display:none;}
+.hunt-priority{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;flex-shrink:0;}
+.hunt-priority.high{background:rgba(239,68,68,0.15);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}
+.hunt-priority.medium{background:rgba(251,191,36,0.12);color:var(--amber);border:1px solid rgba(251,191,36,0.22);}
+.hunt-priority.low{background:rgba(52,211,153,0.1);color:var(--cyber);border:1px solid rgba(52,211,153,0.2);}
+.hunt-signal{font-size:0.88rem;font-weight:700;color:var(--text);flex:1;}
+.hunt-chevron{font-size:0.6rem;color:var(--muted2);transition:transform 0.2s;flex-shrink:0;}
+details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
+.hunt-body{padding:12px 14px;border-top:1px solid var(--border);background:var(--surface);}
+.hunt-desc{font-size:0.88rem;color:var(--muted);line-height:1.65;}
+.hunt-log-tag{display:inline-block;margin-top:8px;margin-right:5px;font-size:0.68rem;font-weight:700;font-family:'Courier New',monospace;padding:2px 8px;border-radius:4px;background:rgba(129,140,248,0.1);color:var(--ai);border:1px solid rgba(129,140,248,0.2);}
+.ioc-caveat{padding:12px 15px;border-radius:8px;margin-bottom:16px;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.25);display:flex;align-items:flex-start;gap:10px;}
+.ioc-caveat-icon{font-size:1rem;flex-shrink:0;margin-top:1px;} .ioc-caveat-text{font-size:0.83rem;color:var(--body-text);line-height:1.6;}
+.ioc-caveat-text strong{color:var(--amber);font-weight:700;}
+.ioc-group{margin-bottom:16px;} .ioc-group:last-child{margin-bottom:0;}
+.ioc-group-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.ioc-group-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);}
+.ioc-copy-btn{font-size:0.68rem;font-weight:600;padding:3px 10px;border-radius:20px;background:transparent;border:1px solid var(--border2);color:var(--muted2);cursor:pointer;transition:color 0.15s,border-color 0.15s;display:flex;align-items:center;gap:4px;}
+.ioc-copy-btn:hover,.ioc-copy-btn.copied{color:var(--cyber);border-color:rgba(52,211,153,0.4);}
+.ioc-list{background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.ioc-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);font-family:'Courier New',monospace;font-size:0.8rem;color:var(--body-text);word-break:break-all;}
+.ioc-item:last-child{border-bottom:none;} .ioc-item:hover{background:rgba(255,255,255,0.02);}
+.ioc-copy-single{flex-shrink:0;background:none;border:none;cursor:pointer;color:var(--muted2);font-size:0.72rem;padding:2px 6px;border-radius:4px;transition:color 0.15s;font-family:inherit;}
+.ioc-copy-single:hover{color:var(--cyber);}
+.ioc-no-data{padding:12px;font-size:0.83rem;color:var(--muted2);font-style:italic;text-align:center;}
+.ta-inline-tag{display:inline-flex;align-items:center;gap:5px;font-size:0.63rem;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.28);cursor:pointer;transition:background 0.15s,border-color 0.15s;font-family:inherit;white-space:nowrap;}
+.ta-inline-tag:hover{background:rgba(167,139,250,0.18);border-color:rgba(167,139,250,0.45);}
+.share-footer{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.share-footer-text{font-size:0.85rem;color:var(--muted);}
+.share-footer-text strong{color:var(--text);}
+.share-footer-btns{display:flex;flex-wrap:wrap;gap:7px;}
+.share-opt{display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 13px;cursor:pointer;text-decoration:none;font-size:0.8rem;font-weight:600;color:var(--muted);transition:border-color 0.18s,color 0.18s;font-family:inherit;}
+.share-opt:hover{color:var(--text);border-color:var(--border2);}
+.share-opt.x:hover{border-color:#e7e7e7;color:#e7e7e7;}
+.share-opt.whatsapp:hover{border-color:#25d366;color:#25d366;}
+.share-opt.telegram:hover{border-color:#2aabee;color:#2aabee;}
+.share-opt.linkedin:hover{border-color:#0a66c2;color:#0a66c2;}
+.share-opt.copy-link:hover{border-color:var(--cyber);color:var(--cyber);}
+.popover-overlay{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.6);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.popover-overlay.open{opacity:1;pointer-events:all;}
+.popover-box{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:24px 24px 20px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto;transform:translateY(12px);transition:transform 0.2s;position:relative;}
+.popover-overlay.open .popover-box{transform:translateY(0);}
+.popover-close{position:absolute;top:14px;right:14px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.78rem;display:flex;align-items:center;justify-content:center;transition:color 0.15s;font-family:inherit;}
+.popover-close:hover{color:var(--text);}
+.popover-type-tag{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;padding:2px 9px;border-radius:4px;display:inline-block;margin-bottom:10px;}
+.popover-type-tag.technique{background:rgba(251,191,36,0.12);color:var(--amber);border:1px solid rgba(251,191,36,0.25);}
+.popover-type-tag.tactic{background:rgba(239,68,68,0.12);color:var(--sec-soft);border:1px solid rgba(239,68,68,0.25);}
+.popover-type-tag.actor{background:rgba(167,139,250,0.12);color:var(--purple);border:1px solid rgba(167,139,250,0.25);}
+.popover-title{font-size:1.1rem;font-weight:800;color:var(--text);margin-bottom:4px;line-height:1.3;}
+.popover-subtitle{font-size:0.75rem;font-weight:600;font-family:'Courier New',monospace;color:var(--muted2);margin-bottom:14px;}
+.popover-section-label{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:6px;margin-top:14px;}
+.popover-body-text{font-size:0.9rem;color:var(--body-text);line-height:1.7;}
+.popover-relevance{font-size:0.88rem;color:var(--muted);line-height:1.65;padding:10px 14px;background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.18);border-radius:8px;border-left:3px solid rgba(129,140,248,0.4);margin-top:6px;}
+.popover-att-link{display:inline-flex;align-items:center;gap:4px;margin-top:12px;font-size:0.75rem;font-weight:600;color:var(--sec-soft);text-decoration:none;transition:color 0.15s;}
+.popover-att-link:hover{color:var(--sec);}
+.popover-tags-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.popover-tag{font-size:0.68rem;font-weight:600;padding:3px 9px;border-radius:5px;font-family:inherit;}
+.popover-tag.purple{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.22);}
+.popover-tag.alias{background:var(--surface3);color:var(--muted2);border:1px solid var(--border2);}
+.popover-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.popover-cell{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.popover-cell-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);margin-bottom:4px;}
+.popover-cell-value{font-size:0.88rem;font-weight:700;color:var(--text);}
+.popover-cell-value.purple{color:var(--purple);}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface2);border:1px solid var(--cyber);color:var(--cyber);padding:8px 18px;border-radius:20px;font-size:0.78rem;font-weight:600;opacity:0;transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:9999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+@media(max-width:640px){
+  .hero-title{font-size:1.35rem;}
+  .top-nav .nav-breadcrumb{display:none;}
+  .score-row{gap:8px;}
+  .cvss-bar-track{width:100px;}
+  .page-body{padding:16px 12px 60px;}
+  .sec-block-body{padding:14px;}
+  .details-grid{grid-template-columns:1fr 1fr;}
+  .fix-grid{grid-template-columns:1fr;}
+  .share-footer{flex-direction:column;}
+  .affected-table th,.affected-table td{padding:8px;}
+  .mitre-col{min-width:130px;}
+  .popover-grid{grid-template-columns:1fr;}
+  .popover-box{padding:18px 16px 16px;}
+}
+</style>
+</head>
+<body>
+<nav class="top-nav">
+  <a href="https://dizchrisctrl.github.io/daily-digest" class="back-btn">&#8592; Back to Digest</a>
+  <span class="nav-breadcrumb">The Daily Rundown <span>/</span> 2026-04-24 <span>/</span> Threat Actor Profile</span>
+  <div class="nav-actions">
+    <button class="theme-toggle" onclick="document.documentElement.classList.toggle('light')">&#9788; Theme</button>
+    <button class="share-btn-top" onclick="copyPageLink(this)">&#8679; Share</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-badges">
+      <span class="type-badge">&#9670; Threat Actor Profile</span>
+      
+      <button class="ta-inline-tag" data-ta="{&quot;name&quot;: &quot;UNC6692&quot;, &quot;aliases&quot;: [], &quot;origin&quot;: &quot;Unknown&quot;, &quot;motivation&quot;: &quot;Unknown&quot;, &quot;description&quot;: &quot;UNC6692 is a newly documented uncategorized threat cluster tracked for impersonating corporate IT helpdesk staff via Microsoft Teams to deploy a custom malware suite called SNOW. The group leverages collaboration platform social engineering rather than software exploits for initial access, demonstrating operational sophistication in pretext construction and real-time victim interaction. Full attribution, sponsorship, and strategic objectives remain under investigation.&quot;, &quot;known_ttps&quot;: [&quot;Impersonation of IT helpdesk staff via Microsoft Teams external chat&quot;, &quot;Social engineering through real-time conversational pretexting&quot;, &quot;Deployment of custom SNOW malware suite for persistence and C2&quot;, &quot;Abuse of Microsoft Teams external tenant federation for initial contact&quot;, &quot;Possible use of remote assistance tools to gain interactive endpoint access&quot;], &quot;attribution_confidence&quot;: &quot;Medium&quot;, &quot;story_relevance&quot;: &quot;&quot;}" onclick="openTAPopover(event,this)">&#9670; UNC6692 &#8594;</button>
+    </div>
+    <h1 class="hero-title">UNC6692 Poses as IT Helpdesk on Microsoft Teams to Drop Custom SNOW Malware</h1>
+    <div class="score-row">
+      
+      <span class="severity-pill sev-high">High</span>
+      <span class="patch-pill patch-mitigation">&#9888; Mitigation Only</span>
+    </div>
+    <p class="hero-desc">A newly tracked threat group designated UNC6692 is impersonating corporate IT helpdesk personnel via Microsoft Teams to social-engineer employees into installing a custom malware suite called SNOW. The campaign exploits the implicit trust users place in collaboration platforms, bypassing traditional email-based phishing defenses entirely. Once SNOW is deployed on a victim endpoint, it provides the attacker with persistent access and command-and-control capabilities within the compromised environment.</p>
+    <div class="hero-meta">
+      <span class="hero-meta-item">&#128197; Apr 23, 2026 2:16 PM EDT</span><span class="hero-meta-sep">|</span>
+      <span class="hero-meta-item">Source: <a href="https://thehackernews.com/2026/04/unc6692-impersonates-it-helpdesk-via.html" class="src-link-hero" target="_blank" rel="noopener">The Hacker News &#8599;</a></span>
+      
+    </div>
+  </div>
+</header>
+
+<main class="page-body">
+
+  
+      <div class="sec-block">
+        <div class="sec-block-header"><span class="sec-block-icon">&#9654;</span><span class="sec-block-title red">Attack Flow</span></div>
+        <div class="sec-block-body">
+          <div class="diagram-wrap">
+            <div class="diagram-bar">
+              <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+              <span class="diagram-title">UNC6692 – IT Helpdesk Impersonation via Microsoft Teams Deploying SNOW Malware</span>
+            </div>
+            <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#34d399"/>
+    </marker>
+  </defs>
+  <rect width="700" height="340" fill="#060912"/>
+  <text x="350" y="28" fill="#7a849a" font-size="12" font-family="monospace" text-anchor="middle">UNC6692 ATTACK CHAIN — Teams Social Engineering → SNOW Malware</text>
+
+  <!-- Step 1: Attacker Account -->
+  <rect x="20" y="70" width="120" height="60" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="80" y="96" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Attacker</text>
+  <text x="80" y="114" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Fake IT Account</text>
+
+  <!-- Arrow 1→2 -->
+  <line x1="140" y1="100" x2="175" y2="100" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <text x="158" y="88" fill="#34d399" font-size="9" font-family="monospace" text-anchor="middle">Teams</text>
+  <text x="158" y="78" fill="#34d399" font-size="9" font-family="monospace" text-anchor="middle">chat invite</text>
+
+  <!-- Step 2: Teams Chat -->
+  <rect x="180" y="70" width="120" height="60" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="240" y="96" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">MS Teams Chat</text>
+  <text x="240" y="114" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">External Tenant</text>
+
+  <!-- Arrow 2→3 -->
+  <line x1="300" y1="100" x2="335" y2="100" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <text x="318" y="88" fill="#34d399" font-size="9" font-family="monospace" text-anchor="middle">Victim</text>
+  <text x="318" y="78" fill="#34d399" font-size="9" font-family="monospace" text-anchor="middle">accepts</text>
+
+  <!-- Step 3: Social Engineering -->
+  <rect x="340" y="70" width="120" height="60" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="400" y="96" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Social Eng.</text>
+  <text x="400" y="114" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">"IT helpdesk"</text>
+
+  <!-- Arrow 3→4 -->
+  <line x1="460" y1="100" x2="495" y2="100" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+  <text x="478" y="88" fill="#34d399" font-size="9" font-family="monospace" text-anchor="middle">Payload</text>
+  <text x="478" y="78" fill="#34d399" font-size="9" font-family="monospace" text-anchor="middle">download</text>
+
+  <!-- Step 4: SNOW Malware -->
+  <rect x="500" y="70" width="120" height="60" rx="6" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="560" y="96" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">SNOW Malware</text>
+  <text x="560" y="114" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Deployed</text>
+
+  <!-- Arrow down from SNOW to persistence -->
+  <line x1="560" y1="130" x2="560" y2="170" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Step 5: Persistence -->
+  <rect x="500" y="175" width="120" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="560" y="200" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Persistence</text>
+  <text x="560" y="215" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">C2 Established</text>
+
+  <!-- Arrow from persistence to lateral -->
+  <line x1="500" y1="200" x2="460" y2="200" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Step 6: Lateral Movement -->
+  <rect x="340" y="175" width="120" height="50" rx="6" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="400" y="200" fill="#eaedf5" font-size="11" font-family="monospace" text-anchor="middle">Lateral Move</text>
+  <text x="400" y="215" fill="#7a849a" font-size="10" font-family="monospace" text-anchor="middle">Network Access</text>
+
+  <!-- Key/Legend -->
+  <rect x="20" y="270" width="14" height="14" rx="3" fill="#12152a" stroke="#34d399" stroke-width="1.5"/>
+  <text x="42" y="282" fill="#7a849a" font-size="10" font-family="monospace">Key attack stage</text>
+  <rect x="20" y="295" width="14" height="14" rx="3" fill="#12152a" stroke="#252840" stroke-width="1.5"/>
+  <text x="42" y="307" fill="#7a849a" font-size="10" font-family="monospace">Supporting stage</text>
+
+  <!-- Callout -->
+  <rect x="340" y="260" width="280" height="50" rx="6" fill="#34d399" opacity="0.12"/>
+  <text x="480" y="282" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">No vulnerability exploited —</text>
+  <text x="480" y="298" fill="#34d399" font-size="11" font-family="monospace" text-anchor="middle">human trust is the attack surface</text>
+</svg></div>
+          </div>
+          <div class="attack-vector-text">UNC6692 creates or compromises accounts mimicking legitimate IT helpdesk identities and initiates Microsoft Teams chats with targets—often leveraging external tenant communication enabled by default—to guide victims into accepting remote assistance sessions or downloading the SNOW malware payload, all without exploiting any software vulnerability.</div>
+        </div>
+      </div>
+
+  
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128336;</span><span class="sec-block-title amber">Timeline</span></div>
+    <div class="sec-block-body">
+      <div class="timeline-track"><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Disclosed</div><div class="tl-date">2026-04-23</div></div><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Exploited in Wild</div><div class="tl-date">2026-04-23</div></div><div class="tl-step"><div class="tl-dot amber"></div><div class="tl-label">Patch Released</div><div class="tl-date na">Unknown</div></div></div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Map</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tactic or technique for details</span></div>
+    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Initial Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1566.003&quot;, &quot;name&quot;: &quot;Phishing: Spearphishing via Service&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Initial Access</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1566.003</span><span class="mitre-tech-name">Phishing: Spearphishing via Service</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">UNC6692 uses Microsoft Teams as the delivery channel for social engineering, sending targeted messages that impersonate IT helpdesk staff to initiate the attack.</p><a href="https://attack.mitre.org/techniques/T1566/003/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Execution&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1204.002&quot;, &quot;name&quot;: &quot;User Execution: Malicious File&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Execution</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1204.002</span><span class="mitre-tech-name">User Execution: Malicious File</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Victims are persuaded through conversation to download and execute the SNOW malware payload on their endpoints.</p><a href="https://attack.mitre.org/techniques/T1204/002/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Defense Evasion&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1036.005&quot;, &quot;name&quot;: &quot;Masquerading: Match Legitimate Name or Location&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Defense Evasion</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1036.005</span><span class="mitre-tech-name">Masquerading: Match Legitimate Name or Location</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The threat actor crafts Teams account names and display information to convincingly impersonate internal IT support personnel.</p><a href="https://attack.mitre.org/techniques/T1036/005/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Command and Control&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1219&quot;, &quot;name&quot;: &quot;Remote Access Software&quot;}, {&quot;id&quot;: &quot;T1071.001&quot;, &quot;name&quot;: &quot;Application Layer Protocol: Web Protocols&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Command and Control</span><span class="mitre-tactic-cnt">2 techniques</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1219</span><span class="mitre-tech-name">Remote Access Software</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">UNC6692 may guide victims into accepting remote assistance sessions as part of the social engineering pretext, granting direct interactive access to the endpoint.</p><a href="https://attack.mitre.org/techniques/T1219/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1071.001</span><span class="mitre-tech-name">Application Layer Protocol: Web Protocols</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">The SNOW malware suite establishes persistence and command-and-control communication from compromised hosts back to attacker infrastructure.</p><a href="https://attack.mitre.org/techniques/T1071/001/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
+  </div>
+
+  
+      <div class="sec-block">
+        <div class="sec-block-header"><span class="sec-block-icon">&#9888;</span><span class="sec-block-title red">Affected Products</span></div>
+        <div class="sec-block-body" style="padding:0;overflow-x:auto;">
+          <table class="affected-table">
+            <thead><tr><th>Vendor</th><th>Product</th><th>Versions Affected</th><th>Fixed In</th></tr></thead>
+            <tbody><tr>
+          <td><span class="prod-vendor">Microsoft</span></td>
+          <td><span class="prod-name">Microsoft Teams</span></td>
+          <td><span class="prod-ver">All versions — external access enabled by default in many configurations</span></td>
+          <td><span class="prod-fix none">Mitigate: Restrict external tenant communication and enforce verification protocols</span></td>
+        </tr></tbody>
+          </table>
+        </div>
+      </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#10067;</span><span class="sec-block-title amber">Am I Affected?</span></div>
+    <div class="sec-block-body">
+      <p class="apply-intro">You are likely at risk if <strong>any</strong> of the following apply:</p>
+      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your organization uses Microsoft Teams with external access (federation) enabled, allowing users to receive messages from outside your tenant.</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your employees are not trained to recognize social engineering attacks delivered through collaboration platforms such as Teams or Slack.</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment lacks endpoint detection and response (EDR) capable of identifying unknown or custom malware payloads.</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your IT helpdesk does not have a documented, out-of-band verification process for support requests initiated via chat.</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your organization has disabled external access in Microsoft Teams and only allows communication with explicitly approved tenant domains.</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your environment enforces application whitelisting that blocks execution of unapproved software downloaded by end users.</span></div></div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128736;</span><span class="sec-block-title green">Fix &amp; Recommendations</span></div>
+    <div class="sec-block-body">
+      <div class="fix-grid">
+        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Restrict Microsoft Teams external access immediately: In the Teams Admin Center, navigate to Org-wide settings &gt; External access and set &#39;Users can communicate with other Teams users&#39; to &#39;Block all external domains&#39; or whitelist only trusted partner domains.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Issue an organization-wide alert to all employees warning them that IT helpdesk will never initiate support sessions via Teams chat and providing the legitimate channel (e.g., ticketing system, phone number) for IT support requests.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Hunt for indicators of the SNOW malware across endpoints by scanning for recently downloaded executables from Teams chat sessions; review EDR telemetry for unusual process trees originating from Teams-related file downloads in the past 30 days.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Audit Microsoft Teams chat logs in Microsoft 365 Unified Audit Log for external tenant conversations where the display name matches IT helpdesk naming patterns (e.g., &#39;IT Support&#39;, &#39;Helpdesk&#39;, &#39;IT Admin&#39;) from unfamiliar domains.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Block remote assistance tools (e.g., Quick Assist, AnyDesk, TeamViewer) on endpoints where they are not operationally required using application control policies or Group Policy.</span></li></ul></div>
+        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Extend phishing awareness training to cover collaboration platforms: develop and run simulated social engineering exercises specifically targeting Teams, Slack, and other chat tools, not just email.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Implement Conditional Access policies in Azure AD/Entra ID to require multi-factor authentication and compliant devices before Teams sessions are established, reducing the value of compromised external accounts.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Deploy application whitelisting (e.g., Microsoft Defender Application Control or AppLocker) across all user endpoints to prevent execution of unapproved binaries regardless of how they are delivered.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Establish a formal, out-of-band verification protocol for all IT support interactions: any request for software installation, remote access, or credential changes must be confirmed via a second trusted channel (e.g., phone callback to a published number).</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Integrate Microsoft Teams telemetry into your SIEM platform and build detection rules for anomalous external chat patterns, file transfers from external tenants, and rapid-trust social engineering indicators such as short conversations preceding file downloads.</span></li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128218;</span><span class="sec-block-title ai">Concept Briefing</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tag to expand</span></div>
+    <div class="sec-block-body">
+      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-collaboration-platform-phishin')">Collaboration Platform Phishing</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-external-tenant-federation')">External Tenant Federation</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-custom-malware-suite')">Custom Malware Suite</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-pretexting')">Pretexting</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-uncategorized-threat-cluster')">Uncategorized Threat Cluster</button></div>
+      <div class="concept-tag-expand" id="ct-collaboration-platform-phishin">
+          <div class="concept-tag-expand-name">Collaboration Platform Phishing</div>
+          <div class="concept-def">Social engineering attacks delivered through business chat tools like Microsoft Teams or Slack, rather than traditional email, exploiting the implicit trust users place in internal communication platforms.</div>
+          <div class="concept-rel">UNC6692&#39;s entire initial access strategy relies on abusing Microsoft Teams as a trusted channel to impersonate IT staff, bypassing email-based security controls.</div>
+        </div><div class="concept-tag-expand" id="ct-external-tenant-federation">
+          <div class="concept-tag-expand-name">External Tenant Federation</div>
+          <div class="concept-def">A Microsoft Teams configuration that allows users in one organization to send messages to users in a completely different organization&#39;s tenant, enabled by default in many deployments.</div>
+          <div class="concept-rel">This default-on setting is what allows UNC6692 to initiate conversations with victims without ever compromising the target organization&#39;s own infrastructure.</div>
+        </div><div class="concept-tag-expand" id="ct-custom-malware-suite">
+          <div class="concept-tag-expand-name">Custom Malware Suite</div>
+          <div class="concept-def">Purpose-built malicious software created by a specific threat actor, as opposed to commodity or open-source tools, making it harder to detect with signature-based defenses.</div>
+          <div class="concept-rel">SNOW is a previously undocumented malware suite custom-built by UNC6692 for persistence and C2, meaning traditional antivirus signatures are unlikely to catch it initially.</div>
+        </div><div class="concept-tag-expand" id="ct-pretexting">
+          <div class="concept-tag-expand-name">Pretexting</div>
+          <div class="concept-def">A social engineering technique in which an attacker creates a fabricated scenario (the pretext) to manipulate a victim into performing an action or divulging information.</div>
+          <div class="concept-rel">UNC6692 constructs a convincing IT helpdesk pretext—complete with professional jargon and urgency—to persuade victims to install malware they believe is a legitimate security update.</div>
+        </div><div class="concept-tag-expand" id="ct-uncategorized-threat-cluster">
+          <div class="concept-tag-expand-name">Uncategorized Threat Cluster</div>
+          <div class="concept-def">A designation (often prefixed &#39;UNC&#39;) used by threat intelligence firms for a group of related intrusion activity that has not yet been formally attributed to a named threat actor or nation-state.</div>
+          <div class="concept-rel">UNC6692 is a newly tracked cluster, meaning its full scope, sponsorship, and long-term objectives are still being investigated by researchers.</div>
+        </div>
+    </div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#128269;</span><span class="sec-block-title amber">Threat Hunting Signals</span></div>
+    <div class="sec-block-body"><div class="hunt-list">
+        <details class="hunt-entry" open>
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">External Teams chat initiations with IT helpdesk-themed display names</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Search Microsoft 365 Unified Audit Log and Teams message events for incoming chats from external tenants where the sender&#39;s display name contains keywords such as &#39;IT Support&#39;, &#39;Helpdesk&#39;, &#39;IT Admin&#39;, &#39;Tech Support&#39;, or &#39;Service Desk&#39;. High volume of such contacts to multiple users in a short window is a strong indicator of a campaign.</div>
+            <span class="hunt-log-tag">Microsoft 365 Unified Audit Log</span><span class="hunt-log-tag">Microsoft Teams Admin Center chat logs</span><span class="hunt-log-tag">Microsoft Defender for Cloud Apps activity logs</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">File downloads originating from Teams chat sessions</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Monitor EDR telemetry for executable files (.exe, .msi, .ps1, .bat, .scr) written to disk from Teams-related processes (e.g., Teams.exe child processes or files in the Teams Downloads folder). Correlate with external tenant chat events to identify socially engineered payload delivery.</div>
+            <span class="hunt-log-tag">EDR telemetry (Microsoft Defender for Endpoint, CrowdStrike, SentinelOne)</span><span class="hunt-log-tag">Windows Sysmon Event ID 11 (FileCreate)</span><span class="hunt-log-tag">Microsoft Defender for Cloud Apps file activity</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">Unexpected remote assistance tool execution</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Detect launches of Quick Assist, AnyDesk, TeamViewer, ScreenConnect, or similar remote access tools on endpoints where they are not standard software. Look for process creation events with these tool names, especially when preceded by Teams activity within a short time window.</div>
+            <span class="hunt-log-tag">EDR telemetry</span><span class="hunt-log-tag">Windows Security Event Log (Event ID 4688)</span><span class="hunt-log-tag">Windows Sysmon Event ID 1 (ProcessCreate)</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority medium">Medium</span>
+            <span class="hunt-signal">Unknown or unsigned executables with persistence mechanisms post-Teams interaction</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Hunt for newly created scheduled tasks, registry run keys, or startup folder entries that reference executables not present in your organization&#39;s software baseline, particularly on hosts where external Teams chat activity was recently logged.</div>
+            <span class="hunt-log-tag">EDR telemetry</span><span class="hunt-log-tag">Windows Sysmon Event IDs 12/13 (Registry)</span><span class="hunt-log-tag">Windows Task Scheduler logs</span><span class="hunt-log-tag">Autoruns baseline comparison</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority medium">Medium</span>
+            <span class="hunt-signal">Anomalous outbound C2 traffic from endpoints with recent Teams file downloads</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Correlate network traffic logs for beaconing patterns (regular interval HTTP/HTTPS requests to uncommon or newly registered domains) from endpoints where Teams-originated file downloads were detected. The SNOW malware&#39;s C2 communication may use standard web protocols to blend in.</div>
+            <span class="hunt-log-tag">Network firewall/proxy logs</span><span class="hunt-log-tag">DNS query logs</span><span class="hunt-log-tag">NDR/NTA platforms (e.g., Zeek, Darktrace)</span><span class="hunt-log-tag">EDR network telemetry</span>
+          </div>
+        </details></div></div>
+  </div>
+
+  <div class="sec-block">
+    <div class="sec-block-header"><span class="sec-block-icon">&#9762;</span><span class="sec-block-title amber">Indicators of Compromise</span><button class="ioc-copy-btn" style="margin-left:auto" onclick="copyAllIOCs()">&#10064; Copy All IOCs</button></div>
+    <div class="sec-block-body">
+      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> No specific indicators of compromise (file hashes, IP addresses, domains, file paths, or URI patterns) were reported in the source article for the SNOW malware or UNC6692 infrastructure. All IOC arrays are empty. If IOCs are published in follow-up vendor reporting, validate them against your own telemetry before blocking—do not assume third-party IOC lists are complete or free of false positives.</span></div>
+      <div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Hashes (SHA-256)</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Command &amp;amp; Control IPs</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Malicious Domains</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Paths / Artifacts</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Suspicious URI Patterns</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div>
+    </div>
+  </div>
+
+  <div class="share-footer">
+    <div class="share-footer-text"><strong>Share this advisory</strong><br><span style="font-size:0.78rem;">Help your network patch faster.</span></div>
+    <div class="share-footer-btns">
+      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20UNC6692%20Poses%20as%20IT%20Helpdesk%20on%20Microsoft%20Teams%20to%20Drop%20Custom%20SNOW%20Malware%0A%0ACVSS%20N/A%20%C2%B7%20High%20%C2%B7%20Mitigation%20Only&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-24-story-cyber-3.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
+      <a href="https://wa.me/?text=%F0%9F%9B%A1%20UNC6692%20Poses%20as%20IT%20Helpdesk%20on%20Microsoft%20Teams%20to%20Drop%20Custom%20SNOW%20Malware%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-24-story-cyber-3.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
+      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-24-story-cyber-3.html&amp;text=UNC6692%20Poses%20as%20IT%20Helpdesk%20on%20Microsoft%20Teams%20to%20Drop%20Custom%20SNOW%20Malware" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-04-24-story-cyber-3.html" class="share-opt linkedin" target="_blank" rel="noopener">in Share</a>
+      <button class="share-opt copy-link" onclick="copyPageLink(this)">&#128279; Copy Link</button>
+    </div>
+  </div>
+
+</main>
+
+<div class="popover-overlay" id="mitre-ta-overlay" onclick="closeOverlay(event)">
+  <div class="popover-box" id="mitre-ta-box" onclick="event.stopPropagation()">
+    <button class="popover-close" onclick="closeOverlay()">&#10005;</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+function escHtml(s){
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function toggleConcept(btn,id){
+  var el=document.getElementById(id);
+  if(!el)return;
+  var open=el.classList.contains('visible');
+  document.querySelectorAll('.concept-tag-expand').forEach(function(e){e.classList.remove('visible');});
+  document.querySelectorAll('.concept-tag-pill').forEach(function(b){b.classList.remove('active');});
+  if(!open){el.classList.add('visible');btn.classList.add('active');el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+}
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2200);
+}
+function copyText(btn,text){
+  navigator.clipboard.writeText(text).then(function(){
+    var o=btn.textContent;btn.textContent='&#10003;';
+    setTimeout(function(){btn.textContent=o;},1400);
+    showToast('Copied');
+  });
+}
+function copyIOCGroup(gid){
+  var el=document.getElementById('ioc-'+gid);
+  if(!el)return;
+  var items=Array.from(el.querySelectorAll('.ioc-item > span')).map(function(s){return s.textContent.trim();});
+  navigator.clipboard.writeText(items.join('\n')).then(function(){showToast(items.length+' IOC'+(items.length!==1?'s':'')+' copied');});
+}
+function copyAllIOCs(){
+  var all=Array.from(document.querySelectorAll('.ioc-item > span')).map(function(s){return s.textContent.trim();});
+  navigator.clipboard.writeText(all.join('\n')).then(function(){showToast(all.length+' IOCs copied');});
+}
+function copyPageLink(btn){
+  navigator.clipboard.writeText(window.location.href).then(function(){
+    var o=btn.textContent;btn.textContent='&#10003; Copied!';
+    if(btn.classList)btn.classList.add('copied');
+    setTimeout(function(){btn.textContent=o;if(btn.classList)btn.classList.remove('copied');},1800);
+    showToast('Link copied');
+  });
+}
+function _showOverlay(html){
+  var ov=document.getElementById('mitre-ta-overlay');
+  var bx=document.getElementById('mitre-ta-box');
+  if(!ov||!bx)return;
+  bx.innerHTML='<button class="popover-close" onclick="closeOverlay()">&#10005;</button>'+html;
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeOverlay(e){
+  if(e&&e.target!==document.getElementById('mitre-ta-overlay'))return;
+  var ov=document.getElementById('mitre-ta-overlay');
+  if(ov)ov.classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeOverlay();});
+var MITRE_TACTIC_DESC={
+  'Reconnaissance':'The adversary is gathering information to plan future operations — identifying targets, mapping infrastructure, or probing defenses before striking.',
+  'Resource Development':'The adversary is acquiring or building capabilities: purchasing domains, setting up infrastructure, obtaining tools, or developing malware.',
+  'Initial Access':'The adversary is trying to get a foothold. Common methods include phishing, exploiting public-facing applications, and leveraging valid credentials.',
+  'Execution':'The adversary is running malicious code on a local or remote system to carry out their objectives — via scripts, native APIs, or exploited applications.',
+  'Persistence':'The adversary is maintaining their foothold so they survive reboots, credential changes, and re-imaging. They want to stay in, not just get in.',
+  'Privilege Escalation':'The adversary is gaining higher-level permissions — moving from user to admin or from standard process to SYSTEM — to unlock restricted resources.',
+  'Defense Evasion':'The adversary is avoiding detection. Techniques include disabling security tools, obfuscating code, masquerading as legitimate processes, and clearing logs.',
+  'Credential Access':'The adversary is stealing passwords, tokens, and keys — through keylogging, dumping memory, or exploiting authentication weaknesses.',
+  'Discovery':'The adversary is learning about the environment: what systems exist, who has access, how the network is laid out, and where the valuable data lives.',
+  'Lateral Movement':'The adversary is spreading through the network — pivoting from an initial beachhead to reach high-value targets using stolen credentials and trust relationships.',
+  'Collection':'The adversary is gathering data relevant to their goal: emails, files, clipboard contents, screenshots, credentials, or sensitive records.',
+  'Command and Control':'The adversary is communicating with compromised systems — issuing commands, receiving data, and maintaining covert channels to control the operation.',
+  'Exfiltration':'The adversary is stealing your data — compressing, encrypting, and transferring it to attacker-controlled infrastructure, often over legitimate channels.',
+  'Impact':'The adversary is disrupting, destroying, or manipulating your systems — through ransomware, data deletion, manipulation, or denial of service.',
+};
+function openMitrePopover(e,btn){
+  e.stopPropagation();
+  var raw=btn.getAttribute('data-mitre');
+  if(!raw)return;
+  var d;try{d=JSON.parse(raw);}catch(err){return;}
+  var html='';
+  if(d.type==='tactic'){
+    var tacDesc=MITRE_TACTIC_DESC[d.name]||'A phase in the ATT&amp;CK lifecycle describing how adversaries achieve a goal within a broader attack chain.';
+    var techs=(d.techniques||[]).map(function(t){
+      return '<span class="popover-tag purple">'+escHtml((t.id?t.id+' ':'')+escHtml(t.name||''))+'</span>';
+    }).join('');
+    html='<span class="popover-type-tag tactic">ATT&amp;CK Tactic</span>'+
+      '<div class="popover-title">'+escHtml(d.name)+'</div>'+
+      '<div class="popover-section-label">What This Means</div>'+
+      '<div class="popover-body-text">'+tacDesc+'</div>'+
+      (techs?'<div class="popover-section-label">Techniques Relevant to This Story</div><div class="popover-tags-row">'+techs+'</div>':'')+
+      '<a href="https://attack.mitre.org/tactics/" class="popover-att-link" target="_blank" rel="noopener">Browse ATT&amp;CK Tactics &#8599;</a>';
+  }
+  _showOverlay(html);
+}
+function openTAPopover(e,btn){
+  e.stopPropagation();
+  var raw=btn.getAttribute('data-ta');
+  if(!raw)return;
+  var d;try{d=JSON.parse(raw);}catch(err){return;}
+  var aliases=(d.aliases||[]).map(function(a){return '<span class="popover-tag alias">'+escHtml(a)+'</span>';}).join('');
+  var ttps=(d.known_ttps||[]).map(function(t){return '<span class="popover-tag purple">'+escHtml(t)+'</span>';}).join('');
+  var conf=d.attribution_confidence?'<span class="conf-badge" style="margin-left:8px">'+escHtml(d.attribution_confidence)+' Confidence</span>':'';
+  var html='<span class="popover-type-tag actor">Threat Actor</span>'+conf+
+    '<div class="popover-title" style="color:var(--purple)">'+escHtml(d.name)+'</div>'+
+    (aliases?'<div class="popover-tags-row" style="margin-bottom:10px">'+aliases+'</div>':'')+
+    '<div class="popover-grid">'+
+      '<div class="popover-cell"><div class="popover-cell-label">Origin</div><div class="popover-cell-value">'+escHtml(d.origin||'Unknown')+'</div></div>'+
+      '<div class="popover-cell"><div class="popover-cell-label">Motivation</div><div class="popover-cell-value purple">'+escHtml(d.motivation||'Unknown')+'</div></div>'+
+    '</div>'+
+    (d.description?'<div class="popover-section-label">Description</div><div class="popover-body-text">'+escHtml(d.description)+'</div>':'')+
+    (d.story_relevance?'<div class="popover-section-label">Story Relevance</div><div class="popover-relevance">'+escHtml(d.story_relevance)+'</div>':'')+
+    (ttps?'<div class="popover-section-label">Known TTPs</div><div class="popover-tags-row">'+ttps+'</div>':'');
+  _showOverlay(html);
+}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.cvss-bar-fill').forEach(function(bar){
+    var w=bar.style.width;bar.style.width='0%';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){bar.style.width=w;});});
+  });
+});
+</script>
+</body>
+</html>
