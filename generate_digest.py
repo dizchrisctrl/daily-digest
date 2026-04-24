@@ -19,8 +19,8 @@ if _raw_worker_url and not (_parsed_worker.scheme == "https" and _parsed_worker.
     raise ValueError(f"WORKER_URL must be an https:// URL, got: {_raw_worker_url!r}")
 WORKER_URL = _raw_worker_url
 
-RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
-WORKER_SECRET  = os.environ.get("WORKER_SECRET", "")
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "").strip()
+WORKER_SECRET  = os.environ.get("WORKER_SECRET", "").strip()
 
 # ── RSS Feeds ──────────────────────────────────────────────────────────────────
 AI_FEEDS = [
