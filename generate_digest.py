@@ -541,7 +541,7 @@ ARTICLES:
 
 Reply with only a JSON array of 3 indices, e.g.: [0, 2, 5]"""
     sel_response = client.messages.create(
-        model="claude-opus-4-6",
+        model="claude-opus-4-7",
         max_tokens=50,
         messages=[{"role": "user", "content": selection_prompt}],
     )
@@ -580,7 +580,7 @@ Reply with only a JSON array of 3 indices, e.g.: [0, 2, 5]"""
         )
         for attempt in range(1, 3):
             response = client.messages.create(
-                model="claude-opus-4-6",
+                model="claude-opus-4-7",
                 max_tokens=8000,
                 tools=[SECTION_TOOL],
                 tool_choice={"type": "tool", "name": "publish_story"},
@@ -601,7 +601,7 @@ def call_claude_for_notables(client, today, articles):
     prompt = NOTABLES_PROMPT.format(today=today, articles=json.dumps(articles, indent=2))
     for attempt in range(1, 3):
         response = client.messages.create(
-            model="claude-opus-4-6",
+            model="claude-opus-4-7",
             max_tokens=4000,
             tools=[NOTABLES_TOOL],
             tool_choice={"type": "tool", "name": "publish_notables"},
@@ -789,7 +789,7 @@ def call_claude_for_security_detail(client, today, story):
     )
     for attempt in range(1, 3):
         response = client.messages.create(
-            model="claude-opus-4-6",
+            model="claude-opus-4-7",
             max_tokens=6000,
             tools=[SECURITY_DETAIL_TOOL],
             tool_choice={"type": "tool", "name": "publish_security_detail"},
@@ -2591,7 +2591,7 @@ Call the publish_story tool.`;
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-opus-4-6',
+      model: 'claude-opus-4-7',
       max_tokens: 8000,
       tools: [CM_TOOL],
       tool_choice: { type: 'tool', name: 'publish_story' },
@@ -2640,7 +2640,7 @@ Call the publish_security_detail tool.`;
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-opus-4-6',
+      model: 'claude-opus-4-7',
       max_tokens: 6000,
       tools: [CM_SECURITY_TOOL],
       tool_choice: { type: 'tool', name: 'publish_security_detail' },
