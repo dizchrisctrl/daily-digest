@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';">
-<title>Typosquatted PyTorch Lightning PyPI Package Drops Credential Stealer | The Daily Rundown</title>
+<title>CVE-2026-22679 — Weaver E-cology Unauthenticated RCE — CVE-2026-22679 | The Daily Rundown</title>
 <meta property="og:type"        content="article">
 <meta property="og:site_name"   content="The Daily Rundown">
-<meta property="og:title"       content="Typosquatted PyTorch Lightning PyPI Package Drops Credential Stealer">
-<meta property="og:description" content="A malicious package masquerading as PyTorch Lightning was uploaded to PyPI and steals browser credentials, .env file secrets, and cloud SDK tokens (AWS, GCP, HuggingFace, OpenAI) from any developer who pip-installs it. Because PyTorch Lightning is ubiquitous in ML workflows and M">
+<meta property="og:title"       content="CVE-2026-22679 — Weaver E-cology Unauthenticated RCE">
+<meta property="og:description" content="A critical unauthenticated remote code execution vulnerability in Weaver E-cology, China&#39;s most widely deployed enterprise office automation suite, has been exploited in the wild since mid-March 2026. Attackers have used the seven-week pre-disclosure window to run low-noise r">
 <meta property="og:url"         content="https://dizchrisctrl.github.io/daily-digest/s/2026-05-04-story-cyber-1.html">
 <meta name="twitter:card"        content="summary">
-<meta name="twitter:title"       content="Typosquatted PyTorch Lightning PyPI Package Drops Credential Stealer">
-<meta name="twitter:description" content="A malicious package masquerading as PyTorch Lightning was uploaded to PyPI and steals browser credentials, .env file secrets, and cloud SDK tokens (AWS, GCP, HuggingFace, OpenAI) from any developer who pip-installs it. Because PyTorch Lightning is ubiquitous in ML workflows and M">
+<meta name="twitter:title"       content="CVE-2026-22679 — Weaver E-cology Unauthenticated RCE">
+<meta name="twitter:description" content="A critical unauthenticated remote code execution vulnerability in Weaver E-cology, China&#39;s most widely deployed enterprise office automation suite, has been exploited in the wild since mid-March 2026. Attackers have used the seven-week pre-disclosure window to run low-noise r">
 <style>
 :root {
   --bg:#0b0d16; --surface:#12152a; --surface2:#1a1d32; --surface3:#20233c;
@@ -20,8 +20,8 @@
   --cyber:#34d399; --cyber2:#10b981; --purple:#a78bfa; --amber:#fbbf24; --ai:#818cf8;
   --border:#252840; --border2:#333660;
   --body-text:#c0c8d8;
-  --sec:#fbbf24; --sec2:#dc2626; --sec-soft:#fde68a;
-  --sec-glow:rgba(251,191,36,0.15); --sec-bg:rgba(251,191,36,0.04); --sec-border:rgba(251,191,36,0.22);
+  --sec:#ef4444; --sec2:#dc2626; --sec-soft:#f87171;
+  --sec-glow:rgba(239,68,68,0.15); --sec-bg:rgba(239,68,68,0.04); --sec-border:rgba(239,68,68,0.22);
 }
 html.light {
   --bg:#f4f6fb; --surface:#ffffff; --surface2:#eef0f7; --surface3:#e4e7f2;
@@ -244,7 +244,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
 <body>
 <nav class="top-nav">
   <a href="https://dizchrisctrl.github.io/daily-digest" class="back-btn">&#8592; Back to Digest</a>
-  <span class="nav-breadcrumb">The Daily Rundown <span>/</span> 2026-05-04 <span>/</span> Breach Report</span>
+  <span class="nav-breadcrumb">The Daily Rundown <span>/</span> 2026-05-04 <span>/</span> Vulnerability Advisory</span>
   <div class="nav-actions">
     <button class="theme-toggle" onclick="document.documentElement.classList.toggle('light')">&#9788; Theme</button>
     <button class="share-btn-top" onclick="copyPageLink(this)">&#8679; Share</button>
@@ -254,21 +254,21 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
 <header class="hero">
   <div class="hero-inner">
     <div class="hero-badges">
-      <span class="type-badge">&#9650; Breach Report</span>
-      
+      <span class="type-badge">&#9888; Vulnerability Advisory</span>
+      <span class="live-badge"><span class="live-dot"></span>Active Exploitation</span>
       
     </div>
-    <h1 class="hero-title">Typosquatted PyTorch Lightning on PyPI Hijacks ML Devs&#39; Cloud Keys</h1>
+    <h1 class="hero-title">Weaver E-cology Zero-Day Quietly Exploited Since March</h1>
     <div class="score-row">
-      
-      <span class="severity-pill sev-high">High</span>
-      <span class="patch-pill patch-mitigation">&#9888; Mitigation Only</span>
+      <div class="cvss-wrap"><span class="cvss-label">CVSS</span><div class="cvss-bar-track"><div class="cvss-bar-fill" style="width:98%"></div></div><span class="cvss-score-num">9.8</span></div>
+      <span class="severity-pill sev-critical">Critical</span>
+      <span class="patch-pill patch-available">&#10003; Patch Available</span>
     </div>
-    <p class="hero-desc">A malicious package masquerading as PyTorch Lightning was uploaded to PyPI and steals browser credentials, .env file secrets, and cloud SDK tokens (AWS, GCP, HuggingFace, OpenAI) from any developer who pip-installs it. Because PyTorch Lightning is ubiquitous in ML workflows and ML developers commonly run pip on machines loaded with cloud credentials, the blast radius is unusually high.</p>
+    <p class="hero-desc">A critical unauthenticated remote code execution vulnerability in Weaver E-cology, China&#39;s most widely deployed enterprise office automation suite, has been exploited in the wild since mid-March 2026. Attackers have used the seven-week pre-disclosure window to run low-noise reconnaissance commands inside corporate networks, likely as a prelude to lateral movement or data theft.</p>
     <div class="hero-meta">
-      <span class="hero-meta-item">&#128197; May 04, 2026 1:15 PM EDT</span><span class="hero-meta-sep">|</span>
-      <span class="hero-meta-item">Source: <a href="https://www.bleepingcomputer.com/news/security/backdoored-pytorch-lightning-package-drops-credential-stealer/" class="src-link-hero" target="_blank" rel="noopener">BleepingComputer &#8599;</a></span>
-      
+      <span class="hero-meta-item">&#128197; May 04, 2026 6:12 PM EDT</span><span class="hero-meta-sep">|</span>
+      <span class="hero-meta-item">Source: <a href="https://www.bleepingcomputer.com/news/security/weaver-e-cology-critical-bug-exploited-in-attacks-since-march/" class="src-link-hero" target="_blank" rel="noopener">BleepingComputer &#8599;</a></span>
+      <span class="hero-meta-sep">|</span><span class="hero-meta-item" style="font-family:monospace;color:var(--sec-soft);">CVE-2026-22679</span>
     </div>
   </div>
 </header>
@@ -282,26 +282,26 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
           <div class="diagram-wrap">
             <div class="diagram-bar">
               <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-              <span class="diagram-title">Typosquatted PyTorch Lightning PyPI Package Drops Credential Stealer</span>
+              <span class="diagram-title">CVE-2026-22679 — Weaver E-cology Unauthenticated RCE</span>
             </div>
-            <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"><rect width="700" height="340" fill="#060912"/><defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#34d399"/></marker></defs><text x="20" y="28" fill="#eaedf5" font-family="monospace" font-size="14">Attack chain: malicious PyTorch Lightning package</text><rect x="20" y="60" width="140" height="60" fill="#12152a" stroke="#34d399" rx="6"/><text x="90" y="85" fill="#eaedf5" font-family="monospace" font-size="13" text-anchor="middle">1. Upload</text><text x="90" y="105" fill="#7a849a" font-family="monospace" font-size="11" text-anchor="middle">typosquat to PyPI</text><rect x="190" y="60" width="140" height="60" fill="#12152a" stroke="#252840" rx="6"/><text x="260" y="85" fill="#eaedf5" font-family="monospace" font-size="13" text-anchor="middle">2. pip install</text><text x="260" y="105" fill="#7a849a" font-family="monospace" font-size="11" text-anchor="middle">dev fat-fingers name</text><rect x="360" y="60" width="140" height="60" fill="#12152a" stroke="#252840" rx="6"/><text x="430" y="85" fill="#eaedf5" font-family="monospace" font-size="13" text-anchor="middle">3. setup.py runs</text><text x="430" y="105" fill="#7a849a" font-family="monospace" font-size="11" text-anchor="middle">code exec as user</text><rect x="530" y="60" width="150" height="60" fill="#12152a" stroke="#34d399" rx="6"/><text x="605" y="85" fill="#eaedf5" font-family="monospace" font-size="13" text-anchor="middle">4. Stealer drops</text><text x="605" y="105" fill="#7a849a" font-family="monospace" font-size="11" text-anchor="middle">enumerates secrets</text><line x1="160" y1="90" x2="190" y2="90" stroke="#34d399" stroke-width="2" marker-end="url(#arr)"/><line x1="330" y1="90" x2="360" y2="90" stroke="#34d399" stroke-width="2" marker-end="url(#arr)"/><line x1="500" y1="90" x2="530" y2="90" stroke="#34d399" stroke-width="2" marker-end="url(#arr)"/><text x="20" y="160" fill="#eaedf5" font-family="monospace" font-size="13">Harvested from victim machine:</text><rect x="20" y="180" width="200" height="50" fill="#12152a" stroke="#252840" rx="6"/><text x="120" y="210" fill="#eaedf5" font-family="monospace" font-size="12" text-anchor="middle">Browser logins</text><rect x="240" y="180" width="200" height="50" fill="#12152a" stroke="#252840" rx="6"/><text x="340" y="210" fill="#eaedf5" font-family="monospace" font-size="12" text-anchor="middle">.env / API keys</text><rect x="460" y="180" width="220" height="50" fill="#12152a" stroke="#252840" rx="6"/><text x="570" y="210" fill="#eaedf5" font-family="monospace" font-size="12" text-anchor="middle">AWS / GCP / HF tokens</text><line x1="120" y1="230" x2="350" y2="280" stroke="#34d399" stroke-width="2" marker-end="url(#arr)"/><line x1="340" y1="230" x2="350" y2="280" stroke="#34d399" stroke-width="2" marker-end="url(#arr)"/><line x1="570" y1="230" x2="360" y2="280" stroke="#34d399" stroke-width="2" marker-end="url(#arr)"/><rect x="270" y="285" width="180" height="40" fill="#34d399" rx="6"/><text x="360" y="310" fill="#060912" font-family="monospace" font-size="13" text-anchor="middle">Attacker C2 server</text></svg></div>
+            <div class="diagram-svg"><svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"><rect width="700" height="340" fill="#060912"/><defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#34d399"/></marker></defs><text x="350" y="28" fill="#eaedf5" font-family="monospace" font-size="14" text-anchor="middle">CVE-2026-22679 Exploitation Timeline</text><line x1="50" y1="180" x2="650" y2="180" stroke="#252840" stroke-width="2"/><line x1="80" y1="170" x2="80" y2="190" stroke="#34d399" stroke-width="2"/><text x="80" y="155" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">Mar 15</text><rect x="30" y="200" width="100" height="46" fill="#12152a" stroke="#34d399" rx="6"/><text x="80" y="220" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">First exploit</text><text x="80" y="236" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">in the wild</text><line x1="240" y1="170" x2="240" y2="190" stroke="#34d399" stroke-width="2"/><text x="240" y="155" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">Mar–Apr</text><rect x="180" y="200" width="120" height="46" fill="#12152a" stroke="#252840" rx="6"/><text x="240" y="220" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">whoami / net</text><text x="240" y="236" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">recon commands</text><line x1="410" y1="170" x2="410" y2="190" stroke="#34d399" stroke-width="2"/><text x="410" y="155" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">Apr</text><rect x="350" y="200" width="120" height="46" fill="#12152a" stroke="#252840" rx="6"/><text x="410" y="220" fill="#eaedf5" font-size="12" font-family="monospace" text-anchor="middle">AD enumeration</text><text x="410" y="236" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">target triage</text><line x1="580" y1="170" x2="580" y2="190" stroke="#34d399" stroke-width="2"/><text x="580" y="155" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">May 4</text><rect x="520" y="200" width="120" height="46" fill="#12152a" stroke="#34d399" rx="6"/><text x="580" y="220" fill="#060912" font-size="12" font-family="monospace" text-anchor="middle" font-weight="bold">Public disclosure</text><text x="580" y="236" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">defenders alerted</text><rect x="80" y="270" width="500" height="40" fill="#12152a" stroke="#34d399" rx="6"/><text x="330" y="294" fill="#34d399" font-size="13" font-family="monospace" text-anchor="middle">~7-week attacker head start before patches existed</text><line x1="130" y1="223" x2="180" y2="223" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr)"/><line x1="300" y1="223" x2="350" y2="223" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr)"/><line x1="470" y1="223" x2="520" y2="223" stroke="#34d399" stroke-width="1.5" marker-end="url(#arr)"/><text x="350" y="70" fill="#7a849a" font-size="11" font-family="monospace" text-anchor="middle">Weaver E-cology — China's dominant enterprise OA platform</text></svg></div>
           </div>
-          <div class="attack-vector-text">Attacker published a typosquatted lookalike of the PyTorch Lightning package on PyPI; on `pip install`, setup/import-time hooks scan the filesystem for browser credential stores, `.env` files, and cloud SDK credential caches and exfiltrate them to an attacker-controlled server.</div>
+          <div class="attack-vector-text">An unauthenticated attacker sends a crafted HTTP request to an internet-exposed Weaver E-cology instance to execute arbitrary commands on the underlying host as the application service account. Observed post-exploitation activity has been limited to discovery commands (whoami, ipconfig, directory listings) consistent with environment triage prior to a follow-on intrusion phase.</div>
         </div>
       </div>
 
-  
+  <div class="sec-block"><div class="sec-block-header"><span class="sec-block-icon">&#9432;</span><span class="sec-block-title red">Vulnerability Details</span></div><div class="sec-block-body"><div class="details-grid"><div class="detail-cell"><div class="detail-label">CVE ID</div><div class="detail-value red">CVE-2026-22679</div></div><div class="detail-cell"><div class="detail-label">CVSS v3.1 Score</div><div class="detail-value red">9.8 / 10</div></div><div class="detail-cell"><div class="detail-label">Severity</div><div class="detail-value red">Critical</div></div><div class="detail-cell"><div class="detail-label">Patch Status</div><div class="detail-value green">Patch Available</div></div><div class="detail-cell cvss-vector-cell"><div class="detail-label">CVSS Vector</div><div class="detail-value muted">CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</div></div></div></div></div>
 
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#128336;</span><span class="sec-block-title amber">Timeline</span></div>
     <div class="sec-block-body">
-      <div class="timeline-track"><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Disclosed</div><div class="tl-date">2026-05-04</div></div><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Exploited in Wild</div><div class="tl-date">2026-05-04</div></div><div class="tl-step"><div class="tl-dot amber"></div><div class="tl-label">Patch Released</div><div class="tl-date na">Unknown</div></div></div>
+      <div class="timeline-track"><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Disclosed</div><div class="tl-date">2026-05-04</div></div><div class="tl-step"><div class="tl-dot red"></div><div class="tl-label">Exploited in Wild</div><div class="tl-date">2026-03-15</div></div><div class="tl-step"><div class="tl-dot green"></div><div class="tl-label">Patch Released</div><div class="tl-date">2026-05-04</div></div></div>
     </div>
   </div>
 
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#9741;</span><span class="sec-block-title red">MITRE ATT&amp;CK Map</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tactic or technique for details</span></div>
-    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Initial Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1195.002&quot;, &quot;name&quot;: &quot;Compromise Software Supply Chain&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Initial Access</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1195.002</span><span class="mitre-tech-name">Compromise Software Supply Chain</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Attacker uploaded a typosquatted package to PyPI to compromise developers who mistype or copy poisoned install commands.</p><a href="https://attack.mitre.org/techniques/T1195/002/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Execution&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1059.006&quot;, &quot;name&quot;: &quot;Command and Scripting Interpreter: Python&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Execution</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1059.006</span><span class="mitre-tech-name">Command and Scripting Interpreter: Python</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Malicious Python code executes at install/import time via setup.py or __init__.py hooks.</p><a href="https://attack.mitre.org/techniques/T1059/006/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Credential Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1552.001&quot;, &quot;name&quot;: &quot;Unsecured Credentials: Credentials In Files&quot;}, {&quot;id&quot;: &quot;T1555.003&quot;, &quot;name&quot;: &quot;Credentials from Web Browsers&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Credential Access</span><span class="mitre-tactic-cnt">2 techniques</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1552.001</span><span class="mitre-tech-name">Unsecured Credentials: Credentials In Files</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Stealer parses .env files and ~/.aws/credentials for plaintext API keys and cloud tokens.</p><a href="https://attack.mitre.org/techniques/T1552/001/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1555.003</span><span class="mitre-tech-name">Credentials from Web Browsers</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Payload reads Chrome Login Data SQLite and Firefox profile credential stores.</p><a href="https://attack.mitre.org/techniques/T1555/003/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Exfiltration&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1041&quot;, &quot;name&quot;: &quot;Exfiltration Over C2 Channel&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Exfiltration</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1041</span><span class="mitre-tech-name">Exfiltration Over C2 Channel</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Harvested secrets are POSTed to an attacker-controlled server during the install process.</p><a href="https://attack.mitre.org/techniques/T1041/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
+    <div class="sec-block-body"><div class="mitre-map"><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Initial Access&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1190&quot;, &quot;name&quot;: &quot;Exploit Public-Facing Application&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Initial Access</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1190</span><span class="mitre-tech-name">Exploit Public-Facing Application</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Attackers exploit the unauthenticated RCE in internet-exposed Weaver E-cology instances to gain initial code execution.</p><a href="https://attack.mitre.org/techniques/T1190/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Execution&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1059&quot;, &quot;name&quot;: &quot;Command and Scripting Interpreter&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Execution</span><span class="mitre-tactic-cnt">1 technique</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1059</span><span class="mitre-tech-name">Command and Scripting Interpreter</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Post-exploitation commands such as whoami and ipconfig are executed via the host shell through the vulnerable web application.</p><a href="https://attack.mitre.org/techniques/T1059/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div><div class="mitre-col"><button class="mitre-tactic-hdr" data-mitre="{&quot;type&quot;: &quot;tactic&quot;, &quot;name&quot;: &quot;Discovery&quot;, &quot;techniques&quot;: [{&quot;id&quot;: &quot;T1033&quot;, &quot;name&quot;: &quot;System Owner/User Discovery&quot;}, {&quot;id&quot;: &quot;T1016&quot;, &quot;name&quot;: &quot;System Network Configuration Discovery&quot;}, {&quot;id&quot;: &quot;T1083&quot;, &quot;name&quot;: &quot;File and Directory Discovery&quot;}]}" onclick="openMitrePopover(event,this)"><span class="mitre-tactic-lbl">Discovery</span><span class="mitre-tactic-cnt">3 techniques</span><span class="mitre-tactic-hint">Click for description &#8599;</span></button><div class="mitre-techs"><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1033</span><span class="mitre-tech-name">System Owner/User Discovery</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Observed `whoami` execution to identify the privilege context of the compromised E-cology service account.</p><a href="https://attack.mitre.org/techniques/T1033/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1016</span><span class="mitre-tech-name">System Network Configuration Discovery</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Attackers run network enumeration (e.g., ipconfig) to map the host&#39;s network position and connectivity.</p><a href="https://attack.mitre.org/techniques/T1016/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details><details class="mitre-tech-detail"><summary><span class="mitre-tech-id">T1083</span><span class="mitre-tech-name">File and Directory Discovery</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">Directory listings observed on compromised hosts to inventory accessible files and application data.</p><a href="https://attack.mitre.org/techniques/T1083/" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details></div></div></div></div>
   </div>
 
   
@@ -311,15 +311,10 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
           <table class="affected-table">
             <thead><tr><th>Vendor</th><th>Product</th><th>Versions Affected</th><th>Fixed In</th></tr></thead>
             <tbody><tr>
-          <td><span class="prod-vendor">Third-party (malicious)</span></td>
-          <td><span class="prod-name">Typosquatted PyTorch Lightning lookalike package on PyPI</span></td>
-          <td><span class="prod-ver">All versions of the malicious package — see vendor advisory</span></td>
-          <td><span class="prod-fix none">Mitigate: uninstall package, rotate all exposed credentials, and pin to the legitimate `pytorch-lightning` / `lightning` package from the verified publisher</span></td>
-        </tr><tr>
-          <td><span class="prod-vendor">Lightning AI</span></td>
-          <td><span class="prod-name">PyTorch Lightning (legitimate)</span></td>
-          <td><span class="prod-ver">Not affected — legitimate package is unmodified</span></td>
-          <td><span class="prod-fix">N/A — install only from the official `lightning` / `pytorch-lightning` project on PyPI</span></td>
+          <td><span class="prod-vendor">Weaver</span></td>
+          <td><span class="prod-name">E-cology</span></td>
+          <td><span class="prod-ver">All versions — see vendor advisory (specific build range pending)</span></td>
+          <td><span class="prod-fix">See Weaver vendor advisory dated 2026-05-04</span></td>
         </tr></tbody>
           </table>
         </div>
@@ -329,7 +324,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="sec-block-header"><span class="sec-block-icon">&#10067;</span><span class="sec-block-title amber">Am I Affected?</span></div>
     <div class="sec-block-body">
       <p class="apply-intro">You are likely at risk if <strong>any</strong> of the following apply:</p>
-      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You or your team have run `pip install` for PyTorch Lightning on a developer laptop, notebook, or GPU box in the last several days</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your environment stores AWS, GCP, OpenAI, HuggingFace, or Weights &amp; Biases tokens in `.env` files or default SDK credential paths on developer machines</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You copy `pip install` snippets from blog posts, tutorials, or LLM/AI assistant suggestions without verifying package names</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your environment installs Python dependencies exclusively from a curated internal mirror or via hash-pinned lockfiles (e.g., `pip install --require-hashes`)</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">You only use the canonical packages `lightning` or `pytorch-lightning` from the verified Lightning AI publisher and have verified the install logs</span></div></div>
+      <div class="apply-list"><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You operate one or more Weaver E-cology (泛微 e-cology) instances in your environment</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your E-cology deployment is reachable from the internet or from semi-trusted partner networks</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">Your E-cology instance is integrated with corporate Active Directory, HR systems, or document repositories</span></div><div class="apply-item"><span class="apply-check">&#9888;</span><span class="apply-text">You have not reviewed E-cology web access and process execution logs going back to mid-March 2026</span></div><div class="apply-item" style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2);"><span class="apply-check" style="color:var(--cyber)">&#10003;</span><span class="apply-text" style="color:var(--muted);">Your environment uses no Weaver products and no OEM/rebranded E-cology integrations</span></div></div>
     </div>
   </div>
 
@@ -337,8 +332,8 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
     <div class="sec-block-header"><span class="sec-block-icon">&#128736;</span><span class="sec-block-title green">Fix &amp; Recommendations</span></div>
     <div class="sec-block-body">
       <div class="fix-grid">
-        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Audit `pip list` and pip install logs across developer workstations and CI runners for any package whose name resembles but does not exactly match `pytorch-lightning` or `lightning`; uninstall any suspicious package immediately with `pip uninstall &lt;name&gt;`.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Rotate all credentials that may have been present on affected machines: AWS access keys, GCP service account keys, OpenAI/Anthropic/HuggingFace/W&amp;B tokens, GitHub PATs, and any secrets stored in `.env` files or browser-saved logins.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Review CloudTrail / GCP audit logs / HuggingFace and OpenAI usage dashboards for anomalous API calls from unfamiliar IPs in the last 7 days.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Clear browser saved-credential stores on any affected developer machine and force re-login with new passwords + MFA enforcement.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Block outbound traffic from developer subnets to unknown hosts at the egress proxy and capture netflow from the suspect time window for forensic review.</span></li></ul></div>
-        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Adopt hash-pinned lockfiles (pip-tools, Poetry, uv) with `--require-hashes` in CI and document the practice for researchers.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Stand up an internal PyPI mirror (e.g., Artifactory, devpi, AWS CodeArtifact) with an allowlist of vetted packages and block direct pypi.org access from developer and GPU environments.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Move developer cloud credentials off disk: use short-lived tokens via AWS SSO/IAM Identity Center, GCP Workload Identity Federation, and OIDC-based runners; ban long-lived keys in `.env` files.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Deploy supply-chain scanning (e.g., Socket, Phylum, GitHub Dependabot, OSV-Scanner) that flags newly published, low-reputation, or typosquat-similarity packages before install.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Train ML/research teams on package-name verification and the risk of trusting LLM-suggested install commands; provide a curated internal &#39;starter kit&#39; of approved ML packages.</span></li></ul></div>
+        <div class="fix-panel immediate"><div class="fix-panel-label">&#9888; Immediate <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">24&#8211;72 hours</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Apply the Weaver vendor patch for CVE-2026-22679 to all E-cology instances immediately; if patching is delayed, remove the application from direct internet exposure and place it behind a VPN or zero-trust proxy.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Hunt retrospectively in E-cology web/access logs from 2026-03-01 forward for anomalous POST requests to administrative or workflow endpoints followed by short response times, and for child processes of the E-cology Java/IIS worker spawning cmd.exe, powershell.exe, or /bin/sh.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Search host process logs for execution of whoami, ipconfig/ifconfig, net user, net group, dir/ls, and systeminfo originating from the E-cology service account.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Rotate credentials for any service accounts, AD bind accounts, database accounts, and API keys configured within E-cology, assuming compromise until proven otherwise.</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Engage IR and preserve forensic images of any E-cology host showing unexplained reconnaissance command execution before remediation.</span></li></ul></div>
+        <div class="fix-panel strategic"><div class="fix-panel-label">&#9679; Strategic <span style="font-size:0.68rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted2);margin-left:4px;">This week &amp; beyond</span></div><ul class="fix-steps"><li class="fix-step"><span class="fix-step-num ">1</span><span>Adopt an &#39;assume breach&#39; posture for all internet-facing enterprise applications: schedule periodic retrospective threat hunts rather than waiting for CVE disclosure to trigger response.</span></li><li class="fix-step"><span class="fix-step-num ">2</span><span>Place enterprise OA platforms (E-cology, Confluence, Exchange, etc.) behind identity-aware proxies or VPNs so unauthenticated internet exploitation is structurally impossible.</span></li><li class="fix-step"><span class="fix-step-num ">3</span><span>Segment E-cology hosts away from domain controllers, file servers, and HR/financial backends; use tiered service accounts with least privilege and no domain admin rights.</span></li><li class="fix-step"><span class="fix-step-num ">4</span><span>Deploy EDR with behavioral detection on all OA application servers and alert on web-process-spawned shells (java.exe/w3wp.exe → cmd/powershell/sh).</span></li><li class="fix-step"><span class="fix-step-num ">5</span><span>Build an SBOM and exposure inventory for all regional/incumbent enterprise software so the next n-day can be triaged in hours rather than weeks.</span></li></ul></div>
       </div>
     </div>
   </div>
@@ -346,27 +341,27 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#128218;</span><span class="sec-block-title ai">Concept Briefing</span><span style="font-size:0.68rem;color:var(--muted2);margin-left:auto;">Click a tag to expand</span></div>
     <div class="sec-block-body">
-      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-typosquatting')">Typosquatting</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-software-supply-chain-attack')">Software supply chain attack</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-install-time-code-execution')">Install-time code execution</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-secrets-sprawl')">Secrets sprawl</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-dependency-pinning')">Dependency pinning</button></div>
-      <div class="concept-tag-expand" id="ct-typosquatting">
-          <div class="concept-tag-expand-name">Typosquatting</div>
-          <div class="concept-def">Registering a name that is a close misspelling of a legitimate one to catch users who mistype or skim.</div>
-          <div class="concept-rel">The attacker&#39;s package on PyPI uses a name visually similar to PyTorch Lightning to trick developers during `pip install`.</div>
-        </div><div class="concept-tag-expand" id="ct-software-supply-chain-attack">
-          <div class="concept-tag-expand-name">Software supply chain attack</div>
-          <div class="concept-def">An attack that compromises software not by breaking the target directly but by tampering with an upstream dependency the target trusts.</div>
-          <div class="concept-rel">ML projects pulling the malicious package inherit the credential stealer transitively into their environments.</div>
-        </div><div class="concept-tag-expand" id="ct-install-time-code-execution">
-          <div class="concept-tag-expand-name">Install-time code execution</div>
-          <div class="concept-def">The behavior where package managers like pip run code from a downloaded package during install (setup hooks, import side effects), with the user&#39;s privileges.</div>
-          <div class="concept-rel">This is what allows a malicious PyPI package to steal credentials before the install command even finishes.</div>
-        </div><div class="concept-tag-expand" id="ct-secrets-sprawl">
-          <div class="concept-tag-expand-name">Secrets sprawl</div>
-          <div class="concept-def">The pattern of long-lived API keys and cloud tokens accumulating in plaintext files like `.env` and `~/.aws/credentials` on developer machines.</div>
-          <div class="concept-rel">ML workstations are dense with such secrets, making a single credential-stealer execution catastrophic.</div>
-        </div><div class="concept-tag-expand" id="ct-dependency-pinning">
-          <div class="concept-tag-expand-name">Dependency pinning</div>
-          <div class="concept-def">Locking exact package versions and cryptographic hashes so installs are reproducible and resistant to upstream tampering or name confusion.</div>
-          <div class="concept-rel">Hash-pinned lockfiles would have caused the install of an unexpected typosquat package to fail.</div>
+      <div class="concept-tags-grid"><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-n-day-exploitation-window')">N-day Exploitation Window</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-unauthenticated-rce')">Unauthenticated RCE</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-living-off-the-land-discovery')">Living-off-the-Land Discovery</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-pivot-point')">Pivot Point</button><button class="concept-tag-pill" onclick="toggleConcept(this,'ct-retrospective-threat-hunting')">Retrospective Threat Hunting</button></div>
+      <div class="concept-tag-expand" id="ct-n-day-exploitation-window">
+          <div class="concept-tag-expand-name">N-day Exploitation Window</div>
+          <div class="concept-def">The period between when attackers begin exploiting a vulnerability and when defenders successfully patch it; pre-disclosure exploitation makes this effectively a zero-day for victims.</div>
+          <div class="concept-rel">Weaver E-cology was exploited from mid-March, but disclosure landed in early May — a ~7-week head start during which attackers triaged victim environments.</div>
+        </div><div class="concept-tag-expand" id="ct-unauthenticated-rce">
+          <div class="concept-tag-expand-name">Unauthenticated RCE</div>
+          <div class="concept-def">A flaw allowing arbitrary command execution on a server without any login or credentials, typically the most severe vulnerability class for internet-facing software.</div>
+          <div class="concept-rel">CVE-2026-22679 requires no authentication, meaning any internet-reachable E-cology instance is directly exploitable.</div>
+        </div><div class="concept-tag-expand" id="ct-living-off-the-land-discovery">
+          <div class="concept-tag-expand-name">Living-off-the-Land Discovery</div>
+          <div class="concept-def">Use of native operating-system commands (whoami, ipconfig, dir) instead of malware to map an environment, evading signature-based defenses.</div>
+          <div class="concept-rel">Observed post-exploitation activity is limited to built-in commands, which is the tell that this is patient pre-positioning rather than smash-and-grab.</div>
+        </div><div class="concept-tag-expand" id="ct-pivot-point">
+          <div class="concept-tag-expand-name">Pivot Point</div>
+          <div class="concept-def">A compromised system whose network position and integrations allow attackers to reach far more valuable internal targets.</div>
+          <div class="concept-rel">E-cology&#39;s integration with AD, HR, and document workflows makes each compromised instance a high-value gateway into the wider enterprise.</div>
+        </div><div class="concept-tag-expand" id="ct-retrospective-threat-hunting">
+          <div class="concept-tag-expand-name">Retrospective Threat Hunting</div>
+          <div class="concept-def">Searching historical logs for evidence of compromise dating back before a vulnerability was publicly known.</div>
+          <div class="concept-rel">Because exploitation began seven weeks before disclosure, patching alone is insufficient — defenders must hunt back to mid-March.</div>
         </div>
     </div>
   </div>
@@ -377,45 +372,56 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
         <details class="hunt-entry" open>
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Recent pip install of a package name similar-but-not-equal to `pytorch-lightning` or `lightning`</span>
+            <span class="hunt-signal">Web-process-spawned command shells on E-cology hosts</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Search shell history, pip cache (`~/.cache/pip`), and CI build logs for `pip install` invocations whose target name is a Levenshtein-close variant of the legitimate package. Any non-canonical match is suspicious.</div>
-            <span class="hunt-log-tag">Shell history (~/.bash_history, ~/.zsh_history)</span><span class="hunt-log-tag">Pip logs (~/.pip/pip.log, pip --verbose output)</span><span class="hunt-log-tag">CI/CD build logs</span><span class="hunt-log-tag">EDR process telemetry</span>
+            <div class="hunt-desc">Look for the E-cology Java process (or IIS w3wp.exe in Windows deployments) spawning child processes such as cmd.exe, powershell.exe, /bin/sh, or /bin/bash. This pattern is rare in normal OA workflow operation and is the strongest single indicator of RCE exploitation.</div>
+            <span class="hunt-log-tag">EDR process telemetry</span><span class="hunt-log-tag">Sysmon Event ID 1</span><span class="hunt-log-tag">Linux auditd execve</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Process reads of browser credential stores by python.exe / python3</span>
+            <span class="hunt-signal">Reconnaissance command bursts from the E-cology service account</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">A Python process opening `Chrome/User Data/Default/Login Data`, Firefox `logins.json`/`key4.db`, or `~/.aws/credentials` shortly after a pip install is highly anomalous for an ML workflow.</div>
-            <span class="hunt-log-tag">EDR file-access telemetry</span><span class="hunt-log-tag">Sysmon Event ID 11/1</span><span class="hunt-log-tag">macOS ESF / Linux auditd</span>
+            <div class="hunt-desc">Sequences of whoami, ipconfig/ifconfig, net user, net group /domain, systeminfo, dir, or ls -la executed within seconds of each other under the E-cology service identity, dating back to mid-March 2026.</div>
+            <span class="hunt-log-tag">EDR</span><span class="hunt-log-tag">Sysmon Event ID 1</span><span class="hunt-log-tag">Windows Security 4688</span><span class="hunt-log-tag">Linux auditd</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority high">High</span>
-            <span class="hunt-signal">Outbound HTTP(S) POST from developer host to an unfamiliar domain immediately after pip install</span>
+            <span class="hunt-signal">Anomalous POST requests to E-cology endpoints from low-reputation IPs</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">Look for short-lived TLS or HTTP connections from python processes to non-PyPI, non-cloud domains within seconds of a package install event.</div>
-            <span class="hunt-log-tag">DNS resolver logs</span><span class="hunt-log-tag">Egress proxy/firewall logs</span><span class="hunt-log-tag">Zeek/Suricata netflow</span><span class="hunt-log-tag">EDR network telemetry</span>
+            <div class="hunt-desc">Unusual POST traffic to E-cology workflow, file upload, or admin URIs from IPs that have never previously interacted with the application, especially from VPS/hosting ASNs, occurring between 2026-03-15 and patch deployment.</div>
+            <span class="hunt-log-tag">E-cology web access logs</span><span class="hunt-log-tag">WAF logs</span><span class="hunt-log-tag">Reverse proxy/Nginx/IIS logs</span>
           </div>
         </details>
         <details class="hunt-entry">
           <summary>
             <span class="hunt-priority medium">Medium</span>
-            <span class="hunt-signal">Use of leaked cloud credentials from anomalous geographies or ASNs</span>
+            <span class="hunt-signal">Outbound connections from E-cology hosts to new external destinations</span>
             <span class="hunt-chevron">&#9658;</span>
           </summary>
           <div class="hunt-body">
-            <div class="hunt-desc">AWS/GCP/HuggingFace/OpenAI API calls authenticated with developer-owned keys but originating from IPs or user agents inconsistent with that developer&#39;s normal pattern.</div>
-            <span class="hunt-log-tag">AWS CloudTrail</span><span class="hunt-log-tag">GCP Cloud Audit Logs</span><span class="hunt-log-tag">HuggingFace audit logs</span><span class="hunt-log-tag">OpenAI usage dashboard</span>
+            <div class="hunt-desc">E-cology application servers initiating outbound HTTPS, DNS, or raw-socket connections to previously unseen external IPs/domains, indicating possible C2 staging following discovery.</div>
+            <span class="hunt-log-tag">NetFlow</span><span class="hunt-log-tag">Firewall egress logs</span><span class="hunt-log-tag">DNS query logs</span><span class="hunt-log-tag">Zeek conn.log</span>
+          </div>
+        </details>
+        <details class="hunt-entry">
+          <summary>
+            <span class="hunt-priority high">High</span>
+            <span class="hunt-signal">New or modified files in E-cology web roots</span>
+            <span class="hunt-chevron">&#9658;</span>
+          </summary>
+          <div class="hunt-body">
+            <div class="hunt-desc">Files created or modified under E-cology web application directories (JSP/ASPX/PHP) outside of vendor patch windows — potential webshells planted for persistence.</div>
+            <span class="hunt-log-tag">File integrity monitoring</span><span class="hunt-log-tag">Sysmon Event ID 11</span><span class="hunt-log-tag">Linux auditd watch on webroot</span>
           </div>
         </details></div></div>
   </div>
@@ -423,7 +429,7 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="sec-block">
     <div class="sec-block-header"><span class="sec-block-icon">&#9762;</span><span class="sec-block-title amber">Indicators of Compromise</span><button class="ioc-copy-btn" style="margin-left:auto" onclick="copyAllIOCs()">&#10064; Copy All IOCs</button></div>
     <div class="sec-block-body">
-      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> The source BleepingComputer article did not publish specific hashes, IPs, domains, file paths, or URI patterns for the malicious package at time of writing. No IOCs are reproduced here to avoid fabrication. Consult the BleepingComputer article and PyPI&#39;s removed-project notice for the exact malicious package name(s) and any IOCs subsequently released; verify against multiple sources before blocking.</span></div>
+      <div class="ioc-caveat"><span class="ioc-caveat-icon">&#9888;</span><span class="ioc-caveat-text"><strong>Verify before use.</strong> The BleepingComputer source describes only generic reconnaissance commands (whoami, ipconfig, directory listings) and does not publish specific IPs, domains, hashes, file paths, or URI patterns. No atomic IOCs are reproduced here to avoid fabrication. Consult Weaver&#39;s official advisory and reputable CTI feeds for verified indicators before blocking.</span></div>
       <div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Hashes (SHA-256)</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Command &amp;amp; Control IPs</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Malicious Domains</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">File Paths / Artifacts</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div><div class="ioc-group"><div class="ioc-group-header"><span class="ioc-group-label">Suspicious URI Patterns</span></div><div class="ioc-list"><div class="ioc-no-data">None reported in source coverage</div></div></div>
     </div>
   </div>
@@ -431,9 +437,9 @@ details.hunt-entry[open] .hunt-chevron{transform:rotate(90deg);}
   <div class="share-footer">
     <div class="share-footer-text"><strong>Share this advisory</strong><br><span style="font-size:0.78rem;">Help your network patch faster.</span></div>
     <div class="share-footer-btns">
-      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20Typosquatted%20PyTorch%20Lightning%20on%20PyPI%20Hijacks%20ML%20Devs%27%20Cloud%20Keys%0A%0ACVSS%20N/A%20%C2%B7%20High%20%C2%B7%20Mitigation%20Only&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-05-04-story-cyber-1.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
-      <a href="https://wa.me/?text=%F0%9F%9B%A1%20Typosquatted%20PyTorch%20Lightning%20on%20PyPI%20Hijacks%20ML%20Devs%27%20Cloud%20Keys%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/2026-05-04-story-cyber-1.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
-      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-05-04-story-cyber-1.html&amp;text=Typosquatted%20PyTorch%20Lightning%20on%20PyPI%20Hijacks%20ML%20Devs%27%20Cloud%20Keys" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
+      <a href="https://twitter.com/intent/tweet?text=%F0%9F%9B%A1%20Weaver%20E-cology%20Zero-Day%20Quietly%20Exploited%20Since%20March%0A%0ACVSS%209.8%20%C2%B7%20Critical%20%C2%B7%20Patch%20Available&amp;url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-05-04-story-cyber-1.html" class="share-opt x" target="_blank" rel="noopener">&#120143; Post on X</a>
+      <a href="https://wa.me/?text=%F0%9F%9B%A1%20Weaver%20E-cology%20Zero-Day%20Quietly%20Exploited%20Since%20March%0Ahttps%3A//dizchrisctrl.github.io/daily-digest/s/2026-05-04-story-cyber-1.html" class="share-opt whatsapp" target="_blank" rel="noopener">&#128362; WhatsApp</a>
+      <a href="https://t.me/share/url?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-05-04-story-cyber-1.html&amp;text=Weaver%20E-cology%20Zero-Day%20Quietly%20Exploited%20Since%20March" class="share-opt telegram" target="_blank" rel="noopener">&#9992; Telegram</a>
       <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A//dizchrisctrl.github.io/daily-digest/s/2026-05-04-story-cyber-1.html" class="share-opt linkedin" target="_blank" rel="noopener">in Share</a>
       <button class="share-opt copy-link" onclick="copyPageLink(this)">&#128279; Copy Link</button>
     </div>
