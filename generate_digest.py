@@ -2154,72 +2154,462 @@ function cmAdvisoryBadge(story, anchor) {
   const secType = story.security_type;
   const meta = CM_ADV_META[secType];
   if (!meta || !story.security_detail) return '';
-  CM_ADV_DATA[anchor] = { sd: story.security_detail, secType, headline: story.headline||'' };
-  return `<div class="sec-advisory-row" onclick="event.stopPropagation()"><a class="sec-advisory-link${meta.cls}" href="#" onclick="event.stopPropagation();event.preventDefault();cmOpenAdvisory(CM_ADV_DATA['${anchor}'].sd,CM_ADV_DATA['${anchor}'].secType,CM_ADV_DATA['${anchor}'].headline)">${meta.icon} ${meta.lbl} &rarr;</a></div>`;
+  CM_ADV_DATA[anchor] = { sd: story.security_detail, secType, headline: story.headline||'', story };
+  return `<div class="sec-advisory-row" onclick="event.stopPropagation()"><a class="sec-advisory-link${meta.cls}" href="#" onclick="event.stopPropagation();event.preventDefault();cmShowAdvisoryPage(CM_ADV_DATA['${anchor}'].sd,CM_ADV_DATA['${anchor}'].secType,CM_ADV_DATA['${anchor}'].headline,CM_ADV_DATA['${anchor}'].story)">${meta.icon} ${meta.lbl} &rarr;</a></div>`;
 }
 
-// ── Inline advisory modal for card maker cards ──
-function cmOpenAdvisory(sd, secType, headline) {
-  if (!sd) return;
-  const h2 = function(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
-  const sev = sd.severity||'';
-  const sevCls = {Critical:'sev-critical',High:'sev-high',Medium:'sev-medium',Low:'sev-low'}[sev]||'sev-low';
-  const patchCls = {'Patch Available':'patch-available','Mitigation Only':'patch-mitigation'}[sd.patch_status||'']||'patch-none';
-  const cvss = sd.cvss_score!=null ? `<span class="cvss-score-num" style="font-size:1rem;font-family:monospace;font-weight:900">${h2(sd.cvss_score)}</span>` : '';
+// ── Full advisory page view (replaces the old modal) ──
+let CM_ADV_BACK_DATA = null;
 
-  // MITRE map (inline waterfall)
+function cmInjectAdvisoryCSS() {
+  if (document.getElementById('cm-adv-css')) return;
+  const s = document.createElement('style');
+  s.id = 'cm-adv-css';
+  s.textContent = `
+.cm-adv-wrap{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.cm-adv-badges{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:14px}
+.cm-adv-type-badge{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:3px 10px;border-radius:4px}
+.cm-adv-live-badge{display:flex;align-items:center;gap:5px;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 9px;border-radius:4px;background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.3);animation:cm-adv-pulse 2s ease-in-out infinite}
+.cm-adv-live-dot{width:6px;height:6px;border-radius:50%;background:#ef4444;flex-shrink:0;animation:cm-adv-pulse 1.2s ease-in-out infinite}
+@keyframes cm-adv-pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.cm-adv-title{font-size:1.5rem;font-weight:900;line-height:1.2;letter-spacing:-0.3px;margin-bottom:12px}
+.cm-adv-score-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.cm-adv-desc{font-size:0.93rem;color:var(--body-text);line-height:1.75;margin-bottom:14px}
+.cm-adv-meta{display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+.cm-adv-meta-item{font-size:0.76rem;color:var(--muted2);display:flex;align-items:center;gap:5px}
+.cm-adv-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.cm-adv-block-hdr{padding:13px 18px 11px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.cm-adv-block-icon{font-size:1rem;flex-shrink:0}
+.cm-adv-block-title{font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted2);flex:1}
+.cm-adv-block-body{padding:18px}
+.cm-adv-details-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.cm-adv-detail-cell{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.cm-adv-detail-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);margin-bottom:5px}
+.cm-adv-detail-value{font-size:0.93rem;font-weight:700;color:var(--text);font-family:'Courier New',monospace;word-break:break-all}
+.cm-adv-timeline{display:flex;align-items:flex-start;position:relative;padding:8px 0 4px}
+.cm-adv-timeline::before{content:'';position:absolute;top:24px;left:24px;right:24px;height:2px;background:linear-gradient(90deg,#ef4444 0%,#fbbf24 50%,#34d399 100%);z-index:0}
+.cm-adv-tl-step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1}
+.cm-adv-tl-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--surface2);margin-bottom:8px;flex-shrink:0}
+.cm-adv-tl-dot.red{background:#ef4444;box-shadow:0 0 10px rgba(239,68,68,0.5)}
+.cm-adv-tl-dot.amber{background:#fbbf24;box-shadow:0 0 10px rgba(251,191,36,0.4)}
+.cm-adv-tl-dot.green{background:#34d399;box-shadow:0 0 10px rgba(52,211,153,0.4)}
+.cm-adv-tl-dot.empty{background:var(--surface3);border-color:var(--border2)}
+.cm-adv-tl-label{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted2);text-align:center;margin-bottom:4px}
+.cm-adv-tl-date{font-size:0.8rem;font-weight:700;color:var(--text);text-align:center;font-family:'Courier New',monospace}
+.cm-adv-tl-date.na{color:var(--muted2);font-style:italic;font-size:0.72rem}
+.cm-adv-table{width:100%;border-collapse:collapse}
+.cm-adv-table th{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2)}
+.cm-adv-table td{padding:10px 12px;border-bottom:1px solid var(--border)}
+.cm-adv-table tr:last-child td{border-bottom:none}
+.cm-adv-prod-vendor{font-size:0.8rem;color:var(--muted)}
+.cm-adv-prod-name{font-size:0.9rem;font-weight:700;color:var(--text)}
+.cm-adv-prod-ver{font-family:'Courier New',monospace;font-size:0.78rem;color:#fca5a5;background:rgba(239,68,68,0.09);padding:3px 8px;border-radius:5px;border:1px solid rgba(239,68,68,0.18)}
+.cm-adv-prod-fix{font-family:'Courier New',monospace;font-size:0.78rem;color:#34d399;background:rgba(52,211,153,0.08);padding:3px 8px;border-radius:5px;border:1px solid rgba(52,211,153,0.2)}
+.cm-adv-prod-fix.none{color:#f87171;background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2)}
+.cm-adv-apply-list{display:flex;flex-direction:column;gap:8px}
+.cm-adv-apply-item{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:var(--surface2)}
+.cm-adv-apply-check{font-size:0.85rem;flex-shrink:0;margin-top:1px}
+.cm-adv-apply-text{font-size:0.88rem;color:var(--body-text);line-height:1.55}
+.cm-adv-fix-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.cm-adv-fix-grid{grid-template-columns:1fr}}
+.cm-adv-fix-panel{border-radius:10px;padding:16px 18px}
+.cm-adv-fix-panel.imm{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2)}
+.cm-adv-fix-panel.str{background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.18)}
+.cm-adv-fix-panel-label{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px}
+.cm-adv-fix-panel.imm .cm-adv-fix-panel-label{color:#f87171}
+.cm-adv-fix-panel.str .cm-adv-fix-panel-label{color:#34d399}
+.cm-adv-fix-steps{list-style:none;display:flex;flex-direction:column;gap:8px;padding:0;margin:0}
+.cm-adv-fix-step{display:flex;align-items:flex-start;gap:9px;font-size:0.87rem;color:var(--body-text);line-height:1.55}
+.cm-adv-fix-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;font-size:0.63rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.cm-adv-fix-panel.imm .cm-adv-fix-num{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.25)}
+.cm-adv-fix-panel.str .cm-adv-fix-num{background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.22)}
+.cm-adv-mitre-map{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;padding-bottom:6px}
+.cm-adv-mitre-col{display:flex;flex-direction:column;gap:5px;min-width:140px;flex:1}
+.cm-adv-mitre-tactic{background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.22);border-radius:8px;padding:8px 10px}
+.cm-adv-mitre-tac-lbl{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:0.9px;color:#f87171}
+.cm-adv-mitre-tac-cnt{font-size:0.58rem;color:var(--muted2);margin-top:2px}
+.cm-adv-mitre-techs{display:flex;flex-direction:column;gap:4px;margin-top:5px}
+details.cm-adv-mitre-tech{border:1px solid var(--border);border-radius:6px;overflow:hidden}
+details.cm-adv-mitre-tech[open]{border-color:var(--border2)}
+details.cm-adv-mitre-tech summary{display:flex;align-items:flex-start;gap:6px;padding:7px 9px;cursor:pointer;list-style:none;background:var(--surface2);user-select:none}
+details.cm-adv-mitre-tech summary::-webkit-details-marker{display:none}
+details.cm-adv-mitre-tech[open] summary{background:var(--surface3);border-bottom:1px solid var(--border)}
+.cm-adv-mitre-tech-id{font-size:0.6rem;font-weight:800;font-family:'Courier New',monospace;color:#fbbf24;background:rgba(251,191,36,0.08);padding:1px 5px;border-radius:3px;flex-shrink:0;margin-top:1px;border:1px solid rgba(251,191,36,0.18)}
+.cm-adv-mitre-tech-name{font-size:0.72rem;color:var(--body-text);line-height:1.35;flex:1}
+.cm-adv-mitre-tech-body{padding:9px 10px;background:var(--surface);font-size:0.8rem;color:var(--body-text);line-height:1.6;border-left:2px solid rgba(251,191,36,0.3)}
+.cm-adv-mitre-tech-link{display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-size:0.7rem;font-weight:600;color:#f87171;text-decoration:none;border:1px solid rgba(239,68,68,0.25);padding:2px 8px;border-radius:4px}
+.cm-adv-concept-pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.cm-adv-concept-pill{font-size:0.72rem;font-weight:700;font-family:'Courier New',monospace;padding:5px 12px;border-radius:6px;background:var(--surface2);color:var(--muted);border:1px solid var(--border2);cursor:pointer;transition:color 0.15s,border-color 0.15s,background 0.15s;font-family:inherit}
+.cm-adv-concept-pill:hover,.cm-adv-concept-pill.active{color:#818cf8;border-color:rgba(129,140,248,0.4);background:rgba(129,140,248,0.08)}
+.cm-adv-concept-expand{display:none;padding:14px 16px;border-radius:9px;background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.15);margin-top:4px}
+.cm-adv-concept-expand.visible{display:block}
+.cm-adv-concept-name{font-size:0.85rem;font-weight:800;color:#818cf8;font-family:'Courier New',monospace;margin-bottom:8px}
+.cm-adv-concept-def{font-size:0.88rem;color:var(--body-text);line-height:1.65;margin-bottom:9px}
+.cm-adv-concept-rel{font-size:0.85rem;color:var(--muted);line-height:1.6;font-style:italic;padding-left:12px;border-left:2px solid rgba(129,140,248,0.35)}
+.cm-adv-hunt-list{display:flex;flex-direction:column;gap:8px}
+details.cm-adv-hunt-entry{border-radius:9px;overflow:hidden;border:1px solid var(--border)}
+details.cm-adv-hunt-entry[open]{border-color:var(--border2)}
+details.cm-adv-hunt-entry summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;background:var(--surface2);user-select:none}
+details.cm-adv-hunt-entry summary::-webkit-details-marker{display:none}
+details.cm-adv-hunt-entry[open] summary{background:var(--surface3)}
+.cm-adv-hunt-prio{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.cm-adv-hunt-prio.high{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.25)}
+.cm-adv-hunt-prio.medium{background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.22)}
+.cm-adv-hunt-prio.low{background:rgba(52,211,153,0.1);color:#34d399;border:1px solid rgba(52,211,153,0.2)}
+.cm-adv-hunt-signal{font-size:0.88rem;font-weight:700;color:var(--text);flex:1}
+.cm-adv-hunt-body{padding:12px 14px;border-top:1px solid var(--border);background:var(--surface)}
+.cm-adv-hunt-desc{font-size:0.88rem;color:var(--muted);line-height:1.65}
+.cm-adv-log-tag{display:inline-block;margin-top:8px;margin-right:5px;font-size:0.68rem;font-weight:700;font-family:'Courier New',monospace;padding:2px 8px;border-radius:4px;background:rgba(129,140,248,0.1);color:#818cf8;border:1px solid rgba(129,140,248,0.2)}
+.cm-adv-ioc-caveat{padding:12px 15px;border-radius:8px;margin-bottom:14px;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.25);display:flex;align-items:flex-start;gap:10px}
+.cm-adv-ioc-caveat-text{font-size:0.83rem;color:var(--body-text);line-height:1.6}
+.cm-adv-ioc-caveat-text strong{color:#fbbf24}
+.cm-adv-ioc-group{margin-bottom:14px}
+.cm-adv-ioc-group:last-child{margin-bottom:0}
+.cm-adv-ioc-group-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.cm-adv-ioc-group-lbl{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted2)}
+.cm-adv-ioc-copy-btn{font-size:0.68rem;font-weight:600;padding:3px 10px;border-radius:20px;background:transparent;border:1px solid var(--border2);color:var(--muted2);cursor:pointer;transition:color 0.15s,border-color 0.15s;font-family:inherit}
+.cm-adv-ioc-copy-btn:hover{color:#34d399;border-color:rgba(52,211,153,0.4)}
+.cm-adv-ioc-list{background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.cm-adv-ioc-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);font-family:'Courier New',monospace;font-size:0.8rem;color:var(--body-text);word-break:break-all}
+.cm-adv-ioc-item:last-child{border-bottom:none}
+.cm-adv-ioc-copy-single{flex-shrink:0;background:none;border:none;cursor:pointer;color:var(--muted2);font-size:0.72rem;padding:2px 6px;border-radius:4px;font-family:inherit}
+.cm-adv-ioc-no-data{padding:12px;font-size:0.83rem;color:var(--muted2);font-style:italic;text-align:center}
+.cm-adv-ta-block{background:rgba(167,139,250,0.05);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:18px}
+.cm-adv-ta-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.cm-adv-ta-name{font-size:1.1rem;font-weight:800;color:#a78bfa}
+.cm-adv-ta-aliases{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.cm-adv-ta-alias{font-size:0.68rem;padding:2px 8px;border-radius:5px;background:var(--surface3);color:var(--muted2);border:1px solid var(--border2)}
+.cm-adv-ta-rows{display:flex;flex-direction:column;gap:10px}
+.cm-adv-ta-row-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2);margin-bottom:4px}
+.cm-adv-ta-row-val{font-size:0.9rem;color:var(--body-text);line-height:1.65}
+.severity-pill,.patch-pill{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;padding:3px 10px;border-radius:20px}
+.sev-critical{background:rgba(239,68,68,0.18);color:#f87171;border:1px solid rgba(239,68,68,0.35)}
+.sev-high{background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.3)}
+.sev-medium{background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.25)}
+.sev-low{background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.25)}
+.patch-available{background:rgba(52,211,153,0.1);color:#34d399;border:1px solid rgba(52,211,153,0.25)}
+.patch-mitigation{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.22)}
+.patch-none{background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.22)}
+.cvss-bar-track{width:140px;height:7px;border-radius:4px;background:var(--surface3);border:1px solid var(--border);overflow:hidden;display:inline-block;vertical-align:middle}
+.cvss-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#22c55e 0%,#f59e0b 40%,#ef4444 70%)}
+`;
+  document.head.appendChild(s);
+}
+
+function cmShowAdvisoryPage(sd, secType, headline, story, cardId) {
+  if (!sd) return;
+  cmInjectAdvisoryCSS();
+  CM_ADV_BACK_DATA = { story: story || {}, cardId };
+
+  const h2 = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+  const accents = {
+    vulnerability: ['#ef4444','#f87171','rgba(239,68,68,0.15)','rgba(239,68,68,0.22)','rgba(239,68,68,0.04)'],
+    breach:        ['#fbbf24','#fde68a','rgba(251,191,36,0.15)','rgba(251,191,36,0.22)','rgba(251,191,36,0.04)'],
+    threat_actor:  ['#a78bfa','#c4b5fd','rgba(167,139,250,0.15)','rgba(167,139,250,0.22)','rgba(167,139,250,0.04)'],
+  };
+  const [ac,acs,aglow,aglow2,abg] = accents[secType] || accents.vulnerability;
+  const typeLabels = {vulnerability:'Vulnerability Advisory', breach:'Breach Report', threat_actor:'Threat Actor Profile'};
+  const typeLabel  = typeLabels[secType] || 'Security Advisory';
+
+  // CVSS
+  const cvssScore = sd.cvss_score;
+  const cvssPct = cvssScore != null ? `${Math.min(Number(cvssScore)/10*100,100).toFixed(0)}%` : '0%';
+  const sev = sd.severity || '';
+  const sevCls = {Critical:'sev-critical',High:'sev-high',Medium:'sev-medium',Low:'sev-low'}[sev] || 'sev-low';
+  const patchStatus = sd.patch_status || '';
+  const patchCls = {'Patch Available':'patch-available','Mitigation Only':'patch-mitigation'}[patchStatus] || 'patch-none';
+  const patchIcon = patchStatus === 'Patch Available' ? '&#10003;' : '&#9888;';
+
+  // Live badge (active exploitation)
+  const tl = sd.patch_timeline || {};
+  const liveBadge = (secType === 'vulnerability' && tl.exploited_in_wild)
+    ? `<span class="cm-adv-live-badge"><span class="cm-adv-live-dot"></span>Active Exploitation</span>` : '';
+
+  // CVSS bar
+  const cvssHtml = cvssScore != null
+    ? `<div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted2)">CVSS</span>
+        <div class="cvss-bar-track"><div class="cvss-bar-fill" style="width:${h2(cvssPct)}"></div></div>
+        <span style="font-size:1.1rem;font-weight:900;font-family:'Courier New',monospace;color:${h2(ac)}">${h2(String(cvssScore))}</span>
+      </div>` : '';
+
+  // Threat actor inline tag
+  const ta = sd.threat_actor;
+  const taTag = (ta && ta.name)
+    ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.63rem;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.28)">&#9670; ${h2(ta.name)}</span>` : '';
+
+  // ── Patch timeline ──
+  function tlStep(label, dateVal, dotCls) {
+    const d = h2(dateVal || '');
+    return `<div class="cm-adv-tl-step">
+      <div class="cm-adv-tl-dot ${dotCls}"></div>
+      <div class="cm-adv-tl-label">${h2(label)}</div>
+      ${d ? `<div class="cm-adv-tl-date">${d}</div>` : `<div class="cm-adv-tl-date na">Unknown</div>`}
+    </div>`;
+  }
+  const timelineHtml = `<div class="cm-adv-timeline">
+    ${tlStep('Disclosed', tl.disclosed, tl.disclosed ? 'red' : 'empty')}
+    ${tlStep('Exploited in Wild', tl.exploited_in_wild, tl.exploited_in_wild ? 'red' : 'empty')}
+    ${tlStep('Patch Released', tl.patch_released, tl.patch_released ? 'green' : (patchStatus === 'Mitigation Only' ? 'amber' : 'empty'))}
+  </div>`;
+
+  // ── Attack Flow diagram ──
+  const svgRaw = (story && story.visual_svg) || '';
+  const diagramBlock = svgRaw ? `
+    <div class="cm-adv-block">
+      <div class="cm-adv-block-hdr"><span class="cm-adv-block-icon">&#9654;</span><span class="cm-adv-block-title" style="color:${h2(acs)}">Attack Flow Diagram</span></div>
+      <div class="cm-adv-block-body" style="padding:0">
+        <div class="diagram-wrap">
+          <div class="diagram-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><span class="diagram-title">${h2(sd.title||headline)}</span></div>
+          <div class="diagram-svg">${svgRaw}</div>
+        </div>
+        ${sd.attack_vector_summary ? `<div style="margin:14px;font-size:0.92rem;color:var(--body-text);line-height:1.72;padding:12px 16px;background:${abg};border:1px solid ${aglow2};border-radius:8px;border-left:3px solid ${ac}">${h2(sd.attack_vector_summary)}</div>` : ''}
+      </div>
+    </div>` : '';
+
+  // ── Technical details ──
+  let detailCells = '';
+  if (sd.cve_id) detailCells += `<div class="cm-adv-detail-cell"><div class="cm-adv-detail-label">CVE ID</div><div class="cm-adv-detail-value" style="color:${h2(acs)}">${h2(sd.cve_id)}</div></div>`;
+  if (cvssScore != null) detailCells += `<div class="cm-adv-detail-cell"><div class="cm-adv-detail-label">CVSS Score</div><div class="cm-adv-detail-value" style="color:${h2(ac)}">${h2(String(cvssScore))}</div></div>`;
+  if (sd.cvss_vector) detailCells += `<div class="cm-adv-detail-cell" style="grid-column:1/-1"><div class="cm-adv-detail-label">CVSS Vector</div><div class="cm-adv-detail-value" style="font-size:0.75rem">${h2(sd.cvss_vector)}</div></div>`;
+  const techBlock = detailCells ? `
+    <div class="cm-adv-block">
+      <div class="cm-adv-block-hdr"><span class="cm-adv-block-icon">&#128196;</span><span class="cm-adv-block-title">Technical Details</span></div>
+      <div class="cm-adv-block-body"><div class="cm-adv-details-grid">${detailCells}</div></div>
+    </div>` : '';
+
+  // ── Affected products ──
+  let prodRows = '';
+  for (const p of (sd.affected_products || [])) {
+    const fv = h2(p.fixed_in || '');
+    const nf = fv.toLowerCase().startsWith('no fix') || fv.toLowerCase().startsWith('mitigate');
+    prodRows += `<tr>
+      <td><span class="cm-adv-prod-vendor">${h2(p.vendor||'')}</span></td>
+      <td><span class="cm-adv-prod-name">${h2(p.product||'')}</span></td>
+      <td><span class="cm-adv-prod-ver">${h2(p.versions_affected||'')}</span></td>
+      <td><span class="cm-adv-prod-fix${nf?' none':''}">${fv||'—'}</span></td>
+    </tr>`;
+  }
+  const productsBlock = prodRows ? `
+    <div class="cm-adv-block">
+      <div class="cm-adv-block-hdr"><span class="cm-adv-block-icon">&#9888;</span><span class="cm-adv-block-title" style="color:${h2(acs)}">Affected Products</span></div>
+      <div class="cm-adv-block-body" style="padding:0;overflow-x:auto">
+        <table class="cm-adv-table"><thead><tr><th>Vendor</th><th>Product</th><th>Versions Affected</th><th>Fixed In</th></tr></thead><tbody>${prodRows}</tbody></table>
+      </div>
+    </div>` : '';
+
+  // ── Applicability checklist ──
+  let applyItems = '';
+  for (const item of (sd.applicability_checklist || [])) {
+    const ok = item.at_risk === false;
+    applyItems += `<div class="cm-adv-apply-item"${ok?' style="background:rgba(52,211,153,0.04);border-color:rgba(52,211,153,0.2)"':''}>
+      <span class="cm-adv-apply-check"${ok?' style="color:#34d399"':''}>${ok?'&#10003;':'&#9888;'}</span>
+      <span class="cm-adv-apply-text"${ok?' style="color:var(--muted)"':''}>${h2(item.condition||'')}</span>
+    </div>`;
+  }
+  const applyBlock = applyItems ? `
+    <div class="cm-adv-block">
+      <div class="cm-adv-block-hdr"><span class="cm-adv-block-icon">&#9745;</span><span class="cm-adv-block-title" style="color:${h2(acs)}">Am I At Risk?</span></div>
+      <div class="cm-adv-block-body"><div class="cm-adv-apply-list">${applyItems}</div></div>
+    </div>` : '';
+
+  // ── Fix steps ──
+  const immSteps = (sd.fix_immediate_steps || []).map((s,i) =>
+    `<li class="cm-adv-fix-step"><span class="cm-adv-fix-num">${i+1}</span><span>${h2(s)}</span></li>`).join('');
+  const strSteps = (sd.fix_strategic_steps || []).map((s,i) =>
+    `<li class="cm-adv-fix-step"><span class="cm-adv-fix-num">${i+1}</span><span>${h2(s)}</span></li>`).join('');
+  const fixBlock = (immSteps || strSteps) ? `
+    <div class="cm-adv-block">
+      <div class="cm-adv-block-hdr"><span class="cm-adv-block-icon">&#128736;</span><span class="cm-adv-block-title" style="color:${h2(acs)}">Remediation</span></div>
+      <div class="cm-adv-block-body"><div class="cm-adv-fix-grid">
+        ${immSteps ? `<div class="cm-adv-fix-panel imm"><div class="cm-adv-fix-panel-label">&#9888; Immediate Steps</div><ol class="cm-adv-fix-steps">${immSteps}</ol></div>` : ''}
+        ${strSteps ? `<div class="cm-adv-fix-panel str"><div class="cm-adv-fix-panel-label">&#127919; Strategic Steps</div><ol class="cm-adv-fix-steps">${strSteps}</ol></div>` : ''}
+      </div></div>
+    </div>` : '';
+
+  // ── MITRE ATT&CK ──
   const tacGroups = {};
-  (sd.mitre_techniques||[]).forEach(t => {
-    const tac = t.tactic||'Unknown';
+  (sd.mitre_techniques || []).forEach(t => {
+    const tac = t.tactic || 'Unknown';
     if (!tacGroups[tac]) tacGroups[tac] = [];
     tacGroups[tac].push(t);
   });
-  const mitreHtml = Object.entries(tacGroups).map(([tac,techs]) => {
-    const cells = techs.map(t => {
+  const mitreColsHtml = Object.entries(tacGroups).map(([tac, techs]) => {
+    const techItems = techs.map(t => {
       const url = 'https://attack.mitre.org/techniques/' + h2((t.id||'').replace('.','/')) + '/';
-      return `<details class="mitre-tech-detail"><summary><span class="mitre-tech-id">${h2(t.id||'')}</span><span class="mitre-tech-name">${h2(t.name||'')}</span><span class="mitre-tech-chevron">&#9656;</span></summary><div class="mitre-tech-body"><p class="mitre-tech-rel">${h2(t.relevance||'')}</p><a href="${h2(url)}" class="mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a></div></details>`;
+      return `<details class="cm-adv-mitre-tech">
+        <summary><span class="cm-adv-mitre-tech-id">${h2(t.id||'')}</span><span class="cm-adv-mitre-tech-name">${h2(t.name||'')}</span></summary>
+        <div class="cm-adv-mitre-tech-body">${h2(t.relevance||'')}
+          <br><a href="${h2(url)}" class="cm-adv-mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a>
+        </div>
+      </details>`;
     }).join('');
-    return `<div class="mitre-col"><div class="mitre-tactic-hdr" style="cursor:default"><span class="mitre-tactic-lbl">${h2(tac)}</span><span class="mitre-tactic-cnt">${techs.length} technique${techs.length!==1?'s':''}</span></div><div class="mitre-techs">${cells}</div></div>`;
-  }).join('');
-
-  // IOC rows
-  function iocGroup(lbl, items) {
-    if (!items||!items.length) return '';
-    return `<div style="margin-bottom:10px"><div style="font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#7a849a;margin-bottom:4px">${h2(lbl)}</div>${items.map(v=>`<div style="font-family:monospace;font-size:0.78rem;padding:4px 8px;background:#12152a;border-radius:4px;margin-bottom:3px">${h2(v)}</div>`).join('')}</div>`;
-  }
-  const iocs = sd.iocs||{};
-  const iocHtml = [
-    iocGroup('IPs', iocs.ips),
-    iocGroup('Domains', iocs.domains),
-    iocGroup('File Hashes', iocs.hashes),
-    iocGroup('URI Patterns', iocs.uri_patterns),
-  ].join('');
-
-  // Threat actor tag
-  const ta = sd.threat_actor;
-  const taTag = (ta&&ta.name) ? `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.63rem;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.28)">&#9670; ${h2(ta.name)}</span>` : '';
-
-  const modal = document.createElement('div');
-  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto';
-  modal.innerHTML = `
-    <div style="background:#12152a;border:1px solid #333660;border-radius:16px;padding:24px;max-width:680px;width:100%;max-height:88vh;overflow-y:auto;position:relative">
-      <button onclick="this.closest('[style]').remove()" style="position:absolute;top:14px;right:14px;background:#1a1d32;border:1px solid #252840;color:#7a849a;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.78rem">&#10005;</button>
-      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:14px">
-        <span style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;padding:3px 10px;border-radius:4px;background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.25)">${h2(secType||'Security').replace('_',' ')}</span>
-        ${cvss} ${sev ? `<span class="severity-pill ${sevCls}">${h2(sev)}</span>` : ''}
-        ${sd.patch_status ? `<span class="patch-pill ${patchCls}">${h2(sd.patch_status)}</span>` : ''}
-        ${taTag}
-      </div>
-      <h2 style="font-size:1.3rem;font-weight:900;margin-bottom:10px;line-height:1.25">${h2(sd.title||headline||'')}</h2>
-      <p style="font-size:0.93rem;color:#c0c8d8;line-height:1.75;margin-bottom:20px">${h2(sd.description||'')}</p>
-      ${mitreHtml ? `<div style="margin-bottom:20px"><div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#7a849a;margin-bottom:10px">&#9741; MITRE ATT&amp;CK Map</div><div class="mitre-map">${mitreHtml}</div></div>` : ''}
-      ${(sd.fix_immediate_steps||[]).length ? `<div style="margin-bottom:16px"><div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#7a849a;margin-bottom:8px">&#9888; Immediate Steps</div><ol style="padding-left:20px;font-size:0.88rem;color:#c0c8d8;line-height:1.65">${(sd.fix_immediate_steps||[]).map(s=>`<li style="margin-bottom:4px">${h2(s)}</li>`).join('')}</ol></div>` : ''}
-      ${iocHtml ? `<div style="margin-bottom:16px"><div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#7a849a;margin-bottom:8px">&#9762; Indicators of Compromise</div>${iocHtml}</div>` : ''}
+    return `<div class="cm-adv-mitre-col">
+      <div class="cm-adv-mitre-tactic"><div class="cm-adv-mitre-tac-lbl">${h2(tac)}</div><div class="cm-adv-mitre-tac-cnt">${techs.length} technique${techs.length!==1?'s':''}</div></div>
+      <div class="cm-adv-mitre-techs">${techItems}</div>
     </div>`;
-  document.body.appendChild(modal);
-  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
-  document.addEventListener('keydown', function esc(e) { if (e.key==='Escape') { modal.remove(); document.removeEventListener('keydown', esc); } });
+  }).join('');
+  const mitreBlock = mitreColsHtml ? `
+    <div class="cm-adv-block">
+      <div class="cm-adv-block-hdr"><span class="cm-adv-block-icon">&#9741;</span><span class="cm-adv-block-title">MITRE ATT&amp;CK Map</span></div>
+      <div class="cm-adv-block-body"><div class="cm-adv-mitre-map">${mitreColsHtml}</div></div>
+    </div>` : '';
+
+  // ── Concept tags ──
+  let conceptPills = '', conceptExpands = '';
+  (sd.concept_tags || []).forEach((ct, i) => {
+    const tid = 'cm-adv-ct-' + Date.now() + '-' + i;
+    conceptPills  += `<button class="cm-adv-concept-pill" onclick="this.classList.toggle('active');document.getElementById('${tid}').classList.toggle('visible')">${h2(ct.tag||'')}</button>`;
+    conceptExpands += `<div class="cm-adv-concept-expand" id="${tid}"><div class="cm-adv-concept-name">${h2(ct.tag||'')}</div><div class="cm-adv-concept-def">${h2(ct.definition||'')}</div><div class="cm-adv-concept-rel">${h2(ct.relevance||'')}</div></div>`;
+  });
+  const conceptBlock = conceptPills ? `
+    <div class="cm-adv-block">
+      <div class="cm-adv-block-hdr"><span class="cm-adv-block-icon">&#128218;</span><span class="cm-adv-block-title">Concept Reference</span></div>
+      <div class="cm-adv-block-body"><div class="cm-adv-concept-pills">${conceptPills}</div>${conceptExpands}</div>
+    </div>` : '';
+
+  // ── Threat Hunting ──
+  let huntItems = '';
+  (sd.threat_hunting_signals || []).forEach((sig, i) => {
+    const prio = (sig.priority || 'Medium').toLowerCase();
+    const logTags = (sig.log_sources || []).map(ls => `<span class="cm-adv-log-tag">${h2(ls)}</span>`).join('');
+    huntItems += `<details class="cm-adv-hunt-entry"${i===0?' open':''}>
+      <summary><span class="cm-adv-hunt-prio ${prio}">${h2(sig.priority||'Medium')}</span><span class="cm-adv-hunt-signal">${h2(sig.signal||'')}</span></summary>
+      <div class="cm-adv-hunt-body"><div class="cm-adv-hunt-desc">${h2(sig.description||'')}</div>${logTags}</div>
+    </details>`;
+  });
+  const huntBlock = huntItems ? `
+    <div class="cm-adv-block">
+      <div class="cm-adv-block-hdr"><span class="cm-adv-block-icon">&#128270;</span><span class="cm-adv-block-title" style="color:#34d399">Threat Hunting Signals</span></div>
+      <div class="cm-adv-block-body"><div class="cm-adv-hunt-list">${huntItems}</div></div>
+    </div>` : '';
+
+  // ── IOCs ──
+  const iocs = sd.iocs || {};
+  function iocGrp(gid, label, items) {
+    const rows = (items && items.length)
+      ? items.map(v => `<div class="cm-adv-ioc-item"><span>${h2(v)}</span><button class="cm-adv-ioc-copy-single" onclick="navigator.clipboard&&navigator.clipboard.writeText('${h2(v)}')" title="Copy">&#10064;</button></div>`).join('')
+      : `<div class="cm-adv-ioc-no-data">None reported in source coverage</div>`;
+    const copyBtn = (items && items.length)
+      ? `<button class="cm-adv-ioc-copy-btn" onclick="navigator.clipboard&&navigator.clipboard.writeText(${JSON.stringify((items||[]).join('\n'))})">&#10064; Copy</button>` : '';
+    return `<div class="cm-adv-ioc-group"><div class="cm-adv-ioc-group-hdr"><span class="cm-adv-ioc-group-lbl">${h2(label)}</span>${copyBtn}</div><div class="cm-adv-ioc-list">${rows}</div></div>`;
+  }
+  const iocBlock = `
+    <div class="cm-adv-block">
+      <div class="cm-adv-block-hdr"><span class="cm-adv-block-icon">&#9762;</span><span class="cm-adv-block-title" style="color:#fbbf24">Indicators of Compromise</span></div>
+      <div class="cm-adv-block-body">
+        <div class="cm-adv-ioc-caveat"><div class="cm-adv-ioc-caveat-text"><strong>&#9888; Important:</strong> Only IOC values explicitly stated in the source article are listed. Verify independently before blocking.</div></div>
+        ${iocGrp('hashes','File Hashes (SHA-256)',iocs.hashes)}
+        ${iocGrp('ips','Command &amp; Control IPs',iocs.ips)}
+        ${iocGrp('domains','Malicious Domains',iocs.domains)}
+        ${iocGrp('file-paths','File Paths / Artifacts',iocs.file_paths)}
+        ${iocGrp('uri-patterns','Suspicious URI Patterns',iocs.uri_patterns)}
+      </div>
+    </div>`;
+
+  // ── Threat Actor profile ──
+  let taBlock = '';
+  if (ta && ta.name) {
+    const aliases = (ta.aliases || []).map(a => `<span class="cm-adv-ta-alias">${h2(a)}</span>`).join('');
+    const confBadge = ta.attribution_confidence
+      ? `<span style="font-size:0.65rem;font-weight:700;letter-spacing:0.8px;padding:2px 8px;border-radius:4px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);color:#a78bfa">${h2(ta.attribution_confidence)} confidence</span>` : '';
+    taBlock = `
+      <div class="cm-adv-block">
+        <div class="cm-adv-block-hdr"><span class="cm-adv-block-icon">&#9670;</span><span class="cm-adv-block-title" style="color:#a78bfa">Threat Actor Profile</span></div>
+        <div class="cm-adv-block-body"><div class="cm-adv-ta-block">
+          <div class="cm-adv-ta-header">
+            <div><div class="cm-adv-ta-name">${h2(ta.name)}</div>${aliases?`<div class="cm-adv-ta-aliases">${aliases}</div>`:''}</div>
+            ${confBadge}
+          </div>
+          <div class="cm-adv-ta-rows">
+            ${ta.origin?`<div><div class="cm-adv-ta-row-label">Origin</div><div class="cm-adv-ta-row-val">${h2(ta.origin)}</div></div>`:''}
+            ${ta.motivation?`<div><div class="cm-adv-ta-row-label">Motivation</div><div class="cm-adv-ta-row-val">${h2(ta.motivation)}</div></div>`:''}
+            ${ta.description?`<div><div class="cm-adv-ta-row-label">Description</div><div class="cm-adv-ta-row-val">${h2(ta.description)}</div></div>`:''}
+            ${ta.story_relevance?`<div><div class="cm-adv-ta-row-label">Story Relevance</div><div class="cm-adv-ta-row-val">${h2(ta.story_relevance)}</div></div>`:''}
+            ${(ta.known_ttps||[]).length?`<div><div class="cm-adv-ta-row-label">Known TTPs</div><div class="cm-adv-ta-row-val">${(ta.known_ttps||[]).map(t=>h2(t)).join(' &middot; ')}</div></div>`:''}
+          </div>
+        </div></div>
+      </div>`;
+  }
+
+  // ── Assemble and render ──
+  const outputEl = document.getElementById('cm-output');
+  if (!outputEl) return;
+
+  outputEl.innerHTML = `
+    <div class="cm-output-header">
+      <span class="cm-output-label">${h2(typeLabel)}</span>
+      <div class="cm-actions">
+        <button class="cm-action-btn" onclick="cmBackFromAdvisory()">&#8592; Back to Card</button>
+        <button class="cm-action-btn" onclick="cmClear()">&#x2715; Clear</button>
+      </div>
+    </div>
+    <div class="cm-adv-wrap">
+      <div style="padding:22px 20px 18px;border:1px solid ${aglow2};border-radius:12px;background:${abg};margin-bottom:12px;position:relative;overflow:hidden">
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 0%,${aglow} 0%,transparent 70%);pointer-events:none"></div>
+        <div style="position:relative">
+          <div class="cm-adv-badges">
+            <span class="cm-adv-type-badge" style="background:${aglow};color:${acs};border:1px solid ${aglow2}">${h2(typeLabel)}</span>
+            ${liveBadge}
+          </div>
+          <div class="cm-adv-title">${h2(sd.title||headline)}</div>
+          <div class="cm-adv-score-row">
+            ${cvssHtml}
+            ${sev?`<span class="severity-pill ${sevCls}">${h2(sev)}</span>`:''}
+            ${patchStatus?`<span class="patch-pill ${patchCls}">${patchIcon} ${h2(patchStatus)}</span>`:''}
+            ${taTag}
+          </div>
+          <div class="cm-adv-desc">${h2(sd.description||'')}</div>
+          ${sd.cve_id?`<div class="cm-adv-meta"><div class="cm-adv-meta-item"><span style="color:var(--muted2)">CVE:</span><code style="font-size:0.78rem;color:${acs}">${h2(sd.cve_id)}</code></div></div>`:''}
+        </div>
+      </div>
+      ${diagramBlock}
+      ${techBlock}
+      <div class="cm-adv-block">
+        <div class="cm-adv-block-hdr"><span class="cm-adv-block-icon">&#128337;</span><span class="cm-adv-block-title">Patch Timeline</span></div>
+        <div class="cm-adv-block-body">${timelineHtml}</div>
+      </div>
+      ${productsBlock}
+      ${applyBlock}
+      ${fixBlock}
+      ${mitreBlock}
+      ${conceptBlock}
+      ${huntBlock}
+      ${iocBlock}
+      ${taBlock}
+    </div>`;
+
+  requestAnimationFrame(() => outputEl.scrollIntoView({ behavior: 'smooth', block: 'start' }));
 }
+
+window.cmBackFromAdvisory = function() {
+  if (!CM_ADV_BACK_DATA) { cmClear(); return; }
+  const { story, cardId } = CM_ADV_BACK_DATA;
+  const cardHtml = cmRenderCard(story, '#f472b6');
+  const outputEl = document.getElementById('cm-output');
+  outputEl.innerHTML = `
+    <div class="cm-output-header">
+      <span class="cm-output-label">Generated Card</span>
+      <div class="cm-actions">
+        <button class="cm-action-btn" onclick="cmCopyHtml(event)">Copy HTML</button>
+        <button class="cm-action-btn" onclick="cmClear()">&#x2715; Clear</button>
+      </div>
+    </div>
+    <div id="cm-card-wrap">${cardHtml}</div>`;
+  if (cardId) {
+    const advLink = outputEl.querySelector('.sec-advisory-link');
+    if (advLink) {
+      const base = window.location.origin + window.location.pathname;
+      advLink.href = base + '?card=' + cardId + '&advisory=1';
+      advLink.onclick = e => e.stopPropagation();
+    }
+  }
+  requestAnimationFrame(() => {
+    const card = outputEl.querySelector('.story-card');
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+};
 
 // ── Render a full story card from Claude's structured output ──
 const LENS_ICO = { Scientific:'&#x1F52C;', Historical:'&#x1F4DC;', Societal:'&#x1F30D;' };
@@ -2783,12 +3173,20 @@ async function cmSaveCard(story, color, articleEl) {
   fetch(CM_WORKER_URL + '/card/' + cardId)
     .then(r => r.ok ? r.json() : Promise.reject())
     .then(({ story, color }) => {
+      cmHideStatus();
+
+      // Advisory URL: skip rendering the card, jump straight to the advisory page
+      if (openAdv && story.security_detail) {
+        cmShowAdvisoryPage(story.security_detail, story.security_type, story.headline, story, cardId);
+        return;
+      }
+
+      // Shared card (no advisory): render card normally
       const cardHtml = cmRenderCard(story, color || '#f472b6');
       const out = document.getElementById('cm-output');
-      const label = openAdv ? 'Advisory' : 'Shared Card';
       out.innerHTML = `
         <div class="cm-output-header">
-          <span class="cm-output-label">${label}</span>
+          <span class="cm-output-label">Shared Card</span>
           <div class="cm-actions">
             <button class="cm-action-btn" onclick="cmClear()">&#x2715; Clear</button>
           </div>
@@ -2796,9 +3194,8 @@ async function cmSaveCard(story, color, articleEl) {
         <div id="cm-card-wrap">${cardHtml}</div>`;
       const card = out.querySelector('.story-card');
       if (card) card.classList.remove('open');
-      cmHideStatus();
 
-      // Wire up the advisory badge href to the persistent URL for this card
+      // Wire up the advisory badge href to its persistent URL
       if (card) {
         const advLink = card.querySelector('.sec-advisory-link');
         if (advLink) {
@@ -2813,18 +3210,10 @@ async function cmSaveCard(story, color, articleEl) {
       requestAnimationFrame(() => requestAnimationFrame(() => {
         if (!card) return;
         card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-        // If ?advisory=1: open the advisory modal right after the scroll lands
-        if (openAdv && story.security_detail) {
-          setTimeout(() => {
-            cmOpenAdvisory(story.security_detail, story.security_type, story.headline);
-          }, 600);
-        } else {
-          setTimeout(() => {
-            card.classList.add('story-highlight');
-            card.addEventListener('animationend', () => card.classList.remove('story-highlight'), { once: true });
-          }, 700);
-        }
+        setTimeout(() => {
+          card.classList.add('story-highlight');
+          card.addEventListener('animationend', () => card.classList.remove('story-highlight'), { once: true });
+        }, 700);
       }));
     })
     .catch(() => cmStatus('error', '&#x26A0; Could not load shared card — it may have expired (cards are kept for 30 days).'));
