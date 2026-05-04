@@ -3030,7 +3030,9 @@ async function cmFetchArticle(url) {
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || `Could not fetch article (HTTP ${res.status}). Try pasting the text instead.`);
+    const e = new Error(err.error || `Could not fetch article (HTTP ${res.status}). Try pasting the text instead.`);
+    if (err.is_pdf) e.isPdf = true;
+    throw e;
   }
   const data = await res.json();
   if (data.error) throw new Error(data.error + ' — try pasting the article text instead.');
@@ -3196,7 +3198,14 @@ window.cmGenerate = async function() {
     }));
 
   } catch(err) {
-    cmStatus('error', '&#x26A0; ' + h(err.message || 'Something went wrong. Try again.'));
+    const msg = err.message || 'Something went wrong. Try again.';
+    cmStatus('error', '&#x26A0; ' + h(msg));
+    document.getElementById('cm-output').innerHTML = `
+      <div style="padding:28px 24px;border:1px solid var(--border2);border-radius:14px;background:var(--surface2);text-align:center;max-width:560px;margin:24px auto">
+        <div style="font-size:2.2rem;margin-bottom:12px">${err.isPdf ? '&#128196;' : '&#9888;&#65039;'}</div>
+        <div style="font-weight:700;font-size:1rem;color:var(--text);margin-bottom:10px">${err.isPdf ? 'PDF files can\'t be fetched automatically' : 'Could not generate card'}</div>
+        <div style="font-size:0.88rem;color:var(--muted);line-height:1.65;max-width:420px;margin:0 auto">${h(msg)}</div>
+      </div>`;
   } finally {
     btn.disabled = false;
   }
