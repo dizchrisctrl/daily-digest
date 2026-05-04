@@ -301,6 +301,13 @@ export default {
         if (!res.ok) {
           return jsonResponse({ error: `HTTP ${res.status} fetching article` }, 400, origin);
         }
+        const ct = res.headers.get('Content-Type') || '';
+        if (ct.includes('application/pdf') || fetchUrl.pathname.toLowerCase().endsWith('.pdf')) {
+          return jsonResponse({
+            error: 'This URL points to a PDF file. PDF text cannot be extracted automatically — please open the PDF, select all text (Ctrl+A / Cmd+A), copy it, and paste it into the text box instead.',
+            is_pdf: true,
+          }, 415, origin);
+        }
         const html = await res.text();
         return jsonResponse({ html, url: fetchUrl.toString() }, 200, origin);
       } catch (e) {

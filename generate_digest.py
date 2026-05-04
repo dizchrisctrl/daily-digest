@@ -2160,6 +2160,8 @@ function cmAdvisoryBadge(story, anchor) {
 
 // ── Full advisory page view (replaces the old modal) ──
 let CM_ADV_BACK_DATA = null;
+let _cmAdvMPop = null;    // singleton MITRE technique popover
+let _cmAdvMapPop = null;  // singleton full MITRE map overlay
 
 function cmInjectAdvisoryCSS() {
   if (document.getElementById('cm-adv-css')) return;
@@ -2223,21 +2225,29 @@ function cmInjectAdvisoryCSS() {
 .cm-adv-fix-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;font-size:0.63rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
 .cm-adv-fix-panel.imm .cm-adv-fix-num{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.25)}
 .cm-adv-fix-panel.str .cm-adv-fix-num{background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.22)}
-.cm-adv-mitre-map{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;padding-bottom:6px}
-.cm-adv-mitre-col{display:flex;flex-direction:column;gap:5px;min-width:140px;flex:1}
-.cm-adv-mitre-tactic{background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.22);border-radius:8px;padding:8px 10px}
-.cm-adv-mitre-tac-lbl{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:0.9px;color:#f87171}
-.cm-adv-mitre-tac-cnt{font-size:0.58rem;color:var(--muted2);margin-top:2px}
-.cm-adv-mitre-techs{display:flex;flex-direction:column;gap:4px;margin-top:5px}
-details.cm-adv-mitre-tech{border:1px solid var(--border);border-radius:6px;overflow:hidden}
-details.cm-adv-mitre-tech[open]{border-color:var(--border2)}
-details.cm-adv-mitre-tech summary{display:flex;align-items:flex-start;gap:6px;padding:7px 9px;cursor:pointer;list-style:none;background:var(--surface2);user-select:none}
-details.cm-adv-mitre-tech summary::-webkit-details-marker{display:none}
-details.cm-adv-mitre-tech[open] summary{background:var(--surface3);border-bottom:1px solid var(--border)}
-.cm-adv-mitre-tech-id{font-size:0.6rem;font-weight:800;font-family:'Courier New',monospace;color:#fbbf24;background:rgba(251,191,36,0.08);padding:1px 5px;border-radius:3px;flex-shrink:0;margin-top:1px;border:1px solid rgba(251,191,36,0.18)}
-.cm-adv-mitre-tech-name{font-size:0.72rem;color:var(--body-text);line-height:1.35;flex:1}
-.cm-adv-mitre-tech-body{padding:9px 10px;background:var(--surface);font-size:0.8rem;color:var(--body-text);line-height:1.6;border-left:2px solid rgba(251,191,36,0.3)}
-.cm-adv-mitre-tech-link{display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-size:0.7rem;font-weight:600;color:#f87171;text-decoration:none;border:1px solid rgba(239,68,68,0.25);padding:2px 8px;border-radius:4px}
+.cm-adv-mitre-tactics{display:flex;flex-direction:column;gap:10px}
+.cm-adv-mitre-tac-hdr{display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:7px;margin-bottom:8px}
+.cm-adv-mitre-tac-lbl{font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.9px;color:#f87171}
+.cm-adv-mitre-tac-cnt{font-size:0.6rem;color:var(--muted2);margin-left:auto}
+.cm-adv-mitre-chips{display:flex;flex-wrap:wrap;gap:6px}
+button.cm-adv-mitre-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border:1px solid var(--border2);border-radius:6px;background:var(--surface2);cursor:pointer;transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;font-family:inherit}
+button.cm-adv-mitre-chip:hover{border-color:rgba(251,191,36,0.5);background:rgba(251,191,36,0.06);box-shadow:0 2px 8px rgba(251,191,36,0.12)}
+.cm-adv-mitre-chip-id{font-size:0.63rem;font-weight:800;font-family:'Courier New',monospace;color:#fbbf24}
+.cm-adv-mitre-chip-name{font-size:0.73rem;color:var(--body-text)}
+.cm-adv-mp-overlay{position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.18s}
+.cm-adv-mp-overlay.open{opacity:1;pointer-events:all}
+.cm-adv-mp-box{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:22px 22px 18px;max-width:500px;width:100%;position:relative;transform:translateY(10px);transition:transform 0.18s;max-height:80vh;overflow-y:auto}
+.cm-adv-mp-box-wide{max-width:780px}
+.cm-adv-mp-overlay.open .cm-adv-mp-box{transform:translateY(0)}
+.cm-adv-mp-close{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-family:inherit;transition:color 0.15s}
+.cm-adv-mp-close:hover{color:var(--text)}
+.cm-adv-mp-tactic-lbl{font-size:0.6rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;padding:2px 9px;border-radius:4px;background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.25);display:inline-block;margin-bottom:10px}
+.cm-adv-mp-id-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.cm-adv-mp-id{font-size:0.75rem;font-weight:800;font-family:'Courier New',monospace;color:#fbbf24;background:rgba(251,191,36,0.08);padding:3px 9px;border-radius:4px;border:1px solid rgba(251,191,36,0.2)}
+.cm-adv-mp-name{font-size:1rem;font-weight:800;color:var(--text);line-height:1.25}
+.cm-adv-mp-rel{font-size:0.9rem;color:var(--body-text);line-height:1.7;margin-bottom:14px;padding:10px 14px;background:rgba(129,140,248,0.05);border:1px solid rgba(129,140,248,0.15);border-radius:8px;border-left:3px solid rgba(129,140,248,0.4)}
+.cm-adv-mp-link{display:inline-flex;align-items:center;gap:5px;font-size:0.75rem;font-weight:600;color:#f87171;text-decoration:none;border:1px solid rgba(239,68,68,0.25);padding:4px 10px;border-radius:5px;transition:border-color 0.15s,color 0.15s}
+.cm-adv-mp-link:hover{border-color:#ef4444;color:#ef4444}
 .cm-adv-concept-pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
 .cm-adv-concept-pill{font-size:0.72rem;font-weight:700;font-family:'Courier New',monospace;padding:5px 12px;border-radius:6px;background:var(--surface2);color:var(--muted);border:1px solid var(--border2);cursor:pointer;transition:color 0.15s,border-color 0.15s,background 0.15s;font-family:inherit}
 .cm-adv-concept-pill:hover,.cm-adv-concept-pill.active{color:#818cf8;border-color:rgba(129,140,248,0.4);background:rgba(129,140,248,0.08)}
@@ -2428,32 +2438,38 @@ function cmShowAdvisoryPage(sd, secType, headline, story, cardId) {
       </div></div>
     </div>` : '';
 
-  // ── MITRE ATT&CK ──
+  // ── MITRE ATT&CK ── (chips per tactic, click opens popover)
   const tacGroups = {};
   (sd.mitre_techniques || []).forEach(t => {
     const tac = t.tactic || 'Unknown';
     if (!tacGroups[tac]) tacGroups[tac] = [];
     tacGroups[tac].push(t);
   });
-  const mitreColsHtml = Object.entries(tacGroups).map(([tac, techs]) => {
-    const techItems = techs.map(t => {
+  const mitreTacGroupsHtml = Object.entries(tacGroups).map(([tac, techs]) => {
+    const chips = techs.map(t => {
       const url = 'https://attack.mitre.org/techniques/' + h2((t.id||'').replace('.','/')) + '/';
-      return `<details class="cm-adv-mitre-tech">
-        <summary><span class="cm-adv-mitre-tech-id">${h2(t.id||'')}</span><span class="cm-adv-mitre-tech-name">${h2(t.name||'')}</span></summary>
-        <div class="cm-adv-mitre-tech-body">${h2(t.relevance||'')}
-          <br><a href="${h2(url)}" class="cm-adv-mitre-tech-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a>
-        </div>
-      </details>`;
+      return `<button class="cm-adv-mitre-chip"
+        data-mitre-id="${h2(t.id||'')}"
+        data-mitre-name="${h2(t.name||'')}"
+        data-mitre-tactic="${h2(tac)}"
+        data-mitre-rel="${h2(t.relevance||'')}"
+        data-mitre-url="${h2(url)}">
+        <span class="cm-adv-mitre-chip-id">${h2(t.id||'')}</span>
+        <span class="cm-adv-mitre-chip-name">${h2(t.name||'')}</span>
+      </button>`;
     }).join('');
-    return `<div class="cm-adv-mitre-col">
-      <div class="cm-adv-mitre-tactic"><div class="cm-adv-mitre-tac-lbl">${h2(tac)}</div><div class="cm-adv-mitre-tac-cnt">${techs.length} technique${techs.length!==1?'s':''}</div></div>
-      <div class="cm-adv-mitre-techs">${techItems}</div>
+    return `<div class="cm-adv-mitre-tac-group">
+      <div class="cm-adv-mitre-tac-hdr">
+        <span class="cm-adv-mitre-tac-lbl">${h2(tac)}</span>
+        <span class="cm-adv-mitre-tac-cnt">${techs.length} technique${techs.length!==1?'s':''}</span>
+      </div>
+      <div class="cm-adv-mitre-chips">${chips}</div>
     </div>`;
   }).join('');
-  const mitreBlock = mitreColsHtml ? `
+  const mitreBlock = mitreTacGroupsHtml ? `
     <div class="cm-adv-block">
-      <div class="cm-adv-block-hdr"><span class="cm-adv-block-icon">&#9741;</span><span class="cm-adv-block-title">MITRE ATT&amp;CK Map</span></div>
-      <div class="cm-adv-block-body"><div class="cm-adv-mitre-map">${mitreColsHtml}</div></div>
+      <div class="cm-adv-block-hdr"><span class="cm-adv-block-icon">&#9741;</span><span class="cm-adv-block-title">MITRE ATT&amp;CK Map</span><span style="font-size:0.65rem;color:var(--muted2);margin-left:auto">Click a technique for details</span></div>
+      <div class="cm-adv-block-body"><div class="cm-adv-mitre-tactics">${mitreTacGroupsHtml}</div><button class="cm-adv-mitre-view-all" style="margin-top:12px;padding:7px 16px;border:1px solid var(--border2);border-radius:7px;background:var(--surface2);cursor:pointer;font-size:0.78rem;font-weight:600;color:var(--muted2)">&#9741; View full MITRE map</button></div>
     </div>` : '';
 
   // ── Concept tags ──
@@ -2485,26 +2501,25 @@ function cmShowAdvisoryPage(sd, secType, headline, story, cardId) {
       <div class="cm-adv-block-body"><div class="cm-adv-hunt-list">${huntItems}</div></div>
     </div>` : '';
 
-  // ── IOCs ──
+  // ── IOCs ── (only show groups that have data)
   const iocs = sd.iocs || {};
   function iocGrp(gid, label, items) {
-    const rows = (items && items.length)
-      ? items.map(v => `<div class="cm-adv-ioc-item"><span>${h2(v)}</span><button class="cm-adv-ioc-copy-single" onclick="navigator.clipboard&&navigator.clipboard.writeText('${h2(v)}')" title="Copy">&#10064;</button></div>`).join('')
-      : `<div class="cm-adv-ioc-no-data">None reported in source coverage</div>`;
-    const copyBtn = (items && items.length)
-      ? `<button class="cm-adv-ioc-copy-btn" onclick="navigator.clipboard&&navigator.clipboard.writeText(${JSON.stringify((items||[]).join('\n'))})">&#10064; Copy</button>` : '';
+    if (!items || !items.length) return '';
+    const rows = items.map(v => `<div class="cm-adv-ioc-item"><span>${h2(v)}</span><button class="cm-adv-ioc-copy-single" onclick="navigator.clipboard&&navigator.clipboard.writeText('${h2(v)}')" title="Copy">&#10064;</button></div>`).join('');
+    const copyBtn = `<button class="cm-adv-ioc-copy-btn" onclick="navigator.clipboard&&navigator.clipboard.writeText(${JSON.stringify(items.join('\n'))})">&#10064; Copy all</button>`;
     return `<div class="cm-adv-ioc-group"><div class="cm-adv-ioc-group-hdr"><span class="cm-adv-ioc-group-lbl">${h2(label)}</span>${copyBtn}</div><div class="cm-adv-ioc-list">${rows}</div></div>`;
   }
+  const iocGroupsHtml = iocGrp('hashes','File Hashes (SHA-256)',iocs.hashes)
+    + iocGrp('ips','Command &amp; Control IPs',iocs.ips)
+    + iocGrp('domains','Malicious Domains',iocs.domains)
+    + iocGrp('file-paths','File Paths / Artifacts',iocs.file_paths)
+    + iocGrp('uri-patterns','Suspicious URI Patterns',iocs.uri_patterns);
   const iocBlock = `
     <div class="cm-adv-block">
       <div class="cm-adv-block-hdr"><span class="cm-adv-block-icon">&#9762;</span><span class="cm-adv-block-title" style="color:#fbbf24">Indicators of Compromise</span></div>
       <div class="cm-adv-block-body">
         <div class="cm-adv-ioc-caveat"><div class="cm-adv-ioc-caveat-text"><strong>&#9888; Important:</strong> Only IOC values explicitly stated in the source article are listed. Verify independently before blocking.</div></div>
-        ${iocGrp('hashes','File Hashes (SHA-256)',iocs.hashes)}
-        ${iocGrp('ips','Command &amp; Control IPs',iocs.ips)}
-        ${iocGrp('domains','Malicious Domains',iocs.domains)}
-        ${iocGrp('file-paths','File Paths / Artifacts',iocs.file_paths)}
-        ${iocGrp('uri-patterns','Suspicious URI Patterns',iocs.uri_patterns)}
+        ${iocGroupsHtml || '<div style="font-size:0.88rem;color:var(--muted2);font-style:italic;padding:8px 0">No IOCs were explicitly reported in the source article.</div>'}
       </div>
     </div>`;
 
@@ -2579,6 +2594,86 @@ function cmShowAdvisoryPage(sd, secType, headline, story, cardId) {
       ${iocBlock}
       ${taBlock}
     </div>`;
+
+  // ── Wire MITRE chip clicks to popover ──
+  outputEl.querySelectorAll('.cm-adv-mitre-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      if (!_cmAdvMPop) {
+        _cmAdvMPop = document.createElement('div');
+        _cmAdvMPop.className = 'cm-adv-mp-overlay';
+        _cmAdvMPop.innerHTML = `<div class="cm-adv-mp-box">
+          <button class="cm-adv-mp-close">&#10005;</button>
+          <div class="cm-adv-mp-tactic-lbl" id="cm-adv-mp-tac"></div>
+          <div class="cm-adv-mp-id-row">
+            <span class="cm-adv-mp-id" id="cm-adv-mp-id"></span>
+            <span class="cm-adv-mp-name" id="cm-adv-mp-name"></span>
+          </div>
+          <div class="cm-adv-mp-rel" id="cm-adv-mp-rel"></div>
+          <a class="cm-adv-mp-link" id="cm-adv-mp-link" target="_blank" rel="noopener">View on ATT&amp;CK &#8599;</a>
+        </div>`;
+        _cmAdvMPop.querySelector('.cm-adv-mp-close').onclick = () => _cmAdvMPop.classList.remove('open');
+        _cmAdvMPop.addEventListener('click', e => { if (e.target === _cmAdvMPop) _cmAdvMPop.classList.remove('open'); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && _cmAdvMPop) _cmAdvMPop.classList.remove('open'); });
+        document.body.appendChild(_cmAdvMPop);
+      }
+      _cmAdvMPop.querySelector('#cm-adv-mp-tac').textContent  = chip.dataset.mitreTactic || '';
+      _cmAdvMPop.querySelector('#cm-adv-mp-id').textContent   = chip.dataset.mitreId    || '';
+      _cmAdvMPop.querySelector('#cm-adv-mp-name').textContent = chip.dataset.mitreName  || '';
+      _cmAdvMPop.querySelector('#cm-adv-mp-rel').textContent  = chip.dataset.mitreRel   || '';
+      _cmAdvMPop.querySelector('#cm-adv-mp-link').href        = chip.dataset.mitreUrl   || '#';
+      requestAnimationFrame(() => _cmAdvMPop.classList.add('open'));
+    });
+  });
+
+  // ── "View full MITRE map" button wiring ──
+  const mitreViewBtn = outputEl.querySelector('.cm-adv-mitre-view-all');
+  if (mitreViewBtn) {
+    mitreViewBtn.addEventListener('click', () => {
+      if (!_cmAdvMapPop) {
+        _cmAdvMapPop = document.createElement('div');
+        _cmAdvMapPop.className = 'cm-adv-mp-overlay';
+        _cmAdvMapPop.innerHTML = '<div class="cm-adv-mp-box cm-adv-mp-box-wide" id="cm-adv-map-inner"></div>';
+        _cmAdvMapPop.querySelector('.cm-adv-mp-box').addEventListener('click', e => e.stopPropagation());
+        _cmAdvMapPop.addEventListener('click', () => _cmAdvMapPop.classList.remove('open'));
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && _cmAdvMapPop) _cmAdvMapPop.classList.remove('open'); });
+        document.body.appendChild(_cmAdvMapPop);
+      }
+      // Build full map HTML from current chips
+      const chips = [...outputEl.querySelectorAll('.cm-adv-mitre-chip')];
+      const tacMap = {};
+      chips.forEach(c => {
+        const tac = c.dataset.mitreTactic || 'Unknown';
+        if (!tacMap[tac]) tacMap[tac] = [];
+        tacMap[tac].push(c);
+      });
+      let mapHtml = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+        <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted2)">&#9741; MITRE ATT&CK Map</div>
+        <button style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.78rem;font-family:inherit;display:flex;align-items:center;justify-content:center" onclick="this.closest('.cm-adv-mp-overlay').classList.remove('open')">&#10005;</button>
+      </div>`;
+      Object.entries(tacMap).forEach(([tac, cList]) => {
+        mapHtml += `<div style="margin-bottom:14px">
+          <div style="font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.9px;color:#f87171;background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:6px;padding:5px 10px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">
+            <span>${tac}</span><span style="color:var(--muted2);font-weight:400">${cList.length} technique${cList.length!==1?'s':''}</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">`;
+        cList.forEach(c => {
+          mapHtml += `<div style="display:flex;gap:10px;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;align-items:flex-start">
+            <div style="flex-shrink:0;padding-top:2px">
+              <span style="font-size:0.63rem;font-weight:800;font-family:'Courier New',monospace;color:#fbbf24;background:rgba(251,191,36,0.08);padding:2px 7px;border-radius:4px;border:1px solid rgba(251,191,36,0.2)">${c.dataset.mitreId||''}</span>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:0.85rem;font-weight:700;color:var(--text);margin-bottom:5px">${c.dataset.mitreName||''}</div>
+              <div style="font-size:0.82rem;color:var(--muted);line-height:1.6">${c.dataset.mitreRel||''}</div>
+              <a href="${c.dataset.mitreUrl||'#'}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:3px;margin-top:7px;font-size:0.7rem;font-weight:600;color:#f87171;text-decoration:none;border:1px solid rgba(239,68,68,0.22);padding:2px 8px;border-radius:4px">View on ATT&CK &#8599;</a>
+            </div>
+          </div>`;
+        });
+        mapHtml += '</div></div>';
+      });
+      document.getElementById('cm-adv-map-inner').innerHTML = mapHtml;
+      requestAnimationFrame(() => _cmAdvMapPop.classList.add('open'));
+    });
+  }
 
   requestAnimationFrame(() => outputEl.scrollIntoView({ behavior: 'smooth', block: 'start' }));
 }
@@ -3015,11 +3110,11 @@ STORY HEADLINE: ${story.headline || ''}
 STORY TL;DR: ${story.tldr || ''}
 
 ARTICLE:
-${(articleText||'').slice(0, 5000)}
+${(articleText||'').slice(0, 8000)}
 
 Guidelines:
 - mitre_techniques: map real MITRE ATT&CK techniques (use correct IDs like T1190, T1059.004). For each: write 2-3 sentences of relevance explaining exactly how this technique was used in this specific story.
-- iocs: ONLY include IOC values explicitly mentioned in the source article. Do NOT generate or infer IOC values.
+- iocs: Scan the full article text carefully for any IOC values — IPv4/IPv6 addresses, domain names, file hashes (MD5/SHA-1/SHA-256), file paths, registry keys, and suspicious URL/URI patterns. Include every value that appears verbatim in the source text. Do NOT fabricate or guess values not present in the text.
 - threat_actor: only populate if a named threat actor is attributed in the story.
 - applicability_checklist: 4-6 conditions that put an org at risk.
 - fix_immediate_steps/fix_strategic_steps: 3-5 concrete, actionable items each.
